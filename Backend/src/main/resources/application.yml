@@ -1,0 +1,54 @@
+
+#配置实体类的位置
+mybatis-plus:
+  type-aliases-package:
+    com.example.transaction.pojo
+  #xml文件位置
+  mapper-locations:
+    classpath*:/mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case:
+      true
+  #mybatis-plus.global-config.db-config.id-type=auto
+  #mybatis-plus配置控制台打印完整带参数SQL语句
+  #mybatis-plus.configuration.log-impl= org.apache.ibatis.logging.log4j2.Log4j2Impl
+
+  #logging.level.com.looedu.mapper= info
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/stransaction?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+    username: root
+    password: zaoMENG45.
+
+    # 配置日志输出
+    druid:
+      filter:
+        slf4j:
+          enabled: true
+          statement-log-enabled: true
+          statement-executable-sql-log-enable: true
+          statement-create-after-log-enabled: false
+          statement-close-after-log-enabled: false
+          result-set-open-after-log-enabled: false
+          result-set-close-after-log-enabled: false
+
+# ---- 下面 暂时不设置 ----
+##初始化时建立物理连接的个数。
+#spring.datasource.druid.initial-size=5
+##最大连接池数量
+#spring.datasource.druid.max-active=20
+##最小连接池数量
+#spring.datasource.druid.min-idle=5
+##获取连接时最大等待时间，单位毫秒
+#spring.datasource.druid.max-wait=3000
+##是否缓存preparedStatement，也就是PSCache,PSCache对支持游标的数据库性能提升巨大，比如说oracle,在mysql下建议关闭。
+#spring.datasource.druid.pool-prepared-statements=false
+##要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true。
+#spring.datasource.druid.max-open-prepared-statements= -1
+##配置检测可以关闭的空闲连接间隔时间
+#spring.datasource.druid.time-between-eviction-runs-millis=60000
+## 配置连接在池中的最小生存时间
+#spring.datasource.druid.min-evictable-idle-time-millis= 300000
+#spring.datasource.druid.max-evictable-idle-time-millis= 400000
