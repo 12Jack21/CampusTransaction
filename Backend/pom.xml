@@ -18,7 +18,7 @@
         <java.version>11</java.version>
         <maven.compiler.release>11</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
-        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.lomboktarget>${java.version}</maven.compiler.lomboktarget>
     </properties>
 
     <dependencies>

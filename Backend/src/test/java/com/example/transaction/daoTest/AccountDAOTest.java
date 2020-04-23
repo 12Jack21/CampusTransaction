@@ -29,5 +29,6 @@ class AccountDAOTest {
     @Test
     public void getAll(){
         List<Account> accounts = accountDAO.getAllAccount();
+        System.out.println(accounts.toString());
     }
 }
