@@ -1,6 +1,8 @@
 package com.example.transaction.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -13,10 +15,14 @@ import java.sql.Timestamp;
 
 @Data
 public class Search {
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private String content;
     private Integer count;
+    @TableField(value = "notify_id")
     private Timestamp createTime;
+    @TableField(value = "notify_id")
     private Timestamp updateTime;
+    @TableField(value = "notify_id")
     private Integer accountId;
 }

@@ -1,6 +1,9 @@
 package com.example.transaction.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.List;
@@ -13,8 +16,11 @@ import java.util.List;
 
 @Data
 public class Commodity {
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
+    @TableField(value = "original_price")
     private Double originalPrice;
+    @TableField(value = "expected_price")
     private Double expectedPrice;
     private String name;
     private Integer newness;

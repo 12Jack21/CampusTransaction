@@ -16,6 +16,13 @@ class NoticeDAOTest {
     @Autowired
     private NoticeDAO noticeDAO;
 
+
+    @Test
+    void selectById(){
+        Notice notice = noticeDAO.selectById(1);
+        System.out.printf(notice.toString());
+    }
+
     @Test
     void testGetNoticeByOwnerId(){
         List<Notice> list = noticeDAO.getNoticeByOwnerId(21);

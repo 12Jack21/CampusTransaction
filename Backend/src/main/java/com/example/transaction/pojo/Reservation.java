@@ -13,15 +13,20 @@ import java.sql.Timestamp;
 
 @Data
 public class Reservation {
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private String note;
+    @TableField(value = "start_time")
     private Timestamp startTime;
+    @TableField(value = "end_time")
     private Timestamp endTime;
+    @TableField(value = "state_enum")
     private Integer stateEnum;
     private Integer count;
+    @TableField(value = "accountId")
     private Integer accountId;
+    @TableField(value = "commodity_id")
     private Integer commodityId;
-
     @TableField(exist = false)
     private Account user;
     @TableField(exist = false)

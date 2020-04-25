@@ -2,6 +2,8 @@ package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.transaction.pojo.CommodityImage;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -17,4 +19,6 @@ import java.util.List;
 public interface CommodityImageDAO extends BaseMapper<CommodityImage> {
     @Select("select * from com_image where commodity_id = #{id}")
     List<CommodityImage> getAllImageByCommodityId(Integer id);
+
+
 }

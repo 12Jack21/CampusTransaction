@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface NoticeDAO extends BaseMapper<Notice> {
 
-    @Select("select * from notice where accountId = #{id}")
+    @Select("select * from notice where account_id = #{id}")
     List<Notice> getNoticeByOwnerId(Integer id);
 
     @Select("select * from notice ${ew.customSqlSegment}")

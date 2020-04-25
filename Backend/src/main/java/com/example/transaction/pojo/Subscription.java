@@ -13,9 +13,16 @@ import java.sql.Timestamp;
 
 @Data
 public class Subscription {
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private Integer target;
+    @TableField(value = "target_type")
     private Integer targetType;
+    @TableField(value = "create_time")
     private Timestamp createTime;
+    @TableField(value = "account_id")
     private Integer accountId;
+
+    @TableField(exist = false)
+    private Account user;
 }

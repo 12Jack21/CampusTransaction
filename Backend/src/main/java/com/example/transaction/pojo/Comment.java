@@ -1,6 +1,8 @@
 package com.example.transaction.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -13,12 +15,22 @@ import java.sql.Timestamp;
 
 @Data
 public class Comment {
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     private Boolean type;
     private String content;
     private Timestamp date;
     private Integer fromId;
     private Integer toId;
+    private Integer commodityId;
+
+    @TableField(value = "from_id")
+    private Integer senderId;
+
+    @TableField(value = "to_id")
+    private Integer receiverId;
+
+    @TableField(value = "commodity_id")
     private Integer commodityId;
 
     @TableField(exist = false)

@@ -11,9 +11,8 @@ import java.util.List;
 
 @Repository
 public interface AccountDAO extends BaseMapper<Account> {
-    //获取用户所有通告记录
-    Account getAllNotice(Integer id);
-    //获取某用户所有预约记录
-    Account getAllReservation(Integer id);
+    List<Account> getAllAccount();
+
+
 }
 
