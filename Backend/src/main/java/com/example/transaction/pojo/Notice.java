@@ -16,7 +16,7 @@ public class Notice {
     private Integer stateEnum;
     private Timestamp updateTime;
     private Timestamp createTime;
-    private Integer ownerId;
+    private Integer accountId;
 
     @TableField(exist = false)
     private List<CommodityList> commodityLists;

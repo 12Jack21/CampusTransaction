@@ -17,7 +17,5 @@ public class Subscription {
     private Integer target;
     private Integer targetType;
     private Timestamp createTime;
-
-    @TableField(exist = false)
-    private Account user;
+    private Integer accountId;
 }

@@ -1,6 +1,7 @@
 package com.example.transaction.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -13,14 +14,17 @@ import java.util.List;
  */
 
 @Data
+@TableName(value = "acc_notify")
 public class AccountNotify {
     private Integer id;
     private boolean isRead;
     private Timestamp createTime;
     private Timestamp readTime;
+    private Integer notifyId;
+    private Integer accountId;
 
     @TableField(exist = false)
-    private List<Notify> notify;
+    private Notify notify;
     @TableField(exist = false)
     private Account owner;
 }

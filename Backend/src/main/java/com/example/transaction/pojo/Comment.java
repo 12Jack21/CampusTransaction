@@ -17,11 +17,14 @@ public class Comment {
     private Boolean type;
     private String content;
     private Timestamp date;
+    private Integer fromId;
+    private Integer toId;
+    private Integer commodityId;
 
+    @TableField(exist = false)
+    private Commodity commodity;
     @TableField(exist = false)
     private Account sender;
     @TableField(exist = false)
     private Account receiver;
-    @TableField(exist = false)
-    private Commodity commodity;
 }

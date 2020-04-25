@@ -19,6 +19,8 @@ public class Reservation {
     private Timestamp endTime;
     private Integer stateEnum;
     private Integer count;
+    private Integer accountId;
+    private Integer commodityId;
 
     @TableField(exist = false)
     private Account user;

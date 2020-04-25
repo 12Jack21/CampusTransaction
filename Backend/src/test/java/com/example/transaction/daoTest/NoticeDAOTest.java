@@ -6,6 +6,8 @@ import com.example.transaction.pojo.Notice;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 @SpringBootTest
@@ -24,7 +26,10 @@ class NoticeDAOTest {
     @Test
     void testGetNoticeWithCondition(){
         QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(true,"state_enum", 1);
+//        queryWrapper.eq(true,"state_enum", 1);
+        Timestamp timestamp = Timestamp.valueOf("2020-04-09 11:47:19.000000");
+//        String strn = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+        queryWrapper.le("end_time", timestamp);
         List<Notice> notices = noticeDAO.getNoticeWithCondition(queryWrapper);
         System.out.println(notices.size());
         System.out.println(notices.get(0));

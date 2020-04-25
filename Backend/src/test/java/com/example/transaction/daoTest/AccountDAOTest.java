@@ -16,16 +16,13 @@ class AccountDAOTest {
     private AccountDAO accountDAO;
 
     @Test
-    public void testAccAdd(){
-//        Account a = new Account();
-//        a.setId(100);
-//        a.setUsername("IOIO");
-//        int index = accountDAO.insert(a);
+    void testGetAllNotice(){
+        Account account = accountDAO.getAllNotice(21);
+        System.out.println(account);
     }
-
     @Test
-    public void getAll(){
-        List<Account> accounts = accountDAO.getAllAccount();
-        System.out.println(accounts.toString());
+    void testGetAllReservation(){
+        Account account = accountDAO.getAllReservation(1);
+        System.out.println(account);
     }
 }

@@ -23,4 +23,12 @@ public class Account {
 
     @TableField(exist = false)
     private List<Notice> noticeList;
+    @TableField(exist = false)
+    private List<Reservation> reservationList;
+    @TableField(exist = false)
+    private List<Search> searchList;
+    @TableField(exist = false)
+    private List<AccountNotify> accountNotifyList;
+    @TableField(exist = false)
+    private List<Subscription> subscriptionList;
 }
