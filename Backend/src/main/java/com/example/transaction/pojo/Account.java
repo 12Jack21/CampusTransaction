@@ -11,7 +11,7 @@ public class Account {
     private int id;
     private String username;
     private String password;
-    private Byte gender;
+    private boolean gender;
     private String address;
     private String institute;
     private String mail;

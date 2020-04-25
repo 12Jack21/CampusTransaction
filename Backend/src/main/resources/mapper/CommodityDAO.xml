@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.transaction.dao.CommodityDAO">
+    <!--查询与account关联的所有信息，如commodityList、notice、commodityImages-->
+    <resultMap id="commodityInfo" type="commodity">
+        <id property="id" column="id"/>
+        <association property="commodityList" javaType="com.example.transaction.pojo.CommodityList" column="id" select="com.example.transaction.dao.CommodityListDAO.getAllByCommodityId"/>
+        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDao.selectById"/>
+        <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.selectById"/>
+    </resultMap>
+    <select id="selectAllInfoById" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">
+        select * from commodity where id=#{id};
+    </select>
+
+    <select id="selectWithCondition" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">
+        select * from commodity ${ew.customSqlSegment}
+    </select>
+</mapper>

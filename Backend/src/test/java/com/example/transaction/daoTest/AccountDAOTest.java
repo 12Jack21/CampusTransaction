@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @SpringBootTest
-@Transactional
 class AccountDAOTest {
 
     @Autowired
@@ -18,12 +17,10 @@ class AccountDAOTest {
 
     @Test
     public void testAccAdd(){
-        Account a = new Account();
+//        Account a = new Account();
 //        a.setId(100);
-        a.setUsername("IOIO");
-        int index = accountDAO.insert(a);
-        List<Account> l = accountDAO.getByPassword("1111");
-        System.out.println("Affected Row my : " + index);
+//        a.setUsername("IOIO");
+//        int index = accountDAO.insert(a);
     }
 
     @Test

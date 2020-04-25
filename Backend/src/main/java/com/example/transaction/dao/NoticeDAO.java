@@ -11,17 +11,19 @@ import java.util.List;
 
 @Repository
 public interface NoticeDAO extends BaseMapper<Notice> {
-    @Results(id = "noticeMap", value = {
-            @Result(id = true, column = "id"), // can ignore property without duplicated string definitions
-            @Result(property = "owner", column = "owner_id", javaType = Account.class,one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+
+    @Select("select * from notice where owner_id = #{id}")
+    List<Notice> getNoticeByOwnerId(Integer id);
+
+    @Select("select * from notice ${ew.customSqlSegment}")
+    List<Notice> getNoticeWithCondition(@Param("ew")QueryWrapper<Notice> wrapper);
+
+    @Results(id="noticeMap", value = {
+            @Result(id = true, property = "id", column = "id"),
+            @Result(property = "commodityLists", column = "id", many = @Many(
+                    select = "com.example.transaction.dao.CommodityListDAO.getAllCommodityListByNoticeId"
             ))
     })
-    @Select("SELECT * FROM notice WHERE 1=1")
-    List<Notice> getAllNotice(@Param("ew")QueryWrapper<Notice> wrapper);
-
-    int updateXML(Notice notice);
-
-    @Select("SELECT * FROM notice WHERE owner_id=#{owner_id}")
-    List<Notice> getByOwnerId(@Param("owner_id")int ownerId);
+    @Select("select * from notice where id=#{id}")
+    Notice getNoticeWithAllCommodityById(Integer id);
 }
