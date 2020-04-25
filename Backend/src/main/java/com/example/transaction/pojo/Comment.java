@@ -20,9 +20,6 @@ public class Comment {
     private Boolean type;
     private String content;
     private Timestamp date;
-    private Integer fromId;
-    private Integer toId;
-    private Integer commodityId;
 
     @TableField(value = "from_id")
     private Integer senderId;
