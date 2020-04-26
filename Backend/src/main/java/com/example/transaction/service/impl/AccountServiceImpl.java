@@ -46,8 +46,6 @@ public class AccountServiceImpl implements AccountService {
      */
     @Transactional
     public responseFromServer updateAccount(Account account){
-        account.setPassword(null);
-
         if(accountDAO.updateById(account)!=1){
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

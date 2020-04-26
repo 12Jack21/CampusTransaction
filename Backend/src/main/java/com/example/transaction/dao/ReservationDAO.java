@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @Author: 高战立
  * @Date: 2020/4/25 14:55
- * @Content: 预约表业务层
+ * @Content: 预约表数据层
  */
 
 @Repository
@@ -29,6 +29,14 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     })
     @Select("select * from reservation where account_id=#{id}")
     List<Reservation> getAllReservationByAccountId(Integer id);
+
+    @Results(id = "userMap", value = {
+            @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
+                    select = "com.example.transaction.dao.AccountDAO.selectById"
+            ))
+    })
+    @Select("select * from reservation where commodity_id=#{id}")
+    List<Reservation> getAllReservationByCommodityId(Integer id);
 
     @Select("select * from reservation ${ew.customSqlSegment}")
     @ResultMap(value = {"reservationMap"}) //复用上述外键查找

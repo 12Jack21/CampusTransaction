@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @Author: 高战立
  * @Date: 2020/4/25 7:08
- * @Content: CommodityList业务层
+ * @Content: CommodityList数据层
  */
 
 @Repository

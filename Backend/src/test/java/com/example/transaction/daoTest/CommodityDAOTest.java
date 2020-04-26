@@ -23,13 +23,17 @@ public class CommodityDAOTest {
 
     @Test
     void testSelectById(){
-        Commodity commodity = commodityDAO.selectById(1);
-        System.out.println(commodity);
+//        Commodity commodity = commodityDAO.selectById(1);
+//        System.out.println(commodity);
+        Commodity commodity = new Commodity();
+        commodity.setId(2);
+        commodity.setDescription("jiang");
+        commodityDAO.updateById(commodity); //updateById若为null不覆盖
     }
 
     @Test
     void testSelectAllInfoById(){
-        Commodity commodity = commodityDAO.selectAllInfoById(2);
+        List<Commodity> commodity = commodityDAO.selectAllInfo();
         System.out.println(commodity);
     }
 
@@ -41,7 +45,9 @@ public class CommodityDAOTest {
 //        System.out.println(commodities.size());
 //        System.out.println(commodities.get(0));
 
-        queryWrapper.between("expected_price",5,20); //价格区间检索
+//        queryWrapper.between("expected_price",5,20); //价格区间检索
+        queryWrapper.eq("name", "yellow");
+        queryWrapper.orderByDesc("newness");
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
         System.out.println(commodities.size());
         System.out.println(commodities.toString());
