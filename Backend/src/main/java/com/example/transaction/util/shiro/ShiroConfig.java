@@ -2,12 +2,15 @@ package com.example.transaction.util.shiro;
 
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;
-
+import org.apache.shiro.mgt.SecurityManager;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -18,7 +21,85 @@ import java.util.Map;
  * @Date: 2020/4/25 20:56
  */
 public class ShiroConfig {
+    //不加这个注解不生效，具体不详
+    @Bean
+    @ConditionalOnMissingBean
+    public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator defaultAAP = new DefaultAdvisorAutoProxyCreator();
+        defaultAAP.setProxyTargetClass(true);
+        return defaultAAP;
+    }
 
+    //将自己的验证方式加入容器
+    @Bean
+    public MyShiroRealm myShiroRealm() {
+        MyShiroRealm myShiroRealm = new MyShiroRealm();
+        return myShiroRealm;
+    }
+
+
+    /**
+     * 权限管理，配置主要是Realm的管理认证，可配置一个或多个realm
+     * @return
+     */
+    @Bean
+    public SecurityManager securityManager() {
+        DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
+        securityManager.setRealm(new MyShiroRealm());
+        /*可以配置一个或多个rewalm*/
+        return securityManager;
+    }
+
+    /**
+     * Filter工厂，设置对应的过滤条件和跳转条件
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+        ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
+        shiroFilterFactoryBean.setSecurityManager(securityManager);
+        shiroFilterFactoryBean.setLoginUrl("/login");
+
+        /*  配置拦截过滤器链，
+            map的键 : 资源地址 ;
+            map的值 : 所有默认Shiro过滤器实例名 默认Shiro过滤器实例*/
+        // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
+        Map<String, String> filterMap = new HashMap<>();
+        filterMap.put("/static/**", "anon"); // 公开访问的资源
+        filterMap.put("/account/login", "anon"); // 登录地址放开
+        filterMap.put("/account/logout", "logout"); // 配置登出页,shiro已经帮我们实现了跳转
+        //这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
+        filterMap.put("/**", "authc"); // 所有资源都需要经过验证
+        /*
+        //登出
+        map.put("/logout", "logout");
+        //对所有用户认证
+        map.put("/**", "authc");
+        //首页
+        shiroFilterFactoryBean.setSuccessUrl("/index");
+        //错误页面，认证不通过跳转
+        shiroFilterFactoryBean.setUnauthorizedUrl("/error");
+        */
+        shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
+        return shiroFilterFactoryBean;
+    }
+
+    //加入注解的使用，不加入这个注解不生效
+    /**
+     * 开启shiro 注解支持. 使以下注解能够生效 :
+     * 需要认证 {@link org.apache.shiro.authz.annotation.RequiresAuthentication RequiresAuthentication}
+     * 需要用户 {@link org.apache.shiro.authz.annotation.RequiresUser RequiresUser}
+     * 需要访客 {@link org.apache.shiro.authz.annotation.RequiresGuest RequiresGuest}
+     * 需要角色 {@link org.apache.shiro.authz.annotation.RequiresRoles RequiresRoles}
+     * 需要权限 {@link org.apache.shiro.authz.annotation.RequiresPermissions RequiresPermissions}
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
+    }
 
 
 }

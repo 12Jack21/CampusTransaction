@@ -2,6 +2,7 @@ package com.example.transaction.util.shiro;
 
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
+import com.example.transaction.util.responseFromServer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -39,9 +40,9 @@ public class MyShiroRealm extends AuthorizingRealm {
         //实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         String userName = token.getUsername();
-        Account account = accountService.selectByUserName(userName);//根据登陆名account从库中查询user对象
-        if(account==null){throw new AuthenticationException("用户不存在");}
-
+        responseFromServer response = accountService.selectByUserName(userName);//根据登陆名account从库中查询user对象
+        if(!response.isSuccess()){throw new AuthenticationException("用户不存在");}
+        Account account = (Account) response.getData();
         //进行认证，将正确数据给shiro处理
         //密码不用自己比对，AuthenticationInfo认证信息对象，一个接口，new他的实现类对象SimpleAuthenticationInfo
         /*	第一个参数随便放，可以放user对象，程序可在任意位置获取 放入的对象

@@ -47,6 +47,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public responseFromServer updateAccount(Account account){
         account.setPassword(null);
+
         if(accountDAO.updateById(account)!=1){
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -57,7 +58,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
-     * 验证密码是否一致
+     * (修改密码时)验证密码是否一致
      * @param account
      * @return
      */
@@ -74,7 +75,7 @@ public class AccountServiceImpl implements AccountService {
     /**
      * 根据用户名返回账号  ==>  Shiro
      * @param userName
-     * @return
+     * @return responseFromServer
      */
     public responseFromServer selectByUserName(String userName){
         Map<String,Object> queryMap = new HashMap<>();
