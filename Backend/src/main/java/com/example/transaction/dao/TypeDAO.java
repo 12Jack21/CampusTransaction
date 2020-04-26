@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 @Repository
-public interface TypeDao extends BaseMapper<Type> {
+public interface TypeDAO extends BaseMapper<Type> {
 
     @Select("select * from type where commodity_id = #{id}")
     List<Type> getAllTypeByCommodityId(Integer id);

@@ -5,7 +5,7 @@
     <resultMap id="commodityInfo" type="commodity">
         <id property="id" column="id"/>
         <association property="commodityList" javaType="com.example.transaction.pojo.CommodityList" column="id" select="com.example.transaction.dao.CommodityListDAO.getAllByCommodityId"/>
-        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDao.selectById"/>
+        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.selectById"/>
         <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.selectById"/>
     </resultMap>
     <select id="selectAllInfoById" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">

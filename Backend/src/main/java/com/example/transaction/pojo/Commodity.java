@@ -25,6 +25,7 @@ public class Commodity {
     private String name;
     private Integer newness;
     private String description;
+    private Integer stock;
 
     @TableField(exist = false)
     private List<Type> types;

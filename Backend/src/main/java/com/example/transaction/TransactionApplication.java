@@ -7,8 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
 @SpringBootApplication(
-        scanBasePackages = {"com.example.transaction.pojo", "com.example.transaction.dao","com.example.transaction.controller",
-                "com.example.transaction.config","com.example.transaction.service","com.example.transaction.dto"})
+        scanBasePackages = {
+                "com.example.transaction.pojo",
+                "com.example.transaction.dao",
+                "com.example.transaction.controller",
+                "com.example.transaction.config",
+                "com.example.transaction.service",
+                "com.example.transaction.dto"
+        })
 public class TransactionApplication {
     public static void main(String[] args) {
         SpringApplication.run(TransactionApplication.class, args);
