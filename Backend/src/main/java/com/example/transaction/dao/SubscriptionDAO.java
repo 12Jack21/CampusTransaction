@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * @Author: 高战立
  * @Date: 2020/4/25 18:36
- * @Content: 订阅表业务层
+ * @Content: 订阅表数据层
  */
 
 @Repository

@@ -25,10 +25,11 @@ public class Reservation {
     @TableField(value = "state_enum")
     private Integer stateEnum;
     private Integer count;
-    @TableField(value = "accountId")
+    @TableField(value = "account_id")
     private Integer accountId;
     @TableField(value = "commodity_id")
     private Integer commodityId;
+
     @TableField(exist = false)
     private Account user;
     @TableField(exist = false)

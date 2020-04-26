@@ -29,6 +29,12 @@ public class ReservationDAOTest {
     }
 
     @Test
+    void testGetAllReservationByCommodityId(){
+        List<Reservation> reservations = reservationDAO.getAllReservationByCommodityId(1);
+        System.out.println(reservations);
+    }
+
+    @Test
     void testGetWithCondition(){
         QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("state_enum", 0);  //根据state_enum进行条件查询

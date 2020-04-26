@@ -3,7 +3,6 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.util.List;
@@ -32,4 +31,6 @@ public class Commodity {
     private List<CommodityImage> commodityImages;
     @TableField(exist = false)
     private CommodityList commodityList;
+    @TableField(exist = false)
+    private Reservation reservation;
 }

@@ -1,6 +1,6 @@
 package com.example.transaction.daoTest;
 
-import com.example.transaction.dao.TypeDao;
+import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.pojo.Type;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.List;
 public class TypeDAOTest {
 
     @Autowired
-    private TypeDao typeDao;
+    private TypeDAO typeDao;
 
     @Test
     void testGetAllTypeByCommodityId(){
