@@ -1,14 +1,14 @@
 package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.transaction.pojo.Estimate;
+import org.springframework.stereotype.Repository;
 
 /**
- * @InterfaceName: EstimateDAO
- * @Description: TODO
- * @Author: 曾志昊
- * @Date: 2020/4/25 19:51
+ * @Author: 高战立
+ * @Date: 2020/4/25 18:37
+ * @Content: 评估表操作层
  */
-public interface EstimateDAO extends BaseMapper<Estimate> {
 
+@Repository
+public interface EstimateDAO extends BaseMapper<EstimateDAO> {
 }

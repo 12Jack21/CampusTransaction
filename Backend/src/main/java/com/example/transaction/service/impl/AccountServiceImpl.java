@@ -1,5 +1,6 @@
 package com.example.transaction.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
@@ -40,7 +41,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
-     * 更新用户信息(不包含密码)
+     * 更新用户信息
      * @param account
      * @return
      */
@@ -68,6 +69,15 @@ public class AccountServiceImpl implements AccountService {
         }else{
             return responseFromServer.success();
         }
+    }
+
+    public responseFromServer verifyUserName(String userName){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("username",userName);
+        if(accountDAO.selectCount(queryWrapper)!=1){
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
     }
 
     /**

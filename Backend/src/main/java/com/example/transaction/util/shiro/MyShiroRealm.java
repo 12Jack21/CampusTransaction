@@ -23,6 +23,11 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Autowired
     AccountService accountService;
 
+    /**
+     * 验证权限时调用
+     * @param arg0
+     * @return
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection arg0) {
 
@@ -33,6 +38,12 @@ public class MyShiroRealm extends AuthorizingRealm {
         return simpleAuthorInfo;
     }
 
+    /**
+     * 认证（登录时）
+     * @param authcToken
+     * @return
+     * @throws AuthenticationException
+     */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(
             AuthenticationToken authcToken) throws AuthenticationException {
@@ -40,8 +51,10 @@ public class MyShiroRealm extends AuthorizingRealm {
         //实际上这个authcToken是从LoginController里面currentUser.login(token)传过来的
         UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
         String userName = token.getUsername();
-        responseFromServer response = accountService.selectByUserName(userName);//根据登陆名account从库中查询user对象
-        if(!response.isSuccess()){throw new AuthenticationException("用户不存在");}
+        //根据登陆名account从库中查询user对象
+        responseFromServer response = accountService.selectByUserName(userName);
+        //账号不存在
+        if(!response.isSuccess()||response.getData()==null){throw new AuthenticationException("用户不存在");}
         Account account = (Account) response.getData();
         //进行认证，将正确数据给shiro处理
         //密码不用自己比对，AuthenticationInfo认证信息对象，一个接口，new他的实现类对象SimpleAuthenticationInfo
@@ -53,7 +66,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
         //清之前的授权信息
         super.clearCachedAuthorizationInfo(authcInfo.getPrincipals());
-        SecurityUtils.getSubject().getSession().setAttribute("login", account);
+        SecurityUtils.getSubject().getSession().setAttribute("currentAccount", account);
         return authcInfo;//返回给安全管理器，securityManager，由securityManager比对数据库查询出的密码和页面提交的密码
         //如果有问题，向上抛异常，一直抛到控制器
     }
