@@ -20,5 +20,6 @@ public interface ReservationService {
     public responseFromServer deleteReservation(Reservation reservation);
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex);
     public responseFromServer updateReservation(Reservation reservation);
+    public responseFromServer validateReservation(Reservation reservation);
 
 }

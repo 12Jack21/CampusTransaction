@@ -36,6 +36,7 @@ public class ReservationServiceImpl implements ReservationService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+        /*TODO 将预约信息添加到notify中*/
         return responseFromServer.success();
     }
 
@@ -99,6 +100,12 @@ public class ReservationServiceImpl implements ReservationService {
             return  responseFromServer.error();
         }
         return responseFromServer.success();
+    }
+
+
+    @Override
+    public responseFromServer validateReservation(Reservation reservation) {
+        return null;
     }
 
     ReservationDAO reservationDAO;
