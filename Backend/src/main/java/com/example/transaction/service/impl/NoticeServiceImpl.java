@@ -50,7 +50,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 删除特定的notice
-     * @param notice
+     * @param queryWrapper
      * @return
      */
     @Override
@@ -97,6 +97,7 @@ public class NoticeServiceImpl implements NoticeService {
         return responseFromServer.success(myPage);
     }
 
+/*
     @Override
     public responseFromServer getRecentNoticePage(Map<String, Object> map) {
 
@@ -107,6 +108,7 @@ public class NoticeServiceImpl implements NoticeService {
     public responseFromServer getNoticePageByAccountId(Map<String, Object> map) {
         return null;
     }
+*/
 
     NoticeDAO noticeDAO;
 
