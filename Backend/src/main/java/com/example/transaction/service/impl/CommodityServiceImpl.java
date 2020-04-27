@@ -3,6 +3,7 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.pojo.Commodity;
+import com.example.transaction.pojo.Estimate;
 import com.example.transaction.pojo.Type;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.util.responseFromServer;
@@ -11,8 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @Author: 高战立
@@ -81,6 +81,33 @@ public class CommodityServiceImpl implements CommodityService {
         queryWrapper.between("expected_price", low, high);
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
         return selectByCountAndDate(commodities);
+    }
+
+    /**
+     * 根据所有者信誉排序
+     * @param name 商品名
+     * @return Commodity数组
+     */
+    public List<Commodity> sortByCredit(String name){
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", "%"+name+"%");
+        List<Commodity> commodities = selectByCountAndDate(commodityDAO.selectWithCondition(queryWrapper));
+        commodities.sort(new Comparator<Commodity>() {
+            @Override
+            public int compare(Commodity o1, Commodity o2) {
+                Estimate estimate1 = o1.getCommodityList().getNotice().getUser().getEstimate();
+                Estimate estimate2 = o2.getCommodityList().getNotice().getUser().getEstimate();
+                double credit1 = estimate1.getSellCredit() + estimate1.getPurchaseCredit();
+                double credit2 = estimate2.getSellCredit() + estimate2.getPurchaseCredit();
+
+                if(credit1 > credit2)
+                    return -1;
+                else if(credit1 <credit2)
+                    return 1;
+                return 0;
+            }
+        });
+        return commodities;
     }
 
     /**

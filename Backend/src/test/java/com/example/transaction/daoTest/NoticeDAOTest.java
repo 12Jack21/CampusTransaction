@@ -47,4 +47,10 @@ class NoticeDAOTest {
         Notice notice = noticeDAO.getNoticeWithAllCommodityById(1);
         System.out.println(notice);
     }
+
+    @Test
+    void testGetCreditByAccountId(){
+        Notice notice = noticeDAO.getCreditByNoticeId(1);
+        System.out.println(notice);
+    }
 }

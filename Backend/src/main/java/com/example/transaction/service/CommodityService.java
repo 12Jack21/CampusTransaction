@@ -18,6 +18,8 @@ public interface CommodityService {
     public List<Commodity> getByTypeId(Integer typeId);
     //根据价格区间筛选物品
     public List<Commodity> getBetweenPrice(String name, Integer low, Integer high);
+    //根据所有者信用排序
+    public List<Commodity> sortByCredit(String name);
     //插入商品
     public responseFromServer insertCommodity(Commodity commodity);
     //更新商品信息

@@ -22,8 +22,5 @@ public class Estimate {
     @TableField(value = "sell_credit")
     private Double sellCredit;
     @TableField(value = "account_id")
-    private Integer accountId;
-
-    @TableField(exist = false)
-    private Account user;
+    private Integer accountId;;
 }

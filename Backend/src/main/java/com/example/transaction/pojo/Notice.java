@@ -27,4 +27,6 @@ public class Notice {
 
     @TableField(exist = false)
     private List<CommodityList> commodityLists;
+    @TableField(exist = false)
+    private Account user;
 }

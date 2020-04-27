@@ -2,7 +2,6 @@ package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Notice;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -26,4 +25,12 @@ public interface NoticeDAO extends BaseMapper<Notice> {
     })
     @Select("select * from notice where id=#{id}")
     Notice getNoticeWithAllCommodityById(Integer id);
+
+    @Results(id="accountMap", value = {
+            @Result(property = "user", column = "account_id", one = @One(
+                    select = "com.example.transaction.dao.AccountDAO.getAccountCreditById"
+            ))
+    })
+    @Select("select * from notice where id = #{id}")
+    Notice getCreditByNoticeId(Integer id);
 }

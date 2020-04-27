@@ -3,9 +3,8 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -26,6 +25,8 @@ public class Account {
     private Timestamp createTime;
     private Timestamp updateTime;
 
+    @TableField(exist = false)
+    private Estimate estimate;
     @TableField(exist = false)
     private List<Notice> noticeList;
     @TableField(exist = false)
