@@ -1,5 +1,6 @@
 package com.example.transaction.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.util.responseFromServer;
@@ -17,7 +18,7 @@ public interface ReservationService {
     public responseFromServer setUpReservation(Reservation reservation);
     public responseFromServer cancelReservation(Reservation reservation);
     public responseFromServer deleteReservation(Reservation reservation);
-    public responseFromServer getReservationsPageForUser(Map<String,Object> map);
+    public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex);
     public responseFromServer updateReservation(Reservation reservation);
 
 }

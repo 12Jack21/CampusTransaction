@@ -91,11 +91,16 @@ public class ShiroConfig {
         /*  配置拦截过滤器链，
             map的键 : 资源地址 ;
             map的值 : 所有默认Shiro过滤器实例名 默认Shiro过滤器实例*/
-        // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
+        // authc:所有url都必须认证通过才可以访问;
+        // anon:所有url都都可以匿名访问
         Map<String, String> filterMap = new HashMap<>();
+        /*公开地址*/
         filterMap.put("/static/**", "anon"); // 公开访问的资源
         filterMap.put("/account/login", "anon"); // 登录地址放开
+        filterMap.put("/notice/getRecentNoticePage", "anon"); // 获取首页最新通告
+
         filterMap.put("/account/logout", "logout"); // 配置登出页,shiro已经帮我们实现了跳转
+
         //这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         filterMap.put("/**", "authc"); // 所有资源都需要经过验证
         /*

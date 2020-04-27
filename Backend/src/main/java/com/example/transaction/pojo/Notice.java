@@ -10,6 +10,7 @@ import java.util.List;
 @Data
 public class Notice {
     @TableId(value = "id",type = IdType.AUTO)
+    private Integer id;
     private Boolean type;
     @TableField(value = "end_time")
     private Timestamp endTime;

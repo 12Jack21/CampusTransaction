@@ -1,17 +1,15 @@
-package com.example.transaction.util;
+package com.example.transaction.util.code;
 
-public enum ReservationCode {
-
-    CANCELED(-1,"CANCELED"),
-    WAITING(0,"WAITING"),
-    SUCCESS(1,"SUCCESS"),
-    FAIL(2,"FAIL");
+public enum NoticeCode {
+    UNPUBLISHED(-1,"UNPUBLISHED"),
+    PUBLISHED(0,"PUBLISHED"),
+    CANCELLED(1,"CANCELLED");
 
     private final int code;
     private final String desc;
 
 
-    ReservationCode(int code, String desc){
+    NoticeCode(int code, String desc){
         this.code = code;
         this.desc = desc;
     }

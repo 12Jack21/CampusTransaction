@@ -71,6 +71,11 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    /**
+     * 检查是否存在对应的用户名
+     * @param userName
+     * @return
+     */
     public responseFromServer verifyUserName(String userName){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("username",userName);
