@@ -30,7 +30,7 @@ public interface CommodityListDAO extends BaseMapper<CommodityList> {
 
     @Results(id = "noticeInfo", value = {
             @Result(property = "notice", column = "notice_id", javaType = Notice.class, one = @One(
-                    select = "com.example.transaction.dao.NoticeDAO.selectById"
+                    select = "com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"
             ))
     })
     @Select("select * from com_list where commodity_id=#{id}")

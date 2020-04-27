@@ -32,7 +32,7 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
 
     @Results(id = "userMap", value = {
             @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+                    select = "com.example.transaction.dao.AccountDAO.getAccountCreditById"
             ))
     })
     @Select("select * from reservation where commodity_id=#{id}")

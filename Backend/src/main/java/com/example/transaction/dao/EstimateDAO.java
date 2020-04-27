@@ -1,6 +1,8 @@
 package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.transaction.pojo.Estimate;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,5 +12,8 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface EstimateDAO extends BaseMapper<EstimateDAO> {
+
+public interface EstimateDAO extends BaseMapper<Estimate> {
+    @Select("select * from estimate where account_id=#{id}")
+    Estimate getByAccountId(Integer id); //多表查询会用到，不能被替代
 }

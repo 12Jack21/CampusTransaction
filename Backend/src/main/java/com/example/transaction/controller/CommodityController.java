@@ -49,6 +49,7 @@ public class CommodityController {
 
     /**
      * 根据价格区间筛选物品
+     * @param name 商品名称
      * @param low 最低价
      * @param high 最高价
      * @return Commodity数组
@@ -56,6 +57,16 @@ public class CommodityController {
     @RequestMapping("/betweenPrice")
     public List<Commodity> getBetweenPrice(@RequestParam(value = "name") String name, @RequestParam(value = "low")Integer low, @RequestParam(value = "high")Integer high){
         return commodityService.getBetweenPrice(name, low, high);
+    }
+
+    /**
+     * 根据所有者信誉排序
+     * @param name 商品名称
+     * @return Commodity数组
+     */
+    @RequestMapping("/sortByCredit")
+    public List<Commodity> sortByCredit(@RequestParam(value = "name") String name){
+        return commodityService.sortByCredit(name);
     }
 
     /**
