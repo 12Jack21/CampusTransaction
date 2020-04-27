@@ -1,6 +1,7 @@
 package com.example.transaction.controller;
 
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
 import com.example.transaction.util.AccountVerify;
@@ -93,11 +94,25 @@ public class ReservationController {
 
 
     /*查看商品的预约*/
+    @RequestMapping("/getReservationPageForCommodity")
+    public responseFromServer getReservationPageForCommodity(@RequestBody Commodity commodity, HttpSession session){
+        return null;
+    }
 
     /*查看我申请的预约*/
+    @RequestMapping("/getMyReservation")
+    public responseFromServer getMyReservation(HttpSession session){
+        return null;
+    }
+
+    /*todo 需要注意的问题是返回的reservation包含数据的问题
+    *  是否要包含commodity对象？dao编写？*/
 
     /*查看我接收到的预约*/
-
+    @RequestMapping("/getReservationRequest")
+    public responseFromServer getReservationRequest(HttpSession session){
+        return null;
+    }
 
 
     @RequestMapping("/getReservationPage")
