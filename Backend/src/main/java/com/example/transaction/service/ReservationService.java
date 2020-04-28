@@ -16,7 +16,7 @@ import java.util.Map;
 public interface ReservationService {
 
     public responseFromServer setUpReservation(Reservation reservation);
-    public responseFromServer cancelReservation(Reservation reservation);
+    public responseFromServer cancelReservation(Integer reservationId,Integer accountId);
     public responseFromServer deleteReservation(Reservation reservation);
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex);
     public responseFromServer updateReservation(Reservation reservation);

@@ -53,12 +53,11 @@ public class ReservationController {
      */
     @RequestMapping("/cancelReservation")
     public responseFromServer cancelReservation(@RequestBody Reservation reservation,HttpSession session){
-        Account account = new Account(reservation.getId());
-        if(AccountVerify.verify(account,session)){
-            return reservationService.cancelReservation(reservation);
-        }else{
-            return responseFromServer.illegal();
-        }
+        Account account = (Account) session.getAttribute("currentAccount");
+        if(reservation.getId()!=null)
+            return reservationService.cancelReservation(reservation.getId(),account.getId());
+        else
+            return responseFromServer.error();
     }
 
 

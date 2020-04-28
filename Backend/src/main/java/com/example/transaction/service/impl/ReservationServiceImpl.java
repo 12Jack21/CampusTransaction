@@ -45,16 +45,39 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 取消预约：state = CANCELED
-     * @param reservation
+     * @param reservationId
+     * @param accountId
      * @return
      */
     @Override
     @Transactional
-    public responseFromServer cancelReservation(Reservation reservation) {
+    public responseFromServer cancelReservation(Integer reservationId,Integer accountId) {
+        Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
+        if(accountId.intValue()!=reservation.getAccountId().intValue()
+                &&accountId.intValue() != reservation.getCommodity().getNotice().getAccountId()){
+            /*既不是卖家也不是买家*/
+            return responseFromServer.illegal();
+        }
+        /*身份验证成功*/
+        if(reservation.getStateEnum()==ReservationCode.VALIDATE.getCode()){
+            /*如果已经validate，则需要恢复库存*/
+            Commodity commodity = reservation.getCommodity();
+            Commodity newCommodity = new Commodity();
+            newCommodity.setId(commodity.getId());
+            newCommodity.setCount(commodity.getCount()+reservation.getCount());
+            if(commodityDAO.updateById(newCommodity)!=1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }
+        }else if(reservation.getStateEnum()==ReservationCode.FINISHED.getCode()){
+            /*如果finish则不可以进行修改取消操作*/
+            return responseFromServer.illegal("不可取消已完成的订单");
+        }
+
         reservation.setStateEnum(ReservationCode.CANCELLED.getCode());
         if(reservationDAO.updateById(reservation)!=1){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return responseFromServer.error();
+            return responseFromServer.error("修改状态错误");
         }
         return responseFromServer.success();
     }

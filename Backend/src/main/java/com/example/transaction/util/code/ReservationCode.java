@@ -5,7 +5,7 @@ public enum ReservationCode {
     CANCELLED(-1,"CANCELLED"),
     WAITING(0,"WAITING"),
     VALIDATE(1,"VALIDATE"),
-    SUCCESS(2,"SUCCESS");
+    FINISHED(2,"FINISHED");
 
     private final int code;
     private final String desc;
