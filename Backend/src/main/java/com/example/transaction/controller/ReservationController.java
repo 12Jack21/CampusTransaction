@@ -5,6 +5,7 @@ import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
 import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.code.ReservationCode;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +40,7 @@ public class ReservationController {
             return responseFromServer.error();
         }else{
             reservation.setAccountId(account.getId());
+            reservation.setStateEnum(ReservationCode.WAITING.getCode());
             return reservationService.setUpReservation(reservation);
         }
     }
@@ -78,27 +80,34 @@ public class ReservationController {
 
 
     /**
-     *
+     * 设置预约成功----减少库存
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/validateReservation")
     public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session){
-        /*TODO*/
         Account account = (Account) session.getAttribute("currentAccount");
-        if(AccountVerify.verify(account,session)){
-            /*操作用户是对应的用户*/
+        if(reservation.getId()==null)
+            return responseFromServer.error();
+        return reservationService.validateReservation(reservation.getId(),account);
+    }
 
-        }else{
-            return responseFromServer.illegal();
-        }
-        /*检查*/
-        /*修改reservation状态*/
-        /*修改commodity库存*/
+
+
+    @RequestMapping("/finishReservation")
+    public responseFromServer finishBuyerReservation(@RequestBody Reservation reservation,HttpSession session){
+        Account account = new Account(reservation.getId());
+        /*判断当前预约是validate的*/
         return null;
     }
 
+    @RequestMapping("/finishSellerReservation")
+    public responseFromServer finishSellerReservation(@RequestBody Reservation reservation,HttpSession session){
+        /*判断当前用户是卖家*/
+        /*判断当前预约的状态*/
+        return null;
+    }
 
     /*查看商品的预约*/
     @RequestMapping("/getReservationPageForCommodity")

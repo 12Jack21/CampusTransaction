@@ -1,11 +1,11 @@
 package com.example.transaction.util.code;
 
 public enum ReservationCode {
-
+    FAIL(-2,"FAIL"),
     CANCELLED(-1,"CANCELLED"),
     WAITING(0,"WAITING"),
-    SUCCESS(1,"SUCCESS"),
-    FAIL(2,"FAIL");
+    VALIDATE(1,"VALIDATE"),
+    SUCCESS(2,"SUCCESS");
 
     private final int code;
     private final String desc;

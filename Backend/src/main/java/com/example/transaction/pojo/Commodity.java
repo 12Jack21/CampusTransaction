@@ -24,7 +24,7 @@ public class Commodity {
     private String name;
     private Integer newness;
     private String description;
-    private Integer stock;
+    private Integer count;
 
     @TableField(exist = false)
     private List<Type> types;
@@ -34,4 +34,6 @@ public class Commodity {
     private CommodityList commodityList;
     @TableField(exist = false)
     private Reservation reservation;
+    @TableField(exist = false)
+    private Notice notice;
 }

@@ -3,7 +3,10 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.ReservationDAO;
+import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
 import com.example.transaction.util.MyPage;
@@ -103,21 +106,68 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
 
+    /**
+     * 设置预约成功
+     * @param reservationId
+     * @param account
+     * @return
+     */
     @Override
-    public responseFromServer validateReservation(Reservation reservation) {
+    @Transactional
+    public responseFromServer validateReservation(Integer reservationId, Account account) {
         /*TODO*/
+        /*获取reservation 检查id和用户id*/
+        Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
+        Commodity commodity = reservation.getCommodity();
+        if(commodity !=null
+                &&commodity.getNotice()!=null
+                &&commodity.getNotice().getAccountId()!=null){
+            if(commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
+                /*此时要操作的用户跟notice的卖家不符合 非法操作*/
+                return responseFromServer.illegal();
+        }else{
+            /*查询错误*/
+            return responseFromServer.error("查询错误");
+        }
+        /*用户验证成功*/
 
-        /*检查*/
+        /*验证reservation状态是否是等待状态*/
+        if(reservation.getStateEnum()!=ReservationCode.WAITING.getCode()){
+            return responseFromServer.error("预约状态错误");
+        }
+        /*验证状态成功*/
+
+        /*验证commodity库存*/
+        if(commodity.getCount()<reservation.getCount()){
+            /*库存不足*/
+            return responseFromServer.error("库存不足");
+        }
+        /*库存充足*/
+
         /*修改reservation状态*/
-        /*修改commodity库存*/
-        return null;
+        reservation.setStateEnum(ReservationCode.VALIDATE.getCode());
+        if(reservationDAO.updateById(reservation)!=1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error("修改预约状态错误");
+        }
+        Commodity newCommodity = new Commodity();
+        newCommodity.setCount(commodity.getCount()-reservation.getCount());
+        newCommodity.setId(commodity.getId());
+        if(commodityDAO.updateById(newCommodity)!=1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error("修改商品库存出错");
+        }
+        return responseFromServer.success();
     }
 
-    ReservationDAO reservationDAO;
 
+
+    ReservationDAO reservationDAO;
+    CommodityDAO commodityDAO;
     @Autowired
-    public ReservationServiceImpl(ReservationDAO reservationDAO){
+    public ReservationServiceImpl(ReservationDAO reservationDAO,CommodityDAO commodityDAO){
         this.reservationDAO = reservationDAO;
+        this.commodityDAO = commodityDAO;
     }
 
 

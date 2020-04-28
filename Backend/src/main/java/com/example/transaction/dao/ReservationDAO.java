@@ -41,4 +41,18 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Select("select * from reservation ${ew.customSqlSegment}")
     @ResultMap(value = {"reservationMap"}) //复用上述外键查找
     List<Reservation> getWithCondition(@Param("ew")QueryWrapper<Reservation> queryWrapper);
+
+    /**
+     * 查询商品，包括notice
+     * @param id
+     * @return
+     */
+    @Select("select from reservation where id = #{id}")
+    @Results(
+            id = "reservation-detailedCommodity-map",value = {
+                    @Result(property = "commodity",column = "commodity_id",javaType = Commodity.class, one = @One(
+                            select = "com.examp;e.transaction.dao.CommodityDAO.selectWithAllInfoById"
+                    ))
+    })
+    Reservation selectWithDetailedCommodityById(Integer id);
 }
