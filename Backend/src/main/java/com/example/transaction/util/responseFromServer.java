@@ -1,4 +1,5 @@
 package com.example.transaction.util;
+import com.example.transaction.util.code.ResponseCode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.io.Serializable;
@@ -85,4 +86,13 @@ public class responseFromServer<T> implements Serializable {
         return new responseFromServer<T>(errorCode,errorMessage);
     }
 
+    /*非法访问*/
+    public static <T> responseFromServer<T> illegal(String errorMessage){
+        return new responseFromServer<T>(ResponseCode.ILLEGAL_ARGUMENT.getCode(),errorMessage);
+    }
+
+    /*非法访问*/
+    public static <T> responseFromServer<T> illegal(){
+        return new responseFromServer<T>(ResponseCode.ILLEGAL_ARGUMENT.getCode());
+    }
 }

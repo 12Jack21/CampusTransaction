@@ -1,10 +1,12 @@
 package com.example.transaction.util.shiro;
 
 import org.apache.shiro.cache.CacheManager;
+import org.apache.shiro.session.mgt.SessionManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +23,30 @@ import java.util.Map;
  * @Date: 2020/4/25 20:56
  */
 public class ShiroConfig {
+    /**
+     * Session Manager：会话管理
+     * 即用户登录后就是一次会话，在没有退出之前，它的所有信息都在会话中；
+     * 会话可以是普通JavaSE环境的，也可以是如Web环境的；
+     */
+    @Bean("sessionManager")
+    public SessionManager sessionManager(){
+        DefaultWebSessionManager sessionManager = new DefaultWebSessionManager();
+        //设置session过期时间
+        sessionManager.setGlobalSessionTimeout(60 * 60 * 1000);
+        sessionManager.setSessionValidationSchedulerEnabled(true);
+        // 去掉shiro登录时url里的JSESSIONID
+        sessionManager.setSessionIdUrlRewritingEnabled(false);
+        return sessionManager;
+    }
+
+    /**
+     * 管理Shiro中一些bean的生命周期
+     */
+    @Bean("lifecycleBeanPostProcessor")
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
     //不加这个注解不生效，具体不详
     @Bean
     @ConditionalOnMissingBean
@@ -51,7 +77,8 @@ public class ShiroConfig {
     }
 
     /**
-     * Filter工厂，设置对应的过滤条件和跳转条件
+     * ShiroFilter是整个Shiro的入口点，用于拦截需要安全控制的请求进行处理
+     * Filter工厂，设置对应的过滤条件和跳转条件，
      * @param securityManager
      * @return
      */
@@ -64,11 +91,16 @@ public class ShiroConfig {
         /*  配置拦截过滤器链，
             map的键 : 资源地址 ;
             map的值 : 所有默认Shiro过滤器实例名 默认Shiro过滤器实例*/
-        // authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问
+        // authc:所有url都必须认证通过才可以访问;
+        // anon:所有url都都可以匿名访问
         Map<String, String> filterMap = new HashMap<>();
+        /*公开地址*/
         filterMap.put("/static/**", "anon"); // 公开访问的资源
         filterMap.put("/account/login", "anon"); // 登录地址放开
+        filterMap.put("/notice/getRecentNoticePage", "anon"); // 获取首页最新通告
+
         filterMap.put("/account/logout", "logout"); // 配置登出页,shiro已经帮我们实现了跳转
+
         //这行代码必须放在所有权限设置的最后，不然会导致所有 url 都被拦截 剩余的都需要认证
         filterMap.put("/**", "authc"); // 所有资源都需要经过验证
         /*

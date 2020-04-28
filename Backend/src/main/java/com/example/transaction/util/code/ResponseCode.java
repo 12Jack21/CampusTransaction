@@ -1,4 +1,4 @@
-package com.example.transaction.util;
+package com.example.transaction.util.code;
 /**
  * 返回状态的枚举
  */

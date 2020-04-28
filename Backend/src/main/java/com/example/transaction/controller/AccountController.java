@@ -2,6 +2,7 @@ package com.example.transaction.controller;
 
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
+import com.example.transaction.util.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName: AccountController
@@ -75,6 +78,48 @@ public class AccountController {
             usernamePasswordToken.clear();
             return responseFromServer.error();
         }
+
+    }
+
+    /**
+     * 检查当前用户名是否被使用
+     * @param userName
+     * @return
+     */
+    @RequestMapping("/verifyUserName")
+    public responseFromServer verifyUserName(@RequestBody String userName){
+        if(userName==null||userName==""){
+            return responseFromServer.error();
+        }else{
+            return accountService.verifyUserName(userName);
+        }
+    }
+
+    /**
+     * 注册
+     * @param account
+     * @return
+     */
+    @RequestMapping("/register")
+    public responseFromServer register(@RequestBody Account account){
+        return accountService.register(account);
+    }
+
+
+    /**
+     * 更新用户信息
+     * @param account
+     * @param session
+     * @return
+     */
+    @RequestMapping("/updateUser")
+    public responseFromServer updateUser(@RequestBody Account account, HttpSession session){
+        /*验证当前用户id与更新信息中id是否相同
+         * 避免用户非法修改其他用户信息*/
+        if(AccountVerify.verify(account,session)){
+            return accountService.updateAccount(account);
+        }
+        return responseFromServer.error("非法操作");
 
     }
 

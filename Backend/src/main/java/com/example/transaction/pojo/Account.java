@@ -38,4 +38,7 @@ public class Account {
     @TableField(exist = false)
     private List<Subscription> subscriptionList;
 
+    public Account(Integer accountId){
+        this.id = accountId;
+    }
 }
