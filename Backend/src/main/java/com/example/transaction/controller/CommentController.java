@@ -4,13 +4,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @ClassName: SearchController
+ * @ClassName: CommentController
  * @Description: TODO
  * @Author: 曾志昊
- * @Date: 2020/4/29 1:02
+ * @Date: 2020/4/29 1:42
  */
 @RestController
-@RequestMapping("/search")
-public class SearchController {
-
+@RequestMapping("/comment")
+public class CommentController {
 }

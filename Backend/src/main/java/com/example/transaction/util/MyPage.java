@@ -36,6 +36,6 @@ public class MyPage<T> {
         this.pageIndex = page.getCurrent();
         this.pageCount = page.getPages();
         this.pageList = page.getRecords();
-        this.pageSize = page.getSize();
+        this.pageSize = pageList.size();
     }
 }

@@ -12,8 +12,10 @@ import com.example.transaction.util.responseFromServer;
  * @Date: 2020/4/28 2:07
  */
 public interface NotifyService {
-    public responseFromServer pushNotify(Notify notify);
-    public responseFromServer getNotifyPage(QueryWrapper queryWrapper, int pageIndex);
-    public responseFromServer readNotify(Notify notify);
-    public responseFromServer getUnreadNotify(Account account);
+    responseFromServer pushNotify(Notify notify);
+    responseFromServer getNotifyPage(QueryWrapper queryWrapper,Integer pageIndex);
+    responseFromServer getUnreadNotifyCount(Integer accountId);
+    responseFromServer getUnreadNotify(Integer accountId,Integer pageIndex);
+    responseFromServer getAllNotify(Integer accountId,Integer pageIndex);
+    responseFromServer readNotify(Integer notifyId);
 }
