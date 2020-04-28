@@ -29,6 +29,11 @@ public class Reservation {
     private Integer accountId;
     @TableField(value = "commodity_id")
     private Integer commodityId;
+    @TableField(value = "sellerFinished")
+    private Boolean seller_finished;
+    @TableField(value = "buyerFinished")
+    private Boolean buyer_finished;
+
 
     @TableField(exist = false)
     private Account user;

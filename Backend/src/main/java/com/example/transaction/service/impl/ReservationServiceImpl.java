@@ -183,7 +183,29 @@ public class ReservationServiceImpl implements ReservationService {
         return responseFromServer.success();
     }
 
-
+    /**
+     * 设置订单完成
+     * @param reservationId
+     * @param accountId
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer finishReservation(Integer reservationId, Integer accountId) {
+        Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
+        Commodity commodity = reservation.getCommodity();
+        if(commodity.getNotice().getAccountId().intValue()!=accountId.intValue()){
+            return responseFromServer.illegal();
+        }else{
+            reservation.setStateEnum(ReservationCode.FINISHED.getCode());
+            if(reservationDAO.updateById(reservation)!=1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }else{
+                return responseFromServer.success();
+            }
+        }
+    }
 
     ReservationDAO reservationDAO;
     CommodityDAO commodityDAO;
