@@ -38,7 +38,7 @@ public class CommodityServiceImpl implements CommodityService {
      * count为偶数:顺序（从小到大）；奇数:倒序
      * @return Commodity数组
      */
-    public List<Commodity> getByNameSortedByNewness(String name){
+    public responseFromServer getByNameSortedByNewness(String name){
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", "%"+name+"%");
         if(count%2 == 0)
@@ -47,7 +47,7 @@ public class CommodityServiceImpl implements CommodityService {
             queryWrapper.orderByDesc("newness");
         count++;
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper); //查询得到的所有结果，但是需要考虑商品的数据和截止日期
-        return selectByCountAndDate(commodities);
+        return responseFromServer.success(selectByCountAndDate(commodities));
     }
 
     /**
@@ -55,7 +55,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param typeId 标签
      * @return Commodity数组
      */
-    public List<Commodity> getByTypeId(Integer typeId){
+    public responseFromServer getByTypeId(Integer typeId){
         List<Commodity> commodities = selectByCountAndDate(commodityDAO.selectAllInfo()); //查询得到的所有结果，但是需要考虑商品的数据和截止日期
         List<Commodity> results = new ArrayList<>();
         for(Commodity commodity:commodities){
@@ -66,7 +66,7 @@ public class CommodityServiceImpl implements CommodityService {
                 }
             }
         }
-        return results;
+        return responseFromServer.success(results);
     }
 
     /**
@@ -75,12 +75,12 @@ public class CommodityServiceImpl implements CommodityService {
      * @param high 最高价
      * @return Commodity数组
      */
-    public List<Commodity> getBetweenPrice(String name, Integer low, Integer high){
+    public responseFromServer getBetweenPrice(String name, Integer low, Integer high){
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", "%"+name+"%");
         queryWrapper.between("expected_price", low, high);
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-        return selectByCountAndDate(commodities);
+        return responseFromServer.success(selectByCountAndDate(commodities));
     }
 
     /**
@@ -88,7 +88,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param name 商品名
      * @return Commodity数组
      */
-    public List<Commodity> sortByCredit(String name){
+    public responseFromServer sortByCredit(String name){
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", "%"+name+"%");
         List<Commodity> commodities = selectByCountAndDate(commodityDAO.selectWithCondition(queryWrapper));
@@ -107,7 +107,7 @@ public class CommodityServiceImpl implements CommodityService {
                 return 0;
             }
         });
-        return commodities;
+        return responseFromServer.success(commodities);
     }
 
     /**

@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
  * @ClassName: CommodityController
  * @Description: TODO
@@ -33,7 +31,7 @@ public class CommodityController {
      * @return Commodity数组
      */
     @RequestMapping("/sortByNewness")
-    public List<Commodity> getByNameSortedByNewness(@RequestParam(value = "name") String name){
+    public responseFromServer getByNameSortedByNewness(@RequestParam(value = "name") String name){
         return commodityService.getByNameSortedByNewness(name);
     }
 
@@ -43,7 +41,7 @@ public class CommodityController {
      * @return Commodity数组
      */
     @RequestMapping("/getByType")
-    public List<Commodity> getByTypeId(@RequestParam(value = "typeId")Integer typeId){
+    public responseFromServer getByTypeId(@RequestParam(value = "typeId")Integer typeId){
         return commodityService.getByTypeId(typeId);
     }
 
@@ -55,7 +53,7 @@ public class CommodityController {
      * @return Commodity数组
      */
     @RequestMapping("/betweenPrice")
-    public List<Commodity> getBetweenPrice(@RequestParam(value = "name") String name, @RequestParam(value = "low")Integer low, @RequestParam(value = "high")Integer high){
+    public responseFromServer getBetweenPrice(@RequestParam(value = "name") String name, @RequestParam(value = "low")Integer low, @RequestParam(value = "high")Integer high){
         return commodityService.getBetweenPrice(name, low, high);
     }
 
@@ -65,7 +63,7 @@ public class CommodityController {
      * @return Commodity数组
      */
     @RequestMapping("/sortByCredit")
-    public List<Commodity> sortByCredit(@RequestParam(value = "name") String name){
+    public responseFromServer sortByCredit(@RequestParam(value = "name") String name){
         return commodityService.sortByCredit(name);
     }
 
