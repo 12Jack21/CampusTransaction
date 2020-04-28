@@ -106,6 +106,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public responseFromServer validateReservation(Reservation reservation) {
         /*TODO*/
+
         /*检查*/
         /*修改reservation状态*/
         /*修改commodity库存*/

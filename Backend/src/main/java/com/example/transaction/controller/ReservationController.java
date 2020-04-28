@@ -51,7 +51,7 @@ public class ReservationController {
      */
     @RequestMapping("/cancelReservation")
     public responseFromServer cancelReservation(@RequestBody Reservation reservation,HttpSession session){
-        Account account = (Account)session.getAttribute("currentAccount");
+        Account account = new Account(reservation.getId());
         if(AccountVerify.verify(account,session)){
             return reservationService.cancelReservation(reservation);
         }else{
@@ -68,7 +68,7 @@ public class ReservationController {
      */
     @RequestMapping("/deleteReservation")
     public responseFromServer deleteReservation(@RequestBody Reservation reservation,HttpSession session){
-        Account account = (Account)session.getAttribute("currentAccount");
+        Account account = new Account(reservation.getId());
         if(AccountVerify.verify(account,session)){
             return reservationService.deleteReservation(reservation);
         }else{
@@ -86,6 +86,13 @@ public class ReservationController {
     @RequestMapping("/validateReservation")
     public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session){
         /*TODO*/
+        Account account = (Account) session.getAttribute("currentAccount");
+        if(AccountVerify.verify(account,session)){
+            /*操作用户是对应的用户*/
+
+        }else{
+            return responseFromServer.illegal();
+        }
         /*检查*/
         /*修改reservation状态*/
         /*修改commodity库存*/

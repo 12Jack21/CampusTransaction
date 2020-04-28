@@ -32,6 +32,7 @@ public class NotifyServiceImpl implements NotifyService {
         }
     }
 
+
     @Override
     public responseFromServer getNotifyPage(QueryWrapper queryWrapper, int pageIndex) {
         return null;
