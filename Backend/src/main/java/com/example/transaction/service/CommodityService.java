@@ -16,6 +16,11 @@ import javax.servlet.http.HttpSession;
 public interface CommodityService {
     //根据id获取商品
     public responseFromServer getById(Integer id);
+
+    public responseFromServer getDetailedCommodity(Integer id);
+
+    public responseFromServer getSimpleCommodity(Integer id);
+
     //商品名称模糊检索，崭新程度排序
     public responseFromServer getByNameSortedByNewness(Integer pageIndex, String name);
     //根据类型分类

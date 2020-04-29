@@ -66,6 +66,18 @@ public class CommodityServiceImpl implements CommodityService {
         return responseFromServer.success(commodities.get(0));
     }
 
+    public responseFromServer getSimpleCommodity(Integer id){
+        Commodity commodity = commodityDAO.getSimpleCommodityById(id);
+        if(commodity==null){
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
+    }
+
+    public responseFromServer getDetailedCommodity(Integer id){
+        return getById(id);
+    }
+
     /**
      * 商品名称模糊检索，崭新程度排序
      * @param pageIndex 当前页数

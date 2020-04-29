@@ -2,6 +2,8 @@ package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
@@ -55,4 +57,8 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
                     ))
     })
     Reservation selectWithDetailedCommodityById(Integer id);
+
+    @Select("select * from reservation r,commodity c,notice n where" +
+            "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id}")
+    IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id);
 }

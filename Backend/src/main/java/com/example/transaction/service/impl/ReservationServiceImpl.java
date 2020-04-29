@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.ReservationDAO;
-import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
@@ -114,6 +113,20 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /**
+     * 获取向我的预约请求
+     * @param accountId
+     * @param pageIndex
+     * @return
+     */
+    @Override
+    public responseFromServer getReservationRequest(Integer accountId,Integer pageIndex) {
+        Page<Reservation> page = new Page<>(pageIndex,Nums.pageSize);
+        IPage<Reservation> reservationPage = reservationDAO.getReservationRequestPage(page,accountId);
+        MyPage myPage = new MyPage(reservationPage);
+        return responseFromServer.success(myPage);
+    }
+
+    /**
      * 更新预约
      * @param reservation
      * @return
@@ -127,6 +140,26 @@ public class ReservationServiceImpl implements ReservationService {
         }
         return responseFromServer.success();
     }
+
+    /**
+     * 更新预约
+     * @param reservation
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer updateBuyerReservation(Reservation reservation) {
+        Reservation oldReservation = reservationDAO.selectById(reservation.getId());
+        if(oldReservation.getStateEnum() != ReservationCode.WAITING.getCode()){
+            return responseFromServer.illegal();
+        }
+        if(reservationDAO.updateById(reservation)!=1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return  responseFromServer.error();
+        }
+        return responseFromServer.success();
+    }
+
 
 
     /**
@@ -172,24 +205,18 @@ public class ReservationServiceImpl implements ReservationService {
     /**
      * 设置订单完成
      * @param reservationId
-     * @param accountId
      * @return
      */
     @Override
     @Transactional
-    public responseFromServer finishReservation(Integer reservationId, Integer accountId) {
+    public responseFromServer finishReservation(Integer reservationId) {
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        Commodity commodity = reservation.getCommodity();
-        if(commodity.getNotice().getAccountId().intValue()!=accountId.intValue()){
-            return responseFromServer.illegal();
+        reservation.setStateEnum(ReservationCode.FINISHED.getCode());
+        if(reservationDAO.updateById(reservation)!=1){
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
         }else{
-            reservation.setStateEnum(ReservationCode.FINISHED.getCode());
-            if(reservationDAO.updateById(reservation)!=1){
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return responseFromServer.error();
-            }else{
-                return responseFromServer.success();
-            }
+            return responseFromServer.success();
         }
     }
 
