@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.transaction.dao.AccountDAO">
+    <!--获取账号信誉情况-->
+    <resultMap id="estimateMap" type="account">
+        <id property="id" column="id"/>
+        <association property="estimate" javaType="com.example.transaction.pojo.Estimate" column="id" select="com.example.transaction.dao.EstimateDAO.getByAccountId"/>
+    </resultMap>
+    <!--查询与account关联的所有notice-->
+    <resultMap id="accountWithNotices" type="account">
+        <id property="id" column="id"/>
+        <collection property="noticeList" ofType="com.example.transaction.pojo.Notice" column="id" select="com.example.transaction.dao.NoticeDAO.getNoticeByOwnerId"/>
+    </resultMap>
+    <!--查询与account关联的所有reservation-->
+    <resultMap id="accountWithReservations" type="account">
+        <id property="id" column="id"/>
+        <collection property="reservationList" ofType="com.example.transaction.pojo.Reservation" column="id" select="com.example.transaction.dao.ReservationDAO.getAllReservationByAccountId"/>
+    </resultMap>
+    <!--查询用户所有历史记录-->
+    <resultMap id="searchMap" type="search">
+        <collection property="searchList" ofType="com.example.transaction.pojo.Search" column="id" select="com.example.transaction.dao.SearchDAO.getAllSearchByAccountId"/>
+    </resultMap>
+    <!--查询所有与用户关联的订阅-->
+    <resultMap id="subscriptionMap" type="subscription">
+        <collection property="subscriptionList" ofType="com.example.transaction.pojo.Subscription" column="id" select="com.example.transaction.dao.SubscriptionDAO.getAllSubscriptionByAccountId"/>
+    </resultMap>
+
+    <select id="getAccountCreditById" resultMap="estimateMap" resultType="com.example.transaction.pojo.Account">
+        select * from account where id=#{id};
+    </select>
+</mapper>

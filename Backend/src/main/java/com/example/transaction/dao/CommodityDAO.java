@@ -23,6 +23,13 @@ import java.util.List;
 @Repository
 public interface CommodityDAO extends BaseMapper<Commodity> {
 
+//    @Results(id="commodity_detailedMap-01", value = {
+//            @Result(id = true, property = "id", column = "id"),
+//            @Result(property = "commodityLists", column = "id", many = @Many(
+//                    select = "com.example.transaction.dao.CommodityDAO.getInfoByCommodityId"
+//            ))
+//    })
+    @Select("select * from commodity where id = #{id}")
     Commodity selectDetailedCommodity(Integer id);
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);

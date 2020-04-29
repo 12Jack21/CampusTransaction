@@ -1,8 +1,13 @@
 package com.example.transaction.daoTest;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.util.MyPage;
+import com.example.transaction.util.Nums;
+import com.example.transaction.util.responseFromServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,6 +21,14 @@ class NoticeDAOTest {
     @Autowired
     private NoticeDAO noticeDAO;
 
+    @Test
+    void testDetailedPage(){
+        Page<Notice> page = new Page<>(1, Nums.pageSize);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.ge("id",1);
+        IPage<Notice> noticeIPage = noticeDAO.testDetailed(page,queryWrapper);
+        MyPage myPage = new MyPage(noticeIPage);
+    }
 
     @Test
     void selectById(){

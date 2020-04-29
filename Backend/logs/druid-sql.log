@@ -1,0 +1,144 @@
+[2020-04-29 15:48:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:48:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:48:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where id >= 1
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 601.9873 millis. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 140, 10]
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id >= 1
+limit 140, 10
+[2020-04-29 15:48:21] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 26.1749 millis. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where id >= 1
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 163.8352 millis. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 140, 10]
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id >= 1
+limit 140, 10
+[2020-04-29 15:50:27] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 4.9344 millis. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where id >= 1
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 175.7687 millis. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 0, 10]
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id >= 1
+limit 0, 10
+[2020-04-29 15:51:26] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 9.2741 millis. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:53:29] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from notice where id=?
+[2020-04-29 15:53:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:53:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:53:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from notice
+where id = 1
+[2020-04-29 15:53:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 176.7727 millis. select * from notice where id=?
+[2020-04-29 15:56:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from notice where id=?
+[2020-04-29 15:56:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:56:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:56:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from notice
+where id = 1
+[2020-04-29 15:56:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 233.9472 millis. select * from notice where id=?
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from notice where id=?
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from notice
+where id = 1
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 254.3877 millis. select * from notice where id=?
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from commodity where id = ?
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1]
+[2020-04-29 15:57:55] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER]
+[2020-04-29 15:57:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from commodity
+where id = 1
+[2020-04-29 15:57:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 8.9697 millis. select * from commodity where id = ?
+[2020-04-29 15:58:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:58:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 15:58:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where id >= 1
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 203.6784 millis. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 0, 10]
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id >= 1
+limit 0, 10
+[2020-04-29 15:58:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 4.8071 millis. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where id >= 1
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 214.3672 millis. SELECT COUNT(1) FROM notice WHERE (id >= ?)
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 0, 10]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where id >= 1
+limit 0, 10
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 10.4765 millis. select * from notice WHERE (id >= ?) LIMIT ?,?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from commodity where id = ?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from commodity
+where id = 1
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 15.7218 millis. select * from commodity where id = ?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from commodity where id = ?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [2]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from commodity
+where id = 2
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 6.4228 millis. select * from commodity where id = ?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. select * from commodity where id = ?
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [3]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select *
+from commodity
+where id = 3
+[2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 110.8365 millis. select * from commodity where id = ?

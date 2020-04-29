@@ -107,7 +107,7 @@ public class ReservationController {
                     return responseFromServer.error("查询错误");
                 }
                 /*用户验证成功*/
-                return reservationService.validateReservation(reservation.getId(),account);
+                return reservationService.validateReservation(reservation);
             }else{
                 return responseFromServer.error();
             }
