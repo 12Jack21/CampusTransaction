@@ -24,14 +24,18 @@ public class Commodity {
     private String name;
     private Integer newness;
     private String description;
-    private Integer stock;
+    @TableField(value = "notice_id")
+    private Integer noticeId;
+    @TableField(value = "initial_count")
+    private Integer initialCount;
+    private Integer count;
 
     @TableField(exist = false)
     private List<Type> types;
     @TableField(exist = false)
     private List<CommodityImage> commodityImages;
     @TableField(exist = false)
-    private CommodityList commodityList;
+    private Notice notice;
     @TableField(exist = false)
-    private Reservation reservation;
+    private List<Reservation> reservation;
 }

@@ -20,10 +20,6 @@
     <resultMap id="searchMap" type="search">
         <collection property="searchList" ofType="com.example.transaction.pojo.Search" column="id" select="com.example.transaction.dao.SearchDAO.getAllSearchByAccountId"/>
     </resultMap>
-    <!--查询与用户关联的通知-->
-    <resultMap id="accountNotifyMap" type="accountNotify">
-        <collection property="accountNotifyList" ofType="com.example.transaction.pojo.AccountNotify" column="id" select="com.example.transaction.dao.AccountNotifyDAO.getAllByAccountId"/>
-    </resultMap>
     <!--查询所有与用户关联的订阅-->
     <resultMap id="subscriptionMap" type="subscription">
         <collection property="subscriptionList" ofType="com.example.transaction.pojo.Subscription" column="id" select="com.example.transaction.dao.SubscriptionDAO.getAllSubscriptionByAccountId"/>

@@ -2,6 +2,7 @@ package com.example.transaction.daoTest;
 
 import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.pojo.Type;
+import org.apache.ibatis.annotations.Options;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,14 +28,15 @@ public class TypeDAOTest {
     }
 
     @Test
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     void testInsert(){
         Type type = new Type();
-        type.setId(3);
+//        type.setId(3);
         type.setValue("娱乐");
         type.setCommodityId(1);
 
         int result = typeDao.insert(type);
-        System.out.println(result);
+        System.out.println(type);
     }
 
     @Test

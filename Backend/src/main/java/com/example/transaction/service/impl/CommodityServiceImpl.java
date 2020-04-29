@@ -1,18 +1,33 @@
 package com.example.transaction.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
-import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.Estimate;
-import com.example.transaction.pojo.Type;
+import com.example.transaction.dao.CommodityImageDAO;
+import com.example.transaction.dao.TypeDAO;
+import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
+import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.MyPage;
+import com.example.transaction.util.Nums;
 import com.example.transaction.util.responseFromServer;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author: 高战立
@@ -22,32 +37,43 @@ import java.util.*;
 
 @Service
 public class CommodityServiceImpl implements CommodityService {
-    //商品名搜索； 搜索之后排序方式：崭新程度、价格区间、信誉排序  模糊查找
-    //商品分类、修改商品信息
-    //插入、删除、展示所有商品
     private final CommodityDAO commodityDAO;
+    private final TypeDAO typeDAO;
+    private final CommodityImageDAO commodityImageDAO;
     private int count = 0;
     @Autowired
-    CommodityServiceImpl(CommodityDAO commodityDAO){
+    CommodityServiceImpl(CommodityDAO commodityDAO, TypeDAO typeDAO, CommodityImageDAO commodityImageDAO){
         this.commodityDAO = commodityDAO;
+        this.typeDAO = typeDAO;
+        this.commodityImageDAO = commodityImageDAO;
+    }
+
+    /**
+     * 根据id获取商品信息
+     * @param id 商品id
+     * @return 执行结果
+     */
+    public responseFromServer getById(Integer id){
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", id);
+        //id查找是唯一的
+        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
+        return responseFromServer.success(commodities.get(0));
     }
 
     /**
      * 商品名称模糊检索，崭新程度排序
+     * @param pageIndex 当前页数
      * @param name 商品名
      * count为偶数:顺序（从小到大）；奇数:倒序
      * @return Commodity数组
      */
-    public responseFromServer getByNameSortedByNewness(String name){
-        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", "%"+name+"%");
-        if(count%2 == 0)
-            queryWrapper.orderByAsc("newness");
-        else
-            queryWrapper.orderByDesc("newness");
-        count++;
-        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper); //查询得到的所有结果，但是需要考虑商品的数据和截止日期
-        return responseFromServer.success(selectByCountAndDate(commodities));
+    public responseFromServer getByNameSortedByNewness(Integer pageIndex, String name){
+        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByNewness(page, name, timestamp);
+        MyPage<Commodity> myPage = new MyPage<>(iPage);
+        return responseFromServer.success(myPage);
     }
 
     /**
@@ -55,18 +81,12 @@ public class CommodityServiceImpl implements CommodityService {
      * @param typeId 标签
      * @return Commodity数组
      */
-    public responseFromServer getByTypeId(Integer typeId){
-        List<Commodity> commodities = selectByCountAndDate(commodityDAO.selectAllInfo()); //查询得到的所有结果，但是需要考虑商品的数据和截止日期
-        List<Commodity> results = new ArrayList<>();
-        for(Commodity commodity:commodities){
-            for(Type type:commodity.getTypes()){
-                if(type.getId().equals(typeId)){
-                    results.add(commodity);
-                    break;
-                }
-            }
-        }
-        return responseFromServer.success(results);
+    public responseFromServer getByTypeId(Integer pageIndex, Integer typeId){
+        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByType(page, typeId, timestamp);
+        MyPage<Commodity> myPage = new MyPage<>(iPage);
+        return responseFromServer.success(myPage);
     }
 
     /**
@@ -75,12 +95,12 @@ public class CommodityServiceImpl implements CommodityService {
      * @param high 最高价
      * @return Commodity数组
      */
-    public responseFromServer getBetweenPrice(String name, Integer low, Integer high){
-        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", "%"+name+"%");
-        queryWrapper.between("expected_price", low, high);
-        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-        return responseFromServer.success(selectByCountAndDate(commodities));
+    public responseFromServer getBetweenPrice(Integer pageIndex, String name, Integer low, Integer high){
+        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.betweenPrice(page, name, low, high, timestamp);
+        MyPage<Commodity> myPage = new MyPage<>(iPage);
+        return responseFromServer.success(myPage);
     }
 
     /**
@@ -88,26 +108,12 @@ public class CommodityServiceImpl implements CommodityService {
      * @param name 商品名
      * @return Commodity数组
      */
-    public responseFromServer sortByCredit(String name){
-        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like("name", "%"+name+"%");
-        List<Commodity> commodities = selectByCountAndDate(commodityDAO.selectWithCondition(queryWrapper));
-        commodities.sort(new Comparator<Commodity>() {
-            @Override
-            public int compare(Commodity o1, Commodity o2) {
-                Estimate estimate1 = o1.getCommodityList().getNotice().getUser().getEstimate();
-                Estimate estimate2 = o2.getCommodityList().getNotice().getUser().getEstimate();
-                double credit1 = estimate1.getSellCredit() + estimate1.getPurchaseCredit();
-                double credit2 = estimate2.getSellCredit() + estimate2.getPurchaseCredit();
-
-                if(credit1 > credit2)
-                    return -1;
-                else if(credit1 <credit2)
-                    return 1;
-                return 0;
-            }
-        });
-        return responseFromServer.success(commodities);
+    public responseFromServer sortByCredit(Integer pageIndex, String name){
+        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByCredit(page, name, timestamp);
+        MyPage<Commodity> myPage = new MyPage<>(iPage);
+        return responseFromServer.success(myPage);
     }
 
     /**
@@ -115,18 +121,28 @@ public class CommodityServiceImpl implements CommodityService {
      * @param commodity 商品
      * @return 执行结果
      */
-    public responseFromServer insertCommodity(Commodity commodity){
-        commodityDAO.insert(commodity);
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
+    public responseFromServer insertCommodity(Commodity commodity, HttpSession session){
+        if(isIdentityError(commodity, session))  //身份检查
+            return responseFromServer.illegal();
+
+        if(commodityDAO.insert(commodity) != 1 || !insertCommodityInfo(commodity)){
+            /*回滚事务*/
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
         return responseFromServer.success();
     }
 
     /**
-     * 更新商品信息
+     * 更新商品
      * @param commodity 商品
      * @return 执行结果
      */
-    public responseFromServer updateCommodity(Commodity commodity){
-        if(commodityDAO.updateById(commodity) != 1){
+    public responseFromServer updateCommodity(Commodity commodity, HttpSession session){
+        if(isIdentityError(commodity, session))  //身份检查
+            return responseFromServer.illegal();
+        if(commodityDAO.updateById(commodity) != 1 || !updateCommodityInfo(commodity)){
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
@@ -134,6 +150,171 @@ public class CommodityServiceImpl implements CommodityService {
         else{
             return responseFromServer.success();
         }
+    }
+
+    /**
+     * 删除商品
+     * @param commodity 商品名
+     * @param session HttpSession
+     * @return 执行结果
+     */
+    public responseFromServer deleteCommodity(Commodity commodity, HttpSession session){
+        if(isIdentityError(commodity, session))  //身份检查
+            return responseFromServer.illegal();
+
+        deleteCommodityInfo(commodity);
+        if(commodityDAO.deleteById(commodity.getId()) != 1){
+            /*回滚事务*/
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        else{
+            return responseFromServer.success();
+        }
+    }
+
+    /**
+     * 添加商品类型、图片等信息
+     * @param commodity 商品
+     * @return 执行结果
+     */
+    @Transactional
+    public boolean insertCommodityInfo(Commodity commodity){
+        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
+        List<Type> typeList = commodity.getTypes();
+
+        for(CommodityImage commodityImage:commodityImageList){
+            commodityImage.setCommodityId(commodity.getId());
+            if(commodityImageDAO.insert(commodityImage) != 1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        for(Type type:typeList){
+            type.setCommodityId(commodity.getId());
+            if(typeDAO.insert(type) != 1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 更新商品信息
+     * @param commodity 商品
+     * @return 执行结果
+     */
+    @Transactional
+    public boolean updateCommodityInfo(Commodity commodity){
+        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
+        List<Type> typeList = commodity.getTypes();
+
+        for(CommodityImage commodityImage:commodityImageList){
+            commodityImage.setCommodityId(commodity.getId());
+            if(commodityImageDAO.updateById(commodityImage) != 1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        for(Type type:typeList){
+            type.setCommodityId(commodity.getId());
+            if(typeDAO.updateById(type) != 1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 查询某一notice下所有商品
+     * @param notice 通告
+     * @return 执行结果
+     */
+    public responseFromServer selectAllByNoticeId(Notice notice){
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("notice_id", notice.getId());
+        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
+        return responseFromServer.success(commodities);
+    }
+
+    /**
+     * 删除某一notice下所有商品
+     * @param notice 通告
+     * @param session HttpSession
+     * @return 执行结果
+     */
+    @Transactional
+    public responseFromServer deleteAllByNoticeId(Notice notice, HttpSession session){
+        Account account = new Account(notice.getAccountId());
+        if(!AccountVerify.verify(account, session))  //用户合法性检查
+            return responseFromServer.error();
+
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("notice_id", notice.getId());
+        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
+        for(Commodity commodity:commodities)
+            if(deleteCommodity(commodity, session).getStatus() == 1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }
+        return responseFromServer.success();
+    }
+
+    /**
+     * 删除图片、类型等信息,由于外键方式为CASCADE，因此只需删除本地缓存文件资源
+     * @param commodity 商品
+     */
+    public void deleteCommodityInfo(Commodity commodity){
+        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
+        for(CommodityImage commodityImage:commodityImageList){
+            String path = commodityImage.getImageUrl();
+            File file = new File(path);
+            file.delete();
+        }
+    }
+
+    /**
+     * 返回图片路径
+     * @param files 文件数组
+     * @return 执行结果
+     */
+    public responseFromServer imageUrl(MultipartFile[] files){
+        QueryWrapper<CommodityImage> queryWrapper = new QueryWrapper<>();
+        List<CommodityImage> commodityImages = commodityImageDAO.selectList(queryWrapper);
+        List<String> paths = new ArrayList<>(); //存储附件路径
+        for(MultipartFile file:files) {
+            try {
+                byte[] bytes = file.getBytes();
+                String base = System.getProperty("user.dir") + "\\images\\";
+                Path path = Paths.get(base + commodityImages.size() + 1);
+                //如果没有files文件夹，则创建
+                if (!Files.isWritable(path)) {
+                    Files.createDirectories(Paths.get(System.getProperty("user.dir")));
+                }
+                //文件写入指定路径
+                Files.write(path, bytes);
+                paths.add(base + commodityImages.size() + 1);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return responseFromServer.success(paths);
+    }
+
+    /**
+     * 用户身份检查
+     * @param commodity 商品
+     * @param session HttpSession
+     * @return 结果
+     */
+    public boolean isIdentityError(Commodity commodity, HttpSession session){
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", commodity.getId());
+        Account account = commodityDAO.selectWithCondition(queryWrapper).get(0).getNotice().getUser();
+        return !AccountVerify.verify(account, session);
     }
 
     /**
@@ -145,7 +326,7 @@ public class CommodityServiceImpl implements CommodityService {
         List<Commodity> results = new ArrayList<>();
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         for(Commodity commodity : commodities){
-            if(commodity.getCommodityList().getCount() > 0 && timestamp.before(commodity.getCommodityList().getNotice().getEndTime()))
+            if(commodity.getCount() > 0 && timestamp.before(commodity.getNotice().getEndTime()))
                 results.add(commodity);
         }
         return results;
