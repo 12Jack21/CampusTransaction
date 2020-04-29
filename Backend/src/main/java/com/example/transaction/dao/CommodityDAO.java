@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.pojo.Notify;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -23,14 +24,23 @@ import java.util.List;
 @Repository
 public interface CommodityDAO extends BaseMapper<Commodity> {
 
-//    @Results(id="commodity_detailedMap-01", value = {
-//            @Result(id = true, property = "id", column = "id"),
-//            @Result(property = "commodityLists", column = "id", many = @Many(
-//                    select = "com.example.transaction.dao.CommodityDAO.getInfoByCommodityId"
-//            ))
-//    })
     @Select("select * from commodity where id = #{id}")
-    Commodity selectDetailedCommodity(Integer id);
+    Commodity getSimpleCommodityById(Integer id);
+
+    @Results(id = "detailedCommodity_map", value = {
+            @Result(property = "notice", column = "notice_id", javaType = Notice.class, one = @One(
+                    select = "com.example.transaction.dao.NoticeDAO.selectById"
+            )),
+            @Result(property = "commodityImages", column = "id", javaType = List.class, many = @Many(
+                    select = "com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"
+            )),
+            @Result(property = "types", column = "id", javaType = List.class, many = @Many(
+                    select = "com.example.transaction.dao.typeDAO.getAllTypeByCommodityId"
+            ))
+    })
+    @Select("select * from commodity where id = #{id}")
+    Commodity getDetailedCommodityById(Integer id);
+
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
     //分页查询
@@ -43,4 +53,6 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     IPage<Commodity> betweenPrice(Page<?> page, String name, Integer low, Integer high, Timestamp timestamp);
     //商品名模糊分页查询, 所有者信誉排序
     IPage<Commodity> sortByCredit(Page<?> page, String name, Timestamp timestamp);
+
+
 }
