@@ -24,6 +24,10 @@ public class Commodity {
     private String name;
     private Integer newness;
     private String description;
+    @TableField(value = "notice_id")
+    private Integer noticeId;
+    @TableField(value = "initial_count")
+    private Integer initialCount;
     private Integer count;
 
     @TableField(exist = false)
@@ -31,9 +35,8 @@ public class Commodity {
     @TableField(exist = false)
     private List<CommodityImage> commodityImages;
     @TableField(exist = false)
-    private CommodityList commodityList;
-    @TableField(exist = false)
-    private Reservation reservation;
-    @TableField(exist = false)
     private Notice notice;
+    @TableField(exist = false)
+    private List<Reservation> reservation;
+
 }

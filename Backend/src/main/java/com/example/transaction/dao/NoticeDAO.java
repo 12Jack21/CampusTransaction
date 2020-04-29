@@ -20,7 +20,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
     @Results(id="noticeMap", value = {
             @Result(id = true, property = "id", column = "id"),
             @Result(property = "commodityLists", column = "id", many = @Many(
-                    select = "com.example.transaction.dao.CommodityListDAO.getAllCommodityListByNoticeId"
+                    select = "com.example.transaction.dao.CommodityDAO.getInfoByCommodityId"
             ))
     })
     @Select("select * from notice where id=#{id}")
