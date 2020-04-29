@@ -142,3 +142,639 @@ where id = 2
 from commodity
 where id = 3
 [2020-04-29 16:02:01] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 110.8365 millis. select * from commodity where id = ?
+[2020-04-29 17:43:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from commend where commodity_id=?
+[2020-04-29 17:43:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:43:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:43:55] ERROR 149 statementLogError - {conn-10001, pstmt-20000} execute error. select *
+from commend
+where commodity_id = 1 java.sql.SQLSyntaxErrorException: Table 'transaction.commend' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:370) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3461) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_execute(FilterEventAdapter.java:440) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_execute(FilterChainImpl.java:3459) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.proxy.jdbc.PreparedStatementProxyImpl.execute(PreparedStatementProxyImpl.java:167) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.pool.DruidPooledPreparedStatement.execute(DruidPooledPreparedStatement.java:497) ~[druid-1.1.20.jar:1.1.20]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:59) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.sun.proxy.$Proxy137.execute(Unknown Source) ~[?:?]
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:64) ~[mybatis-3.5.3.jar:3.5.3]
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:79) ~[mybatis-3.5.3.jar:3.5.3]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:63) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.sun.proxy.$Proxy135.query(Unknown Source) ~[?:?]
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doQuery(MybatisSimpleExecutor.java:67) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:324) ~[mybatis-3.5.3.jar:3.5.3]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.query(MybatisCachingExecutor.java:163) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.query(MybatisCachingExecutor.java:90) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147) ~[mybatis-3.5.3.jar:3.5.3]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:140) ~[mybatis-3.5.3.jar:3.5.3]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426) ~[mybatis-spring-2.0.3.jar:2.0.3]
+	at com.sun.proxy.$Proxy94.selectList(Unknown Source) ~[?:?]
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:223) ~[mybatis-spring-2.0.3.jar:2.0.3]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForMany(MybatisMapperMethod.java:177) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:78) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:96) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.sun.proxy.$Proxy111.getAllByCommodityId(Unknown Source) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:344) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:198) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at com.sun.proxy.$Proxy112.getAllByCommodityId(Unknown Source) ~[?:?]
+	at com.example.transaction.daoTest.CommentDAOTest.testGetAllByCommodityId(CommentDAOTest.java:25) ~[test-classes/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:675) ~[junit-platform-commons-1.5.2.jar:1.5.2]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:125) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:132) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:124) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:74) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:104) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:62) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:43) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:35) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:202) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:198) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at java.util.ArrayList.forEach(ArrayList.java:1540) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at java.util.ArrayList.forEach(ArrayList.java:1540) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:229) ~[junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:197) ~[junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:211) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:191) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:69) [junit5-rt.jar:?]
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58) [junit-rt.jar:?]
+
+[2020-04-29 17:44:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:44:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:44:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:44:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:44:30] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 146.2226 millis. select * from comment where commodity_id=?
+[2020-04-29 17:51:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:51:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:51:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:51:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:51:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 161.5503 millis. select * from comment where commodity_id=?
+[2020-04-29 17:53:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:53:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:53:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:53:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:53:27] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 120.6436 millis. select * from comment where commodity_id=?
+[2020-04-29 17:54:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 17:54:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:54:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:54:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 1
+[2020-04-29 17:54:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 124.4567 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 17:56:00] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:56:00] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:56:00] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:56:00] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:56:01] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 136.557 millis. select * from comment where commodity_id=?
+[2020-04-29 17:58:24] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:58:24] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:58:24] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:58:24] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:58:24] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 133.0651 millis. select * from comment where commodity_id=?
+[2020-04-29 17:59:03] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:59:03] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:59:03] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:59:03] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:59:03] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 141.5023 millis. select * from comment where commodity_id=?
+[2020-04-29 17:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 17:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 17:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 17:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 17:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 134.2183 millis. select * from comment where commodity_id=?
+[2020-04-29 18:03:31] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:03:31] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:03:31] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:03:31] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:03:31] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 138.2145 millis. select * from comment where commodity_id=?
+[2020-04-29 18:05:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:05:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:05:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:05:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:05:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 135.7455 millis. select * from comment where commodity_id=?
+[2020-04-29 18:06:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:06:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:06:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:06:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:06:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 121.9344 millis. select * from comment where commodity_id=?
+[2020-04-29 18:41:54] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:41:54] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:41:54] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:41:54] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:41:54] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 136.6269 millis. select * from comment where commodity_id=?
+[2020-04-29 18:42:38] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:42:38] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:42:38] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:42:38] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:42:38] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 133.5089 millis. select * from comment where commodity_id=?
+[2020-04-29 18:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 123.2074 millis. select * from comment where commodity_id=?
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from comment where commodity_id=?
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 128.7548 millis. select * from comment where commodity_id=?
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 1
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 4.5808 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [2]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 2
+[2020-04-29 18:47:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 11.2438 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from commodity WHERE (name LIKE ?)
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [%%ello%%]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from commodity
+where name like '%%ello%%'
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 137.5876 millis. select * from commodity WHERE (name LIKE ?)
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice where id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where id = 1
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 6.6048 millis. select * from notice where id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from account where id=?;
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [5]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from account
+where id = 5;
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 2.2164 millis. select * from account where id=?;
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from estimate where account_id=?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [5]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from estimate
+where account_id = 5
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 3.7654 millis. select * from estimate where account_id=?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. select * from type where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [1]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select *
+from type
+where commodity_id = 1
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 4.4422 millis. select * from type where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. select * from com_image where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [1]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 2.4395 millis. select * from com_image where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. select * from type where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [2]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select *
+from type
+where commodity_id = 2
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. 1.8512 millis. select * from type where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} created. select * from com_image where commodity_id = ?
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Parameters : [2]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Types : [INTEGER]
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. select *
+from com_image
+where commodity_id = 2
+[2020-04-29 18:48:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. 1.8153 millis. select * from com_image where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. select * from commodity WHERE (name LIKE ?)
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [%%ello%%]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select *
+from commodity
+where name like '%%ello%%'
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 124.5647 millis. select * from commodity WHERE (name LIKE ?)
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice where id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where id = 1
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 3.6484 millis. select * from notice where id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from account where id=?;
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [5]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from account
+where id = 5;
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 3.3344 millis. select * from account where id=?;
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from estimate where account_id=?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [5]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from estimate
+where account_id = 5
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 3.172 millis. select * from estimate where account_id=?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. select * from type where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [1]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select *
+from type
+where commodity_id = 1
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 3.8772 millis. select * from type where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. select * from com_image where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [1]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 5.3035 millis. select * from com_image where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. select * from comment where commodity_id=?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [1]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select *
+from comment
+where commodity_id = 1
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. 4.386 millis. select * from comment where commodity_id=?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20007} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Parameters : [1]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 1
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. 4.1453 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20008} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Parameters : [2]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20008} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 2
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20008} executed. 2.327 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20009} created. select * from type where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Parameters : [2]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. select *
+from type
+where commodity_id = 2
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. 2.0105 millis. select * from type where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20010} created. select * from com_image where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20010} Parameters : [2]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20010} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20010} executed. select *
+from com_image
+where commodity_id = 2
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20010} executed. 1.8598 millis. select * from com_image where commodity_id = ?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20011} created. select * from comment where commodity_id=?
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20011} Parameters : [2]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20011} Types : [INTEGER]
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20011} executed. select *
+from comment
+where commodity_id = 2
+[2020-04-29 18:51:39] DEBUG 134 statementLog - {conn-10001, pstmt-20011} executed. 1.514 millis. select * from comment where commodity_id=?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM commodity c, notice n WHERE c.name LIKE concat('%', ?, '%') AND c.notice_id = n.id AND n.end_time >= ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [ello, 2020-04-29 18:57:52.492]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR, TIMESTAMP]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from commodity c, notice n
+where c.name like concat('%', 'ello', '%')
+	and c.notice_id = n.id
+	and n.end_time >= '2020-04-29 18:57:52.492'
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 148.3275 millis. SELECT COUNT(1) FROM commodity c, notice n WHERE c.name LIKE concat('%', ?, '%') AND c.notice_id = n.id AND n.end_time >= ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from commodity c, notice n where c.name like concat('%',?,'%') and c.notice_id = n.id and n.end_time >= ? order by c.newness Desc, c.expected_price ASC LIMIT ?,?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [ello, 2020-04-29 18:57:52.492, 1, 1]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [VARCHAR, TIMESTAMP, BIGINT, BIGINT]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from commodity c, notice n
+where c.name like concat('%', 'ello', '%')
+	and c.notice_id = n.id
+	and n.end_time >= '2020-04-29 18:57:52.492'
+order by c.newness desc, c.expected_price asc
+limit 1, 1
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 5.9672 millis. select * from commodity c, notice n where c.name like concat('%',?,'%') and c.notice_id = n.id and n.end_time >= ? order by c.newness Desc, c.expected_price ASC LIMIT ?,?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from notice where id = ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from notice
+where id = 1
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 2.8049 millis. select * from notice where id = ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from account where id=?;
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [5]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from account
+where id = 5;
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 2.9291 millis. select * from account where id=?;
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. select * from estimate where account_id=?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [5]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select *
+from estimate
+where account_id = 5
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 3.771 millis. select * from estimate where account_id=?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. select * from type where commodity_id = ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [2]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select *
+from type
+where commodity_id = 2
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 2.5067 millis. select * from type where commodity_id = ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. select * from com_image where commodity_id = ?
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [2]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER]
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select *
+from com_image
+where commodity_id = 2
+[2020-04-29 18:57:53] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. 2.2151 millis. select * from com_image where commodity_id = ?
+[2020-04-29 19:30:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (commodity_id = ?)
+[2020-04-29 19:30:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 19:30:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 19:30:46] ERROR 149 statementLogError - {conn-10001, pstmt-20000} execute error. select count(1)
+from notice
+where commodity_id = 1 java.sql.SQLSyntaxErrorException: Unknown column 'commodity_id' in 'where clause'
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeQuery(ClientPreparedStatement.java:1003) ~[mysql-connector-java-8.0.19.jar:8.0.19]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_executeQuery(FilterChainImpl.java:3240) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.filter.FilterEventAdapter.preparedStatement_executeQuery(FilterEventAdapter.java:465) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.filter.FilterChainImpl.preparedStatement_executeQuery(FilterChainImpl.java:3237) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.proxy.jdbc.PreparedStatementProxyImpl.executeQuery(PreparedStatementProxyImpl.java:181) ~[druid-1.1.20.jar:1.1.20]
+	at com.alibaba.druid.pool.DruidPooledPreparedStatement.executeQuery(DruidPooledPreparedStatement.java:227) ~[druid-1.1.20.jar:1.1.20]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.apache.ibatis.logging.jdbc.PreparedStatementLogger.invoke(PreparedStatementLogger.java:56) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.sun.proxy.$Proxy138.executeQuery(Unknown Source) ~[?:?]
+	at com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor.queryTotal(PaginationInterceptor.java:259) ~[mybatis-plus-extension-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor.intercept(PaginationInterceptor.java:218) ~[mybatis-plus-extension-3.3.1.tmp.jar:3.3.1.tmp]
+	at org.apache.ibatis.plugin.Plugin.invoke(Plugin.java:61) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.sun.proxy.$Proxy136.prepare(Unknown Source) ~[?:?]
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.prepareStatement(MybatisSimpleExecutor.java:92) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.executor.MybatisSimpleExecutor.doQuery(MybatisSimpleExecutor.java:66) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:324) ~[mybatis-3.5.3.jar:3.5.3]
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156) ~[mybatis-3.5.3.jar:3.5.3]
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.query(MybatisCachingExecutor.java:163) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.executor.MybatisCachingExecutor.query(MybatisCachingExecutor.java:90) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:147) ~[mybatis-3.5.3.jar:3.5.3]
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:140) ~[mybatis-3.5.3.jar:3.5.3]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:426) ~[mybatis-spring-2.0.3.jar:2.0.3]
+	at com.sun.proxy.$Proxy94.selectList(Unknown Source) ~[?:?]
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:223) ~[mybatis-spring-2.0.3.jar:2.0.3]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.executeForIPage(MybatisMapperMethod.java:134) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperMethod.execute(MybatisMapperMethod.java:96) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.baomidou.mybatisplus.core.override.MybatisMapperProxy.invoke(MybatisMapperProxy.java:96) ~[mybatis-plus-core-3.3.1.tmp.jar:3.3.1.tmp]
+	at com.sun.proxy.$Proxy99.getCommentWithAccountInfo(Unknown Source) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.springframework.aop.support.AopUtils.invokeJoinpointUsingReflection(AopUtils.java:344) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.invokeJoinpoint(ReflectiveMethodInvocation.java:198) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:163) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.dao.support.PersistenceExceptionTranslationInterceptor.invoke(PersistenceExceptionTranslationInterceptor.java:139) ~[spring-tx-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.ReflectiveMethodInvocation.proceed(ReflectiveMethodInvocation.java:186) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at org.springframework.aop.framework.JdkDynamicAopProxy.invoke(JdkDynamicAopProxy.java:212) ~[spring-aop-5.2.5.RELEASE.jar:5.2.5.RELEASE]
+	at com.sun.proxy.$Proxy100.getCommentWithAccountInfo(Unknown Source) ~[?:?]
+	at com.example.transaction.daoTest.CommentDAOTest.testGetCommentWithAccountInfo(CommentDAOTest.java:29) ~[test-classes/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:675) ~[junit-platform-commons-1.5.2.jar:1.5.2]
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:125) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:132) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:124) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:74) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(ExecutableInvoker.java:115) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.lambda$invoke$0(ExecutableInvoker.java:105) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:104) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:62) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:43) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:35) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:104) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:98) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$6(TestMethodTestDescriptor.java:202) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:198) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:135) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69) ~[junit-jupiter-engine-5.5.2.jar:5.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at java.util.ArrayList.forEach(ArrayList.java:1540) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at java.util.ArrayList.forEach(ArrayList.java:1540) ~[?:?]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:38) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$5(NodeTestTask.java:139) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$7(NodeTestTask.java:125) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:135) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:123) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:122) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:80) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:32) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:51) ~[junit-platform-engine-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:229) ~[junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:197) ~[junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:211) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:191) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128) [junit-platform-launcher-1.5.2.jar:1.5.2]
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:69) [junit5-rt.jar:?]
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58) [junit-rt.jar:?]
+
+[2020-04-29 19:31:45] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM comment WHERE (commodity_id = ?)
+[2020-04-29 19:31:45] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 19:31:45] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from comment
+where commodity_id = 1
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 137.4062 millis. SELECT COUNT(1) FROM comment WHERE (commodity_id = ?)
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from comment WHERE (commodity_id = ?) LIMIT ?,?
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 0, 1]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from comment
+where commodity_id = 1
+limit 0, 1
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 9.4935 millis. select * from comment WHERE (commodity_id = ?) LIMIT ?,?
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 1
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 8.0496 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [2]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 2
+[2020-04-29 19:31:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 4.7647 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:32:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM comment WHERE (commodity_id = ?)
+[2020-04-29 19:32:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1]
+[2020-04-29 19:32:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-29 19:32:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from comment
+where commodity_id = 1
+[2020-04-29 19:32:55] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 135.2786 millis. SELECT COUNT(1) FROM comment WHERE (commodity_id = ?)
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from comment WHERE (commodity_id = ?) order by date ASC LIMIT ?,?
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [1, 0, 1]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from comment
+where commodity_id = 1
+order by date asc
+limit 0, 1
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 6.6953 millis. select * from comment WHERE (commodity_id = ?) order by date ASC LIMIT ?,?
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 1
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 5.4829 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [2]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where id = 2
+[2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 2.4691 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 

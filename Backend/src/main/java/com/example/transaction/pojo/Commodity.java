@@ -38,5 +38,4 @@ public class Commodity {
     private Notice notice;
     @TableField(exist = false)
     private List<Reservation> reservation;
-
 }

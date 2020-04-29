@@ -185,6 +185,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @return 执行结果
      */
     @Transactional
+    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn = "id")
     public boolean insertCommodityInfo(Commodity commodity){
 //        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
         List<Type> typeList = commodity.getTypes();
@@ -316,20 +317,5 @@ public class CommodityServiceImpl implements CommodityService {
         queryWrapper.eq("id", commodity.getId());
         Account account = commodityDAO.selectWithCondition(queryWrapper).get(0).getNotice().getUser();
         return !AccountVerify.verify(account, session);
-    }
-
-    /**
-     * 筛选有剩余且未截止的商品
-     * @param commodities 商品集合
-     * @return 商品集合
-     */
-    public List<Commodity> selectByCountAndDate(List<Commodity> commodities){
-        List<Commodity> results = new ArrayList<>();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-        for(Commodity commodity : commodities){
-            if(commodity.getCount() > 0 && timestamp.before(commodity.getNotice().getEndTime()))
-                results.add(commodity);
-        }
-        return results;
     }
 }

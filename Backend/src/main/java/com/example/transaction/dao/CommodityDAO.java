@@ -1,14 +1,12 @@
 package com.example.transaction.dao;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.Notice;
-import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
@@ -33,8 +31,6 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     Commodity selectDetailedCommodity(Integer id);
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
-    //分页查询
-    IPage<Commodity> selectCommodityPage(Page<Commodity> page,  @Param(Constants.WRAPPER) Wrapper<Commodity> wrapper);
     //商品名模糊分页查询，新旧程度排序
     IPage<Commodity> sortByNewness(Page<?> page, String name, Timestamp timestamp);
     //商品类型分页查询

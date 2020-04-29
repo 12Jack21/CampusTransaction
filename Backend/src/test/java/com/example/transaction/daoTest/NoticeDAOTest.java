@@ -7,7 +7,6 @@ import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.Nums;
-import com.example.transaction.util.responseFromServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

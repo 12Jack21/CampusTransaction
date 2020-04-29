@@ -22,10 +22,10 @@ public class Comment {
     private Timestamp date;
 
     @TableField(value = "from_id")
-    private Integer senderId;
+    private Integer fromId;
 
     @TableField(value = "to_id")
-    private Integer receiverId;
+    private Integer toId;
 
     @TableField(value = "commodity_id")
     private Integer commodityId;

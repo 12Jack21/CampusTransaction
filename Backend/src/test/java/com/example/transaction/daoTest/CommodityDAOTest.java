@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @Author: 高战立
@@ -27,25 +28,10 @@ public class CommodityDAOTest {
     void testSelectWithCondition(){
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.like("name", "%ello%");  //模糊查找测试, queryWrapper条件是叠加的
-//        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-//        queryWrapper.eq("notice.type", 1);
-//        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-//        System.out.println(commodities.size());
-//        System.out.println(commodities.get(0));
 
-//        queryWrapper.between("expected_price",5,20); //价格区间检索
-//        queryWrapper.eq("name", "yellow");
-//        queryWrapper.orderByDesc("newness");
-
-        Page<Commodity> page = new Page<>(1,2);
-        IPage<Commodity> iPage = commodityDAO.selectCommodityPage(page, queryWrapper);
-        System.out.println(page.getPages());
-        System.out.println(page.getTotal());
-        System.out.println(page.getRecords());
-//        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-//        System.out.println(commodities);
-//        System.out.printlnln(commodities.size());
-//        System.out.println(commodities.toString());
+        List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
+        System.out.println(commodities.size());
+        System.out.println(commodities);
     }
 
     @Test

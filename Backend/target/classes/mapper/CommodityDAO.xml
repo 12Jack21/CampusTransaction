@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.example.transaction.dao.CommodityDAO">
-    <!--查询与account关联的所有信息，如commodityList、notice、commodityImages-->
+    <!--查询与commodity关联的所有信息，如commodityList、notice、commodityImages-->
     <resultMap id="commodityInfo" type="commodity">
         <id property="id" column="id"/>
         <association property="notice" javaType="com.example.transaction.pojo.Notice" column="notice_id" select="com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"/>
@@ -11,11 +11,6 @@
     </resultMap>
 
     <select id="selectWithCondition" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">
-        select * from commodity ${ew.customSqlSegment}
-    </select>
-
-    <!--分页查询-->
-    <select id="selectCommodityPage" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">
         select * from commodity ${ew.customSqlSegment}
     </select>
 
