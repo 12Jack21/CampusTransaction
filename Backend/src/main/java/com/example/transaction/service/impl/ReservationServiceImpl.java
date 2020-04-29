@@ -131,29 +131,15 @@ public class ReservationServiceImpl implements ReservationService {
 
     /**
      * 设置预约成功
-     * @param reservationId
-     * @param account
+     * @param reservation
      * @return
      */
     @Override
     @Transactional
-    public responseFromServer validateReservation(Integer reservationId, Account account) {
-        /*TODO*/
+    public responseFromServer validateReservation(Reservation reservation) {
+        /*用户验证在controller层中处理*/
         /*获取reservation 检查id和用户id*/
-        Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
         Commodity commodity = reservation.getCommodity();
-        if(commodity !=null
-                &&commodity.getNotice()!=null
-                &&commodity.getNotice().getAccountId()!=null){
-            if(commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
-                /*此时要操作的用户跟notice的卖家不符合 非法操作*/
-                return responseFromServer.illegal();
-        }else{
-            /*查询错误*/
-            return responseFromServer.error("查询错误");
-        }
-        /*用户验证成功*/
-
         /*验证reservation状态是否是等待状态*/
         if(reservation.getStateEnum()!=ReservationCode.WAITING.getCode()){
             return responseFromServer.error("预约状态错误");
@@ -206,6 +192,31 @@ public class ReservationServiceImpl implements ReservationService {
             }
         }
     }
+
+
+    /**
+     * 查询详细预约信息（包含商品信息）
+     * @param reservationId
+     * @return
+     */
+    public responseFromServer getDetailedReservation(Integer reservationId){
+        Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
+        if(reservation == null)return responseFromServer.error();
+        else return responseFromServer.success(reservation);
+    }
+
+
+    /**
+     * 查询简单预约信息
+     * @param reservationId
+     * @return
+     */
+    public responseFromServer getSimpleReservation(Integer reservationId){
+        Reservation reservation = reservationDAO.selectById(reservationId);
+        if(reservation == null) return responseFromServer.error();
+        else return responseFromServer.success(reservation);
+    }
+
 
     ReservationDAO reservationDAO;
     CommodityDAO commodityDAO;

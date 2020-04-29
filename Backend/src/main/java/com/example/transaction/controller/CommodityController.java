@@ -1,9 +1,12 @@
 package com.example.transaction.controller;
 
+import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
+import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.CommodityServiceImpl;
+import com.example.transaction.util.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +25,11 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/commodity")
 public class CommodityController {
     private final CommodityService commodityService;
+    private final NoticeService noticeService;
     @Autowired
-    CommodityController(CommodityServiceImpl commodityServiceImpl){
-        this.commodityService = commodityServiceImpl;
+    CommodityController(CommodityService commodityService,NoticeService noticeService){
+        this.commodityService = commodityService;
+        this.noticeService = noticeService;
     }
 
 
@@ -33,7 +38,7 @@ public class CommodityController {
      * @param id 商品id
      * @return 执行结果
      */
-    public responseFromServer getById(Integer id){
+    public responseFromServer getById(@RequestBody Integer id){
         return commodityService.getById(id);
     }
 
@@ -85,8 +90,21 @@ public class CommodityController {
      * @param session HttpSession
      * @return 执行结果
      */
-    public responseFromServer insertCommodity(Commodity commodity, HttpSession session){
-        return commodityService.insertCommodity(commodity, session);
+    public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpSession session){
+        if(commodity.getNoticeId()==null)
+            return responseFromServer.error();
+        responseFromServer response = noticeService.getSimpleNotice(commodity.getNoticeId());
+        if(!response.isSuccess()){
+            return responseFromServer.error();
+        }else{
+            Notice notice = (Notice) response.getData();
+            Account account = (Account) session.getAttribute("currentAccount");
+            if(notice.getAccountId()==null || notice.getAccountId() == account.getId().intValue()){
+                return responseFromServer.error();
+            }
+            /*当前插入商品的notice不属于该用户*/
+            return commodityService.insertCommodity(commodity);
+        }
     }
 
     /**
@@ -96,7 +114,12 @@ public class CommodityController {
      */
     @RequestMapping("/update")
     public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpSession session){
-        return commodityService.updateCommodity(commodity, session);
+        responseFromServer response = getById(commodity.getId());
+        if(AccountVerify.verifySellerByCommodityId(response,session)) {
+            return commodityService.updateCommodity(commodity);
+        }else{
+            return responseFromServer.illegal();
+        }
     }
 
     /**
@@ -107,7 +130,12 @@ public class CommodityController {
      */
     @RequestMapping("/delete")
     public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpSession session){
-        return commodityService.deleteCommodity(commodity, session);
+        responseFromServer response = getById(commodity.getId());
+        if(AccountVerify.verifySellerByCommodityId(response,session))
+        {
+            return commodityService.deleteCommodity((Commodity)response.getData());
+        }
+        return responseFromServer.illegal();
     }
 
     /**
@@ -117,7 +145,7 @@ public class CommodityController {
      */
     @RequestMapping("/selectByNoticeId")
     public responseFromServer selectAllByNoticeId(@RequestBody Notice notice){
-        return commodityService.selectAllByNoticeId(notice);
+        return commodityService.selectAllByNotice(notice);
     }
 
     /**
@@ -128,7 +156,10 @@ public class CommodityController {
      */
     @RequestMapping("/deleteByNoticeId")
     public responseFromServer deleteAllByNoticeId(@RequestBody Notice notice, HttpSession session){
-        return  commodityService.deleteAllByNoticeId(notice, session);
+        Account account = new Account(notice.getAccountId());
+        if(!AccountVerify.verify(account, session))  //用户合法性检查
+            return responseFromServer.error();
+        return  commodityService.deleteAllByNotice(notice);
     }
 
     /**

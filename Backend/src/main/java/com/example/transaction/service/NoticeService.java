@@ -12,6 +12,10 @@ import java.util.Map;
  * @Date: 2020/4/26 16:45
  */
 public interface NoticeService {
+    /*获得通告*/
+    responseFromServer getSimpleNotice(Integer noticeId);
+    /*获得详细通告内容*/
+    responseFromServer getDetailedNotice(Integer noticeId);
     /*添加通告*/
     responseFromServer setupNotice(Notice notice);
     /*删除通告*/

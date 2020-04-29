@@ -15,11 +15,13 @@ import java.util.Map;
  */
 public interface ReservationService {
 
+    public responseFromServer getSimpleReservation(Integer reservationId);
+    public responseFromServer getDetailedReservation(Integer reservationId);
     public responseFromServer setUpReservation(Reservation reservation);
     public responseFromServer cancelReservation(Integer reservationId,Integer accountId);
     public responseFromServer deleteReservation(Reservation reservation);
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex);
     public responseFromServer updateReservation(Reservation reservation);
-    public responseFromServer validateReservation(Integer reservationId, Account account);
+    public responseFromServer validateReservation(Reservation reservation);
     public responseFromServer finishReservation(Integer reservationId,Integer accountId);
 }

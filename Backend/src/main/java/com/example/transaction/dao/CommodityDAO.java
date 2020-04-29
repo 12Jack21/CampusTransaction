@@ -22,6 +22,8 @@ import java.util.List;
 
 @Repository
 public interface CommodityDAO extends BaseMapper<Commodity> {
+
+    Commodity selectDetailedCommodity(Integer id);
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
     //分页查询

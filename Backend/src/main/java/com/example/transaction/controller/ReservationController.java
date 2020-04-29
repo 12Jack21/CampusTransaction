@@ -89,7 +89,29 @@ public class ReservationController {
         Account account = (Account) session.getAttribute("currentAccount");
         if(reservation.getId()==null)
             return responseFromServer.error();
-        return reservationService.validateReservation(reservation.getId(),account);
+        else{
+//            Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
+            responseFromServer response = reservationService.getSimpleReservation(reservation.getId());
+            if(response.isSuccess()){
+                /*用户身份验证*/
+                reservation = (Reservation) response.getData();
+                Commodity commodity = reservation.getCommodity();
+                if(commodity !=null
+                        &&commodity.getNotice()!=null
+                        &&commodity.getNotice().getAccountId()!=null){
+                    if(commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
+                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/
+                        return responseFromServer.illegal();
+                }else{
+                    /*查询错误*/
+                    return responseFromServer.error("查询错误");
+                }
+                /*用户验证成功*/
+                return reservationService.validateReservation(reservation.getId(),account);
+            }else{
+                return responseFromServer.error();
+            }
+        }
     }
 
 
@@ -111,6 +133,7 @@ public class ReservationController {
     /*查看商品的预约*/
     @RequestMapping("/getReservationPageForCommodity")
     public responseFromServer getReservationPageForCommodity(@RequestBody Commodity commodity, HttpSession session){
+        /*用户核对*/
         return null;
     }
 

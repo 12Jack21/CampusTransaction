@@ -7,7 +7,7 @@
         <association property="notice" javaType="com.example.transaction.pojo.Notice" column="notice_id" select="com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"/>
         <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.getAllTypeByCommodityId"/>
         <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"/>
-        <collection property="reservation" ofType="com.example.transaction.pojo.Reservation" column="id" select="com.example.transaction.dao.ReservationDAO.getAllReservationByCommodityId"/>
+<!--        <collection property="reservation" ofType="com.example.transaction.pojo.Reservation" column="id" select="com.example.transaction.dao.ReservationDAO.getAllReservationByCommodityId"/>-->
     </resultMap>
 
     <select id="selectWithCondition" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">

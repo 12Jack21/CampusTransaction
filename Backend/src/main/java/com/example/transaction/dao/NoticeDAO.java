@@ -26,6 +26,16 @@ public interface NoticeDAO extends BaseMapper<Notice> {
     @Select("select * from notice where id=#{id}")
     Notice getNoticeWithAllCommodityById(Integer id);
 
+    @Results(id="noticeMap", value = {
+            @Result(id = true, property = "id", column = "id"),
+            @Result(property = "commodityLists", column = "id", many = @Many(
+                    select = "com.example.transaction.dao.CommodityDAO.getInfoByCommodityId"
+            ))
+    })
+    @Select("select * from notice ${ew.customSqlSegment}")
+    Notice getNoticeWithAllCommodity(@Param("ew")QueryWrapper<Notice> wrapper);
+
+
     @Results(id="accountMap", value = {
             @Result(property = "user", column = "account_id", one = @One(
                     select = "com.example.transaction.dao.AccountDAO.getAccountCreditById"

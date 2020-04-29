@@ -3,9 +3,11 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.pojo.Reservation;
+import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.Nums;
@@ -56,7 +58,10 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public responseFromServer deleteNotice(QueryWrapper queryWrapper) {
-
+//        if(commodityService.deleteAllByNoticeId(notice))
+        Notice notice = noticeDAO.getNoticeWithAllCommodity(queryWrapper);
+        if(notice == null)return responseFromServer.error();
+        commodityService.deleteAllByNotice(notice);
         if(noticeDAO.delete(queryWrapper)!=1){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
@@ -97,7 +102,32 @@ public class NoticeServiceImpl implements NoticeService {
         return responseFromServer.success(myPage);
     }
 
-/*
+    /**
+     * 获取通告信息
+     * @param noticeId
+     * @return
+     */
+    @Override
+    public responseFromServer getSimpleNotice(Integer noticeId) {
+        Notice notice = noticeDAO.selectById(noticeId);
+        if(notice == null)return responseFromServer.error();
+        return responseFromServer.success(notice);
+    }
+
+    /**
+     * 获得详细通告内容，包括商品信息
+     * @param noticeId
+     * @return
+     */
+    @Override
+    public responseFromServer getDetailedNotice(Integer noticeId) {
+        Notice notice = noticeDAO.getNoticeWithAllCommodityById(noticeId);
+        if(notice == null)return responseFromServer.error();
+        return responseFromServer.success(notice);
+    }
+
+
+    /*
     @Override
     public responseFromServer getRecentNoticePage(Map<String, Object> map) {
 
@@ -111,9 +141,13 @@ public class NoticeServiceImpl implements NoticeService {
 */
 
     NoticeDAO noticeDAO;
+    CommodityDAO commodityDAO;
+    CommodityService commodityService;
 
     @Autowired
-    public NoticeServiceImpl(NoticeDAO noticeDAO){
+    public NoticeServiceImpl(NoticeDAO noticeDAO,CommodityDAO commodityDAO, CommodityService commodityService){
         this.noticeDAO = noticeDAO;
+        this.commodityDAO = commodityDAO;
+        this.commodityService = commodityService;
     }
 }

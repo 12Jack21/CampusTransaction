@@ -25,15 +25,15 @@ public interface CommodityService {
     //根据所有者信誉排序
     public responseFromServer sortByCredit(Integer pageIndex, String name);
     //插入商品
-    public responseFromServer insertCommodity(Commodity commodity, HttpSession session);
+    public responseFromServer insertCommodity(Commodity commodity);
     //更新商品信息
-    public responseFromServer updateCommodity(Commodity commodity, HttpSession session);
+    public responseFromServer updateCommodity(Commodity commodity);
     //删除商品信息
-    public responseFromServer deleteCommodity(Commodity commodity, HttpSession session);
+    public responseFromServer deleteCommodity(Commodity commodity);
     //查询某一notice下所有商品
-    public responseFromServer selectAllByNoticeId(Notice notice);
+    public responseFromServer selectAllByNotice(Notice notice);
     //删除某一notice下所有商品
-    public responseFromServer deleteAllByNoticeId(Notice notice, HttpSession session);
+    public responseFromServer deleteAllByNotice(Notice notice);
     //返回商品图片路径
     public responseFromServer imageUrl(MultipartFile[] files);
 }

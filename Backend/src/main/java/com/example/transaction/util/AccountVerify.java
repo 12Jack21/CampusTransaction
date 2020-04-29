@@ -1,6 +1,10 @@
 package com.example.transaction.util;
 
+import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Commodity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 
 import javax.servlet.http.HttpSession;
 
@@ -11,6 +15,9 @@ import javax.servlet.http.HttpSession;
  * @Date: 2020/4/26 15:57
  */
 public class AccountVerify {
+    @Autowired
+    CommodityDAO commodityDAO;
+
     public static boolean verify( Account account,HttpSession session){
         if(account==null)
             return false;
@@ -24,5 +31,19 @@ public class AccountVerify {
             account.setId(currentAccount.getId());
             return true;
         }
+    }
+
+    public static boolean verifySellerByCommodityId(responseFromServer responseFromServer,HttpSession session){
+        if(responseFromServer.isSuccess()){
+            Commodity commodity = (Commodity) responseFromServer.getData();
+            if(commodity == null||commodity.getNotice() == null||commodity.getNotice().getAccountId()==null)
+                return false;
+            Account account = new Account(commodity.getNotice().getAccountId());
+            if(!verify(account,session))
+                return false;
+            return true;
+        }
+        return false;
+
     }
 }
