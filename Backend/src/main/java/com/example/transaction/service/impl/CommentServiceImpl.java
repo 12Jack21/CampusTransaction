@@ -11,6 +11,7 @@ import com.example.transaction.util.Nums;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 /**
@@ -36,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
     public responseFromServer getCommentByCommodityId(Integer pageIndex, Integer commodityId){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("commodity_id", commodityId);
+        queryWrapper.orderByDesc("time");
         Page<Comment> page = new Page<>(pageIndex, Nums.pageSize);
         IPage<Comment> iPage = commentDAO.getCommentWithAccountInfo(page, queryWrapper);
         MyPage myPage = new MyPage(iPage);
@@ -47,16 +49,21 @@ public class CommentServiceImpl implements CommentService {
      * @param comment 评论
      * @return 执行结果
      */
+    @Transactional
     public responseFromServer sendComment(Comment comment){
+        if(comment.getToId()==null||comment.getContent()==null||comment.getCommodityId()==null)
+            return responseFromServer.error();
         if(commentDAO.insert(comment) != 1){
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+        /*todo 插入notify提醒*/
         return  responseFromServer.success();
     }
 
     //删除评论
+    @Transactional
     public responseFromServer deleteComment(Comment comment){
         if(commentDAO.deleteById(comment.getId()) != 1){
             /*回滚事务*/
