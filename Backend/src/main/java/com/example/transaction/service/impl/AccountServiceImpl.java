@@ -1,7 +1,9 @@
 package com.example.transaction.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
+import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.util.responseFromServer;
@@ -23,9 +25,11 @@ import java.util.Map;
 @Service("AccountService")
 public class AccountServiceImpl implements AccountService {
     private AccountDAO accountDAO;
+    private A2aDAO a2aDAO;
     @Autowired
-    public AccountServiceImpl(AccountDAO accountDAO){
+    public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO){
         this.accountDAO = accountDAO;
+        this.a2aDAO = a2aDAO;
     }
 
 
@@ -103,7 +107,20 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-
+    /**
+     * 获取a2a
+     * @param accountId1
+     * @param accountId2
+     * @return
+     */
+    @Override
+    public responseFromServer getA2a(Integer accountId1,Integer accountId2){
+        if(accountId1==null||accountId2 == null)
+            return responseFromServer.error();
+        A2a a2a = a2aDAO.getA2a(accountId1,accountId2);
+        if(a2a==null)return responseFromServer.error();
+        return responseFromServer.success(a2a);
+    }
 
 
 }

@@ -15,4 +15,5 @@ public interface AccountService {
     public responseFromServer register(Account account);
     public responseFromServer updateAccount(Account account);
     public responseFromServer verifyPassword(Account account);
+    public responseFromServer getA2a(Integer accountId1,Integer accountId2);
 }

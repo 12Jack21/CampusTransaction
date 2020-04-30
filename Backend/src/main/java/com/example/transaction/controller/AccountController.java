@@ -124,6 +124,29 @@ public class AccountController {
     }
 
 
+    /**
+     * 获得账号信息，在a2a中验证
+     * @param account
+     * @param session
+     * @return
+     */
+    @RequestMapping("/getAccountInfo")
+    public responseFromServer getAccountInfo(@RequestBody Account account,HttpSession session){
+        Account account1 = AccountVerify.verifyWithReturn(account,session);
+        if(account1.getId().intValue()!=account.getId().intValue()){
+            responseFromServer response = accountService.getA2a(account.getId(),account1.getId());
+            if(response.isSuccess()){
+                account = (Account) response.getData();
+                return responseFromServer.success(account);
+            }else{
+                return responseFromServer.error();
+            }
+        }else{
+            /*此时验证返回的是自己的账户信息*/
+            return responseFromServer.success(account1);
+        }
+    }
+
 
 
 

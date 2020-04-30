@@ -18,6 +18,12 @@ public class AccountVerify {
     @Autowired
     CommodityDAO commodityDAO;
 
+    /**
+     * 验证当前用户是否是登录用户
+     * @param account
+     * @param session
+     * @return
+     */
     public static boolean verify( Account account,HttpSession session){
         if(account==null)
             return false;
@@ -30,6 +36,20 @@ public class AccountVerify {
             /*当用户id为空时*/
             account.setId(currentAccount.getId());
             return true;
+        }
+    }
+
+    public static Account verifyWithReturn( Account account,HttpSession session){
+        if(account==null)
+            return null;
+        Account currentAccount = (Account) session.getAttribute("currentAccount");
+        if(account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
+            /*非法操作*/
+            return null;
+        }
+        else{
+            /*当用户id为空时*/
+            return currentAccount;
         }
     }
 

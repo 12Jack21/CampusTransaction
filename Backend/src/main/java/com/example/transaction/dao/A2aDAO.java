@@ -7,6 +7,7 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import org.apache.ibatis.annotations.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -15,17 +16,18 @@ import java.util.List;
  * @Author: 曾志昊
  * @Date: 2020/4/30 14:28
  */
+@Repository
 public interface A2aDAO extends BaseMapper<A2a> {
     @Results(id = "a2a_map", value = {
-            @Result(property = "notice", column = "account_id_1", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
-            )),
+//            @Result(property = "notice", column = "account_id_1", javaType = Account.class, one = @One(
+//                    select = "com.example.transaction.dao.AccountDAO.selectById"
+//            )),
             @Result(property = "notice", column = "account_id_2", javaType = Account.class, one = @One(
                     select = "com.example.transaction.dao.AccountDAO.selectById"
             ))
     })
-    @Select("select * from a2a ${ew.customSqlSegment}")
-    A2a getA2a(@Param("ew") QueryWrapper<Commodity> wrapper);
+    @Select("select * from a2a where account_id_1 = #{accountId1} and account_id_2 = #{accountId2}")
+    A2a getA2a(Integer accountId1, Integer accountId2);
 
 
 

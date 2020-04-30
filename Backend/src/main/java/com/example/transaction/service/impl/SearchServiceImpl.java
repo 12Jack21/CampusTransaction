@@ -21,6 +21,7 @@ public class SearchServiceImpl implements  SearchService{
     }
 
     public responseFromServer addSearchRecord(Integer accountId, String searchStr){
+
         return null;
     }
 
