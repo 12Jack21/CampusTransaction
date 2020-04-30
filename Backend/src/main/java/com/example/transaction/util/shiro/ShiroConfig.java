@@ -8,8 +8,10 @@ import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.apache.shiro.mgt.SecurityManager;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.Map;
  * @Author: 曾志昊
  * @Date: 2020/4/25 20:56
  */
+@Configuration
 public class ShiroConfig {
     /**
      * Session Manager：会话管理
@@ -57,7 +60,7 @@ public class ShiroConfig {
     }
 
     //将自己的验证方式加入容器
-    @Bean
+    @Bean("myShiroRealm")
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
         return myShiroRealm;
@@ -68,13 +71,15 @@ public class ShiroConfig {
      * 权限管理，配置主要是Realm的管理认证，可配置一个或多个realm
      * @return
      */
-    @Bean
+    @Bean("securityManager")
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
-        securityManager.setRealm(new MyShiroRealm());
+        securityManager.setRealm(myShiroRealm());
         /*可以配置一个或多个rewalm*/
         return securityManager;
     }
+
+
 
     /**
      * ShiroFilter是整个Shiro的入口点，用于拦截需要安全控制的请求进行处理
@@ -82,11 +87,11 @@ public class ShiroConfig {
      * @param securityManager
      * @return
      */
-    @Bean
-    public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
+    @Bean("shiroFilter")
+    public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("securityManager")SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
-        shiroFilterFactoryBean.setSecurityManager(securityManager);
-        shiroFilterFactoryBean.setLoginUrl("/login");
+        shiroFilterFactoryBean.setSecurityManager(securityManager());
+        shiroFilterFactoryBean.setLoginUrl("/account/login");
 
         /*  配置拦截过滤器链，
             map的键 : 资源地址 ;
@@ -96,7 +101,7 @@ public class ShiroConfig {
         Map<String, String> filterMap = new HashMap<>();
         /*公开地址*/
         filterMap.put("/static/**", "anon"); // 公开访问的资源
-        filterMap.put("/account/login", "anon"); // 登录地址放开
+        //filterMap.put("/account/login", "anon"); // 登录地址放开
         filterMap.put("/notice/getRecentNoticePage", "anon"); // 获取首页最新通告
 
         filterMap.put("/account/logout", "logout"); // 配置登出页,shiro已经帮我们实现了跳转

@@ -49,9 +49,10 @@ public interface NoticeDAO extends BaseMapper<Notice> {
     @Results(id="noticeMap4", value = {
             @Result(id = true, property = "id", column = "id"),
             @Result(property = "commodityLists", column = "id", many = @Many(
-                    select = "com.example.transaction.dao.CommodityDAO.selectDetailedCommodity"
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
             ))
     })
     @Select("select * from notice ${ew.customSqlSegment}")
-    IPage<Notice> testDetailed(Page<?> page, @Param("ew")QueryWrapper<Notice> wrapper );
+    IPage<Notice> getDetailedNoticePage(Page<?> page, @Param("ew")QueryWrapper<Notice> wrapper );
+
 }

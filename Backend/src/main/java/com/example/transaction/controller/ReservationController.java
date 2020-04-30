@@ -132,6 +132,7 @@ public class ReservationController {
     public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session){
         if(verifySeller(reservation,session)){
             /*验证当前操作用户是否是卖家*/
+            /*todo 加入a2a*/
             return reservationService.validateReservation(reservation);
         }else{
             return responseFromServer.illegal();

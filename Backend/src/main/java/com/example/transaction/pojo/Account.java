@@ -41,4 +41,5 @@ public class Account {
     public Account(Integer accountId){
         this.id = accountId;
     }
+    public Account(){}
 }

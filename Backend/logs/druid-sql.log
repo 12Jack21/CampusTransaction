@@ -778,3 +778,460 @@ where id = 1
 from account
 where id = 2
 [2020-04-29 19:32:56] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 2.4691 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account WHERE id=? 
+[2020-04-30 20:04:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:04:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:04:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:04:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:04:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 217.8185 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:05:07] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:05:07] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [123]
+[2020-04-30 20:05:07] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [VARCHAR]
+[2020-04-30 20:05:07] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:05:07] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 3.1425 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:05:14] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:05:14] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [123]
+[2020-04-30 20:05:14] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [VARCHAR]
+[2020-04-30 20:05:14] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:05:14] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 5.8297 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:07:41] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:07:41] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [123]
+[2020-04-30 20:07:41] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [VARCHAR]
+[2020-04-30 20:07:41] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:07:41] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 5.5131 millis. SELECT id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time FROM account  
+ WHERE username = ?
+[2020-04-30 20:08:07] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:08:07] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:08:07] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:08:07] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:08:07] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 136.6225 millis. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:08:20] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:08:20] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [123]
+[2020-04-30 20:08:20] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [VARCHAR]
+[2020-04-30 20:08:20] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:08:20] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 3.3051 millis. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:09:19] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:09:19] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [123]
+[2020-04-30 20:09:19] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [VARCHAR]
+[2020-04-30 20:09:19] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:09:20] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 7.2992 millis. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:10:12] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:10:12] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:10:12] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:10:12] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:10:12] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 106.789 millis. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:10:44] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:10:44] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [{
+    "username":"123",
+    "password":"123"
+}]
+[2020-04-30 20:10:44] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [VARCHAR]
+[2020-04-30 20:10:44] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select count(1)
+from account
+where username = '{
+    "username":"123",
+    "password":"123"
+}'
+[2020-04-30 20:10:44] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 154.1981 millis. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:12:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:12:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [{
+    "username":"123",
+    "password":"123"
+}]
+[2020-04-30 20:12:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [VARCHAR]
+[2020-04-30 20:12:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select count(1)
+from account
+where username = '{
+    "username":"123",
+    "password":"123"
+}'
+[2020-04-30 20:12:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 3.2983 millis. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:14:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:14:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:14:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:14:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select id, username, password, gender, address
+	, institute, mail, qq, wechat, avatar_url
+	, create_time, update_time
+from account
+where username = '123'
+[2020-04-30 20:14:19] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 101.1578 millis. SELECT  id,username,password,gender,address,institute,mail,qq,wechat,avatar_url,create_time,update_time  FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:14:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:14:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [123]
+[2020-04-30 20:14:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [VARCHAR]
+[2020-04-30 20:14:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select count(1)
+from account
+where username = '123'
+[2020-04-30 20:14:28] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 3.5983 millis. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:17:35] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:17:35] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:17:35] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:17:36] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from account
+where username = '123'
+[2020-04-30 20:17:36] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 81.5791 millis. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:19:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:19:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [123]
+[2020-04-30 20:19:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR]
+[2020-04-30 20:19:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from account
+where username = '123'
+[2020-04-30 20:19:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. 86.6774 millis. SELECT COUNT( 1 ) FROM account 
+ 
+ WHERE (username = ?)
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [0]
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 83.6927 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [0, 0, 10]
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:33:25] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 7.2524 millis. SELECT  id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id  FROM notice 
+ 
+ WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [0]
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 82.8809 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [0, 0, 10]
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:40:10] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 6.0828 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [0]
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20002, rs-50002} query executed. 14.3381 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [0, 0, 10]
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:40:38] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 17.2251 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [0]
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20004, rs-50004} query executed. 12.5402 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [0, 0, 10]
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:41:27] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 14.3821 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [0]
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER]
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20006, rs-50006} query executed. 14.3575 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20007} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Parameters : [0, 0, 10]
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:42:17] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. 15.8417 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:46:41] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [0]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 127.3666 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [0, 0, 10]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 7.4969 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from commodity where notice_id = ?
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 14.9883 millis. select * from commodity where notice_id = ?
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. SELECT id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id FROM notice WHERE id=? 
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [1]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id = 1
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 4.6458 millis. SELECT id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id FROM notice WHERE id=? 
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. select * from com_image where commodity_id = ?
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [1]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 20:46:42] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. 4.6988 millis. select * from com_image where commodity_id = ?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [0]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20005, rs-50005} query executed. 2.6573 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [0, 0, 10]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. 3.9384 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} created. select * from commodity where notice_id = ?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Parameters : [1]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Types : [INTEGER]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. 2.8457 millis. select * from commodity where notice_id = ?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20008} created. SELECT id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id FROM notice WHERE id=? 
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Parameters : [1]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Types : [INTEGER]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20008} executed. select id, type, end_time, title, conditions
+	, description, state_enum, update_time, create_time, account_id
+from notice
+where id = 1
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20008} executed. 5.2209 millis. SELECT id,type,end_time,title,conditions,description,state_enum,update_time,create_time,account_id FROM notice WHERE id=? 
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20009} created. select * from com_image where commodity_id = ?
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Parameters : [1]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Types : [INTEGER]
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 20:46:50] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. 2.2679 millis. select * from com_image where commodity_id = ?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [0]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 131.3728 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [0, 0, 10]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 6.9648 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from commodity where notice_id = ?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 4.5748 millis. select * from commodity where notice_id = ?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from com_image where commodity_id = ?
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [1]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 20:48:46] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 2.943 millis. select * from com_image where commodity_id = ?
+[2020-04-30 20:59:57] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [0]
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [INTEGER]
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 414.7305 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20001} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Parameters : [0, 0, 10]
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20001} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 20:59:58] DEBUG 134 statementLog - {conn-10001, pstmt-20001} executed. 24.7052 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20002} created. select * from commodity where notice_id = ?
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Parameters : [1]
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20002} Types : [INTEGER]
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20002} executed. 18.7509 millis. select * from commodity where notice_id = ?
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20003} created. select * from com_image where commodity_id = ?
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Parameters : [1]
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20003} Types : [INTEGER]
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 20:59:59] DEBUG 134 statementLog - {conn-10001, pstmt-20003} executed. 13.6196 millis. select * from com_image where commodity_id = ?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20004} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Parameters : [0]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20004} Types : [INTEGER]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20004} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20004, rs-50004} query executed. 2.8696 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20005} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Parameters : [0, 0, 10]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20005} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 2.5495 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20006} created. select * from commodity where notice_id = ?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Parameters : [1]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20006} Types : [INTEGER]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20006} executed. 2.9807 millis. select * from commodity where notice_id = ?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20007} created. select * from com_image where commodity_id = ?
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Parameters : [1]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20007} Types : [INTEGER]
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 21:02:56] DEBUG 134 statementLog - {conn-10001, pstmt-20007} executed. 2.5795 millis. select * from com_image where commodity_id = ?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20008} created. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Parameters : [0]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20008} Types : [INTEGER]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20008} executed. select count(1)
+from notice
+where state_enum = 0
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20008, rs-50008} query executed. 2.2179 millis. SELECT COUNT(1) FROM notice WHERE (state_enum = ?)
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20009} created. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Parameters : [0, 0, 10]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20009} Types : [INTEGER, BIGINT, BIGINT]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. select *
+from notice
+where state_enum = 0
+order by update_time desc
+limit 0, 10
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20009} executed. 4.2426 millis. select * from notice WHERE (state_enum = ?) ORDER BY update_time DESC LIMIT ?,?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20010} created. select * from commodity where notice_id = ?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20010} Parameters : [1]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20010} Types : [INTEGER]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20010} executed. select *
+from commodity
+where notice_id = 1
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20010} executed. 2.4418 millis. select * from commodity where notice_id = ?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20011} created. select * from com_image where commodity_id = ?
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20011} Parameters : [1]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20011} Types : [INTEGER]
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20011} executed. select *
+from com_image
+where commodity_id = 1
+[2020-04-30 21:02:59] DEBUG 134 statementLog - {conn-10001, pstmt-20011} executed. 5.8961 millis. select * from com_image where commodity_id = ?

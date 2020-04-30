@@ -4,6 +4,8 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.util.AccountVerify;
 import com.example.transaction.util.responseFromServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
@@ -27,20 +29,34 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
+    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
+
     /**
      * 使用shiro进行登录验证
      * @param account
-     * @param request
+     * @param session
      * @return
      */
     @RequestMapping("/login")
-    public responseFromServer login(@RequestBody Account account, HttpRequest request){
+    public responseFromServer login(@RequestBody Account account, HttpSession session){
         //验证参数，用户名和密码是否为空
         if(account==null||account.getUsername()==null||account.getPassword()==null)
             return responseFromServer.error();
 
+        responseFromServer response  = accountService.selectByUserName(account.getUsername());
+        if (response.isSuccess()) {
+            Account account1 = (Account) response.getData();
+            if(account.getPassword().equals(account1.getPassword())){
+                session.setAttribute("currentAccount",account1);
+                return responseFromServer.success();
+            }else{
+                return responseFromServer.error();
+            }
+        }else{
+            return responseFromServer.error();
+        }
         //添加用户认证信息
-        Subject subject = SecurityUtils.getSubject();
+       /* Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(
                 account.getUsername(),
                 account.getPassword()
@@ -49,8 +65,8 @@ public class AccountController {
         try {
             //进行验证，这里可以捕获异常，然后返回对应信息
             subject.login(usernamePasswordToken);
-            /*subject.checkRole("admin");
-            subject.checkPermissions("query", "add");*/
+            *//*subject.checkRole("admin");
+            subject.checkPermissions("query", "add");*//*
         } catch (AuthorizationException e) {
             e.printStackTrace();
             return responseFromServer.error("没有权限");
@@ -72,22 +88,23 @@ public class AccountController {
         }
 
         if (subject.isAuthenticated()) {
-            /*登录成功*/
+            *//*登录成功*//*
             return responseFromServer.success();
         } else {
             usernamePasswordToken.clear();
             return responseFromServer.error();
         }
-
+*/
     }
 
     /**
      * 检查当前用户名是否被使用
-     * @param userName
+     * @param account
      * @return
      */
     @RequestMapping("/verifyUserName")
-    public responseFromServer verifyUserName(@RequestBody String userName){
+    public responseFromServer verifyUserName(@RequestBody Account account){
+        String userName = account.getUsername();
         if(userName==null||userName==""){
             return responseFromServer.error();
         }else{
@@ -102,6 +119,11 @@ public class AccountController {
      */
     @RequestMapping("/register")
     public responseFromServer register(@RequestBody Account account){
+
+        if(account.getPassword()==null||
+                !accountService.verifyUserName(account.getUsername()).isSuccess()){
+            return responseFromServer.error();
+        }
         return accountService.register(account);
     }
 
@@ -133,6 +155,9 @@ public class AccountController {
     @RequestMapping("/getAccountInfo")
     public responseFromServer getAccountInfo(@RequestBody Account account,HttpSession session){
         Account account1 = AccountVerify.verifyWithReturn(account,session);
+        if(account1 == null){
+            return responseFromServer.error();
+        }
         if(account1.getId().intValue()!=account.getId().intValue()){
             responseFromServer response = accountService.getA2a(account.getId(),account1.getId());
             if(response.isSuccess()){
@@ -146,8 +171,4 @@ public class AccountController {
             return responseFromServer.success(account1);
         }
     }
-
-
-
-
 }

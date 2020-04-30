@@ -25,8 +25,8 @@ class NoticeDAOTest {
         Page<Notice> page = new Page<>(1, Nums.pageSize);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.ge("id",1);
-        IPage<Notice> noticeIPage = noticeDAO.testDetailed(page,queryWrapper);
-        MyPage myPage = new MyPage(noticeIPage);
+//        IPage<Notice> noticeIPage = noticeDAO.testDetailed(page,queryWrapper);
+//        MyPage myPage = new MyPage(noticeIPage);
     }
 
     @Test

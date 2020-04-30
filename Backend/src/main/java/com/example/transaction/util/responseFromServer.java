@@ -16,6 +16,14 @@ public class responseFromServer<T> implements Serializable {
     private int status;//0 成功 1 失败 10 需要登录
     private String msg;
     private T data;
+    /*
+        SUCCESS(0,"SUCCESS"),
+        ERROR(1,"ERROR"),
+        ILLEGAL_ARGUMENT(2,"ILLEGAL_ARGUMENT"),
+        NEED_LOGIN(10,"NEED_LOGIN"),
+        SELLER_NEED_LOGIN(11,"NEED_LOGIN"),
+        Exception(-1,"Exception");
+    * */
 
     private responseFromServer(int status){
         this.status = status;

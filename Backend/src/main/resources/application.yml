@@ -16,6 +16,8 @@ mybatis-plus:
   #logging.level.com.looedu.mapper= info
 
 spring:
+  application:
+    name: shiro
   output:
     ansi:
       enabled: always

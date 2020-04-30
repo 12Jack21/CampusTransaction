@@ -83,10 +83,13 @@ public class AccountServiceImpl implements AccountService {
     public responseFromServer verifyUserName(String userName){
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("username",userName);
-        if(accountDAO.selectCount(queryWrapper)!=1){
-            return responseFromServer.error();
+
+        int count = accountDAO.selectCount(queryWrapper);
+        if(count==0){
+            /*该用户名可以使用*/
+            return responseFromServer.success();
         }
-        return responseFromServer.success();
+        return responseFromServer.error();
     }
 
     /**
@@ -95,9 +98,9 @@ public class AccountServiceImpl implements AccountService {
      * @return responseFromServer
      */
     public responseFromServer selectByUserName(String userName){
-        Map<String,Object> queryMap = new HashMap<>();
-        queryMap.put("username",userName);
-        List<Account> account = accountDAO.selectByMap(queryMap);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("username",userName);
+        List<Account> account = accountDAO.selectList(queryWrapper);
         if(account.size()!=1){
             return responseFromServer.error();
         }else{

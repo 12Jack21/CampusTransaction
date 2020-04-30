@@ -28,6 +28,11 @@ public class AccountVerify {
         if(account==null)
             return false;
         Account currentAccount = (Account) session.getAttribute("currentAccount");
+
+        /*此时未登录*/
+        if(currentAccount==null||currentAccount.getId()==null)
+            return false;
+
         if(account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
             /*非法操作*/
             return false;
@@ -43,7 +48,8 @@ public class AccountVerify {
         if(account==null)
             return null;
         Account currentAccount = (Account) session.getAttribute("currentAccount");
-        if(account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
+
+        if(currentAccount == null||account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
             /*非法操作*/
             return null;
         }

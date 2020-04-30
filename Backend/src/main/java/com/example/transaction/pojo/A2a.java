@@ -27,4 +27,6 @@ public class A2a {
     @TableField(exist = false)
     private Account account2;
 
+    public A2a(){}
+
 }

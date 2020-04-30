@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.pojo.Notice;
-import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.MyPage;
@@ -49,8 +48,6 @@ public class NoticeServiceImpl implements NoticeService {
         }
 
     }
-
-
 
 
     /**
@@ -100,7 +97,7 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex){
         Page<Notice> page = new Page<>(pageIndex,Nums.pageSize);
-        IPage<Notice> noticeIPage = noticeDAO.selectPage(page,queryWrapper);
+        IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page,queryWrapper);
         MyPage myPage = new MyPage(noticeIPage);
         return responseFromServer.success(myPage);
     }
