@@ -5,10 +5,7 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notify;
-import org.apache.ibatis.annotations.One;
-import org.apache.ibatis.annotations.Result;
-import org.apache.ibatis.annotations.Results;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,19 +18,37 @@ import java.util.List;
 
 @Repository
 public interface AccountNotifyDAO extends BaseMapper<AccountNotify> {
-    @Results(id = "notifyInfo", value = {
-            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
-                    select = "com.example.transaction.dao.NotifyDAO.selectById"
-            ))
-    })
-    @Select("select * from acc_notify where notify_id=#{id}")
-    List<AccountNotify> getAllByNotifyId(Integer id);
 
-    @Results(id = "accountInfo", value = {
-            @Result(property = "owner", column = "account_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+    @Results(
+            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
+                    select = "com.example.transaction.dao.NotifyDao.selectById"
             ))
-    })
-    @Select("select * from acc_notify where account_id=#{id}")
-    List<AccountNotify> getAllByAccountId(Integer id);
+    )
+    @Select("select * from notify acc_notify where account_id = #{account_id} and is_read = false order by create_time DESC")
+    List<AccountNotify> getUnreadNotifyByAccountId(Integer accountId);
+
+    @Results(
+            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
+                    select = "com.example.transaction.dao.NotifyDao.selectById"
+            ))
+    )
+    @Select("select * from notify acc_notify where account_id = #{account_id} order by create_time DESC")
+    List<AccountNotify> getAllNotifyByAccountId(Integer accountId);
+
+    @Results(
+            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
+                    select = "com.example.transaction.dao.NotifyDao.selectById"
+            ))
+    )
+    @Select("select * from notify acc_notify where id = #{id} ")
+    AccountNotify getDetailedNotifyById(Integer id);
+
+
+
+    @Update("update acc_notify set is_read = true where id = #{id}")
+    int setNotifyRead(Integer id);
+
+
+
+
 }

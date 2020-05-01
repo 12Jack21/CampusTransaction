@@ -22,7 +22,7 @@ public class AccountNotify {
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     @TableField(value = "is_read")
-    private boolean isRead;
+    private Boolean isRead;
     @TableField(value = "creat_time")
     private Timestamp createTime;
     @TableField(value = "read_time")
