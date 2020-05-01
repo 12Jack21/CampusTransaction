@@ -1,0 +1,26 @@
+{
+  "name": "vuepro",
+  "version": "1.0.0",
+  "description": "A sample vuepress blog",
+  "main": "docs/.vuepress/config.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vuepress dev docs",
+    "build": "vuepress build docs",
+    "deploy": "npm run build & gh-pages -d docs/.vuepress/dist"
+  },
+  "author": "john",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@limdongjin/vuepress-plugin-sidebar-on-off": "^1.0.0-alpha.32",
+    "@vuepress/plugin-medium-zoom": "^1.4.1",
+    "@vuepress/plugin-search": "^1.4.1",
+    "gh-pages": "^2.2.0",
+    "vuepress": "^1.4.1",
+    "vuepress-theme-reco": "^1.4.5"
+  }
+}
