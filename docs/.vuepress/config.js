@@ -8,7 +8,7 @@ module.exports = {
   title: 'SE Blog',
   base: '/CampusTransaction/', // 设置站点根路径
   description: 'A blog for campus second transaction project',
-  //theme:'reco',
+  theme:'reco',
   themeConfig: {
     nav: [
       {
@@ -17,27 +17,35 @@ module.exports = {
         target: '_blank',
       },
     ],
-    sidebarDepth: 1,
+    sidebarDepth: 2,
     // displayAllHeaders: true,
-    sidebar: {
-      '/': [
-        {
-          title: '项目介绍',
-          collapsable: false,
-          children: ['', 'hom1.md', 'home2'],
-        },
-        {
-          title: '需求分析',
-          collapsable: false,
-          children: ['Demand/'],
-        },
-        {
-          title: 'G2',
-          collapsable: false,
-          children: ['page-b/', '/page-b/a.html'],
-        },
-      ],
-    }
+    sidebar: [
+      ['/', '首页'],
+      ['/Introduction', '项目介绍'],
+      ['/Demand','需求说明'],
+      ['/DataBase','数据库设计'],
+      ['/Design','系统设计'],
+      ['/Test','测试结果']
+    ]
+    // sidebar: {
+    //   '/': [
+    //     {
+    //       title: '项目介绍',
+    //       collapsable: false,
+    //       children: ['', 'hom1.md', 'home2'],
+    //     },
+    //     {
+    //       title: '需求分析',
+    //       collapsable: false,
+    //       children: ['Demand/'],
+    //     },
+    //     {
+    //       title: 'G2',
+    //       collapsable: false,
+    //       children: ['page-b/', '/page-b/a.html'],
+    //     },
+    //   ],
+    // }
   },
   plugins:[
     ['@vuepress/search',{

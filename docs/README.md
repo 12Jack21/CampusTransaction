@@ -1,26 +1,16 @@
-## Subject
-### Demand
-
-本课程的实验课时为4周，现在按照6周的时间来准备，进度安排如下：
-
-1）第1周为准备期，完成组队和选题，建立起代码库（GitHub）和博客展示（cnblog或其他）；
-
-2）第2周为需求捕获和分析，网上提交相应的文档；
-
-3）第三周为系统设计，网上提交相应的文档；
-
-4）第四周为编码实现及单元测试，代码上传至GitHub；5）第五周为系统集成，网上提交相应的文档；
-
-6）第六周为机动时间，查漏补缺；
-
-7）14周末进行验收。评选3个优秀项目进行奖励
-
-
-### Plan
-
->  Plan a path for project, and reasonably arrange the task for group members.
-
-### 需求分析
-
-- 需求列表，用例图
-- 数据流图、数据字典
+---
+home: true
+heroImage: /logo.png
+heroText: 校园二手交易平台
+tagline: 面向在校大学生的综合性供需系统
+actionText: 查看项目 →
+actionLink: /Introduction
+features:
+- title: 易用性
+  details: 简介美观的界面设计、简单友好的操作逻辑帮助用户进行需要的二手交易活动
+- title: 综合性
+  details: 相对于分散、繁杂的各种二手交易平台、供需平台来说进行了综合，统一组织和管理
+- title: 时效性
+  details: 平台根据发布者的实际交易状况进行及时的信息更新，同时对相关人员发送通知
+footer: MIT Licensed | Copyright © 2020-present  John
+---
