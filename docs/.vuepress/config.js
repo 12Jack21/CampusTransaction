@@ -6,7 +6,7 @@ const filehelper = require('./utils/initPage')
 
 module.exports = {
   title: 'SE Blog',
-  base: '/SEProBlog/', // 设置站点根路径
+  base: '/CampusTransaction/', // 设置站点根路径
   description: 'A blog for campus second transaction project',
   //theme:'reco',
   themeConfig: {
