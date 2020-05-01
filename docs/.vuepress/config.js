@@ -7,7 +7,7 @@ const filehelper = require('./utils/initPage')
 module.exports = {
   title: 'SE Blog',
   base: '/CampusTransaction/', // 设置站点根路径
-  description: 'A blog for campus second transaction project',
+  description: '面向在校大学生的综合性供需系统',
   theme:'reco',
   themeConfig: {
     nav: [
@@ -24,7 +24,7 @@ module.exports = {
       ['/Introduction', '项目介绍'],
       ['/Demand','需求说明'],
       ['/DataBase','数据库设计'],
-      ['/Design','系统设计'],
+      ['/System','系统设计'],
       ['/Test','测试结果']
     ]
     // sidebar: {

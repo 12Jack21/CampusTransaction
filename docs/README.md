@@ -2,7 +2,6 @@
 home: true
 heroImage: /logo.png
 heroText: 校园二手交易平台
-tagline: 面向在校大学生的综合性供需系统
 actionText: 查看项目 →
 actionLink: /Introduction
 features:
