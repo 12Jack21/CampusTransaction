@@ -60,7 +60,7 @@ date: 2020/05/01 15:00:00
 
 是阿里巴巴集团旗下的二手交易平台，采用类似淘宝的电商模式运营，其涵盖的用户范围比较广，类别比较全，UI界面也是很值得借鉴的
 
-<img src="./assets/xianyu.jpg" alt="在武大小程序" width="250" height="400" />
+<img src="./assets/xianyu.jpg" alt="闲鱼APP" width="250" height="400" />
 
 存在的**问题**：
 
@@ -71,7 +71,7 @@ date: 2020/05/01 15:00:00
 
 据我们的调查，QQ群方式是现在大学生最常用、也是被认为最方便的交易方式，因为他背靠聊天系统，交流方便
 
-<img src="./assets/qqgroup.jpg" alt="在武大小程序" width="250" height="400" />
+<img src="./assets/qqgroup.jpg" alt="QQ群/群相册" width="250" height="400" />
 
 存在的**问题**：
 
