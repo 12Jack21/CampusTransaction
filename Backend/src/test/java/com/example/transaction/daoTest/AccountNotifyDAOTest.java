@@ -19,15 +19,15 @@ public class AccountNotifyDAOTest {
     @Autowired
     private AccountNotifyDAO accountNotifyDAO;
 
-    @Test
-    void testGetAllByNotifyId(){
-        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByNotifyId(1);
-        System.out.println(accountNotifies);
-    }
-
-    @Test
-    void testGetAllByAccountId(){
-        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByAccountId(1);
-        System.out.println(accountNotifies);
-    }
+//    @Test
+//    void testGetAllByNotifyId(){
+////        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByNotifyId(1);
+//        System.out.println(accountNotifies);
+//    }
+//
+//    @Test
+//    void testGetAllByAccountId(){
+////        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByAccountId(1);
+//        System.out.println(accountNotifies);
+//    }
 }
