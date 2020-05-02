@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @ClassName: CommodityController
@@ -44,44 +45,66 @@ public class CommodityController {
 
     /**
      * 商品名称模糊检索，崭新程度排序
-     * @param name 商品名称
-     * @return Commodity数组
+     * @param map
+     * @return
      */
-    @RequestMapping("/sortByNewness")
-    public responseFromServer getByNameSortedByNewness(@RequestParam(value = "pageIndex")Integer pageIndex, @RequestParam(value = "name") String name){
-        return commodityService.getByNameSortedByNewness(pageIndex, name);
+    @RequestMapping("/search/SortByNewness")
+    public responseFromServer getByNameSortedByNewness(@RequestBody Map<String,Object> map){
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        String searchStr = (String) map.get("searchStr");
+        if(searchStr == null||searchStr == ""){
+            return responseFromServer.error();
+        }
+        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
+        return commodityService.getByNameSortedByNewness(pageIndex, searchStr);
     }
 
     /**
      * 根据类型分类
-     * @param typeId 标签
-     * @return Commodity数组
+     * @param map
+     * @return
      */
-    @RequestMapping("/getByType")
-    public responseFromServer getByTypeId(@RequestParam(value = "pageIndex") Integer pageIndex, @RequestParam(value = "typeId")Integer typeId){
+    @RequestMapping("/search/getByType")
+    public responseFromServer getByTypeId(@RequestBody Map<String,Object> map){
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        Integer typeId = (Integer) map.get("typeId");
+        if(typeId == null){
+            return responseFromServer.error();
+        }
+        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
         return commodityService.getByTypeId(pageIndex, typeId);
     }
 
     /**
      * 根据价格区间筛选物品
-     * @param name 商品名称
-     * @param low 最低价
-     * @param high 最高价
-     * @return Commodity数组
+     * @param map
+     * @return
      */
-    @RequestMapping("/betweenPrice")
-    public responseFromServer getBetweenPrice(@RequestParam(value = "pageIndex") Integer pageIndex, @RequestParam(value = "name") String name, @RequestParam(value = "low")Integer low, @RequestParam(value = "high")Integer high){
-        return commodityService.getBetweenPrice(pageIndex, name, low, high);
+    @RequestMapping("/search/betweenPrice")
+    public responseFromServer getBetweenPrice(@RequestBody Map<String,Object> map){
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        Integer low = (Integer) map.get("low"),high = (Integer)map.get("high");
+        String searchStr = (String) map.get("searchStr");
+        if(searchStr == null||searchStr == ""){
+            return responseFromServer.error();
+        }
+        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
+        return commodityService.getBetweenPrice(pageIndex, searchStr, low, high);
     }
 
     /**
      * 根据所有者信誉排序
-     * @param name 商品名称
-     * @return Commodity数组
+     * @param map
+     * @return
      */
-    @RequestMapping("/sortByCredit")
-    public responseFromServer sortByCredit(@RequestParam(value = "pageIndex") Integer pageIndex, @RequestParam(value = "name") String name){
-        return commodityService.sortByCredit(pageIndex, name);
+    @RequestMapping("/search/sortByCredit")
+    public responseFromServer sortByCredit(@RequestBody Map<String,Object> map){
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        String searchStr = (String) map.get("searchStr");
+        if(searchStr == null||searchStr == ""){
+            return responseFromServer.error();
+        }
+        return commodityService.sortByCredit(pageIndex, searchStr);
     }
 
     /**
@@ -90,6 +113,7 @@ public class CommodityController {
      * @param session HttpSession
      * @return 执行结果
      */
+    @RequestMapping("/insertCommodity")
     public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpSession session){
         if(commodity.getNoticeId()==null)
             return responseFromServer.error();
@@ -112,7 +136,7 @@ public class CommodityController {
      * @param commodity 商品
      * @return 执行结果
      */
-    @RequestMapping("/update")
+    @RequestMapping("/updateCommodity")
     public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpSession session){
         responseFromServer response = getById(commodity.getId());
         if(AccountVerify.verifySellerByCommodityId(response,session)) {
@@ -128,7 +152,7 @@ public class CommodityController {
      * @param session HttpSession
      * @return 执行结果
      */
-    @RequestMapping("/delete")
+    @RequestMapping("/deleteCommodity")
     public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpSession session){
         responseFromServer response = getById(commodity.getId());
         if(AccountVerify.verifySellerByCommodityId(response,session))

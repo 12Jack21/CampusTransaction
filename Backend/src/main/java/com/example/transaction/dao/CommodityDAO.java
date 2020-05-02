@@ -55,13 +55,13 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
     //商品名模糊分页查询，新旧程度排序
-    IPage<Commodity> sortByNewness(Page<?> page, String name, Timestamp timestamp);
+    IPage<Commodity> sortByNewness(Page<?> page, String name);
     //商品类型分页查询
-    IPage<Commodity> sortByType(Page<?> page, Integer typeId, Timestamp timestamp);
+    IPage<Commodity> sortByType(Page<?> page, Integer typeId);
     //商品价格区间分页查询
-    IPage<Commodity> betweenPrice(Page<?> page, String name, Integer low, Integer high, Timestamp timestamp);
+    IPage<Commodity> betweenPrice(Page<?> page, String name, Integer low, Integer high);
     //商品名模糊分页查询, 所有者信誉排序
-    IPage<Commodity> sortByCredit(Page<?> page, String name, Timestamp timestamp);
+    IPage<Commodity> sortByCredit(Page<?> page, String name);
 
 
 }

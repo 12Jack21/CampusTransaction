@@ -87,8 +87,8 @@ public class CommodityServiceImpl implements CommodityService {
      */
     public responseFromServer getByNameSortedByNewness(Integer pageIndex, String name){
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-        IPage<Commodity> iPage = commodityDAO.sortByNewness(page, name, timestamp);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByNewness(page, name);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
         return responseFromServer.success(myPage);
     }
@@ -100,8 +100,8 @@ public class CommodityServiceImpl implements CommodityService {
      */
     public responseFromServer getByTypeId(Integer pageIndex, Integer typeId){
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-        IPage<Commodity> iPage = commodityDAO.sortByType(page, typeId, timestamp);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByType(page, typeId);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
         return responseFromServer.success(myPage);
     }
@@ -114,8 +114,8 @@ public class CommodityServiceImpl implements CommodityService {
      */
     public responseFromServer getBetweenPrice(Integer pageIndex, String name, Integer low, Integer high){
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-        IPage<Commodity> iPage = commodityDAO.betweenPrice(page, name, low, high, timestamp);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.betweenPrice(page, name, low, high);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
         return responseFromServer.success(myPage);
     }
@@ -127,8 +127,8 @@ public class CommodityServiceImpl implements CommodityService {
      */
     public responseFromServer sortByCredit(Integer pageIndex, String name){
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
-        IPage<Commodity> iPage = commodityDAO.sortByCredit(page, name, timestamp);
+//        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
+        IPage<Commodity> iPage = commodityDAO.sortByCredit(page, name);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
         return responseFromServer.success(myPage);
     }

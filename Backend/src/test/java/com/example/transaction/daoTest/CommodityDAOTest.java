@@ -39,7 +39,7 @@ public class CommodityDAOTest {
     void testSortByNewness(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         Page<Commodity> page = new Page<>(2,1);
-        IPage<Commodity> iPage = commodityDAO.sortByNewness(page, "ello", timestamp);
+        IPage<Commodity> iPage = commodityDAO.sortByNewness(page, "ello");
         System.out.println(page.getPages());
         System.out.println(page.getTotal());
         System.out.println(page.getRecords());
@@ -50,7 +50,7 @@ public class CommodityDAOTest {
     void testBetweenPrice(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         Page<Commodity> page = new Page<>(2,1);
-        IPage<Commodity> iPage = commodityDAO.betweenPrice(page,"ello", 1, 50, timestamp);
+        IPage<Commodity> iPage = commodityDAO.betweenPrice(page,"ello", 1, 50);
         System.out.println(page.getPages());
         System.out.println(page.getTotal());
         System.out.println(page.getRecords());
@@ -61,7 +61,7 @@ public class CommodityDAOTest {
     void testSortByType(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         Page<Commodity> page = new Page<>(1,1);
-        IPage<Commodity> iPage = commodityDAO.sortByType(page, 1, timestamp);
+        IPage<Commodity> iPage = commodityDAO.sortByType(page, 1);
         System.out.println(page.getPages());
         System.out.println(page.getTotal());
         System.out.println(page.getRecords());
@@ -72,7 +72,7 @@ public class CommodityDAOTest {
     void testSortByCredit(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         Page<Commodity> page = new Page<>(2,1);
-        IPage<Commodity> iPage = commodityDAO.sortByCredit(page, "yell", timestamp);
+        IPage<Commodity> iPage = commodityDAO.sortByCredit(page, "yell");
         System.out.println(page.getPages());
         System.out.println(page.getTotal());
         System.out.println(page.getRecords());
