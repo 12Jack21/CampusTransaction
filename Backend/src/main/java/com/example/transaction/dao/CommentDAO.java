@@ -20,15 +20,16 @@ import org.springframework.stereotype.Repository;
 public interface CommentDAO extends BaseMapper<Comment> {
     @Results(id="commentInfo", value = {
             @Result(property = "sender", column = "from_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+                    select = "com.example.transaction.dao.AccountDAO.getSimpleAccountById"
             )),
             @Result(property = "receiver", column = "to_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+                    select = "com.example.transaction.dao.AccountDAO.getSimpleAccountById"
             ))
     })
-    @Select("select * from comment ${ew.customSqlSegment} order by date ASC")
+    @Select("select * from comment ${ew.customSqlSegment}")
     IPage<Comment> getCommentWithAccountInfo(Page<?> page, @Param("ew") QueryWrapper<Comment> wrapper);
     /*获取分页*/
+
 
     /*评论不可删除*/
 }

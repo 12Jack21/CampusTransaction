@@ -33,7 +33,7 @@ public class AccountVerify {
         if(currentAccount==null||currentAccount.getId()==null)
             return false;
 
-        if(account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
+        if(account.getId()!=null&&account.getId().intValue()!=currentAccount.getId().intValue()){
             /*非法操作*/
             return false;
         }

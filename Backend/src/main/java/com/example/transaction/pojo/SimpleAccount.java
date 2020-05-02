@@ -6,32 +6,31 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 /**
- * @ClassName: A2a
+ * @ClassName: SimpleAccount
  * @Description: TODO
  * @Author: 曾志昊
- * @Date: 2020/4/30 14:31
+ * @Date: 2020/5/2 20:15
  */
 @Data
-@TableName(value = "a2a")
-public class A2a {
+@TableName("account")
+public class SimpleAccount {
+
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
-    @TableField(value = "account_id_1")
-    private int accountId1;
-    @TableField(value = "account_id_2")
-    private int accountId2;
+    private String username;
+    private String password;
+    private Boolean gender;
+    private String avatarUrl;
 
     @TableField(exist = false)
-    private Account account1;
-    @TableField(exist = false)
-    private Account account2;
+    private Estimate estimate;
 
-    public A2a(){}
-
-    public A2a(Integer id1,Integer id2){
-        this.accountId1 = id1;
-        this.accountId2 = id2;
+    public SimpleAccount(Integer accountId){
+        this.id = accountId;
     }
-
+    public SimpleAccount(){}
 }

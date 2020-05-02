@@ -33,7 +33,7 @@ public class Comment {
     @TableField(exist = false)
     private Commodity commodity;
     @TableField(exist = false)
-    private Account sender;
+    private SimpleAccount sender;
     @TableField(exist = false)
-    private Account receiver;
+    private SimpleAccount receiver;
 }

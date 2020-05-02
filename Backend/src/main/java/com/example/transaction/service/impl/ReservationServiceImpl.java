@@ -3,8 +3,10 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.ReservationDAO;
+import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
@@ -169,10 +171,10 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     @Transactional
-    public responseFromServer validateReservation(Reservation reservation) {
+    public responseFromServer validateReservation(Reservation reservation,Integer sellerId) {
         /*用户验证在controller层中处理*/
         /*获取reservation 检查id和用户id*/
-        Commodity commodity = reservation.getCommodity();
+        if(reservation.getCommodityId()==null)return responseFromServer.error();
         /*验证reservation状态是否是等待状态*/
         if(reservation.getStateEnum()!=ReservationCode.WAITING.getCode()){
             return responseFromServer.error("预约状态错误");
@@ -180,6 +182,7 @@ public class ReservationServiceImpl implements ReservationService {
         /*验证状态成功*/
 
         /*验证commodity库存*/
+        Commodity commodity = commodityDAO.selectById(reservation.getCommodityId());
         if(commodity.getCount()<reservation.getCount()){
             /*库存不足*/
             return responseFromServer.error("库存不足");
@@ -198,6 +201,16 @@ public class ReservationServiceImpl implements ReservationService {
         if(commodityDAO.updateById(newCommodity)!=1){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error("修改商品库存出错");
+        }
+
+
+        reservation = reservationDAO.selectById(reservation.getId());
+
+            A2a a2a1 = new A2a(reservation.getAccountId(),sellerId);
+            A2a a2a2 = new A2a(sellerId,reservation.getAccountId());
+            if(a2aDAO.insert(a2a1)!=1||a2aDAO.insert(a2a2)!=1){
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
         }
         return responseFromServer.success();
     }
@@ -245,12 +258,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
 
+    A2aDAO a2aDAO;
     ReservationDAO reservationDAO;
     CommodityDAO commodityDAO;
     @Autowired
-    public ReservationServiceImpl(ReservationDAO reservationDAO,CommodityDAO commodityDAO){
+    public ReservationServiceImpl(ReservationDAO reservationDAO,CommodityDAO commodityDAO,A2aDAO a2aDAO){
         this.reservationDAO = reservationDAO;
         this.commodityDAO = commodityDAO;
+        this.a2aDAO = a2aDAO;
     }
 
 

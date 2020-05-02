@@ -23,7 +23,7 @@ public interface ReservationService {
     public responseFromServer cancelReservation(Integer reservationId,Integer accountId);
     public responseFromServer updateReservation(Reservation reservation);
     public responseFromServer updateBuyerReservation(Reservation reservation);
-    public responseFromServer validateReservation(Reservation reservation);
+    public responseFromServer validateReservation(Reservation reservation,Integer sellerId);
     public responseFromServer finishReservation(Integer reservationId);
 
     public responseFromServer deleteReservation(Reservation reservation);

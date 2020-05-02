@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @ClassName: NoticeController
@@ -78,7 +79,7 @@ public class NoticeController {
      * @param code
      * @return
      */
-    public responseFromServer updateNoticeState(Notice notice,HttpSession session,int code){
+    public responseFromServer updateNoticeState(@RequestBody  Notice notice,HttpSession session,int code){
         Account account = new Account(notice.getAccountId());
         if(AccountVerify.verify(account,session)){
             QueryWrapper queryWrapper = new QueryWrapper();
@@ -118,11 +119,13 @@ public class NoticeController {
 
     /**
      * 获取首页最近通告
-     * @param pageIndex
+     * @param map
      * @return
      */
     @RequestMapping("/getRecentNoticePage")
-    public responseFromServer getRecentNoticePage(@RequestBody Integer pageIndex){
+    public responseFromServer getRecentNoticePage(@RequestBody Map<String,Object> map){
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        if(pageIndex==null) return responseFromServer.error();
         QueryWrapper queryWrapper = new QueryWrapper();
         /*按照时间倒序排序*/
         queryWrapper.orderByDesc("update_time");
@@ -133,7 +136,8 @@ public class NoticeController {
 
 
     @RequestMapping("/getNoticePageForAccount")
-    public responseFromServer getNoticePageByAccountId(@RequestBody Integer pageIndex, HttpSession session){
+    public responseFromServer getNoticePageByAccountId(@RequestBody Map<String,Object> map, HttpSession session){
+        Integer pageIndex = (Integer) map.get("pageIndex");
         Account account = (Account)session.getAttribute("currentAccount");
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id",account.getId());

@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class Account {
+public class Account extends SimpleAccount{
 
     @TableId(value = "id",type = IdType.AUTO)
     private Integer id;

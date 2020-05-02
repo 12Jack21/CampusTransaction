@@ -97,6 +97,26 @@ public class AccountController {
 */
     }
 
+
+    /**
+     * 退登
+     * @param session
+     * @return
+     */
+    @RequestMapping("/logout")
+    public responseFromServer logout(HttpSession session){
+        session.removeAttribute("currentAccount");
+        return responseFromServer.success();
+    }
+
+
+    /*todo 上传图片*/
+    @RequestMapping("/uploadAvatar")
+    public responseFromServer uploadAvatar(HttpSession session){
+        return null;
+    }
+
+
     /**
      * 检查当前用户名是否被使用
      * @param account

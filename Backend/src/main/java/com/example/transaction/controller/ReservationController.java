@@ -133,7 +133,8 @@ public class ReservationController {
         if(verifySeller(reservation,session)){
             /*验证当前操作用户是否是卖家*/
             /*todo 加入a2a*/
-            return reservationService.validateReservation(reservation);
+
+            return reservationService.validateReservation(reservation,((Account)session.getAttribute("currentAccount")).getId());
         }else{
             return responseFromServer.illegal();
         }
