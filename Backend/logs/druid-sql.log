@@ -337,3 +337,13 @@ where id = 2
 from estimate
 where account_id = 2
 [2020-05-02 20:24:45] DEBUG 134 statementLog - {conn-10001, pstmt-20005} executed. 2.5058 millis. select * from estimate where account_id=?
+[2020-05-02 21:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} created. SELECT COUNT(1) FROM commodity c, notice n WHERE (c.name LIKE concat('%', ?, '%') OR c.description LIKE concat('%', ?, '%')) AND c.notice_id = n.id AND n.end_time >= CURRENT_TIMESTAMP
+[2020-05-02 21:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Parameters : [1, 1]
+[2020-05-02 21:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} Types : [VARCHAR, VARCHAR]
+[2020-05-02 21:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000} executed. select count(1)
+from commodity c, notice n
+where (c.name like concat('%', '1', '%')
+		or c.description like concat('%', '1', '%'))
+	and c.notice_id = n.id
+	and n.end_time >= CURRENT_TIMESTAMP
+[2020-05-02 21:44:20] DEBUG 134 statementLog - {conn-10001, pstmt-20000, rs-50000} query executed. 113.2579 millis. SELECT COUNT(1) FROM commodity c, notice n WHERE (c.name LIKE concat('%', ?, '%') OR c.description LIKE concat('%', ?, '%')) AND c.notice_id = n.id AND n.end_time >= CURRENT_TIMESTAMP
