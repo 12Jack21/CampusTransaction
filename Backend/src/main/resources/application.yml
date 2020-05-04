@@ -16,16 +16,14 @@ mybatis-plus:
   #logging.level.com.looedu.mapper= info
 
 web:
-
   upload-path: E:/CampusTransactionResources/images
-
   front-path: E:/CampusTransactionResources/images
-
+  avatar-path: E:/CampusTransactionResources/avatars
 
 spring:
-
   resources:
-    static-locations: file:${web.upload-path},file:${web.front-path}
+    static-locations: file:${web.upload-path},file:${web.front-path},file:${web.avarar-path}
+
 
   application:
     name: shiro

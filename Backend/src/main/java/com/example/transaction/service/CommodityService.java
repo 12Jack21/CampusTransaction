@@ -41,4 +41,6 @@ public interface CommodityService {
     public responseFromServer deleteAllByNotice(Notice notice);
     //返回商品图片路径
     public responseFromServer imageUrl(MultipartFile[] files);
+
+    public responseFromServer uploadCommodityImages( MultipartFile[] files, Integer commodityId);
 }

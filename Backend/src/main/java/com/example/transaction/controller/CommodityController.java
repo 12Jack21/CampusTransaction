@@ -7,13 +7,16 @@ import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.CommodityServiceImpl;
 import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @ClassName: CommodityController
@@ -31,6 +34,42 @@ public class CommodityController {
     CommodityController(CommodityService commodityService,NoticeService noticeService){
         this.commodityService = commodityService;
         this.noticeService = noticeService;
+    }
+
+
+    /**
+     * 上传商品图片
+     * @param files
+     * @param commodityId
+     * @param session
+     * @return
+     */
+    @PostMapping("/uploadPicture")
+    public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
+                                     @RequestParam(name = "commodityId") Integer commodityId,
+                                     HttpSession session) {
+        if (files == null) {
+            return responseFromServer.error(0, "请选择要上传的图片");
+        }
+        if( files.length >6 ){
+            return responseFromServer.error();
+        }
+        for(MultipartFile file:files){
+            if(file.getSize()> 1024 * 1024 * 10){
+                return responseFromServer.error(0, "文件大小不能大于10M");
+            }
+        }
+
+        responseFromServer response = commodityService.getDetailedCommodity(commodityId);
+        if(!response.isSuccess()){
+            return responseFromServer.error();
+        }
+        Commodity commodity = (Commodity) response.getData();
+        Account account = new Account(commodity.getNotice().getAccountId());
+        if(!AccountVerify.verify(account,session)){
+            return responseFromServer.error();
+        }
+        return commodityService.uploadCommodityImages(files,commodityId);
     }
 
 

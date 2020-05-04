@@ -21,4 +21,11 @@ public class CommodityImage {
     private String imageUrl;
     @TableField(value = "commodity_id")
     private Integer commodityId;
+
+    public CommodityImage(){}
+
+    public CommodityImage(String imageUrl,Integer commodityId){
+        this.imageUrl = imageUrl;
+        this.commodityId = commodityId;
+    }
 }

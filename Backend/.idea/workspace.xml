@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0fed5ea2-a05b-4dcc-be0b-68e212847adf" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/transaction/util/code/ResourcePath.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/transaction/controller/CommodityController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/transaction/controller/CommodityController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/transaction/pojo/CommodityImage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/transaction/pojo/CommodityImage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/transaction/service/CommodityService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/transaction/service/CommodityService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/transaction/service/impl/CommodityServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/transaction/service/impl/CommodityServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -481,7 +487,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588569893130</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="配置修改">
+      <created>1588569938031</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1588569938031</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -547,10 +560,10 @@
       <screen x="0" y="1080" width="1536" height="824" />
     </state>
     <state x="542" y="1351" width="452" height="291" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.1080.1536.824/0.0.1536.824@0.1080.1536.824" timestamp="1587889947727" />
-    <state x="372" y="5" key="CommitChangelistDialog2" timestamp="1588569890689">
+    <state x="372" y="5" key="CommitChangelistDialog2" timestamp="1588569936580">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="372" y="5" key="CommitChangelistDialog2/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588569890689" />
+    <state x="372" y="5" key="CommitChangelistDialog2/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588569936580" />
     <state x="372" y="1080" key="CommitChangelistDialog2/0.1080.1536.824/0.0.1536.824@0.1080.1536.824" timestamp="1588427198048" />
     <state width="436" height="466" key="DebuggerActiveHint" timestamp="1588248579687">
       <screen x="0" y="1080" width="1536" height="824" />
@@ -649,19 +662,19 @@
       <screen x="0" y="1080" width="1536" height="824" />
     </state>
     <state x="215" y="1125" key="SettingsEditor/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1587817335359" />
-    <state x="428" y="1229" key="VCS.ChangeListViewerDialog" timestamp="1588569927429">
+    <state x="428" y="1229" key="VCS.ChangeListViewerDialog" timestamp="1588569968301">
       <screen x="0" y="1080" width="1536" height="824" />
     </state>
-    <state x="428" y="1229" key="VCS.ChangeListViewerDialog/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588569927429" />
+    <state x="428" y="1229" key="VCS.ChangeListViewerDialog/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588569968301" />
     <state x="361" y="1226" key="Vcs.Push.Dialog.v2" timestamp="1588427205758">
       <screen x="0" y="1080" width="1536" height="824" />
     </state>
     <state x="361" y="146" key="Vcs.Push.Dialog.v2/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588053115485" />
     <state x="361" y="1226" key="Vcs.Push.Dialog.v2/0.1080.1536.824/0.0.1536.824@0.1080.1536.824" timestamp="1588427205758" />
-    <state x="562" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1588569896110">
+    <state x="562" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1588570001132">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="562" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588569896110" />
+    <state x="562" y="330" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.1080.1536.824/0.0.1536.824@0.0.1536.824" timestamp="1588570001132" />
     <state x="562" y="1410" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.1080.1536.824/0.0.1536.824@0.1080.1536.824" timestamp="1588318281753" />
     <state x="511" y="1211" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1588331318423">
       <screen x="0" y="1080" width="1536" height="824" />
