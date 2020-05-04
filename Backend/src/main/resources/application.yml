@@ -15,12 +15,25 @@ mybatis-plus:
 
   #logging.level.com.looedu.mapper= info
 
+web:
+
+  upload-path: E:/CampusTransactionResources/images
+
+  front-path: E:/CampusTransactionResources/images
+
+
 spring:
+
+  resources:
+    static-locations: file:${web.upload-path},file:${web.front-path}
+
   application:
     name: shiro
+
   output:
     ansi:
       enabled: always
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/transaction?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
