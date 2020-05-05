@@ -319,7 +319,7 @@
 			},
 			searchTap() {
 				uni.navigateTo({
-					url: "/pages/home/search"
+					url: "/pages/search/search"
 				});
 			}
 		}

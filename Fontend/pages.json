@@ -5,9 +5,12 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
+		}, {
+			"path": "pages/search/search",
+			"style": {}
 		}
 	],
 	"globalStyle": {
-		"navigationStyle":"custom"
+		"navigationStyle": "custom"
 	}
 }
