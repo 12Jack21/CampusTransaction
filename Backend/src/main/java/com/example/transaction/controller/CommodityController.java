@@ -20,7 +20,6 @@ import java.util.UUID;
 
 /**
  * @ClassName: CommodityController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/25 20:06
  */

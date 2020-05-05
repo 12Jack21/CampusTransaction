@@ -17,7 +17,6 @@ import java.util.Map;
 
 /**
  * @ClassName: NoticeController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/26 16:44
  */

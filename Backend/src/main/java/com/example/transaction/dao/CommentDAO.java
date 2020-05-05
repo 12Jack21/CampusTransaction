@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @InterfaceName: CommentDao
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/25 15:45
  */
