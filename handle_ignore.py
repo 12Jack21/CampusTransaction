@@ -28,11 +28,13 @@ def main():
                 item = item[1:]
                 p = '!'
             if options.project == 'b':
+                if item.startswith('Backend') continue
                 if item.startswith('/'):
                     item = 'Backend' + item
                 else:
                     item = 'Backend/' + item
             elif project == 'f':
+                if item.startswith('Frontend') continue
                 if item.startswith('/'):
                     item = 'Frontend' + item
                 else:
