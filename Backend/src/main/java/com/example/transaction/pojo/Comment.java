@@ -19,7 +19,7 @@ public class Comment {
     private Integer id;
     private Boolean type;
     private String content;
-    private Timestamp date;
+    private Timestamp time;
 
     @TableField(value = "from_id")
     private Integer fromId;

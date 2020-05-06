@@ -16,7 +16,6 @@ import java.util.Map;
 
 /**
  * @ClassName: CommentController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/29 1:42
  */
@@ -28,6 +27,7 @@ public class CommentController {
     public CommentController(CommentService commentService){
         this.commentService = commentService;
     }
+
 
     /**
      * 获取关于商品的评论
@@ -54,6 +54,10 @@ public class CommentController {
      */
     @RequestMapping("/sendComment")
     public responseFromServer sendComment(@RequestBody Comment comment, HttpSession session){
+       /**
+        * ZZH
+        * TODO : 添加到notify
+        */
         Account account = new Account(comment.getFromId());
         if(!AccountVerify.verify(account,session))
             return responseFromServer.illegal();

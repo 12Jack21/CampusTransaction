@@ -49,6 +49,11 @@ public class responseFromServer<T> implements Serializable {
     public boolean isSuccess(){
         return this.status == ResponseCode.SUCCESS.getCode();
     }
+    @JsonIgnore
+    //使之不在json序列化结果当中
+    public boolean isFailure(){
+        return this.status != ResponseCode.SUCCESS.getCode();
+    }
 
     public int getStatus(){
         return status;

@@ -17,6 +17,4 @@ import java.util.List;
 
 @Repository
 public interface NotifyDAO extends BaseMapper<Notify> {
-
-
 }

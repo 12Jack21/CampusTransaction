@@ -2,6 +2,7 @@ package com.example.transaction.daoTest;
 
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.SimpleAccount;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,8 +15,19 @@ class AccountDAOTest {
 
     @Test
     void testGetAccountCreditById(){
-//        Account account = accountDAO.getAccountCreditById(5);
-        Account account = accountDAO.selectById(1);
+        Account account = accountDAO.getAccountCreditById(1);
         System.out.println(account);
+    }
+
+    @Test
+    void testGetAccountWithPublicInfoById(){
+        Account account = accountDAO.getAccountWithPublicInfoById(1);
+        System.out.println(account);
+    }
+
+    @Test
+    void testGetSimpleAccountById(){
+        SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(1);
+        System.out.println(simpleAccount);
     }
 }

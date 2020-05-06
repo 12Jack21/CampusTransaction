@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @ClassName: ReservationServiceTest
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/27 16:13
  */
@@ -25,6 +24,5 @@ public class ReservationServiceTest {
         queryWrapper.eq("account_id",1);
         responseFromServer response = reservationService.getReservationsPage(queryWrapper,2);
         queryWrapper.eq("account_id",1);
-
     }
 }

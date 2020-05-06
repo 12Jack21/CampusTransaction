@@ -22,9 +22,11 @@ import java.util.List;
 public interface ReservationDAO  extends BaseMapper<Reservation> {
 
     @Results(id = "reservationMap", value = {
-//            @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
-//                    select = "com.example.transaction.dao.AccountDAO.selectById"
-//            )),
+            @Result(property = "commodityId", column = "commodity_id"),
+            @Result(property = "accountId", column = "account_id"),
+            @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
+                    select = "com.example.transaction.dao.AccountDAO.selectById"
+            )),
             @Result(property = "commodity", column = "commodity_id", javaType = Commodity.class, one = @One(
                     select = "com.example.transaction.dao.CommodityDAO.selectById"
             ))
@@ -32,33 +34,24 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Select("select * from reservation where account_id=#{id}")
     List<Reservation> getAllReservationByAccountId(Integer id);
 
-    @Results(id = "userMap", value = {
-            @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.getAccountCreditById"
-            ))
-    })
+    @ResultMap({"reservationMap"})
     @Select("select * from reservation where commodity_id=#{id}")
     List<Reservation> getAllReservationByCommodityId(Integer id);
 
-    @Select("select * from reservation ${ew.customSqlSegment}")
     @ResultMap(value = {"reservationMap"}) //复用上述外键查找
+    @Select("select * from reservation ${ew.customSqlSegment}")
     List<Reservation> getWithCondition(@Param("ew")QueryWrapper<Reservation> queryWrapper);
 
-    /**
-     * 查询商品，包括notice
-     * @param id
-     * @return
-     */
-    @Select("select from reservation where id = #{id}")
-    @Results(
-            id = "reservation-detailedCommodity-map",value = {
-                    @Result(property = "commodity",column = "commodity_id",javaType = Commodity.class, one = @One(
-                            select = "com.examp;e.transaction.dao.CommodityDAO.selectWithAllInfoById"
-                    ))
+    @Results(id = "reservation-detailedCommodity-map",value = {
+            @Result(property = "commodityId", column = "commodity_id"),
+            @Result(property = "commodity",column = "commodity_id",javaType = Commodity.class, one = @One(
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityById"
+            ))
     })
+    @Select("select * from reservation where id = #{id}")
     Reservation selectWithDetailedCommodityById(Integer id);
 
-    @Select("select * from reservation r,commodity c,notice n where" +
+    @Select("select * from reservation r,commodity c,notice n where " +
             "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id}")
     IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id);
 }

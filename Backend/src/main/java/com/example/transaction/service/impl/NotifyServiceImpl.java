@@ -19,17 +19,29 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
  * @ClassName: NotifyServiceImpl
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/28 2:07
  */
 
 @Service("NotifyService")
 public class NotifyServiceImpl implements NotifyService {
+
+    /**
+     * 根据notifyid查询notify
+     * @param notifyId
+     * @return
+     */
+    @Override
+    public responseFromServer getNotifyByNotifyId(Integer notifyId){
+        Notify notify = notifyDAO.selectById(notifyId);
+        return notify==null?responseFromServer.error():responseFromServer.success(notify);
+    }
+
 
     /**
      * 根据id获取notify
@@ -43,6 +55,21 @@ public class NotifyServiceImpl implements NotifyService {
         AccountNotify tempNotify = new AccountNotify();
         tempNotify.setId(id);
         AccountNotify accountNotify = accountNotifyDAO.selectById(id);
+        return responseFromServer.success(accountNotify);
+    }
+
+    /**
+     * 根据id获取notify
+     * @param id
+     * @return
+     */
+    @Override
+    public responseFromServer getSimpleAccountNotifyByNotifyId(Integer id){
+        if(id==null)
+            return responseFromServer.error();
+        AccountNotify tempNotify = new AccountNotify();
+        tempNotify.setId(id);
+        AccountNotify accountNotify = accountNotifyDAO.getSimpleNotifyByNotifyId(id);
         return responseFromServer.success(accountNotify);
     }
 
@@ -90,9 +117,17 @@ public class NotifyServiceImpl implements NotifyService {
         return responseFromServer.success(accountNotifies);
     }
 
+    /**
+     * 查询新消息个数
+     * @param accountId
+     * @return
+     */
     @Override
     public responseFromServer getUnreadNotifyCount(Integer accountId) {
-        return null;
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("account_id",accountId);
+        Integer count = accountNotifyDAO.selectCount(queryWrapper);
+        return count==null?responseFromServer.error():responseFromServer.success(count);
     }
 
     @Override
@@ -101,7 +136,7 @@ public class NotifyServiceImpl implements NotifyService {
         if(notify == null){
             return responseFromServer.error();
         }
-        notify.setAccountNotifyId(null);
+//        notify.setAccountNotifyId(null);
         notify.setId(null);
         if(notifyDAO.insert(notify)!=1){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -127,7 +162,7 @@ public class NotifyServiceImpl implements NotifyService {
             Integer notifyId = notify.getId();
             accountNotify.setNotifyId(notifyId);
             if (accountNotifyDAO.insert(accountNotify) == 1) {
-                notify.setAccountNotifyId(accountNotify.getId());
+//                notify.setAccountNotifyId(accountNotify.getId());
                 if (notifyDAO.updateById(notify) == 1) {
                     return responseFromServer.success();
                 }
@@ -153,19 +188,34 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
 
-    /*todo::此处需要一对多关联查询 返回*/
+
     @Override
     public responseFromServer getNotifyPage(QueryWrapper queryWrapper,Integer pageIndex) {
         Page<Notify> page = new Page<>(pageIndex, Nums.pageSize);
+        queryWrapper.orderByDesc("create_time");
         IPage<Notify> notifyIPage = notifyDAO.selectPage(page,queryWrapper);
         MyPage myPage = new MyPage(notifyIPage);
         return responseFromServer.success(myPage);
     }
 
+    /**
+     * 设置通知为已读
+     * @param notifyId
+     * @return
+     */
     @Override
+    @Transactional
     public responseFromServer readNotify(Integer notifyId) {
-
-        return null;
+        AccountNotify accountNotify = new AccountNotify();
+        accountNotify.setId(notifyId);
+        accountNotify.setIsRead(true);
+        accountNotify.setReadTime(new Timestamp(System.currentTimeMillis()));
+        if(accountNotifyDAO.updateById(accountNotify)!=1)
+        {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
     }
 
     private AccountNotifyDAO accountNotifyDAO;

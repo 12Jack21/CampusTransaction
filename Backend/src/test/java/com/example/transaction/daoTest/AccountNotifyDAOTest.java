@@ -19,15 +19,26 @@ public class AccountNotifyDAOTest {
     @Autowired
     private AccountNotifyDAO accountNotifyDAO;
 
-//    @Test
-//    void testGetAllByNotifyId(){
-////        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByNotifyId(1);
-//        System.out.println(accountNotifies);
-//    }
-//
-//    @Test
-//    void testGetAllByAccountId(){
-////        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllByAccountId(1);
-//        System.out.println(accountNotifies);
-//    }
+    @Test
+    void testGetUnreadNotifyByAccountId(){
+        List<AccountNotify> accountNotifies = accountNotifyDAO.getUnreadNotifyByAccountId(1);
+        System.out.println(accountNotifies.toString());
+    }
+
+    @Test
+    void testGetAllNotifyByAccountId(){
+        List<AccountNotify> accountNotifies = accountNotifyDAO.getAllNotifyByAccountId(1);
+        System.out.println(accountNotifies.toString());
+    }
+
+    @Test
+    void testGetDetailedNotifyById(){
+        AccountNotify accountNotify = accountNotifyDAO.getDetailedNotifyById(1);
+        System.out.println(accountNotify);
+    }
+
+    @Test
+    void testSetNotifyRead(){
+        System.out.println(accountNotifyDAO.setNotifyRead(1));
+    }
 }

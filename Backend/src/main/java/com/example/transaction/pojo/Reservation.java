@@ -20,8 +20,8 @@ public class Reservation {
     private String note;
     @TableField(value = "start_time")
     private Timestamp startTime;
-    @TableField(value = "end_time")
-    private Timestamp endTime;
+    @TableField(value = "update_time")
+    private Timestamp updateTime;
     @TableField(value = "state_enum")
     private Integer stateEnum;
     private Integer count;
@@ -29,10 +29,10 @@ public class Reservation {
     private Integer accountId;
     @TableField(value = "commodity_id")
     private Integer commodityId;
-    @TableField(value = "sellerFinished")
-    private Boolean seller_finished;
-    @TableField(value = "buyerFinished")
-    private Boolean buyer_finished;
+    @TableField(value = "seller_finished")
+    private Boolean sellerFinished;
+    @TableField(value = "")
+    private Boolean buyerFinished;
 
 
     @TableField(exist = false)

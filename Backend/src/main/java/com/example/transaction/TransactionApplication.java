@@ -12,8 +12,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
                 "com.example.transaction.dao",
                 "com.example.transaction.controller",
                 "com.example.transaction.config",
-                "com.example.transaction.service",
-                "com.example.transaction.dto"
+                "com.example.transaction.service"
         })
 public class TransactionApplication {
     public static void main(String[] args) {

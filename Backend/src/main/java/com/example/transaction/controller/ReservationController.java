@@ -22,7 +22,6 @@ import java.util.Map;
 
 /**
  * @ClassName: ReservationController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/26 16:30
  */
@@ -133,7 +132,10 @@ public class ReservationController {
         if(verifySeller(reservation,session)){
             /*验证当前操作用户是否是卖家*/
             /*todo 加入a2a*/
-
+            /**
+             * ZZH
+             * TODO : 添加到notify
+             */
             return reservationService.validateReservation(reservation,((Account)session.getAttribute("currentAccount")).getId());
         }else{
             return responseFromServer.illegal();
@@ -150,6 +152,11 @@ public class ReservationController {
     @RequestMapping("/finishReservation")
     public responseFromServer finishReservation(@RequestBody Reservation reservation,HttpSession session){
         /*验证当前操作用户是否是卖家*/
+        /**
+         * ZZH
+         * TODO : 添加到notify
+         */
+
         if(verifySeller(reservation,session)){
             return reservationService.finishReservation(reservation.getId());
         }else{
@@ -199,6 +206,10 @@ public class ReservationController {
         pageIndex = pageIndex == null||pageIndex.intValue()<=0?1:pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id",account.getId());
+        Boolean isCommodity = (Boolean)map.get("isCommodity");
+        if(isCommodity!=null){
+            queryWrapper.eq("type",isCommodity);
+        }
         return reservationService.getReservationsPage(queryWrapper,pageIndex);
     }
 
@@ -259,6 +270,10 @@ public class ReservationController {
         if(reservation.getStateEnum()!=null&&reservation.getStateEnum()!=ReservationCode.WAITING.getCode()){
             return responseFromServer.illegal();
         }
+        /**
+         * ZZH
+         * TODO : 添加到notify
+         */
         Account account = (Account)session.getAttribute("currentAccount");
         Reservation reservation1 = (Reservation) reservationService.getSimpleReservation(reservation.getId()).getData();
         if(reservation1==null||reservation1.getAccountId()==null){

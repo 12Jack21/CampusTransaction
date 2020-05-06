@@ -1,5 +1,6 @@
 package com.example.transaction.daoTest;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.SearchDAO;
 import com.example.transaction.pojo.Search;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,14 @@ public class SearchDAOTest {
     @Test
     void testGetAllSearchByAccountId(){
         List<Search> list = searchDAO.getAllSearchByAccountId(1);
-        System.out.println(list.get(0));
+        System.out.println(list.size());
+        System.out.println(list.toString());
+    }
+
+    @Test
+    void testDeleteAllSearchByAccountId(){
+        QueryWrapper<Search> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", 1);
+        searchDAO.deleteAllSearchByAccountId(queryWrapper);
     }
 }

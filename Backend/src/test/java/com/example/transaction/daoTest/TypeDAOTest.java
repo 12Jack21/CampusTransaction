@@ -24,7 +24,7 @@ public class TypeDAOTest {
     @Test
     void testGetAllTypeByCommodityId(){
         List<Type> types = typeDao.getAllTypeByCommodityId(1);
-        System.out.println(types.get(0));
+        System.out.println(types.toString());
     }
 
     @Test

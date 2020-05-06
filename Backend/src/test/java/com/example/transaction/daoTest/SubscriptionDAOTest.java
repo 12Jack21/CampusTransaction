@@ -22,7 +22,7 @@ public class SubscriptionDAOTest {
 
     @Test
     void testGetAllSubscriptionByAccountId(){
-        List<Subscription> subscriptions = subscriptionDAO.getAllSubscriptionByAccountId(2);
-        System.out.println(subscriptions);
+        List<Subscription> subscriptions = subscriptionDAO.getAllSubscriptionByAccountId(1);
+        System.out.println(subscriptions.toString());
     }
 }
