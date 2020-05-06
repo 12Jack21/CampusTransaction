@@ -17,6 +17,7 @@
   "dependencies": {},
   "devDependencies": {
     "@limdongjin/vuepress-plugin-sidebar-on-off": "^1.0.0-alpha.32",
+    "@vuepress/plugin-google-analytics": "^1.4.1",
     "@vuepress/plugin-medium-zoom": "^1.4.1",
     "@vuepress/plugin-search": "^1.4.1",
     "gh-pages": "^2.2.0",

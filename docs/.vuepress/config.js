@@ -52,6 +52,12 @@ module.exports = {
       searchMaxSuggestion:6
     }],
     '@vuepress/medium-zoom',
+	[
+      '@vuepress/google-analytics',
+      {
+        'ga': 'UA-165698705-1' // UA-00000000-0
+      }
+    ]
     // '@limdongjin/vuepress-plugin-sidebar-on-off'
   ]
 }
