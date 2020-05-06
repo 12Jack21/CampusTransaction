@@ -114,7 +114,6 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 根据价格区间筛选物品
-     *
      * @param low  最低价
      * @param high 最高价
      * @return Commodity数组

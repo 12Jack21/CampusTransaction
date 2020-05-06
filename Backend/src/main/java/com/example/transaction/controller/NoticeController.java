@@ -17,7 +17,6 @@ import java.util.Map;
 
 /**
  * @ClassName: NoticeController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/26 16:44
  */
@@ -41,6 +40,9 @@ public class NoticeController {
         if(AccountVerify.verify(account,session)){
             /*此时account已更新*/
             notice.setAccountId(account.getId());
+            /*必须传入通告类型*/
+            if(notice.getType()==null)
+                return responseFromServer.error();
             return noticeService.setupNotice(notice);
         }else{
             /*非法操作：为他人创建通告*/
@@ -125,12 +127,17 @@ public class NoticeController {
     @RequestMapping("/getRecentNoticePage")
     public responseFromServer getRecentNoticePage(@RequestBody Map<String,Object> map){
         Integer pageIndex = (Integer) map.get("pageIndex");
+        Boolean isCommodity = (Boolean)map.get("isCommodity");
         if(pageIndex==null) return responseFromServer.error();
         QueryWrapper queryWrapper = new QueryWrapper();
         /*按照时间倒序排序*/
         queryWrapper.orderByDesc("update_time");
         /*只查看确认发布的通告*/
         queryWrapper.eq("state_enum",NoticeCode.PUBLISHED.getCode());
+        /*是商品还是需求*/
+        if(isCommodity!=null){
+            queryWrapper.eq("type",isCommodity);
+        }
         return noticeService.getNoticePage(queryWrapper,pageIndex);
     }
 

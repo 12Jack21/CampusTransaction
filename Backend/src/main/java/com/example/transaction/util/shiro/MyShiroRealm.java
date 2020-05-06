@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @ClassName: MyShiroRealm
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/25 20:59
  */

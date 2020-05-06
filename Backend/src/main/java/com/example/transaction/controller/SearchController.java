@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 
 /**
  * @ClassName: SearchController
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/29 1:02
  */

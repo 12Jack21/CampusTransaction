@@ -2,7 +2,6 @@ package com.example.transaction.util.code;
 
 /**
  * @ClassName: ResourcePath
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/5/4 13:31
  */

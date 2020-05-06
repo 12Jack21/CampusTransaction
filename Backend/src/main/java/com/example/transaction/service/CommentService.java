@@ -5,7 +5,6 @@ import com.example.transaction.util.responseFromServer;
 
 /**
  * @InterfaceName: CommentService
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/29 1:43
  */

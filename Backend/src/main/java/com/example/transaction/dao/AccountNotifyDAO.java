@@ -1,6 +1,9 @@
 package com.example.transaction.dao;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Commodity;
@@ -36,6 +39,18 @@ public interface AccountNotifyDAO extends BaseMapper<AccountNotify> {
     @Select("select * from notify acc_notify where id = #{id} ")
     AccountNotify getDetailedNotifyById(Integer id);
 
+    @Select("select * from notify acc_notify where notify_id = #{id} ")
+    AccountNotify getSimpleNotifyByNotifyId(Integer id);
+
+
     @Update("update acc_notify set is_read = true where id = #{id}")
     int setNotifyRead(Integer id);
+
+    @Results(
+            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
+                    select = "com.example.transaction.dao.NotifyDao.selectById"
+            ))
+    )
+    @Select("select * from notify acc_notify ${ew.customSqlSegment}")
+    IPage<AccountNotify> getNotifyPage(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 }

@@ -8,12 +8,16 @@ import com.example.transaction.util.responseFromServer;
 
 /**
  * @InterfaceName: NotifyService
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/4/28 2:07
  */
 public interface NotifyService {
+    responseFromServer getNotifyByNotifyId(Integer notifyId);
+
     responseFromServer getSimpleAccountNotifyById(Integer id);
+
+    responseFromServer getSimpleAccountNotifyByNotifyId(Integer id);
+
     responseFromServer getDetailedAccountNotifyById(Integer id);
 
     responseFromServer getUnreadNotifyByAccountId(Integer id);

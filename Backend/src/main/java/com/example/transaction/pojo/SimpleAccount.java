@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * @ClassName: SimpleAccount
- * @Description: TODO
  * @Author: 曾志昊
  * @Date: 2020/5/2 20:15
  */
