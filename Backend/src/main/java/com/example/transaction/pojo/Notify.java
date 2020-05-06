@@ -26,10 +26,6 @@ public class Notify {
     /*目标类型: comment  reservation*/
     @TableField(value = "target_type")
     private Integer targetType;
-
-    @TableField(value = "acc_notify_id")
-    private Integer accountNotifyId;
-
     /*动作？*/
     private Integer action;
     /*内容：用于公告*/

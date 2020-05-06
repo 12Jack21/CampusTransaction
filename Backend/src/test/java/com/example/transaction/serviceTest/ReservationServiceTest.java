@@ -25,6 +25,5 @@ public class ReservationServiceTest {
         queryWrapper.eq("account_id",1);
         responseFromServer response = reservationService.getReservationsPage(queryWrapper,2);
         queryWrapper.eq("account_id",1);
-
     }
 }

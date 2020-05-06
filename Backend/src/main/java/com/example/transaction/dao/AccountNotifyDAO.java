@@ -19,36 +19,23 @@ import java.util.List;
 @Repository
 public interface AccountNotifyDAO extends BaseMapper<AccountNotify> {
 
-    @Results(
+    @Results(id = "notifyInfo", value = {
+            @Result(property = "notifyId", column = "notify_id"),
             @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
-                    select = "com.example.transaction.dao.NotifyDao.selectById"
+                    select = "com.example.transaction.dao.NotifyDAO.selectById"
             ))
-    )
-    @Select("select * from notify acc_notify where account_id = #{account_id} and is_read = false order by create_time DESC")
+    })
+    @Select("select * from acc_notify where account_id = #{account_id} and is_read = false order by create_time DESC")
     List<AccountNotify> getUnreadNotifyByAccountId(Integer accountId);
 
-    @Results(
-            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
-                    select = "com.example.transaction.dao.NotifyDao.selectById"
-            ))
-    )
-    @Select("select * from notify acc_notify where account_id = #{account_id} order by create_time DESC")
+    @ResultMap({"notifyInfo"})
+    @Select("select * from acc_notify where account_id = #{account_id} order by create_time DESC")
     List<AccountNotify> getAllNotifyByAccountId(Integer accountId);
 
-    @Results(
-            @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
-                    select = "com.example.transaction.dao.NotifyDao.selectById"
-            ))
-    )
+    @ResultMap({"notifyInfo"})
     @Select("select * from notify acc_notify where id = #{id} ")
     AccountNotify getDetailedNotifyById(Integer id);
 
-
-
     @Update("update acc_notify set is_read = true where id = #{id}")
     int setNotifyRead(Integer id);
-
-
-
-
 }

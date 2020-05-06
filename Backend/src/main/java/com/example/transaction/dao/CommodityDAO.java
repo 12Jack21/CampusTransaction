@@ -28,6 +28,8 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     Commodity getSimpleCommodityById(Integer id);
 
     @Results(id = "detailedCommodity_map", value = {
+            @Result(id = true, property = "id", column = "id"),
+            @Result(property = "noticeId", column = "notice_id"),
             @Result(property = "notice", column = "notice_id", javaType = Notice.class, one = @One(
                     select = "com.example.transaction.dao.NoticeDAO.selectById"
             )),
@@ -42,6 +44,7 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     Commodity getDetailedCommodityById(Integer id);
 
     @Results(id = "detailedCommodity_map2", value = {
+            @Result(id = true, property = "id", column = "id"),
             @Result(property = "commodityImages", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"
             )),

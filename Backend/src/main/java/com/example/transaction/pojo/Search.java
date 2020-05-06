@@ -19,10 +19,10 @@ public class Search {
     private Integer id;
     private String content;
     private Integer count;
-    @TableField(value = "notify_id")
+    @TableField(value = "create_time")
     private Timestamp createTime;
-    @TableField(value = "notify_id")
+    @TableField(value = "update_time")
     private Timestamp updateTime;
-    @TableField(value = "notify_id")
+    @TableField(value = "account_id")
     private Integer accountId;
 }

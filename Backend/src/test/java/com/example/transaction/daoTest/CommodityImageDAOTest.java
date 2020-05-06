@@ -25,6 +25,7 @@ public class CommodityImageDAOTest {
     void testGetAllImageByCommodityId(){
         List<CommodityImage> commodityImages = commodityImageDAO.getAllImageByCommodityId(1);
         System.out.println(commodityImages.size());
+        System.out.println(commodityImages);
     }
 
     @Test

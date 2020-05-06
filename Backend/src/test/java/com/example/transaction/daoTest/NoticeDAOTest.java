@@ -21,25 +21,16 @@ class NoticeDAOTest {
     private NoticeDAO noticeDAO;
 
     @Test
-    void testDetailedPage(){
-        Page<Notice> page = new Page<>(1, Nums.pageSize);
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.ge("id",1);
-//        IPage<Notice> noticeIPage = noticeDAO.testDetailed(page,queryWrapper);
-//        MyPage myPage = new MyPage(noticeIPage);
-    }
-
-    @Test
     void selectById(){
         Notice notice = noticeDAO.selectById(1);
-        System.out.printf(notice.toString());
+        System.out.println(notice);
     }
 
     @Test
     void testGetNoticeByOwnerId(){
-        List<Notice> list = noticeDAO.getNoticeByOwnerId(21);
+        List<Notice> list = noticeDAO.getNoticeByOwnerId(2);
         System.out.println(list.size());
-        System.out.println(list.get(0));
+        System.out.println(list.toString());
     }
 
     @Test
@@ -47,11 +38,10 @@ class NoticeDAOTest {
         QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
 //        queryWrapper.eq(true,"state_enum", 1);
         Timestamp timestamp = Timestamp.valueOf("2020-04-09 11:47:19.000000");
-//        String strn = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
         queryWrapper.le("end_time", timestamp);
         List<Notice> notices = noticeDAO.getNoticeWithCondition(queryWrapper);
         System.out.println(notices.size());
-        System.out.println(notices.get(0));
+        System.out.println(notices.toString());
     }
 
     @Test
@@ -61,8 +51,27 @@ class NoticeDAOTest {
     }
 
     @Test
+    void testGetNoticeWithAllCommodity(){
+        QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", 1);
+        Notice notice = noticeDAO.getNoticeWithAllCommodity(queryWrapper);
+        System.out.println(notice);
+    }
+
+    @Test
     void testGetCreditByAccountId(){
         Notice notice = noticeDAO.getCreditByNoticeId(1);
         System.out.println(notice);
+    }
+
+    @Test
+    void testGetDetailedNoticePage(){
+        Page<Notice> page = new Page<>(1,2);
+        QueryWrapper<Notice> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("id", 1);
+        IPage<Notice> iPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
+        System.out.println(iPage.getPages());
+        System.out.println(iPage.getTotal());
+        System.out.println(iPage.getRecords());
     }
 }

@@ -101,7 +101,7 @@ public class NotifyServiceImpl implements NotifyService {
         if(notify == null){
             return responseFromServer.error();
         }
-        notify.setAccountNotifyId(null);
+//        notify.setAccountNotifyId(null);
         notify.setId(null);
         if(notifyDAO.insert(notify)!=1){
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -127,7 +127,7 @@ public class NotifyServiceImpl implements NotifyService {
             Integer notifyId = notify.getId();
             accountNotify.setNotifyId(notifyId);
             if (accountNotifyDAO.insert(accountNotify) == 1) {
-                notify.setAccountNotifyId(accountNotify.getId());
+//                notify.setAccountNotifyId(accountNotify.getId());
                 if (notifyDAO.updateById(notify) == 1) {
                     return responseFromServer.success();
                 }

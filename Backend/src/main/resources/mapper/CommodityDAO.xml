@@ -4,6 +4,7 @@
     <!--查询与commodity关联的所有信息，如commodityList、notice、commodityImages-->
     <resultMap id="commodityInfo" type="commodity">
         <id property="id" column="id"/>
+        <id property="noticeId" column="notice_id"/>
         <association property="notice" javaType="com.example.transaction.pojo.Notice" column="notice_id" select="com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"/>
         <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.getAllTypeByCommodityId"/>
         <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"/>
@@ -38,6 +39,7 @@
         and n.end_time &gt;= CURRENT_TIMESTAMP
         <if test="low!=null"><![CDATA[ and  c.expected_price >=  #{low}]]></if>
         <if test="high!=null"><![CDATA[ and  c.expected_price <=  #{high}]]></if>
+        order by c.expected_price ASC
     </select>
     <!--商品名模糊分页查询, 所有者信誉排序-->
     <select id="sortByCredit" resultMap="commodityInfo" resultType="com.example.transaction.pojo.Commodity">
