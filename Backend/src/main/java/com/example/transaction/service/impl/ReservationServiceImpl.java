@@ -7,6 +7,7 @@ import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.ReservationDAO;
 import com.example.transaction.pojo.A2a;
+import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.service.ReservationService;
@@ -41,6 +42,7 @@ public class ReservationServiceImpl implements ReservationService {
             return responseFromServer.error();
         }
         /*TODO 将预约信息添加到notify中*/
+        AccountNotify accountNotify = new AccountNotify();
         return responseFromServer.success();
     }
 

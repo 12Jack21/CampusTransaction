@@ -2,10 +2,7 @@ package com.example.transaction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.Notice;
-import com.example.transaction.pojo.Reservation;
+import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.ReservationService;
@@ -49,6 +46,7 @@ public class ReservationController {
         }else{
             reservation.setAccountId(account.getId());
             reservation.setStateEnum(ReservationCode.WAITING.getCode());
+            responseFromServer response = commodityService.getDetailedCommodity(reservation.getCommodityId());
             return reservationService.setUpReservation(reservation);
         }
     }
@@ -131,7 +129,6 @@ public class ReservationController {
     public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session){
         if(verifySeller(reservation,session)){
             /*验证当前操作用户是否是卖家*/
-            /*todo 加入a2a*/
             /**
              * ZZH
              * TODO : 添加到notify
