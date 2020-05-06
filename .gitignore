@@ -35,3 +35,5 @@ Backend/.vscode/
 .git
 
 .idea
+node_modules/
+docs/
