@@ -27,19 +27,25 @@
 				<!--标题栏-->
 				<view class="text-gray detail-topbox">
 					<view class="cuIcon-back text-back" @tap="backTap">返回</view>
-					<view class="text-black text-large" >通告详细信息</view>
+					<view class="text-black text-large">通告详细信息</view>
 				</view>
 				<form @submit="formSubmit" @reset="resetNotice">
 					<!-- 标题 -->
-					<view class="cu-form-group margin-top">
+					<view class="cu-form-group margin-top" key="notice_title">
 						<view class="title">标题</view>
-						<input bindinput="getTitleValue" name="title" placeholder="品类品牌型号都是买家喜欢搜索的" />
+						<input name="title" placeholder="给通告起个好名字" />
 					</view>
 					<!-- end -->
 
 					<!-- 内容 -->
 					<view class="cu-form-group margin-top">
-						<textarea @tap="getContentValue" name="content" maxlength="1000" @input="textareaAInput" placeholder="描述宝贝的转手原因,入手渠道和使用感受"></textarea>
+						<textarea
+							@tap="getContentValue"
+							name="content"
+							maxlength="1000"
+							@input="textareaAInput"
+							placeholder="描述宝贝的转手原因,入手渠道和使用感受,或者其他的一些描述"
+						></textarea>
 					</view>
 					<!-- end -->
 
@@ -52,8 +58,25 @@
 					</view>
 					<!-- end -->
 
+					<view class="comList">
+						<view class="commodity" v-for="(com, index) in comList" :key="index">
+							<text style="margin-right: 20rpx;">{{ com.name }}</text>
+							<text class="cuIcon-close" @tap="delCom(index)"></text>
+						</view>
+					</view>
+					<view>						
+						<view class="add-com-btn" @tap="addComTap">
+							<text>添加新物品</text>
+							<text class="cuIcon-add"></text>
+						</view>
+					</view>
+
 					<!-- 确定发布 -->
-					<view class="padding flex flex-direction"><button class="cu-btn bg-green margin-tb-sm lg" form-type="submit">确定发布</button></view>
+					<view class="padding flex flex-direction">
+						<button class="cu-btn lg release_btn" form-type="submit">
+							确定发布
+						</button>
+					</view>
 					<!-- end -->
 				</form>
 			</view>
@@ -64,11 +87,11 @@
 					<view class="text-black text-large">物品详细信息</view>
 					<view class="cuIcon-back text-back" @tap="backTap">返回</view>
 				</view>
-				<form @submit="formSubmit" @reset="resetObject">
+				<form @submit="comFormSubmit" @reset="comFormReset">
 					<!-- 物品名称 -->
 					<view class="cu-form-group margin-top">
 						<view class="title">名称</view>
-						<input bindinput="getTitleValue" name="title" placeholder="品类品牌型号都是买家喜欢搜索的" />
+						<input name="name" placeholder="输入物品的名称"  key="com_name" />
 					</view>
 					<!-- 图片 -->
 					<view class="cu-bar bg-white margin-top">
@@ -79,9 +102,13 @@
 						<view class="grid col-4 grid-square flex-sub">
 							<view class="bg-img" v-for="(item, index) in imgList" :key="index" @tap="ViewImage" :data-url="imgList[index]">
 								<image :src="imgList[index]" mode="aspectFill"></image>
-								<view class="cu-tag bg-red" @tap.stop="DelImg" :data-index="index"><text class="cuIcon-close"></text></view>
+								<view class="cu-tag bg-red" @tap.stop="DelImg" :data-index="index">
+									<text class="cuIcon-close"></text>
+								</view>
 							</view>
-							<view class="solids" @tap="ChooseImage" v-if="imgList.length < 1"><text class="cuIcon-cameraadd"></text></view>
+							<view class="solids" @tap="ChooseImage" v-if="imgList.length != 5">
+								<text class="cuIcon-cameraadd"></text>
+							</view>
 						</view>
 					</view>
 					<!-- end -->
@@ -89,40 +116,62 @@
 					<!-- 价钱 -->
 					<view class="cu-form-group margin-top">
 						<view class="title">出售价:</view>
-						<input type="digit" @input="moneyInput" :value="money" placeholder="请输入价钱" maxlength="7" name="newPrice" />
+						<input type="digit" @input="newPriceInput" :value="newPrice" placeholder="请输入价钱" maxlength="7" name="newPrice" />
 
 						<view class="title">原价:</view>
-						<input type="digit" @input="newInput" :value="newMoney" placeholder="请输入原价" maxlength="7" name="oriPrice" />
+						<input type="digit" @input="oriPriceInput" :value="oriPrice" placeholder="请输入原价" maxlength="7" name="oriPrice" />
 					</view>
 					<!-- end -->
-
+					
+					<!-- 物品数量 -->
+					<view class="cu-form-group">
+						<view class="title">数量</view>
+						<input type="number" name="count"/>
+					</view>
 					<!-- 选择分类  -->
 					<view class="cu-form-group">
 						<view class="title">分类:</view>
-						<input disabled="true" name="classify" :value="classify" />
-						<button class="cu-btn  bg-green" role="button" aria-disabled="false" @tap="showModal" data-target="DrawerModalL">选择</button>
+						<input disabled="true" name="type" :value="comType" />
+						<button class="cu-btn  bg-green" role="button" aria-disabled="false" @tap="showModal" data-target="DrawerModal">选择</button>
 					</view>
 					<!-- end -->
 
 					<!-- 新旧 -->
 					<view class="cu-form-group">
 						<view class="title">新旧:</view>
-						<input disabled="true" name="itemLists" :value="itemLists[itemListsIndex]" />
+						<input disabled="true" name="newness" :value="newnessList[newnessListIndex]" />
 						<button class="cu-btn  bg-green" role="button" aria-disabled="false" @tap="newState">选择</button>
 					</view>
 					<!-- end -->
 					<!-- 添加 -->
-					<view class="padding flex flex-direction"><button class="cu-btn bg-green margin-tb-sm lg" form-type="submit">添加</button></view>
+					<view class="padding flex flex-direction">
+						<button class="cu-btn bg-green margin-tb-sm lg" form-type="submit">
+							添加
+						</button>
+					</view>
 				</form>
 			</view>
 		</view>
+		
+		<!-- 分类选择的模态框 -->
+		<view @touchmove.stop="modeMove" class=" cu-modal drawer-modal justify-start " :class="modalName == 'DrawerModal'?'show':'' "
+		 @tap="hideModal">
+			<scroll-view scroll-with-animation='true' scroll-y='true' class="cu-dialog basis-df">
+				<view class="cu-list menu text-left">
+					<view class="cu-item com-type-item" v-for="(item,index) in comTypeList" :key="index" 
+					@tap="getComType" :data-name="item">
+						{{item}}
+					</view>
+				</view>
+			</scroll-view>
+		</view>
+		<!-- free space for tabbar -->
 		<view style="height: 100rpx;"></view>
 	</view>
 </template>
 
 <script>
 import typeList from '@/components/list/type-list'
-
 import _sell_data from '@/static/zaiui/data/sell.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 
@@ -144,11 +193,13 @@ export default {
 					classify_name: '手机'
 				}
 			],
-			itemListsIndex: 0, //几层新下标（默认全新）
-			itemLists: ['全新', '99新', '95新', '85新', '8新'], //几次新
-			classify: '其他闲置', //分类选择默认
-			money: '', //出售价
-			newMoney: '', //原价
+			comList: [], // commodity addition list
+			newnessListIndex: 0, //几层新下标（默认全新）
+			newnessList: ['全新', '九五新', '九成新', '八五新', '八成新','七成新'], //几层新
+			comType: '其他闲置', //分类选择默认
+			comTypeList: ['数码类','家电类','交通工具类','其他'], // 分类列表
+			newPrice: '', //出售价
+			oriPrice: '', //原价
 			imgList: [], //图片上传
 			multiIndex: [0, 0, 0], //地址选择下标
 			multiArray: [
@@ -281,21 +332,6 @@ export default {
 				]
 			], //默认选择地址
 			region: ['贵州省', '毕节市', '毕节职业技术学院'], //选择地址
-			// 交易方式
-			checkboxs: [
-				{
-					value: '自提',
-					checked: false
-				},
-				{
-					value: '同城面交',
-					checked: false
-				},
-				{
-					value: '邮寄',
-					checked: false
-				}
-			]
 		}
 	},
 	props: {
@@ -317,6 +353,75 @@ export default {
 		})
 	},
 	methods: {
+		// 新旧程度
+		newState: function(e) {
+			var that = this;
+			uni.showActionSheet({
+				itemList: that.newnessList,
+				success(e) {
+					that.newnessListIndex = e.tapIndex
+				}
+			})
+		},
+		// 拦截模态框滚动事件
+		modeMove: function() {
+			console.log("modal has moved");
+		},
+		// 图片上传
+		ChooseImage() {
+			uni.chooseImage({
+				count: 5, //默认9
+				sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+				sourceType: ['album'], //从相册选择
+				success: (res) => {
+					res.tempFilePaths.forEach(e=>this.imgList.push(e))
+				}
+			});
+		},
+		ViewImage(e) {
+			uni.previewImage({
+				urls: this.imgList,
+				current: e.currentTarget.dataset.url
+			});
+		},
+		// 删除照片
+		DelImg(e) {
+			uni.showModal({
+				title: '提示',
+				content: '确定要删除这个照片吗？',
+				cancelText: '再看看',
+				confirmText: '删除',
+				success: res => {
+					if (res.confirm) {
+						this.imgList.splice(e.currentTarget.dataset.index, 1);
+						this.imgList = this.imgList
+					}
+				}
+			})
+		},
+		comFormSubmit(e){
+			let comStr = JSON.stringify(e.detail.value)
+			console.log('com jsonstring',comStr)
+			this.comList.push(e.detail.value)
+			this.focus = 0
+		},
+		delCom(index){
+			uni.showModal({
+				title: '提示',
+				content: '确认删除该物品吗',
+				showCancel: true,
+				cancelText: '取消',
+				confirmText: '确认',
+				success: res => {
+					if(res.confirm) this.comList.splice(index, 1)
+				}
+			});
+		},
+		addComTap(){
+			let nameList = ['毛巾','Sam','Water']
+			// this.comList.push({name:nameList[parseInt(Math.random() * 3)],age:11})
+			this.focus = 1
+		},
 		backTap() {
 			console.log('click back tap', 'ok?')
 			if (this.focus == 0) this.scene = -1
@@ -328,12 +433,58 @@ export default {
 		typeListTap(e) {
 			console.log('click type', e)
 			this.scene = e.index
+		},
+		// 显示分类模态框
+		showModal(e) {
+			this.modalName = e.currentTarget.dataset.target
+		},
+		// 隐藏分类模态框
+		hideModal(e) {
+			this.modalName = null
+		},
+		// 得到物品分类的值
+		getComType: function(e) {
+			console.log('com type list',e);
+			this.comType = e.currentTarget.dataset.name,
+			this.hideModal();
 		}
 	}
 }
 </script>
 
 <style lang="scss" scoped>
+$item_lh: 66rpx;
+$border_color: #E54D42;
+.com-type-item{
+	margin: 20rpx 0;
+	text-align: center;
+}
+.release_btn{
+	background-color: $border_color;
+	color: white;
+}
+.add-com-btn{
+	text-align: center;
+	margin: 0.3em 30rpx;
+	border: 3rpx solid $border_color;
+	border-radius: 20rpx;
+	line-height: $item_lh;
+}
+.commodity{
+	line-height: $item_lh;
+	border: 1rpx solid $border_color;
+	border-radius: 30rpx;
+	padding: 0 20rpx;
+	margin: 2rpx;
+}
+.comList {
+	margin: 10rpx;
+	background-color: white;
+	border-radius: 10rpx;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
 .detail-topbox {
 	position: relative;
 	margin-top: 20rpx;
