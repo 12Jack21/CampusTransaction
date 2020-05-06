@@ -32,36 +32,38 @@ public class ReservationController {
     NoticeService noticeService;
     @Autowired
     CommodityService commodityService;
+
     /**
      * 创建预约
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/setupReservation")
-    public responseFromServer setupReservation(@RequestBody  Reservation reservation, HttpSession session){
+    public responseFromServer setupReservation(@RequestBody Reservation reservation, HttpSession session) {
         Account account = (Account) session.getAttribute("currentAccount");
-        if(reservation.getCommodityId()==null||reservation.getCount()==null){
+        if (reservation.getCommodityId() == null || reservation.getCount() == null) {
             return responseFromServer.error();
-        }else{
+        } else {
             reservation.setAccountId(account.getId());
             reservation.setStateEnum(ReservationCode.WAITING.getCode());
-            responseFromServer response = commodityService.getDetailedCommodity(reservation.getCommodityId());
             return reservationService.setUpReservation(reservation);
         }
     }
 
     /**
      * 取消预约
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/cancelReservation")
-    public responseFromServer cancelReservation(@RequestBody Reservation reservation,HttpSession session){
+    public responseFromServer cancelReservation(@RequestBody Reservation reservation, HttpSession session) {
         Account account = (Account) session.getAttribute("currentAccount");
-        if(reservation.getId()!=null)
-            return reservationService.cancelReservation(reservation.getId(),account.getId());
+        if (reservation.getId() != null)
+            return reservationService.cancelReservation(reservation.getId(), account.getId());
         else
             return responseFromServer.error();
     }
@@ -69,16 +71,17 @@ public class ReservationController {
 
     /**
      * 删除预约
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/deleteReservation")
-    public responseFromServer deleteReservation(@RequestBody Reservation reservation,HttpSession session){
-        if(verifySeller(reservation,session)){
+    public responseFromServer deleteReservation(@RequestBody Reservation reservation, HttpSession session) {
+        if (verifySeller(reservation, session)) {
             /*在验证的时候已经更新reservation信息*/
             return reservationService.deleteReservation(reservation);
-        }else{
+        } else {
             return responseFromServer.illegal();
         }
     }
@@ -86,33 +89,34 @@ public class ReservationController {
 
     /**
      * 通过reservationId 验证请求用户是否是对应的卖家
+     *
      * @param reservation
      * @param session
      * @return
      */
-    public boolean verifySeller(Reservation reservation, HttpSession session){
+    public boolean verifySeller(Reservation reservation, HttpSession session) {
         Account account = (Account) session.getAttribute("currentAccount");
-        if(reservation.getId()==null)
+        if (reservation.getId() == null)
             return false;
-        else{
+        else {
             responseFromServer response = reservationService.getDetailedReservation(reservation.getId());
-            if(response.isSuccess()){
+            if (response.isSuccess()) {
                 /*用户身份验证*/
                 reservation = (Reservation) response.getData();
                 Commodity commodity = reservation.getCommodity();
-                if(commodity !=null
-                        &&commodity.getNotice()!=null
-                        &&commodity.getNotice().getAccountId()!=null){
-                    if(commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
+                if (commodity != null
+                        && commodity.getNotice() != null
+                        && commodity.getNotice().getAccountId() != null) {
+                    if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
                         /*此时要操作的用户跟notice的卖家不符合 非法操作*/
                         return false;
-                }else{
+                } else {
                     /*查询错误*/
                     return false;
                 }
                 /*用户验证成功*/
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }
@@ -121,20 +125,17 @@ public class ReservationController {
 
     /**
      * 设置预约成功----减少库存
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/validateReservation")
-    public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session){
-        if(verifySeller(reservation,session)){
+    public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session) {
+        if (verifySeller(reservation, session)) {
             /*验证当前操作用户是否是卖家*/
-            /**
-             * ZZH
-             * TODO : 添加到notify
-             */
-            return reservationService.validateReservation(reservation,((Account)session.getAttribute("currentAccount")).getId());
-        }else{
+            return reservationService.validateReservation(reservation, ((Account) session.getAttribute("currentAccount")).getId());
+        } else {
             return responseFromServer.illegal();
         }
     }
@@ -142,142 +143,140 @@ public class ReservationController {
 
     /**
      * 卖家设置预约为完成
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/finishReservation")
-    public responseFromServer finishReservation(@RequestBody Reservation reservation,HttpSession session){
+    public responseFromServer finishReservation(@RequestBody Reservation reservation, HttpSession session) {
         /*验证当前操作用户是否是卖家*/
-        /**
-         * ZZH
-         * TODO : 添加到notify
-         */
-
-        if(verifySeller(reservation,session)){
+        if (verifySeller(reservation, session)) {
             return reservationService.finishReservation(reservation.getId());
-        }else{
+        } else {
             return responseFromServer.illegal();
         }
     }
 
     /**
      * 查看当前商品的所有预约
+     *
      * @param map
      * @param session
      * @return
      */
     @RequestMapping("/getReservationPageForCommodity")
-    public responseFromServer getReservationPageForCommodity(@RequestBody Map<String,Object> map, HttpSession session){
-        Commodity commodity = (Commodity)map.get("commodity");
+    public responseFromServer getReservationPageForCommodity(@RequestBody Map<String, Object> map, HttpSession session) {
+        Commodity commodity = (Commodity) map.get("commodity");
         Integer pageIndex = (Integer) map.get("pageIndex");
-        if(commodity == null)return responseFromServer.error();
-        pageIndex = pageIndex == null||pageIndex.intValue()<=0?1:pageIndex;
+        if (commodity == null) return responseFromServer.error();
+        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /*用户核对*/
         responseFromServer response = commodityService.getSimpleCommodity(commodity.getId());
-        if(!response.isSuccess()){
+        if (!response.isSuccess()) {
             return responseFromServer.error();
         }
         commodity = (Commodity) response.getData();
-        Notice notice = (Notice)noticeService.getSimpleNotice(commodity.getNoticeId()).getData();
-        if(notice.getAccountId().intValue()==((Account)session.getAttribute("currentAccount")).getId().intValue()){
+        Notice notice = (Notice) noticeService.getSimpleNotice(commodity.getNoticeId()).getData();
+        if (notice.getAccountId().intValue() == ((Account) session.getAttribute("currentAccount")).getId().intValue()) {
             /*验证成功*/
             QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("commodity_id",commodity.getId());
-            return reservationService.getReservationsPage(queryWrapper,pageIndex);
-        }else{
+            queryWrapper.eq("commodity_id", commodity.getId());
+            return reservationService.getReservationsPage(queryWrapper, pageIndex);
+        } else {
             return responseFromServer.illegal();
         }
     }
 
     /**
      * 查看我申请的预约
+     *
      * @param map
      * @param session
      * @return
      */
     @RequestMapping("/getMyReservation")
-    public responseFromServer getMyReservation(@RequestBody Map<String,Object> map, HttpSession session){
-        Account account = (Account)session.getAttribute("currentAccount");
-        Integer pageIndex  = (Integer)map.get("pageIndex");
-        pageIndex = pageIndex == null||pageIndex.intValue()<=0?1:pageIndex;
+    public responseFromServer getMyReservation(@RequestBody Map<String, Object> map, HttpSession session) {
+        Account account = (Account) session.getAttribute("currentAccount");
+        Integer pageIndex = (Integer) map.get("pageIndex");
+        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account_id",account.getId());
-        Boolean isCommodity = (Boolean)map.get("isCommodity");
-        if(isCommodity!=null){
-            queryWrapper.eq("type",isCommodity);
+        queryWrapper.eq("account_id", account.getId());
+        Boolean isCommodity = (Boolean) map.get("isCommodity");
+        if (isCommodity != null) {
+            queryWrapper.eq("type", isCommodity);
         }
-        return reservationService.getReservationsPage(queryWrapper,pageIndex);
+        return reservationService.getReservationsPage(queryWrapper, pageIndex);
     }
 
 
     /**
      * 查看我接收到的预约
+     *
      * @param map
      * @param session
      * @return
      */
     @RequestMapping("/getReservationRequest")
-    public responseFromServer getReservationRequest(@RequestBody Map<String,Object> map, HttpSession session){
+    public responseFromServer getReservationRequest(@RequestBody Map<String, Object> map, HttpSession session) {
         Integer pageIndex = (Integer) map.get("pageIndex");
-        pageIndex = pageIndex == null||pageIndex.intValue()<=0?1:pageIndex;
-        return reservationService.getReservationRequest(((Account)session.getAttribute("currentAccount")).getId(),pageIndex);
+        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
+        return reservationService.getReservationRequest(((Account) session.getAttribute("currentAccount")).getId(), pageIndex);
     }
 
     /**
      * 获取详细的预约内容
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/getDetailedReservation")
-    public responseFromServer getDetailedReservation(@RequestBody Reservation reservation,HttpSession session){
-        if(verifySeller(reservation,session)){
+    public responseFromServer getDetailedReservation(@RequestBody Reservation reservation, HttpSession session) {
+        if (verifySeller(reservation, session)) {
             return responseFromServer.success(reservation);
-        }else{
+        } else {
             return responseFromServer.error();
         }
     }
 
     /**
      * 获取简单预约内容
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/getSimpleReservation")
-    public responseFromServer getSimpleReservation(@RequestBody Reservation reservation,HttpSession session){
-        if(verifySeller(reservation,session)){
+    public responseFromServer getSimpleReservation(@RequestBody Reservation reservation, HttpSession session) {
+        if (verifySeller(reservation, session)) {
             reservation.setUser(null);
             reservation.setCommodity(null);
             return responseFromServer.success(reservation);
-        }else{
+        } else {
             return responseFromServer.error();
         }
     }
 
     /**
      * 更新预约内容
+     *
      * @param reservation
      * @param session
      * @return
      */
     @RequestMapping("/updateReservation")
-    public responseFromServer updateBuyerReservation(@RequestBody Reservation reservation,HttpSession session){
-        if(reservation.getStateEnum()!=null&&reservation.getStateEnum()!=ReservationCode.WAITING.getCode()){
+    public responseFromServer updateBuyerReservation(@RequestBody Reservation reservation, HttpSession session) {
+        if (reservation.getStateEnum() != null && reservation.getStateEnum() != ReservationCode.WAITING.getCode()) {
             return responseFromServer.illegal();
         }
-        /**
-         * ZZH
-         * TODO : 添加到notify
-         */
-        Account account = (Account)session.getAttribute("currentAccount");
+        Account account = (Account) session.getAttribute("currentAccount");
         Reservation reservation1 = (Reservation) reservationService.getSimpleReservation(reservation.getId()).getData();
-        if(reservation1==null||reservation1.getAccountId()==null){
-            return  responseFromServer.error();
-        }else if(reservation1.getAccountId().intValue()!=account.getId().intValue()) {
+        if (reservation1 == null || reservation1.getAccountId() == null) {
+            return responseFromServer.error();
+        } else if (reservation1.getAccountId().intValue() != account.getId().intValue()) {
             return responseFromServer.illegal();
-        }else{
+        } else {
             return reservationService.updateBuyerReservation(reservation);
         }
 
