@@ -8,6 +8,9 @@ module.exports = {
   title: 'SE Blog',
   base: '/CampusTransaction/', // 设置站点根路径
   description: '面向在校大学生的综合性供需系统',
+  head:[
+	['meta',{name:'google-site-verification',content:'1EJBxWJB8NwAT0KYQkOvbzLAdK38PkPthYkHTQ9iSss'}]
+  ],
   theme:'reco',
   themeConfig: {
     nav: [
