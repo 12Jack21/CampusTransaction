@@ -51,7 +51,14 @@ module.exports = {
     ['@vuepress/search',{
       searchMaxSuggestion:6
     }],
-    '@vuepress/medium-zoom',
+    ['@vuepress/medium-zoom',{
+      selector: 'img.zoom-custom-imgs',
+      // medium-zoom options here
+      // See: https://github.com/francoischalifour/medium-zoom#options
+      options: {
+        margin: 24
+      }
+    }],
 	[
       '@vuepress/google-analytics',
       {
