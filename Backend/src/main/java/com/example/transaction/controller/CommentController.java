@@ -3,15 +3,14 @@ package com.example.transaction.controller;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Comment;
 import com.example.transaction.service.CommentService;
-import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -49,17 +48,17 @@ public class CommentController {
     /**
      * 发布评论
      * @param comment 评论
-     * @param session HttpSession
+     * @param request HttpServletRequest
      * @return 执行结果
      */
     @RequestMapping("/sendComment")
-    public responseFromServer sendComment(@RequestBody Comment comment, HttpSession session){
+    public responseFromServer sendComment(@RequestBody Comment comment, HttpServletRequest request){
        /**
         * ZZH
         * TODO : 添加到notify
         */
         Account account = new Account(comment.getFromId());
-        if(!AccountVerify.verify(account,session))
+        if(!AccountVerify.verify(account,request))
             return responseFromServer.illegal();
         return commentService.sendComment(comment);
     }
@@ -67,13 +66,13 @@ public class CommentController {
     /**
      * 删除评论
      * @param comment 评论
-     * @param session HttpSession
+     * @param request HttpServletRequest
      * @return 执行结果
      */
     @RequestMapping("/deleteComment")
-    public responseFromServer deleteComment(@RequestBody Comment comment, HttpSession session){
+    public responseFromServer deleteComment(@RequestBody Comment comment, HttpServletRequest request){
         Account account = new Account(comment.getFromId());
-        if(!AccountVerify.verify(account,session))
+        if(!AccountVerify.verify(account,request))
             return responseFromServer.illegal();
         return commentService.deleteComment(comment);
     }

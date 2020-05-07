@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.NoticeService;
-import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -31,13 +32,13 @@ public class NoticeController {
     /**
      * 创建一个空的通告
      * @param notice
-     * @param session
+     * @param request
      * @return 通告
      */
     @RequestMapping("/setupNotice")
-    public responseFromServer setupNotice(@RequestBody Notice notice, HttpSession session){
+    public responseFromServer setupNotice(@RequestBody Notice notice, HttpServletRequest request){
         Account account = new Account(notice.getAccountId());
-        if(AccountVerify.verify(account,session)){
+        if(AccountVerify.verify(account,request)){
             /*此时account已更新*/
             notice.setAccountId(account.getId());
             /*必须传入通告类型*/
@@ -54,36 +55,36 @@ public class NoticeController {
     /**
      * 取消一个通告:::修改通告状态为CANCELLED
      * @param notice
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/cancelNotice")
-    public responseFromServer cancelNotice(@RequestBody Notice notice,HttpSession session){
-       return updateNoticeState(notice,session,NoticeCode.CANCELLED.getCode());
+    public responseFromServer cancelNotice(@RequestBody Notice notice,HttpServletRequest request){
+       return updateNoticeState(notice,request,NoticeCode.CANCELLED.getCode());
     }
 
 
     /**
      * 将已经上传完的通告发布
      * @param notice
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/publishNotice")
-    public responseFromServer publishNotice(@RequestBody Notice notice,HttpSession session){
-        return updateNoticeState(notice,session,NoticeCode.PUBLISHED.getCode());
+    public responseFromServer publishNotice(@RequestBody Notice notice,HttpServletRequest request){
+        return updateNoticeState(notice,request,NoticeCode.PUBLISHED.getCode());
     }
 
     /**
      * 修改状态，进行用户校验，非法操作检查，
      * @param notice
-     * @param session
+     * @param request
      * @param code
      * @return
      */
-    public responseFromServer updateNoticeState(@RequestBody  Notice notice,HttpSession session,int code){
+    public responseFromServer updateNoticeState(@RequestBody  Notice notice, HttpServletRequest request, int code){
         Account account = new Account(notice.getAccountId());
-        if(AccountVerify.verify(account,session)){
+        if(AccountVerify.verify(account,request)){
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("account_id",account.getId());
             queryWrapper.eq("id",notice.getId());
@@ -102,13 +103,13 @@ public class NoticeController {
     /**
      * 删除通告
      * @param notice
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/deleteNotice")
-    public responseFromServer deleteNotice(@RequestBody Notice notice,HttpSession session){
+    public responseFromServer deleteNotice(@RequestBody Notice notice,HttpServletRequest request){
         Account account = new Account(notice.getAccountId());
-        if(AccountVerify.verify(account,session)){
+        if(AccountVerify.verify(account,request)){
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("account_id",account.getId());
             queryWrapper.eq("id",notice.getId());
@@ -143,9 +144,9 @@ public class NoticeController {
 
 
     @RequestMapping("/getNoticePageForAccount")
-    public responseFromServer getNoticePageByAccountId(@RequestBody Map<String,Object> map, HttpSession session){
+    public responseFromServer getNoticePageByAccountId(@RequestBody Map<String,Object> map, HttpServletRequest request){
         Integer pageIndex = (Integer) map.get("pageIndex");
-        Account account = (Account)session.getAttribute("currentAccount");
+        Account account = (Account)request.getAttribute("currentAccount");
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id",account.getId());
         return noticeService.getNoticePage(queryWrapper,pageIndex);

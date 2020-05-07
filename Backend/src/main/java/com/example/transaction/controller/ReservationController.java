@@ -1,12 +1,10 @@
 package com.example.transaction.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.ReservationService;
-import com.example.transaction.util.AccountVerify;
 import com.example.transaction.util.code.ReservationCode;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -37,12 +36,12 @@ public class ReservationController {
      * 创建预约
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/setupReservation")
-    public responseFromServer setupReservation(@RequestBody Reservation reservation, HttpSession session) {
-        Account account = (Account) session.getAttribute("currentAccount");
+    public responseFromServer setupReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        Account account = (Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount");
         if (reservation.getCommodityId() == null || reservation.getCount() == null) {
             return responseFromServer.error();
         } else {
@@ -56,12 +55,12 @@ public class ReservationController {
      * 取消预约
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/cancelReservation")
-    public responseFromServer cancelReservation(@RequestBody Reservation reservation, HttpSession session) {
-        Account account = (Account) session.getAttribute("currentAccount");
+    public responseFromServer cancelReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        Account account = (Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount");
         if (reservation.getId() != null)
             return reservationService.cancelReservation(reservation.getId(), account.getId());
         else
@@ -73,12 +72,12 @@ public class ReservationController {
      * 删除预约
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/deleteReservation")
-    public responseFromServer deleteReservation(@RequestBody Reservation reservation, HttpSession session) {
-        if (verifySeller(reservation, session)) {
+    public responseFromServer deleteReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        if (verifySeller(reservation, request)) {
             /*在验证的时候已经更新reservation信息*/
             return reservationService.deleteReservation(reservation);
         } else {
@@ -91,11 +90,11 @@ public class ReservationController {
      * 通过reservationId 验证请求用户是否是对应的卖家
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
-    public boolean verifySeller(Reservation reservation, HttpSession session) {
-        Account account = (Account) session.getAttribute("currentAccount");
+    public boolean verifySeller(Reservation reservation, HttpServletRequest request) {
+        Account account = (Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount");
         if (reservation.getId() == null)
             return false;
         else {
@@ -127,14 +126,14 @@ public class ReservationController {
      * 设置预约成功----减少库存
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/validateReservation")
-    public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpSession session) {
-        if (verifySeller(reservation, session)) {
+    public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        if (verifySeller(reservation, request)) {
             /*验证当前操作用户是否是卖家*/
-            return reservationService.validateReservation(reservation, ((Account) session.getAttribute("currentAccount")).getId());
+            return reservationService.validateReservation(reservation, ((Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount")).getId());
         } else {
             return responseFromServer.illegal();
         }
@@ -145,13 +144,13 @@ public class ReservationController {
      * 卖家设置预约为完成
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/finishReservation")
-    public responseFromServer finishReservation(@RequestBody Reservation reservation, HttpSession session) {
+    public responseFromServer finishReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         /*验证当前操作用户是否是卖家*/
-        if (verifySeller(reservation, session)) {
+        if (verifySeller(reservation, request)) {
             return reservationService.finishReservation(reservation.getId());
         } else {
             return responseFromServer.illegal();
@@ -162,11 +161,11 @@ public class ReservationController {
      * 查看当前商品的所有预约
      *
      * @param map
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getReservationPageForCommodity")
-    public responseFromServer getReservationPageForCommodity(@RequestBody Map<String, Object> map, HttpSession session) {
+    public responseFromServer getReservationPageForCommodity(@RequestBody Map<String, Object> map, HttpServletRequest request) {
         Commodity commodity = (Commodity) map.get("commodity");
         Integer pageIndex = (Integer) map.get("pageIndex");
         if (commodity == null) return responseFromServer.error();
@@ -178,7 +177,7 @@ public class ReservationController {
         }
         commodity = (Commodity) response.getData();
         Notice notice = (Notice) noticeService.getSimpleNotice(commodity.getNoticeId()).getData();
-        if (notice.getAccountId().intValue() == ((Account) session.getAttribute("currentAccount")).getId().intValue()) {
+        if (notice.getAccountId().intValue() == ((Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount")).getId().intValue()) {
             /*验证成功*/
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("commodity_id", commodity.getId());
@@ -192,12 +191,12 @@ public class ReservationController {
      * 查看我申请的预约
      *
      * @param map
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getMyReservation")
-    public responseFromServer getMyReservation(@RequestBody Map<String, Object> map, HttpSession session) {
-        Account account = (Account) session.getAttribute("currentAccount");
+    public responseFromServer getMyReservation(@RequestBody Map<String, Object> map, HttpServletRequest request) {
+        Account account = (Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount");
         Integer pageIndex = (Integer) map.get("pageIndex");
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
@@ -214,26 +213,26 @@ public class ReservationController {
      * 查看我接收到的预约
      *
      * @param map
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getReservationRequest")
-    public responseFromServer getReservationRequest(@RequestBody Map<String, Object> map, HttpSession session) {
+    public responseFromServer getReservationRequest(@RequestBody Map<String, Object> map, HttpServletRequest request) {
         Integer pageIndex = (Integer) map.get("pageIndex");
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
-        return reservationService.getReservationRequest(((Account) session.getAttribute("currentAccount")).getId(), pageIndex);
+        return reservationService.getReservationRequest(((Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount")).getId(), pageIndex);
     }
 
     /**
      * 获取详细的预约内容
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getDetailedReservation")
-    public responseFromServer getDetailedReservation(@RequestBody Reservation reservation, HttpSession session) {
-        if (verifySeller(reservation, session)) {
+    public responseFromServer getDetailedReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        if (verifySeller(reservation, request)) {
             return responseFromServer.success(reservation);
         } else {
             return responseFromServer.error();
@@ -244,12 +243,12 @@ public class ReservationController {
      * 获取简单预约内容
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getSimpleReservation")
-    public responseFromServer getSimpleReservation(@RequestBody Reservation reservation, HttpSession session) {
-        if (verifySeller(reservation, session)) {
+    public responseFromServer getSimpleReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+        if (verifySeller(reservation, request)) {
             reservation.setUser(null);
             reservation.setCommodity(null);
             return responseFromServer.success(reservation);
@@ -262,15 +261,15 @@ public class ReservationController {
      * 更新预约内容
      *
      * @param reservation
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/updateReservation")
-    public responseFromServer updateBuyerReservation(@RequestBody Reservation reservation, HttpSession session) {
+    public responseFromServer updateBuyerReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         if (reservation.getStateEnum() != null && reservation.getStateEnum() != ReservationCode.WAITING.getCode()) {
             return responseFromServer.illegal();
         }
-        Account account = (Account) session.getAttribute("currentAccount");
+        Account account = (Account) request./* todo 修改获取账号方式*/getAttribute("currentAccount");
         Reservation reservation1 = (Reservation) reservationService.getSimpleReservation(reservation.getId()).getData();
         if (reservation1 == null || reservation1.getAccountId() == null) {
             return responseFromServer.error();

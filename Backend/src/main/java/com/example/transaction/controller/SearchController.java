@@ -1,16 +1,15 @@
 package com.example.transaction.controller;
 
-import com.example.transaction.dao.SearchDAO;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Search;
 import com.example.transaction.service.SearchService;
-import com.example.transaction.util.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -25,13 +24,15 @@ public class SearchController {
     @Autowired
     SearchService searchService;
     @RequestMapping("addSearchRecord")
-    public responseFromServer addSearchRecord(@RequestBody Search search, HttpSession session){
+    public responseFromServer addSearchRecord(@RequestBody Search search, HttpServletRequest request){
         if(search.getContent()==null)
             return responseFromServer.error();
-        return searchService.addSearchRecord(
-                ((Account)session.getAttribute("currentAccount")).getId(),
-                search.getContent()
-        );
+        /*todo 修改*/
+//        return searchService.addSearchRecord(
+//                ((Account)session.getAttribute("currentAccount")).getId(),
+//                search.getContent()
+//        );
+        return responseFromServer.error();
 
     }
 

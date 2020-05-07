@@ -5,13 +5,14 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.NotifyService;
-import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
@@ -31,12 +32,12 @@ public class NotifyController {
      * 根据用户id获取未读notify
      * 可以传入accountid参数也可不传入
      * @param account
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getUnreadNotifyByAccountId")
-    public responseFromServer getUnreadNotify(@RequestBody Account account, HttpSession session){
-        if(AccountVerify.verify(account, session)){
+    public responseFromServer getUnreadNotify(@RequestBody Account account, HttpServletRequest request){
+        if(AccountVerify.verify(account, request)){
             return notifyService.getUnreadNotifyByAccountId(account.getId());
         }else{
             return responseFromServer.illegal();
@@ -46,11 +47,11 @@ public class NotifyController {
     /**
      * 根据notify——id 或者id 查询整个详细的AccountNotify
      * @param accountNotify
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getDetailedAccountNotifyById")
-    public responseFromServer getDetailedAccountNotifyById(@RequestBody AccountNotify accountNotify, HttpSession session){
+    public responseFromServer getDetailedAccountNotifyById(@RequestBody AccountNotify accountNotify, HttpServletRequest request){
         responseFromServer response;
         if(accountNotify.getId()!=null){
             response = notifyService.getSimpleAccountNotifyById(accountNotify.getId());
@@ -68,7 +69,7 @@ public class NotifyController {
         accountNotify = (AccountNotify)response.getData();
         /*验证用户信息*/
         Account account = new Account(accountNotify.getAccountId());
-        if(!AccountVerify.verify(account,session)){
+        if(!AccountVerify.verify(account,request)){
             return responseFromServer.illegal();
         }
         response = notifyService.getNotifyByNotifyId(accountNotify.getNotifyId());
@@ -83,17 +84,17 @@ public class NotifyController {
     /**
      * 获取所有的通知
      * @param map
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getAllNotifyPage")
-    public responseFromServer getAllNotifyPage(@RequestBody Map<String,Object> map,HttpSession session){
+    public responseFromServer getAllNotifyPage(@RequestBody Map<String,Object> map,HttpServletRequest request){
         Integer pageIndex = (Integer) map.get("pageIndex");
         if(pageIndex == null||pageIndex <=0 ){
             pageIndex = 1;
         }
         Account account = new Account();
-        AccountVerify.verify(account,session);
+        AccountVerify.verify(account,request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id",account.getId());
         return notifyService.getNotifyPage(queryWrapper,pageIndex);
@@ -103,13 +104,13 @@ public class NotifyController {
     /**
      * 设置为已读
      * @param notify
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/readNotify")
-    public responseFromServer readNotify(@RequestBody AccountNotify notify,HttpSession session){
+    public responseFromServer readNotify(@RequestBody AccountNotify notify,HttpServletRequest request){
         Account account = new Account();
-        if(!AccountVerify.verify(account,session)){
+        if(!AccountVerify.verify(account,request)){
             return responseFromServer.error();
         }
         if(notify.getId()==null)return responseFromServer.error();
@@ -123,13 +124,13 @@ public class NotifyController {
 
     /**
      * 获取当前登录用户未读新消息的个数
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getUnreadNotifyCount")
-    public responseFromServer getUnreadNotifyCount(HttpSession session){
+    public responseFromServer getUnreadNotifyCount(HttpServletRequest request){
         Account account = new Account();
-        if(!AccountVerify.verify(account,session)){
+        if(!AccountVerify.verify(account,request)){
             return responseFromServer.error();
         }
         return notifyService.getUnreadNotifyCount(account.getId());

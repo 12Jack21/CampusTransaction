@@ -2,21 +2,17 @@ package com.example.transaction.controller;
 
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
-import com.example.transaction.util.AccountVerify;
+import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
-import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @ClassName: AccountController
@@ -38,7 +34,7 @@ public class AccountController {
      * @return
      */
     @RequestMapping("/login")
-    public responseFromServer login(@RequestBody Account account, HttpSession session){
+    public responseFromServer login(@RequestBody Account account, HttpServletRequest session){
         //验证参数，用户名和密码是否为空
         if(account==null||account.getUsername()==null||account.getPassword()==null)
             return responseFromServer.error();
@@ -47,6 +43,10 @@ public class AccountController {
         if (response.isSuccess()) {
             Account account1 = (Account) response.getData();
             if(account.getPassword().equals(account1.getPassword())){
+                /**
+                 * ZZH
+                 * TODO : 修改登录
+                 */
                 session.setAttribute("currentAccount",account1);
                 return responseFromServer.success();
             }else{
@@ -105,7 +105,11 @@ public class AccountController {
      * @return
      */
     @RequestMapping("/logout")
-    public responseFromServer logout(HttpSession session){
+    public responseFromServer logout(HttpServletRequest session){
+        /**
+         * ZZH
+         * TODO : 修改退登
+         */
         session.removeAttribute("currentAccount");
         return responseFromServer.success();
     }
@@ -113,7 +117,7 @@ public class AccountController {
 
     /*todo 上传图片*/
     @RequestMapping("/uploadAvatar")
-    public responseFromServer uploadAvatar(HttpSession session){
+    public responseFromServer uploadAvatar(HttpServletRequest session){
         return null;
     }
 
@@ -152,14 +156,14 @@ public class AccountController {
     /**
      * 更新用户信息
      * @param account
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/updateUser")
-    public responseFromServer updateUser(@RequestBody Account account, HttpSession session){
+    public responseFromServer updateUser(@RequestBody Account account, HttpServletRequest request){
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
-        if(AccountVerify.verify(account,session)){
+        if(AccountVerify.verify(account,request)){
             return accountService.updateAccount(account);
         }
         return responseFromServer.error("非法操作");
@@ -170,12 +174,12 @@ public class AccountController {
     /**
      * 获得账号信息，在a2a中验证
      * @param account
-     * @param session
+     * @param request
      * @return
      */
     @RequestMapping("/getAccountInfo")
-    public responseFromServer getAccountInfo(@RequestBody Account account,HttpSession session){
-        Account account1 = AccountVerify.verifyWithReturn(account,session);
+    public responseFromServer getAccountInfo(@RequestBody Account account,HttpServletRequest request){
+        Account account1 = AccountVerify.verifyWithReturn(account,request);
         if(account1 == null){
             return responseFromServer.error();
         }

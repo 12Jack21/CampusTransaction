@@ -24,7 +24,7 @@ import java.util.Map;
  * @Author: 曾志昊
  * @Date: 2020/4/25 20:56
  */
-@Configuration
+//@Configuration
 public class ShiroConfig {
     /**
      * Session Manager：会话管理

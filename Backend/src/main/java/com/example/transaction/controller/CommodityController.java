@@ -5,18 +5,14 @@ import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
-import com.example.transaction.service.impl.CommodityServiceImpl;
-import com.example.transaction.util.AccountVerify;
-import com.example.transaction.util.code.ResourcePath;
+import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-import java.io.File;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @ClassName: CommodityController
@@ -40,13 +36,13 @@ public class CommodityController {
      * 上传商品图片
      * @param files
      * @param commodityId
-     * @param session
+     * @param request
      * @return
      */
     @PostMapping("/uploadPicture")
     public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
                                      @RequestParam(name = "commodityId") Integer commodityId,
-                                     HttpSession session) {
+                                     HttpServletRequest request) {
         if (files == null) {
             return responseFromServer.error(0, "请选择要上传的图片");
         }
@@ -65,7 +61,7 @@ public class CommodityController {
         }
         Commodity commodity = (Commodity) response.getData();
         Account account = new Account(commodity.getNotice().getAccountId());
-        if(!AccountVerify.verify(account,session)){
+        if(!AccountVerify.verify(account,request)){
             return responseFromServer.error();
         }
         return commodityService.uploadCommodityImages(files,commodityId);
@@ -148,11 +144,11 @@ public class CommodityController {
     /**
      * 插入商品
      * @param commodity 商品
-     * @param session HttpSession
+     * @param request HttpServletRequest
      * @return 执行结果
      */
     @RequestMapping("/insertCommodity")
-    public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpSession session){
+    public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
         if(commodity.getNoticeId()==null)
             return responseFromServer.error();
         responseFromServer response = noticeService.getSimpleNotice(commodity.getNoticeId());
@@ -160,7 +156,7 @@ public class CommodityController {
             return responseFromServer.error();
         }else{
             Notice notice = (Notice) response.getData();
-            Account account = (Account) session.getAttribute("currentAccount");
+            Account account = (Account) request.getAttribute("currentAccount");
             if(notice.getAccountId()==null || notice.getAccountId() == account.getId().intValue()){
                 return responseFromServer.error();
             }
@@ -175,9 +171,9 @@ public class CommodityController {
      * @return 执行结果
      */
     @RequestMapping("/updateCommodity")
-    public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpSession session){
+    public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
         responseFromServer response = getById(commodity.getId());
-        if(AccountVerify.verifySellerByCommodityId(response,session)) {
+        if(AccountVerify.verifySellerByCommodityId(response,request)) {
             return commodityService.updateCommodity(commodity);
         }else{
             return responseFromServer.illegal();
@@ -187,13 +183,13 @@ public class CommodityController {
     /**
      * 删除商品
      * @param commodity 商品
-     * @param session HttpSession
+     * @param request HttpServletRequest
      * @return 执行结果
      */
     @RequestMapping("/deleteCommodity")
-    public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpSession session){
+    public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
         responseFromServer response = getById(commodity.getId());
-        if(AccountVerify.verifySellerByCommodityId(response,session))
+        if(AccountVerify.verifySellerByCommodityId(response,request))
         {
             return commodityService.deleteCommodity((Commodity)response.getData());
         }
@@ -213,13 +209,13 @@ public class CommodityController {
     /**
      * 删除某一notice下所有商品
      * @param notice 通告
-     * @param session HttpSession
+     * @param request HttpServletRequest
      * @return 执行结果
      */
     @RequestMapping("/deleteByNoticeId")
-    public responseFromServer deleteAllByNoticeId(@RequestBody Notice notice, HttpSession session){
+    public responseFromServer deleteAllByNoticeId(@RequestBody Notice notice, HttpServletRequest request){
         Account account = new Account(notice.getAccountId());
-        if(!AccountVerify.verify(account, session))  //用户合法性检查
+        if(!AccountVerify.verify(account, request))  //用户合法性检查
             return responseFromServer.error();
         return  commodityService.deleteAllByNotice(notice);
     }
