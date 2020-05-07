@@ -3,11 +3,18 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.dao.CommentDAO;
+import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Comment;
+import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.CommentService;
+import com.example.transaction.service.NotifyService;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.Nums;
+import com.example.transaction.util.code.NotifyActionCode;
+import com.example.transaction.util.code.NotifyTargetCode;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,10 +28,15 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
  */
 @Service("CommentService")
 public class CommentServiceImpl implements CommentService {
-    private final CommentDAO commentDAO;
+    CommentDAO commentDAO;
+    AccountDAO accountDAO;
+    NotifyService notifyService;
+
     @Autowired
-    public CommentServiceImpl(CommentDAO commentDAO){
+    public CommentServiceImpl(CommentDAO commentDAO, AccountDAO accountDAO, NotifyService notifyService) {
+        this.accountDAO = accountDAO;
         this.commentDAO = commentDAO;
+        this.notifyService = notifyService;
     }
 
     /**
@@ -49,16 +61,30 @@ public class CommentServiceImpl implements CommentService {
      * @return 执行结果
      */
     @Transactional
-    public responseFromServer sendComment(Comment comment){
-        if(comment.getToId()==null||comment.getContent()==null||comment.getCommodityId()==null)
+    public responseFromServer sendComment(Comment comment) {
+        if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null)
             return responseFromServer.error();
-        if(commentDAO.insert(comment) != 1){
+        if (commentDAO.insert(comment) != 1) {
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
-        /*todo 插入notify提醒*/
-        return  responseFromServer.success();
+        /*添加到notify*/
+        AccountNotify accountNotify = new AccountNotify();
+        accountNotify.setAccountId(comment.getToId());
+        Notify notify = new Notify();
+        notify.setSender(comment.getFromId());
+        notify.setTarget(comment.getId());
+        notify.setTargetType(NotifyTargetCode.COMMENT.getCode());
+        notify.setAction(NotifyActionCode.COMMENTS.getCode());
+        Account account = accountDAO.selectById(comment.getFromId());
+        notify.setContent("用户" + account.getUsername() + "向你发送了一条评论");
+        accountNotify.setNotify(notify);
+        if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
     }
 
     //删除评论

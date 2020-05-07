@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @ClassName: InterceptorConfiguration
- * @Description: TODO
+ * @Description: 拦截器配置
  * @Author: 曾志昊
  * @Date: 2020/5/7 18:32
  */

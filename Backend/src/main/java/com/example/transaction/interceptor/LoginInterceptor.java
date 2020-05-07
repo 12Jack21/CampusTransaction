@@ -40,13 +40,14 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
         }
         //权限路径拦截
         //PrintWriter resultWriter = arg1.getOutputStream();
-        // TODO: 有时候用PrintWriter 回报 getWriter() has already been called for this response
+
+        // 有时候用PrintWriter 回报 getWriter() has already been called for this response
         //换成ServletOutputStream就OK了
         arg1.setContentType("text/html;charset=utf-8");
         ServletOutputStream resultWriter = arg1.getOutputStream();
-        final String headerToken=arg0.getHeader("token");
+        final String headerToken = arg0.getHeader("token");
         //判断请求信息
-        if(null==headerToken||headerToken.trim().equals("")){
+        if (null == headerToken || headerToken.trim().equals("")) {
             resultWriter.write("你没有token,需要登录".getBytes());
             resultWriter.flush();
             resultWriter.close();

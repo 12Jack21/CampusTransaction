@@ -9,7 +9,6 @@ import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
-import com.example.transaction.util.security.AccountVerify;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.Nums;
 import com.example.transaction.util.code.ResourcePath;

@@ -3,7 +3,7 @@ package com.example.transaction.controller;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Comment;
 import com.example.transaction.service.CommentService;
-import com.example.transaction.util.security.AccountVerify;
+import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +21,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/comment")
 public class CommentController {
-    private final CommentService commentService;
+    CommentService commentService;
+    AccountVerify accountVerify;
+
     @Autowired
-    public CommentController(CommentService commentService){
+    public CommentController(CommentService commentService, AccountVerify accountVerify) {
+        this.accountVerify = accountVerify;
         this.commentService = commentService;
     }
 
@@ -53,12 +56,8 @@ public class CommentController {
      */
     @RequestMapping("/sendComment")
     public responseFromServer sendComment(@RequestBody Comment comment, HttpServletRequest request){
-       /**
-        * ZZH
-        * TODO : 添加到notify
-        */
         Account account = new Account(comment.getFromId());
-        if(!AccountVerify.verify(account,request))
+        if (!accountVerify.verify(account, request))
             return responseFromServer.illegal();
         return commentService.sendComment(comment);
     }
@@ -72,7 +71,7 @@ public class CommentController {
     @RequestMapping("/deleteComment")
     public responseFromServer deleteComment(@RequestBody Comment comment, HttpServletRequest request){
         Account account = new Account(comment.getFromId());
-        if(!AccountVerify.verify(account,request))
+        if (!accountVerify.verify(account, request))
             return responseFromServer.illegal();
         return commentService.deleteComment(comment);
     }

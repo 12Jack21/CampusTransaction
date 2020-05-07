@@ -5,7 +5,7 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.NotifyService;
-import com.example.transaction.util.security.AccountVerify;
+import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -27,19 +26,22 @@ public class NotifyController {
 
     @Autowired
     NotifyService notifyService;
+    @Autowired
+    AccountVerify accountVerify;
 
     /**
      * 根据用户id获取未读notify
      * 可以传入accountid参数也可不传入
+     *
      * @param account
      * @param request
      * @return
      */
     @RequestMapping("/getUnreadNotifyByAccountId")
-    public responseFromServer getUnreadNotify(@RequestBody Account account, HttpServletRequest request){
-        if(AccountVerify.verify(account, request)){
+    public responseFromServer getUnreadNotify(@RequestBody Account account, HttpServletRequest request) {
+        if (accountVerify.verify(account, request)) {
             return notifyService.getUnreadNotifyByAccountId(account.getId());
-        }else{
+        } else {
             return responseFromServer.illegal();
         }
     }
@@ -69,7 +71,7 @@ public class NotifyController {
         accountNotify = (AccountNotify)response.getData();
         /*验证用户信息*/
         Account account = new Account(accountNotify.getAccountId());
-        if(!AccountVerify.verify(account,request)){
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.illegal();
         }
         response = notifyService.getNotifyByNotifyId(accountNotify.getNotifyId());
@@ -94,7 +96,7 @@ public class NotifyController {
             pageIndex = 1;
         }
         Account account = new Account();
-        AccountVerify.verify(account,request);
+        accountVerify.verify(account, request);
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id",account.getId());
         return notifyService.getNotifyPage(queryWrapper,pageIndex);
@@ -110,10 +112,10 @@ public class NotifyController {
     @RequestMapping("/readNotify")
     public responseFromServer readNotify(@RequestBody AccountNotify notify,HttpServletRequest request){
         Account account = new Account();
-        if(!AccountVerify.verify(account,request)){
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
         }
-        if(notify.getId()==null)return responseFromServer.error();
+        if (notify.getId() == null) return responseFromServer.error();
         responseFromServer response = notifyService.getSimpleAccountNotifyById(notify.getId());
         if(response.isFailure())return responseFromServer.error();
         notify = (AccountNotify)response.getData();
@@ -130,7 +132,7 @@ public class NotifyController {
     @RequestMapping("/getUnreadNotifyCount")
     public responseFromServer getUnreadNotifyCount(HttpServletRequest request){
         Account account = new Account();
-        if(!AccountVerify.verify(account,request)){
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
         }
         return notifyService.getUnreadNotifyCount(account.getId());

@@ -13,8 +13,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
                 "com.example.transaction.controller",
                 "com.example.transaction.config",
                 "com.example.transaction.service",
-                "com.example.transaction.interceptor"/*,
-                "com.example.transaction.util"*/
+                "com.example.transaction.interceptor",
+                "com.example.transaction.util"
         })
 public class TransactionApplication {
     public static void main(String[] args) {

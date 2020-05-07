@@ -5,7 +5,7 @@ import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
-import com.example.transaction.util.security.AccountVerify;
+import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,21 +23,25 @@ import java.util.Map;
 @CrossOrigin
 @RequestMapping("/commodity")
 public class CommodityController {
-    private final CommodityService commodityService;
-    private final NoticeService noticeService;
+    CommodityService commodityService;
+    NoticeService noticeService;
+    AccountVerify accountVerify;
+
     @Autowired
-    CommodityController(CommodityService commodityService,NoticeService noticeService){
+    CommodityController(CommodityService commodityService, NoticeService noticeService, AccountVerify accountVerify) {
         this.commodityService = commodityService;
         this.noticeService = noticeService;
+        this.accountVerify = accountVerify;
     }
 
 
     /**
      * 上传商品图片
+     *
      * @param files
      * @param commodityId
      * @param request
-     * @return
+     * @return responseFromServer
      */
     @PostMapping("/uploadPicture")
     public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
@@ -61,7 +65,7 @@ public class CommodityController {
         }
         Commodity commodity = (Commodity) response.getData();
         Account account = new Account(commodity.getNotice().getAccountId());
-        if(!AccountVerify.verify(account,request)){
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
         }
         return commodityService.uploadCommodityImages(files,commodityId);
@@ -173,9 +177,9 @@ public class CommodityController {
     @RequestMapping("/updateCommodity")
     public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
         responseFromServer response = getById(commodity.getId());
-        if(AccountVerify.verifySellerByCommodityId(response,request)) {
+        if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.updateCommodity(commodity);
-        }else{
+        } else {
             return responseFromServer.illegal();
         }
     }
@@ -189,9 +193,8 @@ public class CommodityController {
     @RequestMapping("/deleteCommodity")
     public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
         responseFromServer response = getById(commodity.getId());
-        if(AccountVerify.verifySellerByCommodityId(response,request))
-        {
-            return commodityService.deleteCommodity((Commodity)response.getData());
+        if (accountVerify.verifySellerByCommodityId(response, request)) {
+            return commodityService.deleteCommodity((Commodity) response.getData());
         }
         return responseFromServer.illegal();
     }
@@ -215,7 +218,7 @@ public class CommodityController {
     @RequestMapping("/deleteByNoticeId")
     public responseFromServer deleteAllByNoticeId(@RequestBody Notice notice, HttpServletRequest request){
         Account account = new Account(notice.getAccountId());
-        if(!AccountVerify.verify(account, request))  //用户合法性检查
+        if (!accountVerify.verify(account, request))  //用户合法性检查
             return responseFromServer.error();
         return  commodityService.deleteAllByNotice(notice);
     }

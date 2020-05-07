@@ -6,15 +6,15 @@ import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
+import com.example.transaction.service.TokenService;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @ClassName: AccountServiceImpl
@@ -25,20 +25,70 @@ import java.util.Map;
 public class AccountServiceImpl implements AccountService {
     private AccountDAO accountDAO;
     private A2aDAO a2aDAO;
+    private TokenService tokenService;
+
     @Autowired
-    public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO){
+    public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO, TokenService tokenService) {
         this.accountDAO = accountDAO;
         this.a2aDAO = a2aDAO;
+        this.tokenService = tokenService;
+    }
+
+    @Override
+    public responseFromServer test(HttpServletRequest request) {
+        return responseFromServer.success();
     }
 
 
     /**
-     * 注册用户  TODO：完成校验
+     * 登录 调用loginservice操作
+     *
+     * @param account
+     * @return
+     */
+    @Override
+    public responseFromServer login(Account account) {
+        responseFromServer response = selectByUserName(account.getUsername());
+        if (response.isSuccess()) {
+            Account account1 = (Account) response.getData();
+            if (account.getPassword().equals(account1.getPassword())) {
+
+                return tokenService.loginOperationOnToken(account.getId());
+//                session.setAttribute("currentAccount",account1);
+//                return responseFromServer.success();
+            } else {
+                return responseFromServer.error();
+            }
+        } else {
+            return responseFromServer.error();
+        }
+    }
+
+    /**
+     * 退登 调用tokenservice操作
+     *
+     * @param account
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer logout(Account account) {
+        if (tokenService.logoutOperationOnToken(account.getId()).isFailure()) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
+    }
+
+
+    /**
+     * 注册用户
+     *
      * @param newAccout
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public responseFromServer register(Account newAccout){
+    public responseFromServer register(Account newAccout) {
         accountDAO.insert(newAccout);
         return responseFromServer.success();
     }

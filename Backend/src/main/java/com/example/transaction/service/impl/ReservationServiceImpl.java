@@ -78,12 +78,18 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public responseFromServer cancelReservation(Integer reservationId, Integer accountId) {
+        Integer receiverId = null;
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        if (accountId.intValue() != reservation.getAccountId().intValue()
-                && accountId.intValue() != reservation.getCommodity().getNotice().getAccountId()) {
+        if (accountId.intValue() == reservation.getAccountId().intValue()) {
+            receiverId = reservation.getCommodity().getNotice().getAccountId();
+        } else if (accountId.intValue() == reservation.getCommodity().getNotice().getAccountId()) {
+            receiverId = reservation.getAccountId().intValue();
+        } else {
             /*既不是卖家也不是买家*/
             return responseFromServer.illegal();
         }
+
+
         /*身份验证成功*/
         if (reservation.getStateEnum() == ReservationCode.VALIDATE.getCode()) {
             /*如果已经validate，则需要恢复库存*/
@@ -107,8 +113,22 @@ public class ReservationServiceImpl implements ReservationService {
         }
         /**
          * ZZH
-         * TODO : 添加到notify
+         * 添加到notify
          */
+        AccountNotify accountNotify = new AccountNotify();
+        accountNotify.setAccountId(receiverId);
+        Notify notify = new Notify();
+        notify.setSender(accountId);
+        notify.setTarget(reservation.getId());
+        notify.setAction(NotifyActionCode.CANCELS.getCode());
+        Account account = accountDAO.selectById(accountId);
+        if (account == null) return responseFromServer.error();
+        notify.setContent("用户" + account.getUsername() + "取消了你的预约");
+        accountNotify.setNotify(notify);
+        if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
         return responseFromServer.success();
     }
 

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 /**
  * @InterfaceName: TokenDAO
- * @Description: TODO
+ * @Description: TokenDao
  * @Author: 曾志昊
  * @Date: 2020/5/7 16:51
  */
