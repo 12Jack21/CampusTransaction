@@ -4,7 +4,7 @@
 		<notice :scrollBottom="scrollBottom && tabID == 1" :show="tabID == 1" v-if="loaded[1]"></notice>
 		<release :show="tabID == 2" v-if="loaded[2]" @closeReleaseTap="closeReleaseTap"></release>
 		<!--底部导航-->
-		<footer-tabbar :tabID="tabID" :msgDot="true" @tabTap="tabTap" />
+		<footer-tabbar :tabID="tabID" :msgDot="true" @tabTap="tabTap" v-show="tabID != 2"/>
 	</view>
 </template>
 
