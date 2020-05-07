@@ -216,7 +216,8 @@ export default {
 			comTypeList: ['数码类', '家电类', '交通工具类', '其他'], // 分类列表
 			newPrice: '', //出售价
 			oriPrice: '', //原价
-			imgList: [] //图片 url 列表
+			imgList: [] ,//图片 url 列表
+			imgError: false
 		}
 	},
 	props: {
@@ -313,69 +314,72 @@ export default {
 				}
 			})
 		},
-		noticeSubmit(e){
-			let notice = e.detail.value
-			console.log('notice form',notice)
-			// upload all commodity first and get image url to set property
-			uni.showLoading({
-				title: '发布中',
-				mask: false
-			});
+		uploadImage(){
+			//TODO: 同步所有上传图片的请求
+			let that = this
 			// upload one by one, get responsed image url
 			for(let i = 0;i < this.comList.length;i++){
 				let c = this.comList[i]
 				c.images = []
 				c.imgList.forEach(url=>{
-					uni.uploadFile({
-						url:'',
-						filePath: url,
-						name:'image',
-						header:{"Content-Type": "multipart/form-data"},
-						success:(res) => {
-								if (res.statusCode == 200){
-										console.log('文件上传成功')
-										console.log('image url',res.data);
-										// add url to commodity image list
-										c.images.push(res.data)
-								}
-						}
+					// 返回的 json 已进行了 JSON.parse()
+					this.$api.uploadImage(url)
+					.then(res=>{c.images.push(res.data)})
+					.catch(err=>{
+						that.imgError = true
+						console.log('一张图片上传失败',that.imgError);
 					})
 				})
 			}
+		},
+		async noticeSubmit(e){
+			let notice = e.detail.value
+			let that = this
+			console.log('notice form',notice)
+			// upload all commodity first and get image url to set property
+			uni.showLoading({
+				title: '发布中',
+				mask: false,
+			});
+			await this.uploadImage()
+			console.log('图片处理完毕，error',this.imgError);
+			if(this.imgError){
+				console.log('存在失败上传的图片，请重新发布通告',imgError);
+				this.imgError = false
+				uni.showToast({
+					title:'图片上传失败',
+					icon:'none'
+				})
+				return
+			}
+			
+			
 			// submit notice data to server
-			uni.request({
-				url: '',
-				method: 'POST',
-				data: {
-					...notice,
-					type: this.scene, //通告类型
-					comList: this.comList
-				},
-				success: res => {
-					if(res.statusCode == 200){	
-					console.log('通告上传成功，返回值',res)
-					uni.showToast({
-						title: '发布成功'
-					});
-					// switch to release start page
-					// this.scene = -1
-					}else{
-						console.log("请求失败，状态码：", res.statusCode)
-					}
-				},
-				fail: () => {
-					console.log("通告上传失败")
-				},
-				complete: () => {
+			this.$api.addNotice({
+				...notice,
+				type: this.scene,
+				comList: this.comList
+				})
+				.then(res=>{
+					console.log('通告上传成功');
 					uni.hideLoading()
 					uni.showToast({
-						title: '发布成功'
+						title: '发布成功',
+						duration: 2000
 					});
-					setTimeout(()=> this.scene = -1,500)
-				}
-			});
+					that.scene = -1
+				})
+				.catch(err =>{
+					console.log('通告上传失败');
+					uni.hideLoading()
+					uni.showToast({
+						title: '发布失败',
+						duration: 2000,
+						icon:'none'
+					});
+				})
 		},
-		comFormSubmit(e) {
+		comFormSubmit(e) { // 添加物品
 			console.log('com',this.commodity)
 			let comFormData = e.detail.value
 			let commodity = {

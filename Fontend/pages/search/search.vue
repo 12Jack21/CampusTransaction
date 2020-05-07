@@ -7,10 +7,10 @@
 				</view>
 				<view class="search-form round">
 					<text class="cuIcon-search"/>
-					<input @input="searchInput" :value="searchKey" :adjust-position="false" type="text" placeholder="苹果7" confirm-type="search"/>
+					<input @input="searchInput" :value="searchKey" :adjust-position="false" type="text" placeholder="高数" confirm-type="search"/>
 					<text class="cuIcon-close close-icon" v-if="search_close" @tap="closeInput"/>
 				</view>
-				<view class="action">
+				<view class="action" @tap="doSearch">
 					<text class="text-red">搜索</text>
 				</view>
 			</view>
@@ -24,7 +24,7 @@
 			<view class="search-list-view">
 				<view class="search-bar-view">
 					<text class="text-black">历史搜索</text>
-					<text class="cuIcon-delete text-gray icon-right" @tap="deleteTap"/>
+					<text class="cuIcon-delete text-gray icon-right" @tap="deleteHistoryTap"/>
 				</view>
 				<view class="btn-view">
 					<button class="cu-btn round">耳机</button>
@@ -118,12 +118,19 @@
 				this.searchKey = '';
 				this.search_close = false;
 			},
-			deleteTap() {
+			deleteHistoryTap() {
 				this.deleteView = true;
 			},
 			logTap() {
 				this.deleteView = false;
 			},
+			doSearch(){
+				// 关键词 模糊搜索
+				let key = this.searchKey.trim().length == 0 ? '高数':this.searchKey.trim()
+				this.$api.getSearchResult(key)
+					.then(res => console.log('then',res))
+					.catch(err => console.log('err',err))
+			}
 		}
 	}
 </script>

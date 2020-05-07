@@ -9,7 +9,11 @@
 			"path": "pages/search/search",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/search/search_result",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationStyle": "custom"
 	}
