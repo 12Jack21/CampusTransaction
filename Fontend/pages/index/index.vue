@@ -2,9 +2,9 @@
 	<view class="content">
 		<home :scrollY="scrollY" :scrollBottom="scrollBottom && tabID == 0" :show="tabID == 0" v-if="loaded[0]"></home>
 		<notice :scrollBottom="scrollBottom && tabID == 1" :show="tabID == 1" v-if="loaded[1]"></notice>
-		<release :show="tabID == 2" v-if="loaded[2]" @closeReleaseTap="closeReleaseTap"></release>
+		<release :show="tabID == 2"  v-if="loaded[2]" @closeReleaseTap="closeReleaseTap" @switchTab="switchTab"></release>
 		<!--底部导航-->
-		<footer-tabbar :tabID="tabID" :msgDot="true" @tabTap="tabTap" v-show="tabID != 2"/>
+		<footer-tabbar :tabID="tabID" :msgDot="true" @tabTap="tabTap" v-show="isTabShow"/>
 	</view>
 </template>
 
@@ -23,6 +23,7 @@ export default {
 	data() {
 		return {
 			scrollY: 0,
+			isTabShow: true,
 			scrollBottom: false,
 			prevTabID: 0,
 			tabID: 2,
@@ -38,6 +39,9 @@ export default {
 		this.scrollBottom = true
 	},
 	methods: {
+		switchTab(show){
+			this.isTabShow = show
+		},
 		tabTap(index) {
 			this.prevTabID = this.tabID
 			this.tabID = index

@@ -13,19 +13,21 @@
 								</block>
 							</view>
 						</view>
+						<!-- Price -->
 						<view class="padding-xs">
 							<view class="text-cut-2 text-black">{{item.title}}</view>
 							<view class="margin-top-xs">
 								<view class="flex">
 									<view class="flex-sub">
 										<text class="text-price text-red text-xl text-left">{{item.price}}</text>
-										<iPrice status="del" decimal="small" v-if="item.originalPrice">{{item.originalPrice}}</iPrice>
+										<text class="originalPricce" v-if="item.originalPrice">{{item.originalPrice}}</text>
 									</view>
 									<view class="flex-sub text-right" v-if="item.state">
 										<text class="cu-tag light bg-red radius sm ">{{item.state}}</text>
 									</view>
 								</view>
 							</view>
+							<!-- end -->
 							<view class="margin-top-sm margin-bottom-xs text-gray user-info-box">
 								<view class="flex">
 									<view class="flex-sub">
@@ -89,7 +91,7 @@
 								<view class="flex">
 									<view class="flex-sub">
 										<text class="text-price text-red text-xl text-left">{{item.price}}</text>
-										<iPrice status="del" decimal="small" v-if="item.originalPrice">{{item.originalPrice}}</iPrice>
+										<text class="originalPricce" v-if="item.originalPrice">{{item.originalPrice}}</text>
 									</view>
 									<view class="flex-sub text-right" v-if="item.state">
 										<text class="cu-tag light bg-red radius sm ">{{item.state}}</text>
@@ -175,6 +177,10 @@
 </script>
 
 <style lang="scss" scoped>
+	.originalPricce{
+		text-decoration-line: line-through;
+		margin-left: 10rpx;
+	}
 	.zaiui-goods-list-box {
 		position: relative;
 		width: 100%;

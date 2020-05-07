@@ -44,6 +44,13 @@
 					<!-- 条件 -->
 					<view class="cu-form-group"><textarea name="condition" maxlength="300" style="height: 3em;" placeholder="限定条件说明"></textarea></view>
 					<!-- end -->
+					
+					<!-- 任务的出价钱 -->
+					<view class="cu-form-group" v-if="scene == 2">
+						<view class="title">出价:</view>
+						<input type="digit" key="demandPrice" placeholder="请输入出价金额" maxlength="7" name="demandPrice" />
+					</view>
+					<!-- end -->
 					<!-- 地址选择 -->
 					<view class="cu-form-group margin-top">
 						<view class="title">地址</view>
@@ -87,6 +94,7 @@
 						<button class="cu-btn lg release_btn" form-type="submit">
 							确定发布
 						</button>
+						<!-- <button class="cu-load bg-red loading">确定发布</button> -->
 					</view>
 					<!-- end -->
 				</form>
@@ -217,7 +225,13 @@ export default {
 			default: true
 		}
 	},
-	watch: {},
+	watch: {
+		scene(newVal,oldVal){
+			console.log('scene new value',newVal);
+			if(oldVal== -1 && newVal != -1) this.$emit('switchTab',false) // close tabbar
+			else if(oldVal != -1 && newVal == -1) this.$emit('switchTab',true)
+		}
+	},
 	computed:{
 		descPlaceholder(){
 			if(this.scene == 0) return '描述物品的转手原因,入手渠道和使用感受,或者其他的一些描述'
@@ -334,26 +348,35 @@ export default {
 				method: 'POST',
 				data: {
 					...notice,
+					type: this.scene, //通告类型
 					comList: this.comList
 				},
 				success: res => {
-					console.log('通告上传成功，返回值',res);
+					if(res.statusCode == 200){	
+					console.log('通告上传成功，返回值',res)
 					uni.showToast({
 						title: '发布成功'
 					});
 					// switch to release start page
-					this.scene = -1
+					// this.scene = -1
+					}else{
+						console.log("请求失败，状态码：", res.statusCode)
+					}
 				},
 				fail: () => {
 					console.log("通告上传失败")
 				},
 				complete: () => {
 					uni.hideLoading()
+					uni.showToast({
+						title: '发布成功'
+					});
+					setTimeout(()=> this.scene = -1,500)
 				}
 			});
 		},
 		comFormSubmit(e) {
-			console.log('com',this.commodity);
+			console.log('com',this.commodity)
 			let comFormData = e.detail.value
 			let commodity = {
 				name: comFormData.comName,
@@ -366,7 +389,7 @@ export default {
 				imgList: this.imgList
 			}
 			this.comList.push(commodity)
-			console.log('Commodity',commodity);
+			console.log('Commodity',commodity)
 			this.focus = 0
 			this.imgList = []
 		},
@@ -398,6 +421,7 @@ export default {
 		typeListTap(e) {
 			console.log('click type', e)
 			this.scene = e.index
+			if(this.scene != 0) this.comList = []
 		},
 		// 显示分类模态框
 		showModal(e) {
