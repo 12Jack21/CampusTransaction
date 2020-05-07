@@ -1,5 +1,5 @@
-let _sell_data = {
-	typeListData() {
+let _release_data = {
+	noticeTypeListData() {
 		return [{
 			id: 1,
 			title: '发布出售通告',
@@ -19,4 +19,4 @@ let _sell_data = {
 	}
 };
 
-export default _sell_data;
+export default _release_data;
