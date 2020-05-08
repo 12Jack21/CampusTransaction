@@ -7,11 +7,13 @@ const store = new Vuex.Store({
 	state:{
 		hasLogin: false,
 		userId: '',
+		userAddress:'',
 		token: ''
 	},
 	mutations:{
-		login(state, {userId,token}){
+		login(state, {userId,userAddress,token}){
 			state.userId = userId
+			state.userAddress - userAddress
 			state.token = token
 			state.hasLogin = true
 		},

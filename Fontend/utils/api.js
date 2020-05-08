@@ -5,7 +5,7 @@ const http = new Request()
 // 静态全局配置
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
-    config.baseUrl = 'http://localhost:8080'; /* 根域名 */
+    config.baseUrl = 'http://localhost:9999'; /* 根域名 */
     config.header = {
         a: 1, // 演示用
         b: 2,
@@ -17,7 +17,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 http.interceptor.request((config, cancel) => { /* cancel 为函数，如果调用会取消本次请求。需要注意：调用cancel,本次请求的catch仍会执行。必须return config */
     config.header = {
       ...config.header,
-      token: 'qweqe1212' // 演示拦截器header加参
+      token: uni.getStorageSync('token') || '' // 演示拦截器header加参
     }
     // 演示custom 用处
     // if (config.custom.auth) {
@@ -52,7 +52,7 @@ export default{
 		return http.get('/',{...config})
 	},
 	getSearchResult(keyword){
-		return http.get('commodity/search',{params:{key:keyword}})
+		return http.get('/commodity/search',{params:{key:keyword}})
 	},
 	uploadImage(filePath,config){
 		return http.upload('/commodity/image/add',{
@@ -67,6 +67,9 @@ export default{
 		})
 	},
 	getSearchHistory(id){
-		return http.get('/history/account/')
+		return http.get('/histories/account/' + id)
+	},
+	clearSearchHistory(id){
+		return http.delete('/histories/account/' + id)
 	}
 }

@@ -23,6 +23,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     @Autowired
@@ -41,7 +42,7 @@ public class ReservationController {
      * @param request
      * @return
      */
-    @RequestMapping("/setupReservation")
+    @PostMapping
     public responseFromServer setupReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
@@ -61,7 +62,8 @@ public class ReservationController {
      * @param request
      * @return
      */
-    @RequestMapping("/cancelReservation")
+    // @RequestMapping("/cancelReservation")
+    @PutMapping('/{reservation_id}/state')
     public responseFromServer cancelReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
@@ -80,7 +82,8 @@ public class ReservationController {
      * @param request
      * @return
      */
-    @RequestMapping("/deleteReservation")
+    // @RequestMapping("/deleteReservation")
+    @DeleteMapping('/{id}')
     public responseFromServer deleteReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         if (verifySeller(reservation, request)) {
             /*在验证的时候已经更新reservation信息*/
@@ -136,6 +139,7 @@ public class ReservationController {
      * @return
      */
     @RequestMapping("/validateReservation")
+    @PutMapping('/{reservation_id}/validate')
     public responseFromServer validateReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         if (verifySeller(reservation, request)) {
             /*验证当前操作用户是否是卖家*/
@@ -155,6 +159,7 @@ public class ReservationController {
      * @return
      */
     @RequestMapping("/finishReservation")
+    @PutMapping('/{reservation_id}/state') //更新对象一般用 Put 
     public responseFromServer finishReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         /*验证当前操作用户是否是卖家*/
         if (verifySeller(reservation, request)) {
@@ -172,6 +177,7 @@ public class ReservationController {
      * @return
      */
     @RequestMapping("/getReservationPageForCommodity")
+    @GetMapping('/commodity/{commodity_id}')
     public responseFromServer getReservationPageForCommodity(@RequestBody Map<String, Object> map, HttpServletRequest request) {
         Commodity commodity = (Commodity) map.get("commodity");
         Integer pageIndex = (Integer) map.get("pageIndex");
@@ -202,6 +208,7 @@ public class ReservationController {
      * @return
      */
     @RequestMapping("/getMyReservation")
+    @GetMapping('/account/{account_id}')
     public responseFromServer getMyReservation(@RequestBody Map<String, Object> map, HttpServletRequest request) {
         Account account = accountVerify.getCurrentAccount(request);
         Integer pageIndex = (Integer) map.get("pageIndex");

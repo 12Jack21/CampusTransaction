@@ -59,12 +59,16 @@
 				</scroll-view>
 			</view>
 
+			<!--商品列表-->
 			<view class="zaiui-tab-list">
-				<!--商品列表-->
-				<goods-list :list_data="goodsData" @listTap="goodsListTap" :show="goodsTabData.TabCur!=2 && goodsTabData.TabCur!=4?true:false" />
-
+				<view class="margin-bottom zaiui-goods-list-box">
+					<view class="flex flex-wrap ">
+						<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs"/>
+						<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs"/>
+					</view>
+				</view>
 			</view>
-
+			<!-- end -->
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height" />
 		</view>
@@ -151,6 +155,14 @@
 			scrollBottom: {
 				type: Boolean,
 				default: false
+			}
+		},
+		computed:{
+			leftGoods(){
+				return this.goodsData.filter((e,index) => index % 2 === 0)
+			},
+			rightGoods(){
+				return this.goodsData.filter((e,index) => index % 2 === 1)
 			}
 		},
 		watch: {
