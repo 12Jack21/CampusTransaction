@@ -65,5 +65,8 @@ export default{
 		return http.post('/notice/add',{
 			data
 		})
+	},
+	getSearchHistory(id){
+		return http.get('/history/account/')
 	}
 }

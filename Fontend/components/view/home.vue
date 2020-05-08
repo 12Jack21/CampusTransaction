@@ -83,10 +83,7 @@
 	import gridMenuList from '@/components/list/grid-menu-list';
 	import identifyList from '@/components/list/identify-list';
 	import sellQuicklyList from '@/components/list/sell-quickly-list';
-	import activityList from '@/components/list/activity-list';
 	import goodsList from '@/components/list/goods-list';
-	import liveList from '@/components/list/live-list';
-	import videoList from '@/components/list/video-list';
 	import footerTabbar from '@/components/footer/footer-tabbar';
 	import gridSortList from '@/components/list/grid-sort-list';
 	import modalImg from '@/components/basics/modal-img';
@@ -101,10 +98,7 @@
 			gridMenuList,
 			identifyList,
 			sellQuicklyList,
-			activityList,
 			goodsList,
-			liveList,
-			videoList,
 			footerTabbar,
 			gridSortList,
 			modalImg

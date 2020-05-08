@@ -354,7 +354,6 @@ export default {
 				return
 			}
 			
-			
 			// submit notice data to server
 			this.$api.addNotice({
 				...notice,

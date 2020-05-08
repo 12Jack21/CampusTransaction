@@ -147,7 +147,6 @@
 
 <script>
 	import _tool from '@/static/zaiui/util/tools.js';
-	import iPrice from '@/components/basics/i-price.vue';
 	export default {
 		name: 'goods-list',
 		props: {
@@ -171,7 +170,6 @@
 			}
 		},
 		components:{
-			iPrice
 		}
 	}
 </script>
