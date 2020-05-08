@@ -51,8 +51,8 @@ export default{
 	testAPI(config){
 		return http.get('/',{...config})
 	},
-	getSearchResult(keyword,config){
-		return http.get('commodity/search',{params:{key:keyword}, ...config})
+	getSearchResult(keyword){
+		return http.get('commodity/search',{params:{key:keyword}})
 	},
 	uploadImage(filePath,config){
 		return http.upload('/commodity/image/add',{
@@ -61,10 +61,9 @@ export default{
 			...config
 		})
 	},
-	addNotice(data,config){
+	addNotice(data){
 		return http.post('/notice/add',{
-			data,
-			...config
+			data
 		})
 	}
 }

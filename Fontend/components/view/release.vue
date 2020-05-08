@@ -314,41 +314,42 @@ export default {
 				}
 			})
 		},
-		uploadImage(){
+		async uploadImage(){
 			//TODO: 同步所有上传图片的请求
 			let that = this
 			// upload one by one, get responsed image url
 			for(let i = 0;i < this.comList.length;i++){
 				let c = this.comList[i]
 				c.images = []
-				c.imgList.forEach(url=>{
-					// 返回的 json 已进行了 JSON.parse()
-					this.$api.uploadImage(url)
+				for(let j = 0;j < c.imgList.length;j++){
+					await that.$api.uploadImage(c.imgList[j])
 					.then(res=>{c.images.push(res.data)})
 					.catch(err=>{
 						that.imgError = true
 						console.log('一张图片上传失败',that.imgError);
 					})
-				})
+				}
 			}
 		},
 		async noticeSubmit(e){
 			let notice = e.detail.value
 			let that = this
-			console.log('notice form',notice)
+
 			// upload all commodity first and get image url to set property
 			uni.showLoading({
 				title: '发布中',
 				mask: false,
 			});
 			await this.uploadImage()
-			console.log('图片处理完毕，error',this.imgError);
+			console.log('图片处理完毕，isError:',this.imgError);
 			if(this.imgError){
-				console.log('存在失败上传的图片，请重新发布通告',imgError);
+				console.log('存在失败上传的图片，请重新发布通告');
 				this.imgError = false
+				uni.hideLoading()
 				uni.showToast({
-					title:'图片上传失败',
-					icon:'none'
+					title:'存在失败上传的图片，请重新发布通告',
+					icon:'none',
+					duration: 4000
 				})
 				return
 			}
@@ -367,7 +368,7 @@ export default {
 						title: '发布成功',
 						duration: 2000
 					});
-					that.scene = -1
+					this.scene = -1
 				})
 				.catch(err =>{
 					console.log('通告上传失败');
