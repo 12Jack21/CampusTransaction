@@ -4,10 +4,11 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.util.responseFromServer;
 import com.example.transaction.service.impl.AccountVerify;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,15 +19,13 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2020/4/25 17:57
  */
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/accounts")
+@Api(tags = "AccountController")
 public class AccountController {
     @Autowired
     AccountService accountService;
     @Autowired
     AccountVerify accountVerify;
-
-
-//    Logger logger = LogManager.getLogger(LogManager.ROOT_LOGGER_NAME);
 
     /**
      * 使用shiro进行登录验证
@@ -35,7 +34,9 @@ public class AccountController {
      * @param session
      * @return
      */
-    @RequestMapping("/login")
+//    @RequestMapping("/login")
+    @ApiOperation(value = "登录验证")
+    @PostMapping("/verify")
     public responseFromServer login(@RequestBody Account account, HttpServletRequest session) {
         //验证参数，用户名和密码是否为空
         if(account==null||account.getUsername()==null||account.getPassword()==null)
@@ -91,7 +92,9 @@ public class AccountController {
      * @param request
      * @return
      */
-    @RequestMapping("/logout")
+//    @RequestMapping("/logout")
+    @ApiOperation(value = "退出登录")
+    @DeleteMapping("/{account_id}")
     public responseFromServer logout(HttpServletRequest request) {
         Account account = new Account();
         if (accountVerify.verify(account, request)) {
@@ -105,7 +108,8 @@ public class AccountController {
 
 
     /*todo 上传图片*/
-    @RequestMapping("/uploadAvatar")
+//    @RequestMapping("/uploadAvatar")
+    //上传图片可归入个人信息修改，用户账号刚创建时初始化头像
     public responseFromServer uploadAvatar(HttpServletRequest session){
         return null;
     }
@@ -116,7 +120,10 @@ public class AccountController {
      * @param account
      * @return
      */
-    @RequestMapping("/verifyUserName")
+//    @RequestMapping("/verifyUserName")
+    @ApiOperation(value = "检查用户名是否被使用")
+    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{account_id}/name")
     public responseFromServer verifyUserName(@RequestBody Account account){
         String userName = account.getUsername();
         if(userName==null||userName==""){
@@ -131,7 +138,9 @@ public class AccountController {
      * @param account
      * @return
      */
-    @RequestMapping("/register")
+//    @RequestMapping("/register")
+    @ApiOperation(value = "用户注册")
+    @PostMapping
     public responseFromServer register(@RequestBody Account account) {
 
         if (account.getPassword() == null ||
@@ -148,7 +157,10 @@ public class AccountController {
      * @param request
      * @return
      */
-    @RequestMapping("/updateUser")
+//    @RequestMapping("/updateUser")
+    @ApiOperation(value = "更新用户信息")
+    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{account_id}")
     public responseFromServer updateUser(@RequestBody Account account, HttpServletRequest request){
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
@@ -166,7 +178,10 @@ public class AccountController {
      * @param request
      * @return
      */
-    @RequestMapping("/getAccountInfo")
+//    @RequestMapping("/getAccountInfo")
+    @ApiOperation(value = "获取账号信息，在a2a中验证")
+    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{account_id}")
     public responseFromServer getAccountInfo(@RequestBody Account account,HttpServletRequest request) {
         Account account1 = accountVerify.verifyWithReturn(account,request);
         if(account1 == null){

@@ -7,10 +7,12 @@ import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.responseFromServer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -21,7 +23,8 @@ import java.util.Map;
  * @Date: 2020/4/26 16:44
  */
 @RestController
-@RequestMapping("/notice")
+@RequestMapping("/notices")
+@Api(tags = "NoticeController")
 public class NoticeController {
 
 
@@ -37,7 +40,9 @@ public class NoticeController {
      * @param request
      * @return 通告
      */
-    @RequestMapping("/setupNotice")
+//    @RequestMapping("/setupNotice")
+    @ApiOperation("创建通告")
+    @PostMapping
     public responseFromServer setupNotice(@RequestBody Notice notice, HttpServletRequest request) {
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
@@ -60,7 +65,10 @@ public class NoticeController {
      * @param request
      * @return
      */
-    @RequestMapping("/cancelNotice")
+//    @RequestMapping("/cancelNotice")
+    @ApiOperation(value = "取消通告")
+    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/{notice_id}/cancel")
     public responseFromServer cancelNotice(@RequestBody Notice notice,HttpServletRequest request){
        return updateNoticeState(notice,request,NoticeCode.CANCELLED.getCode());
     }
@@ -72,7 +80,10 @@ public class NoticeController {
      * @param request
      * @return
      */
-    @RequestMapping("/publishNotice")
+//    @RequestMapping("/publishNotice")
+    @ApiOperation(value = "发布通告")
+    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{notice_id}")
     public responseFromServer publishNotice(@RequestBody Notice notice,HttpServletRequest request){
         return updateNoticeState(notice,request,NoticeCode.PUBLISHED.getCode());
     }
@@ -84,6 +95,12 @@ public class NoticeController {
      * @param code
      * @return
      */
+    @ApiOperation(value = "修改通告")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "code", value = "状态码",  paramType = "Integer", dataType = "Integer")
+    })
+    @PutMapping("/{notice_id}/{code}")
     public responseFromServer updateNoticeState(@RequestBody  Notice notice, HttpServletRequest request, int code){
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
@@ -108,7 +125,10 @@ public class NoticeController {
      * @param request
      * @return
      */
-    @RequestMapping("/deleteNotice")
+//    @RequestMapping("/deleteNotice")
+    @ApiOperation(value = "删除通告")
+    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/{notice_id}/delete")
     public responseFromServer deleteNotice(@RequestBody Notice notice,HttpServletRequest request){
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
@@ -127,7 +147,9 @@ public class NoticeController {
      * @param map
      * @return
      */
-    @RequestMapping("/getRecentNoticePage")
+//    @RequestMapping("/getRecentNoticePage")
+    @ApiOperation("获取首页通告")
+    @GetMapping
     public responseFromServer getRecentNoticePage(@RequestBody Map<String,Object> map){
         Integer pageIndex = (Integer) map.get("pageIndex");
         Boolean isCommodity = (Boolean)map.get("isCommodity");
@@ -145,7 +167,13 @@ public class NoticeController {
     }
 
 
-    @RequestMapping("/getNoticePageForAccount")
+//    @RequestMapping("/getNoticePageForAccount")
+    @ApiOperation(value = "获取用户公告列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+    })
+    @GetMapping("/account/{account_id}")
     public responseFromServer getNoticePageByAccountId(@RequestBody Map<String,Object> map, HttpServletRequest request){
         Integer pageIndex = (Integer) map.get("pageIndex");
         Account account = (Account)request.getAttribute("currentAccount");

@@ -336,10 +336,11 @@ public class CommodityServiceImpl implements CommodityService {
      * @return 结果
      */
     public boolean isIdentityError(Commodity commodity, HttpSession session) {
-        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", commodity.getId());
-        Account account = commodityDAO.selectWithCondition(queryWrapper).get(0).getNotice().getUser();
-        return !AccountVerify.verify(account, session);
+//        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+//        queryWrapper.eq("id", commodity.getId());
+//        Account account = commodityDAO.selectWithCondition(queryWrapper).get(0).getNotice().getUser();
+//        return !AccountVerify.verify(account, session);
+        return false;
     }
 
 

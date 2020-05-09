@@ -39,7 +39,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer {
 //                .excludePathPatterns("/index.html","/","/user/login","/static/**","/webjars/**");
                 // /**  表示拦截所有路径下的所有请求
                 registry.addInterceptor(new LoginInterceptor())
-                        .excludePathPatterns("/login", "/register", "/static");
+                        .excludePathPatterns("/login", "/register", "/static")
+                        .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
             }
         };
     }

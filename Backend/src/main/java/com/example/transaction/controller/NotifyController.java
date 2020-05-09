@@ -7,10 +7,11 @@ import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.responseFromServer;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -21,7 +22,8 @@ import java.util.Map;
  * @Date: 2020/4/28 2:07
  */
 @RestController
-@RequestMapping("/notify")
+@RequestMapping("/notifies")
+@Api(tags = "NotifyController")
 public class NotifyController {
 
     @Autowired
@@ -37,7 +39,10 @@ public class NotifyController {
      * @param request
      * @return
      */
-    @RequestMapping("/getUnreadNotifyByAccountId")
+//    @RequestMapping("/getUnreadNotifyByAccountId")
+    @ApiOperation(value = "根据用户id获取未读notify")
+    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @GetMapping("account/{account_id}/unread")
     public responseFromServer getUnreadNotify(@RequestBody Account account, HttpServletRequest request) {
         if (accountVerify.verify(account, request)) {
             return notifyService.getUnreadNotifyByAccountId(account.getId());
@@ -52,7 +57,10 @@ public class NotifyController {
      * @param request
      * @return
      */
-    @RequestMapping("/getDetailedAccountNotifyById")
+//    @RequestMapping("/getDetailedAccountNotifyById")
+    @ApiOperation(value = "获取详细的AccountNotify")
+    @ApiImplicitParam(name = "notify_id", value = "通知Id",  paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{notify_id}")
     public responseFromServer getDetailedAccountNotifyById(@RequestBody AccountNotify accountNotify, HttpServletRequest request){
         responseFromServer response;
         if(accountNotify.getId()!=null){
@@ -89,7 +97,9 @@ public class NotifyController {
      * @param request
      * @return
      */
-    @RequestMapping("/getAllNotifyPage")
+//    @RequestMapping("/getAllNotifyPage")
+    @ApiOperation(value = "获取所有的通知")
+    @GetMapping
     public responseFromServer getAllNotifyPage(@RequestBody Map<String,Object> map,HttpServletRequest request){
         Integer pageIndex = (Integer) map.get("pageIndex");
         if(pageIndex == null||pageIndex <=0 ){
@@ -109,7 +119,10 @@ public class NotifyController {
      * @param request
      * @return
      */
-    @RequestMapping("/readNotify")
+//    @RequestMapping("/readNotify")
+    @ApiOperation(value = "通知设为已读")
+    @ApiImplicitParam(name = "notify_id", value = "通知Id",  paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{notify_id}")
     public responseFromServer readNotify(@RequestBody AccountNotify notify,HttpServletRequest request){
         Account account = new Account();
         if (!accountVerify.verify(account, request)) {
@@ -129,7 +142,10 @@ public class NotifyController {
      * @param request
      * @return
      */
-    @RequestMapping("/getUnreadNotifyCount")
+//    @RequestMapping("/getUnreadNotifyCount")
+    @ApiOperation(value = "获取用户未读消息数")
+    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @GetMapping("/account/{account_id}/count")
     public responseFromServer getUnreadNotifyCount(HttpServletRequest request){
         Account account = new Account();
         if (!accountVerify.verify(account, request)) {
