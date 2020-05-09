@@ -35,7 +35,11 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
         //此处为不需要登录的接口放行
-        if (arg0.getRequestURI().contains("/login") || arg0.getRequestURI().contains("/register") || arg0.getRequestURI().contains("/error") || arg0.getRequestURI().contains("/static")) {
+        if (arg0.getRequestURI().contains("/login")
+                || arg0.getRequestURI().contains("/register")
+                || arg0.getRequestURI().contains("/error")
+                || arg0.getRequestURI().contains("/static")
+                || arg0.getRequestURI().contains("/test")) {
             return true;
         }
         //权限路径拦截

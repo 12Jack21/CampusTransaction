@@ -9,14 +9,12 @@ import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.MyPage;
-import com.example.transaction.util.Nums;
+import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
-
-import java.util.Map;
 
 /**
  * @ClassName: NoticeServiceImpl

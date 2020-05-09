@@ -10,7 +10,7 @@ import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.util.MyPage;
-import com.example.transaction.util.Nums;
+import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.apache.ibatis.annotations.Options;

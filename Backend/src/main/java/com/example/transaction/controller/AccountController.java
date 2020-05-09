@@ -117,18 +117,21 @@ public class AccountController {
 
     /**
      * 检查当前用户名是否被使用
-     * @param account
+     *
+     * @param accountId
      * @return
      */
 //    @RequestMapping("/verifyUserName")
     @ApiOperation(value = "检查用户名是否被使用")
-    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/{account_id}/name")
-    public responseFromServer verifyUserName(@RequestBody Account account){
+    public responseFromServer verifyUserName(@PathVariable Integer accountId) {
+//    public responseFromServer verifyUserName(@RequestBody Account account){
+        Account account = new Account(accountId);
         String userName = account.getUsername();
-        if(userName==null||userName==""){
+        if (userName == null || userName == "") {
             return responseFromServer.error();
-        }else{
+        } else {
             return accountService.verifyUserName(userName);
         }
     }
@@ -153,17 +156,19 @@ public class AccountController {
 
     /**
      * 更新用户信息
+     *
      * @param account
      * @param request
      * @return
      */
 //    @RequestMapping("/updateUser")
     @ApiOperation(value = "更新用户信息")
-    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
+    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer")
     @PutMapping("/{account_id}")
-    public responseFromServer updateUser(@RequestBody Account account, HttpServletRequest request){
+    public responseFromServer updateUser(@RequestBody Account account, @PathVariable Integer accountId, HttpServletRequest request) {
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
+        account.setId(accountId);
         if (accountVerify.verify(account, request)) {
             return accountService.updateAccount(account);
         }

@@ -1,4 +1,4 @@
-package com.example.transaction.util;
+package com.example.transaction.util.code;
 
 /**
  * @ClassName: Nums

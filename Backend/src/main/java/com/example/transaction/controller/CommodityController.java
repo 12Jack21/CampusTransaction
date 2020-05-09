@@ -6,11 +6,13 @@ import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.AccountVerify;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +40,6 @@ public class CommodityController {
         this.noticeService = noticeService;
         this.accountVerify = accountVerify;
     }
-
 
     /**
      * 上传商品图片
@@ -105,17 +106,21 @@ public class CommodityController {
 //    @RequestMapping("/search/SortByNewness")
     @ApiOperation(value = "商品名称模糊查找，崭新程度排序")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "commodity_name", value = "商品名称",  paramType = "String", dataType = "String"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "searchStr", value = "搜索字符串", paramType = "String", dataType = "String"),
+            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
-    @GetMapping("/{commodity_name}/newness")
-    public responseFromServer getByNameSortedByNewness(@RequestBody Map<String,Object> map){
+    @GetMapping("/{searchStr}/newness")
+    public responseFromServer getByNameSortedByNewness(@RequestBody Map<String, Object> map, @PathVariable(name = "searchStr") String searchStr) {
+        /**
+         * ZZH
+         * TODO : pageIndex
+         */
         Integer pageIndex = (Integer) map.get("pageIndex");
-        String searchStr = (String) map.get("searchStr");
-        if(searchStr == null||searchStr == ""){
+//        String searchStr = (String) map.get("searchStr");
+        if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
         }
-        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
+        pageIndex = pageIndex == null || pageIndex <= 0 ? 1 : pageIndex;
         return commodityService.getByNameSortedByNewness(pageIndex, searchStr);
     }
 
@@ -127,17 +132,17 @@ public class CommodityController {
 //    @RequestMapping("/search/getByType")
     @ApiOperation(value = "商品类型查找")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "type_id", value = "类型Id",  paramType = "Integer", dataType = "Integer"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "type_id", value = "类型Id", paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
     @GetMapping("/type/{type_id}")
-    public responseFromServer getByTypeId(@RequestBody Map<String,Object> map){
+    public responseFromServer getByTypeId(@RequestBody Map<String, Object> map, @PathVariable Integer typeId) {
         Integer pageIndex = (Integer) map.get("pageIndex");
-        Integer typeId = (Integer) map.get("typeId");
-        if(typeId == null){
+//        Integer typeId = (Integer) map.get("typeId");
+        if (typeId == null) {
             return responseFromServer.error();
         }
-        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
+        pageIndex = pageIndex == null || pageIndex <= 0 ? 1 : pageIndex;
         return commodityService.getByTypeId(pageIndex, typeId);
     }
 
@@ -150,21 +155,21 @@ public class CommodityController {
     @ApiOperation(value = "根据价格区间筛选物品")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "commodity_name", value = "商品名称",  paramType = "String", dataType = "String"),
-                    @ApiImplicitParam(name = "low", value = "最低价",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "high", value = "最高价",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+                    @ApiImplicitParam(name = "searchStr", value = "商品名称", paramType = "String", dataType = "String"),
+                    @ApiImplicitParam(name = "low", value = "最低价", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "high", value = "最高价", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    @GetMapping("/{commodity_name}/price")
-    public responseFromServer getBetweenPrice(@RequestBody Map<String,Object> map){
+    @GetMapping("/{searchStr}/price")
+    public responseFromServer getBetweenPrice(@RequestBody Map<String, Object> map, @PathVariable(name = "searchStr") String searchStr) {
         Integer pageIndex = (Integer) map.get("pageIndex");
-        Integer low = (Integer) map.get("low"),high = (Integer)map.get("high");
-        String searchStr = (String) map.get("searchStr");
-        if(searchStr == null||searchStr == ""){
+        Integer low = (Integer) map.get("low"), high = (Integer) map.get("high");
+//        String searchStr = (String) map.get("searchStr");
+        if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
         }
-        pageIndex = pageIndex == null||pageIndex<=0?1:pageIndex;
+        pageIndex = pageIndex == null || pageIndex <= 0 ? 1 : pageIndex;
         return commodityService.getBetweenPrice(pageIndex, searchStr, low, high);
     }
 
@@ -176,14 +181,13 @@ public class CommodityController {
 //    @RequestMapping("/search/sortByCredit")
     @ApiOperation(value = "根据所有者信誉排序")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "commodity_name", value = "商品名称",  paramType = "String", dataType = "String"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "searchStr", value = "搜索字符串", paramType = "String", dataType = "String"),
+            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
-    @GetMapping("/{commodity_name}/credit")
-    public responseFromServer sortByCredit(@RequestBody Map<String,Object> map){
+    @GetMapping("/{searchStr}/credit")
+    public responseFromServer sortByCredit(@RequestBody Map<String, Object> map, @PathVariable String searchStr) {
         Integer pageIndex = (Integer) map.get("pageIndex");
-        String searchStr = (String) map.get("searchStr");
-        if(searchStr == null||searchStr == ""){
+        if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
         }
         return commodityService.sortByCredit(pageIndex, searchStr);
@@ -287,9 +291,17 @@ public class CommodityController {
      * @return 执行结果
      */
     @ApiOperation(value = "返回上传图片路径")
-    @ApiImplicitParam(name = "files", value = "商品图片列表",  paramType = "MultipartFile[]", dataType = "MultipartFile[]")
+    @ApiImplicitParam(name = "files", value = "商品图片列表", paramType = "MultipartFile[]", dataType = "MultipartFile[]")
     @PostMapping("/{files}")
-    public responseFromServer imageUrl(MultipartFile[] files){
+    public responseFromServer imageUrl(MultipartFile[] files) {
         return commodityService.imageUrl(files);
     }
+
+
+    @RequestMapping("/{firstVariable}/test")
+    public responseFromServer test(@RequestJson String age, @PathVariable(name = "firstVariable") Integer firstVariable) {
+        String hahahahaha = "";
+        return responseFromServer.success();
+    }
+
 }

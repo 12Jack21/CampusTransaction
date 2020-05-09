@@ -93,7 +93,6 @@ public class ReservationController {
     @ApiOperation(value = "删除预约")
     @ApiImplicitParam(name = "reservation_id", value = "预约Id",  paramType = "Integer", dataType = "Integer")
     @DeleteMapping("/{reservation_id}")
->>>>>>> 6e3c06f0210a1e588e7d6b0e5c099141f4eac44d
     public responseFromServer deleteReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
         if (verifySeller(reservation, request)) {
             /*在验证的时候已经更新reservation信息*/

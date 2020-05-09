@@ -12,7 +12,7 @@ import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.CommentService;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.util.MyPage;
-import com.example.transaction.util.Nums;
+import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.NotifyActionCode;
 import com.example.transaction.util.code.NotifyTargetCode;
 import com.example.transaction.util.responseFromServer;
