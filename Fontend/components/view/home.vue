@@ -59,12 +59,16 @@
 				</scroll-view>
 			</view>
 
+			<!--商品列表-->
 			<view class="zaiui-tab-list">
-				<!--商品列表-->
-				<goods-list :list_data="goodsData" @listTap="goodsListTap" :show="goodsTabData.TabCur!=2 && goodsTabData.TabCur!=4?true:false" />
-
+				<view class="margin-bottom zaiui-goods-list-box">
+					<view class="flex flex-wrap ">
+						<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs"/>
+						<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs"/>
+					</view>
+				</view>
 			</view>
-
+			<!-- end -->
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height" />
 		</view>
@@ -83,10 +87,7 @@
 	import gridMenuList from '@/components/list/grid-menu-list';
 	import identifyList from '@/components/list/identify-list';
 	import sellQuicklyList from '@/components/list/sell-quickly-list';
-	import activityList from '@/components/list/activity-list';
 	import goodsList from '@/components/list/goods-list';
-	import liveList from '@/components/list/live-list';
-	import videoList from '@/components/list/video-list';
 	import footerTabbar from '@/components/footer/footer-tabbar';
 	import gridSortList from '@/components/list/grid-sort-list';
 	import modalImg from '@/components/basics/modal-img';
@@ -101,10 +102,7 @@
 			gridMenuList,
 			identifyList,
 			sellQuicklyList,
-			activityList,
 			goodsList,
-			liveList,
-			videoList,
 			footerTabbar,
 			gridSortList,
 			modalImg
@@ -157,6 +155,14 @@
 			scrollBottom: {
 				type: Boolean,
 				default: false
+			}
+		},
+		computed:{
+			leftGoods(){
+				return this.goodsData.filter((e,index) => index % 2 === 0)
+			},
+			rightGoods(){
+				return this.goodsData.filter((e,index) => index % 2 === 1)
 			}
 		},
 		watch: {

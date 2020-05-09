@@ -149,19 +149,19 @@ let _home_data = {
 		return [
 			{
 				v: false,
-				mold: [],
+				count: 1,
 				price: '2280.12',
 				originalPrice:'12.3',
 				state: '',
 				username: '仔仔',
 				time: '1小时前发布',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
+				title: '商品标题，商品标题',
 				img: '/static/images/home/goods/1.png',
 				avatar: '/static/images/avatar/1.jpg'
 			},
 			{
 				v: true,
-				mold: [{bg:'red',title: '剩余1件'}],
+				count: 2,
 				price: '5049',
 				originalPrice:'12.3',
 				state: '发布中',
@@ -173,7 +173,7 @@ let _home_data = {
 			},
 			{
 				v: false,
-				mold: [{bg:'blue',title: '剩余2件'}],
+				count: 3,
 				price: '2980',
 				originalPrice:'12.3',
 				state: '已预约',
@@ -185,7 +185,7 @@ let _home_data = {
 			},
 			{
 				v: false,
-				mold: [],
+				count: 4,
 				price: '2280',
 				originalPrice:'',
 				state: '',
@@ -197,7 +197,7 @@ let _home_data = {
 			},
 			{
 				v: true,
-				mold: [{bg:'red',title: '自营'}],
+				count: 5,
 				price: '5049',
 				originalPrice:'12.3',
 				state: '支持验机',
@@ -209,7 +209,7 @@ let _home_data = {
 			},
 			{
 				v: false,
-				mold: [],
+				count: 6,
 				price: '2980',
 				originalPrice:'12.3',
 				state: '已验机',
@@ -221,7 +221,7 @@ let _home_data = {
 			},
 			{
 				v: false,
-				mold: [],
+				count: 7,
 				price: '2280',
 				originalPrice:'12.3',
 				state: '',

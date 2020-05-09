@@ -2,6 +2,8 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
+			// Check token in storage
+			
 		},
 		onShow: function() {
 			// console.log('App Show')
