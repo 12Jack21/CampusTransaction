@@ -2,6 +2,8 @@ package com.example.transaction.dao;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Search;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
@@ -22,6 +24,13 @@ public interface SearchDAO extends BaseMapper<Search> {
     @Select("select * from search where account_id = #{id}")
     List<Search> getAllSearchByAccountId(Integer id);
 
-    @Delete("delete from search ${ew.customSqlSegment}")
-    int deleteAllSearchByAccountId(@Param("ew") QueryWrapper<Search> queryWrapper);
+    @Select("select * from search  ${ew.customSqlSegment}")
+    IPage<Search> getSearchPage(Page<?> page, @Param("ew") QueryWrapper<Search> queryWrapper);
+
+
+    @Delete("delete from search where account_id = {#accountId}")
+    int deleteAllSearchByAccountId(Integer accountId);
+
+    @Delete("delete from search where account_id = {#accountId} and id = {#searchId}")
+    int deleteOneSearchByAccountId(Integer accountId, Integer searchId);
 }

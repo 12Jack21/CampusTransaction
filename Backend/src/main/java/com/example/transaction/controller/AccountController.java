@@ -179,25 +179,27 @@ public class AccountController {
 
     /**
      * 获得账号信息，在a2a中验证
-     * @param account
+     *
+     * @param accountId
      * @param request
      * @return
      */
 //    @RequestMapping("/getAccountInfo")
     @ApiOperation(value = "获取账号信息，在a2a中验证")
-    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer")
-    @GetMapping("/{account_id}")
-    public responseFromServer getAccountInfo(@RequestBody Account account,HttpServletRequest request) {
-        Account account1 = accountVerify.verifyWithReturn(account,request);
-        if(account1 == null){
+    @ApiImplicitParam(name = "accountId", value = "用户Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{accountId}")
+    public responseFromServer getAccountInfo(@PathVariable Integer accountId, HttpServletRequest request) {
+        Account account = new Account(accountId);
+        Account account1 = accountVerify.verifyWithReturn(account, request);
+        if (account1 == null) {
             return responseFromServer.error();
         }
-        if(account1.getId().intValue()!=account.getId().intValue()){
-            responseFromServer response = accountService.getA2a(account.getId(),account1.getId());
-            if(response.isSuccess()){
+        if (account1.getId().intValue() != account.getId().intValue()) {
+            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
+            if (response.isSuccess()) {
                 account = (Account) response.getData();
                 return responseFromServer.success(account);
-            }else{
+            } else {
                 return responseFromServer.error();
             }
         }else{

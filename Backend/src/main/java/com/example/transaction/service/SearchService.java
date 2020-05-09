@@ -9,5 +9,11 @@ import com.example.transaction.util.responseFromServer;
  */
 public interface SearchService {
 
-    public responseFromServer addSearchRecord(Integer accountId,String content);
+    responseFromServer getSearchRecordsPage(Integer accountId, Integer pageIndex);
+
+    responseFromServer addSearchRecord(Integer accountId, String content);
+
+    responseFromServer deleteAllSearchRecords(Integer accountId);
+
+    responseFromServer deleteOneSearchRecord(Integer accountId, Integer searchId);
 }

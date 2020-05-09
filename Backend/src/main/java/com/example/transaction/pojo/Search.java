@@ -19,8 +19,6 @@ public class Search {
     private Integer id;
     private String content;
     private Integer count;
-    @TableField(value = "create_time")
-    private Timestamp createTime;
     @TableField(value = "update_time")
     private Timestamp updateTime;
     @TableField(value = "account_id")

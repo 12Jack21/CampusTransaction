@@ -6,6 +6,7 @@ import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.service.impl.AccountVerify;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -93,23 +94,24 @@ public class NotifyController {
 
     /**
      * 获取所有的通知
-     * @param map
+     *
+     * @param pageIndex
      * @param request
      * @return
      */
 //    @RequestMapping("/getAllNotifyPage")
     @ApiOperation(value = "获取所有的通知")
     @GetMapping
-    public responseFromServer getAllNotifyPage(@RequestBody Map<String,Object> map,HttpServletRequest request){
-        Integer pageIndex = (Integer) map.get("pageIndex");
-        if(pageIndex == null||pageIndex <=0 ){
+    public responseFromServer getAllNotifyPage(@RequestJson Integer pageIndex, HttpServletRequest request) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
+        if (pageIndex == null || pageIndex <= 0) {
             pageIndex = 1;
         }
         Account account = new Account();
         accountVerify.verify(account, request);
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account_id",account.getId());
-        return notifyService.getNotifyPage(queryWrapper,pageIndex);
+        queryWrapper.eq("account_id", account.getId());
+        return notifyService.getNotifyPage(queryWrapper, pageIndex);
     }
 
 

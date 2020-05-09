@@ -60,7 +60,7 @@ public class AccountVerify {
         final String headerToken = request.getHeader("token");
         Account currentAccount = tokenDAO.getTokenByTokenStr(headerToken).getAccount();
 
-        if (currentAccount == null || account.getId() != null && currentAccount.getId() != currentAccount.getId()) {
+        if (currentAccount == null || (account.getId() != null && currentAccount.getId() != currentAccount.getId())) {
             /*非法操作*/
             return null;
         } else {

@@ -53,13 +53,13 @@ public class CommodityController {
     @ApiOperation(value = "上传商品图片")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "files", value = "商品图片列表",  paramType = "MultipartFile[]", dataType = "MultipartFile[]")
+                    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "files", value = "商品图片列表", paramType = "MultipartFile[]", dataType = "MultipartFile[]")
             }
     )
-    @PostMapping("/{commodity_id}/{files}")
+    @PostMapping("/pictures/{commodityId}")
     public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
-                                     @RequestParam(name = "commodityId") Integer commodityId,
+                                     @PathVariable Integer commodityId,
                                      HttpServletRequest request) {
         if (files == null) {
             return responseFromServer.error(0, "请选择要上传的图片");
@@ -88,34 +88,32 @@ public class CommodityController {
 
     /**
      * 根据id获取商品信息
-     * @param id 商品id
+     *
+     * @param commodityId 商品id
      * @return 执行结果
      */
     @ApiOperation(value = "获取商品信息")
-    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer")
-    @GetMapping("/{commodity_id}")
-    public responseFromServer getById(@RequestBody Integer id){
-        return commodityService.getById(id);
+    @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{commodityId}")
+    public responseFromServer getById(@PathVariable Integer commodityId) {
+        return commodityService.getById(commodityId);
     }
 
     /**
      * 商品名称模糊检索，崭新程度排序
-     * @param map
+     *
+     * @param pageIndex
      * @return
      */
 //    @RequestMapping("/search/SortByNewness")
     @ApiOperation(value = "商品名称模糊查找，崭新程度排序")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "searchStr", value = "搜索字符串", paramType = "String", dataType = "String"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
     @GetMapping("/{searchStr}/newness")
-    public responseFromServer getByNameSortedByNewness(@RequestBody Map<String, Object> map, @PathVariable(name = "searchStr") String searchStr) {
-        /**
-         * ZZH
-         * TODO : pageIndex
-         */
-        Integer pageIndex = (Integer) map.get("pageIndex");
+    public responseFromServer getByNameSortedByNewness(@RequestJson Integer pageIndex, @PathVariable String searchStr) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
 //        String searchStr = (String) map.get("searchStr");
         if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
@@ -126,18 +124,19 @@ public class CommodityController {
 
     /**
      * 根据类型分类
-     * @param map
+     *
+     * @param pageIndex
      * @return
      */
 //    @RequestMapping("/search/getByType")
     @ApiOperation(value = "商品类型查找")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "type_id", value = "类型Id", paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "typeId", value = "类型Id", paramType = "Integer", dataType = "Integer"),
             @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
-    @GetMapping("/type/{type_id}")
-    public responseFromServer getByTypeId(@RequestBody Map<String, Object> map, @PathVariable Integer typeId) {
-        Integer pageIndex = (Integer) map.get("pageIndex");
+    @GetMapping("/type/{typeId}")
+    public responseFromServer getByTypeId(@RequestJson Integer pageIndex, @PathVariable Integer typeId) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
 //        Integer typeId = (Integer) map.get("typeId");
         if (typeId == null) {
             return responseFromServer.error();
@@ -146,9 +145,13 @@ public class CommodityController {
         return commodityService.getByTypeId(pageIndex, typeId);
     }
 
+
     /**
      * 根据价格区间筛选物品
-     * @param map
+     * @param pageIndex
+     * @param low
+     * @param high
+     * @param searchStr
      * @return
      */
 //    @RequestMapping("/search/betweenPrice")
@@ -162,9 +165,12 @@ public class CommodityController {
             }
     )
     @GetMapping("/{searchStr}/price")
-    public responseFromServer getBetweenPrice(@RequestBody Map<String, Object> map, @PathVariable(name = "searchStr") String searchStr) {
-        Integer pageIndex = (Integer) map.get("pageIndex");
-        Integer low = (Integer) map.get("low"), high = (Integer) map.get("high");
+    public responseFromServer getBetweenPrice(@RequestJson Integer pageIndex,
+                                              @RequestJson Integer low,
+                                              @RequestJson Integer high,
+                                              @PathVariable(name = "searchStr") String searchStr) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
+//        Integer low = (Integer) map.get("low"), high = (Integer) map.get("high");
 //        String searchStr = (String) map.get("searchStr");
         if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
@@ -175,7 +181,9 @@ public class CommodityController {
 
     /**
      * 根据所有者信誉排序
-     * @param map
+     *
+     * @param pageIndex
+     * @param searchStr
      * @return
      */
 //    @RequestMapping("/search/sortByCredit")
@@ -185,8 +193,8 @@ public class CommodityController {
             @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
     @GetMapping("/{searchStr}/credit")
-    public responseFromServer sortByCredit(@RequestBody Map<String, Object> map, @PathVariable String searchStr) {
-        Integer pageIndex = (Integer) map.get("pageIndex");
+    public responseFromServer sortByCredit(@RequestJson Integer pageIndex, @PathVariable String searchStr) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
         if (searchStr == null || searchStr == "") {
             return responseFromServer.error();
         }
@@ -221,14 +229,17 @@ public class CommodityController {
 
     /**
      * 更新商品信息
-     * @param commodity 商品
-     * @return 执行结果
+     *
+     * @param commodityId
+     * @param request
+     * @return
      */
     @ApiOperation(value = "更新商品信息")
-    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{commodity_id}")
+    @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{commodityId}")
 //    @RequestMapping("/updateCommodity")
-    public responseFromServer updateCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
+    public responseFromServer updateCommodity(@PathVariable Integer commodityId, HttpServletRequest request) {
+        Commodity commodity = new Commodity(commodityId);
         responseFromServer response = getById(commodity.getId());
         if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.updateCommodity(commodity);
@@ -239,15 +250,17 @@ public class CommodityController {
 
     /**
      * 删除商品
-     * @param commodity 商品
-     * @param request HttpServletRequest
-     * @return 执行结果
+     *
+     * @param commodityId
+     * @param request
+     * @return
      */
 //    @RequestMapping("/deleteCommodity")
     @ApiOperation(value = "删除商品")
-    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/{commodity_id}")
-    public responseFromServer deleteCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
+    @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/{commodityId}")
+    public responseFromServer deleteCommodity(@PathVariable Integer commodityId, HttpServletRequest request) {
+        Commodity commodity = new Commodity(commodityId);
         responseFromServer response = getById(commodity.getId());
         if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.deleteCommodity((Commodity) response.getData());
@@ -257,32 +270,36 @@ public class CommodityController {
 
     /**
      * 查询某一notice下所有商品
-     * @param notice 通告
-     * @return 执行结果
+     *
+     * @param noticeId
+     * @return
      */
 //    @RequestMapping("/selectByNoticeId")
     @ApiOperation(value = "查询某一notice下所有商品")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
-    @GetMapping("/notice/{notice_id}")
-    public responseFromServer selectAllByNoticeId(@RequestBody Notice notice){
+    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/notice/{noticeId}")
+    public responseFromServer selectAllByNoticeId(@PathVariable Integer noticeId) {
+        Notice notice = new Notice(noticeId);
         return commodityService.selectAllByNotice(notice);
     }
 
     /**
      * 删除某一notice下所有商品
-     * @param notice 通告
-     * @param request HttpServletRequest
-     * @return 执行结果
+     *
+     * @param noticeId
+     * @param request
+     * @return
      */
 //    @RequestMapping("/deleteByNoticeId")
     @ApiOperation(value = "删除某一notice下所有商品")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/notice/{notice_id}")
-    public responseFromServer deleteAllByNoticeId(@RequestBody Notice notice, HttpServletRequest request){
+    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/notice/{noticeId}")
+    public responseFromServer deleteAllByNoticeId(@PathVariable Integer noticeId, HttpServletRequest request) {
+        Notice notice = new Notice(noticeId);
         Account account = new Account(notice.getAccountId());
         if (!accountVerify.verify(account, request))  //用户合法性检查
             return responseFromServer.error();
-        return  commodityService.deleteAllByNotice(notice);
+        return commodityService.deleteAllByNotice(notice);
     }
 
     /**
@@ -303,5 +320,7 @@ public class CommodityController {
         String hahahahaha = "";
         return responseFromServer.success();
     }
+
+
 
 }

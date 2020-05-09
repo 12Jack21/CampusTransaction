@@ -6,6 +6,7 @@ import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.ReservationService;
 import com.example.transaction.util.code.ReservationCode;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import com.example.transaction.service.impl.AccountVerify;
 import io.swagger.annotations.Api;
@@ -189,7 +190,8 @@ public class ReservationController {
     /**
      * 查看当前商品的所有预约
      *
-     * @param map
+     * @param commodity
+     * @param pageIndex
      * @param request
      * @return
      */
@@ -198,13 +200,13 @@ public class ReservationController {
     @GetMapping("/commodity/{commodity_id}/receive")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+                    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    public responseFromServer getReservationPageForCommodity(@RequestBody Map<String, Object> map, HttpServletRequest request) {
-        Commodity commodity = (Commodity) map.get("commodity");
-        Integer pageIndex = (Integer) map.get("pageIndex");
+    public responseFromServer getReservationPageForCommodity(@RequestJson Commodity commodity, @RequestJson Integer pageIndex, HttpServletRequest request) {
+//        Commodity commodity = (Commodity) map.get("commodity");
+//        Integer pageIndex = (Integer) map.get("pageIndex");
         if (commodity == null) return responseFromServer.error();
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /*用户核对*/
@@ -227,7 +229,8 @@ public class ReservationController {
     /**
      * 查看我申请的预约
      *
-     * @param map
+     * @param pageIndex
+     * @param isCommodity
      * @param request
      * @return
      */
@@ -235,18 +238,18 @@ public class ReservationController {
     @ApiOperation(value = "申请预约列表")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+                    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
     @GetMapping("/account/{account_id}/send")
-    public responseFromServer getMyReservation(@RequestBody Map<String, Object> map, HttpServletRequest request) {
+    public responseFromServer getMyReservation(@RequestBody Integer pageIndex, @RequestBody Boolean isCommodity, HttpServletRequest request) {
         Account account = accountVerify.getCurrentAccount(request);
-        Integer pageIndex = (Integer) map.get("pageIndex");
+//        Integer pageIndex = (Integer) map.get("pageIndex");
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id", account.getId());
-        Boolean isCommodity = (Boolean) map.get("isCommodity");
+//        Boolean isCommodity = (Boolean) map.get("isCommodity");
         if (isCommodity != null) {
             queryWrapper.eq("type", isCommodity);
         }
@@ -257,7 +260,7 @@ public class ReservationController {
     /**
      * 查看我接收到的预约
      *
-     * @param map
+     * @param pageIndex
      * @param request
      * @return
      */
@@ -265,13 +268,13 @@ public class ReservationController {
     @ApiOperation(value = "接收预约列表")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "account_id", value = "用户Id",  paramType = "Integer", dataType = "Integer"),
-                    @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+                    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
     @GetMapping("/account/{account_id}/receive")
-    public responseFromServer getReservationRequest(@RequestBody Map<String, Object> map, HttpServletRequest request) {
-        Integer pageIndex = (Integer) map.get("pageIndex");
+    public responseFromServer getReservationRequest(@RequestJson Integer pageIndex, HttpServletRequest request) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         return reservationService.getReservationRequest(accountVerify.getCurrentAccount(request).getId(), pageIndex);
     }

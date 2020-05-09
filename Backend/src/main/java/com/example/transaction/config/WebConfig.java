@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * @ClassName: WebConfig
- * @Description: TODO
+ * @Description: @RequestJson filter 和拦截配置
  * @Author: 曾志昊
  * @Date: 2020/5/9 13:30
  */

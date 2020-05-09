@@ -38,4 +38,11 @@ public class Commodity {
     private Notice notice;
     @TableField(exist = false)
     private List<Reservation> reservation;
+
+    public Commodity() {
+    }
+
+    public Commodity(Integer id) {
+        this.id = id;
+    }
 }

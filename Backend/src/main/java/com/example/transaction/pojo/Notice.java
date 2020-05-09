@@ -30,4 +30,11 @@ public class Notice {
     private List<CommodityList> commodityLists;
     @TableField(exist = false)
     private Account user;
+
+    public Notice() {
+    }
+
+    public Notice(Integer id) {
+        this.id = id;
+    }
 }

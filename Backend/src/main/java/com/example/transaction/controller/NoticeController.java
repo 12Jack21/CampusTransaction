@@ -6,6 +6,7 @@ import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.code.NoticeCode;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -144,42 +145,50 @@ public class NoticeController {
 
     /**
      * 获取首页最近通告
-     * @param map
+     *
+     * @param pageIndex
+     * @param isCommodity
      * @return
      */
 //    @RequestMapping("/getRecentNoticePage")
     @ApiOperation("获取首页通告")
     @GetMapping
-    public responseFromServer getRecentNoticePage(@RequestBody Map<String,Object> map){
-        Integer pageIndex = (Integer) map.get("pageIndex");
-        Boolean isCommodity = (Boolean)map.get("isCommodity");
-        if(pageIndex==null) return responseFromServer.error();
+    public responseFromServer getRecentNoticePage(@RequestJson Integer pageIndex, @RequestJson Boolean isCommodity) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
+//        Boolean isCommodity = (Boolean)map.get("isCommodity");
+        if (pageIndex == null) return responseFromServer.error();
         QueryWrapper queryWrapper = new QueryWrapper();
         /*按照时间倒序排序*/
         queryWrapper.orderByDesc("update_time");
         /*只查看确认发布的通告*/
-        queryWrapper.eq("state_enum",NoticeCode.PUBLISHED.getCode());
+        queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
         /*是商品还是需求*/
-        if(isCommodity!=null){
-            queryWrapper.eq("type",isCommodity);
+        if (isCommodity != null) {
+            queryWrapper.eq("type", isCommodity);
         }
-        return noticeService.getNoticePage(queryWrapper,pageIndex);
+        return noticeService.getNoticePage(queryWrapper, pageIndex);
     }
 
-
+    /**
+     * 通过用户id获取通告分页
+     *
+     * @param pageIndex
+     * @param request
+     * @return
+     */
 //    @RequestMapping("/getNoticePageForAccount")
     @ApiOperation(value = "获取用户公告列表")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引",  paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
     })
     @GetMapping("/account/{account_id}")
-    public responseFromServer getNoticePageByAccountId(@RequestBody Map<String,Object> map, HttpServletRequest request){
-        Integer pageIndex = (Integer) map.get("pageIndex");
-        Account account = (Account)request.getAttribute("currentAccount");
+    public responseFromServer getNoticePageByAccountId(@RequestJson Integer pageIndex, HttpServletRequest request) {
+//        Integer pageIndex = (Integer) map.get("pageIndex");
+        Account account = (Account) request.getAttribute("currentAccount");
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account_id",account.getId());
-        return noticeService.getNoticePage(queryWrapper,pageIndex);
+        queryWrapper.eq("account_id", account.getId());
+        return noticeService.getNoticePage(queryWrapper, pageIndex);
     }
 
 }

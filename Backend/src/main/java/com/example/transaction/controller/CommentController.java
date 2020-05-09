@@ -4,6 +4,7 @@ import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Comment;
 import com.example.transaction.service.CommentService;
 import com.example.transaction.service.impl.AccountVerify;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -34,20 +35,22 @@ public class CommentController {
 
     /**
      * 获取关于商品的评论
-     * @param map
+     *
+     * @param pageIndex
+     * @param commodityId
      * @return
      */
 //    @RequestMapping("/getCommentByCommodityId")
     @ApiOperation(value = "获取关于商品的评论")
-    @ApiImplicitParam(name = "commodity_id", value = "商品Id",  paramType = "Integer", dataType = "Integer")
-    @GetMapping("/commodity/{commodity_id}")
+    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/commodity/{commodityId}")
     //pageIndex以ParamRequest形式后缀
-    public responseFromServer getCommentByCommodityId(@RequestBody Map<String,Object> map){
-        Integer pageIndex = (Integer)map.get("pageIndex"),commodityId = (Integer)map.get("commodityId");
-        if(pageIndex==null||pageIndex==0){
+    public responseFromServer getCommentByCommodityId(@RequestJson Integer pageIndex, @PathVariable Integer commodityId) {
+//        Integer pageIndex = (Integer)map.get("pageIndex"),commodityId = (Integer)map.get("commodityId");
+        if (pageIndex == null || pageIndex == 0) {
             pageIndex = 1;
         }
-        if(commodityId == null){
+        if (commodityId == null) {
             return responseFromServer.error();
         }
         return commentService.getCommentByCommodityId(pageIndex, commodityId);
@@ -71,17 +74,20 @@ public class CommentController {
 
     /**
      * 删除评论
-     * @param comment 评论
-     * @param request HttpServletRequest
-     * @return 执行结果
+     *
+     * @param commentId
+     * @param request
+     * @return
      */
 //    @RequestMapping("/deleteComment")
     @ApiOperation(value = "删除评论")
-    @DeleteMapping("/{comment_id}")
-    public responseFromServer deleteComment(@RequestBody Comment comment, HttpServletRequest request){
-        Account account = new Account(comment.getFromId());
+    @DeleteMapping("/{commentId}")
+    public responseFromServer deleteComment(@PathVariable Integer commentId, HttpServletRequest request) {
+        Account account = new Account(commentId);
         if (!accountVerify.verify(account, request))
             return responseFromServer.illegal();
+        Comment comment = new Comment();
+        comment.setId(commentId);
         return commentService.deleteComment(comment);
     }
 }
