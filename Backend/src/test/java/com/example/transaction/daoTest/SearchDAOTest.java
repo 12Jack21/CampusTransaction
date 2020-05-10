@@ -30,8 +30,6 @@ public class SearchDAOTest {
 
     @Test
     void testDeleteAllSearchByAccountId(){
-        QueryWrapper<Search> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("id", 1);
-        searchDAO.deleteAllSearchByAccountId(queryWrapper);
+        searchDAO.deleteAllSearchByAccountId(1);
     }
 }
