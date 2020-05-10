@@ -104,28 +104,6 @@ let _home_data = {
 			img: '/static/images/home/grid-icon/12.png'
 		}];
 	},
-	sellQuickly() {
-		return [
-			{
-				id: 1,
-				title: '手机保卖',
-				text: '99%卖出',
-				img: '/static/images/home/sundry/6.png',
-			},
-			{
-				id: 2,
-				title: '拍卖报名',
-				text: '24小时高价卖',
-				img: '/static/images/home/sundry/7.png',
-			},
-			{
-				id: 3,
-				title: '扫码读书',
-				text: '好书高价卖',
-				img: '/static/images/home/sundry/8.png',
-			}
-		];
-	},
 	goodsTab() {
 		return [
 			{
@@ -255,45 +233,6 @@ let _home_data = {
 			]
 		};
 	},
-	gridSortData() {
-		return [{
-			id: 1,
-			name: '手机',
-			img: '/static/images/home/grid-icon/16.png',
-		},{
-			id: 2,
-			name: '平板',
-			img: '/static/images/home/grid-icon/17.png',
-		},{
-			id: 3,
-			name: '电脑',
-			img: '/static/images/home/grid-icon/18.png',
-		},{
-			id: 4,
-			name: '数码',
-			img: '/static/images/home/grid-icon/19.png',
-		},{
-			id: 5,
-			name: '家电',
-			img: '/static/images/home/grid-icon/20.png',
-		},{
-			id: 6,
-			name: '新人红包',
-			img: '/static/images/home/grid-icon/21.png',
-		},{
-			id: 7,
-			name: '手机直播',
-			img: '/static/images/home/grid-icon/22.png',
-		},{
-			id: 8,
-			name: '自营图书',
-			img: '/static/images/home/grid-icon/23.png',
-		},{
-			id: 9,
-			name: '游戏',
-			img: '/static/images/home/grid-icon/24.png',
-		}];
-	}
 };
 
 export default _home_data;

@@ -48,32 +48,32 @@ export default [{
 					"value": "全部"
 				},
 				{
-					"name": "电子产品类",
-					"value": "电子产品类"
+					"name": "电子产品",
+					"value": "电子产品"
 				},
 				{
-					"name": "数码类",
-					"value": "数码类"
+					"name": "数码",
+					"value": "数码"
 				},
 				{
-					"name": "家电类",
-					"value": "家电类"
+					"name": "家电",
+					"value": "家电"
 				},
 				{
-					"name": "衣服类",
-					"value": "衣服类"
+					"name": "衣服",
+					"value": "衣服"
 				},
 				{
-					"name": "鞋子类",
-					"value": "鞋子类"
+					"name": "鞋子",
+					"value": "鞋子"
 				},
 				{
-					"name": "生活用品类",
-					"value": "生活用品类"
+					"name": "生活用品",
+					"value": "生活用品"
 				},
 				{
-					"name": "食品类",
-					"value": "食品类"
+					"name": "食品",
+					"value": "食品"
 				},
 				{
 					"name": "图书",

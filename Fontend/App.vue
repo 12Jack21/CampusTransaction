@@ -2,7 +2,8 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			// Check token in storage
+			// TODO: Handle token in storage
+			// get token and update value in server, store that in vuex state, mount on request header 
 			
 		},
 		onShow: function() {
