@@ -18,7 +18,7 @@
 		<!-- end -->
 		
 		<!-- 筛选界面 -->
-		<HMfilterDropdown v-if="!searchView" class="filterList" :filterData="filterData" :defaultSelected ="filterDropdownValue" @confirm="confirmFilter"></HMfilterDropdown>
+		<HMfilterDropdown class="filterList" :filterData="filterData" :defaultSelected ="filterDropdownValue" @confirm="confirmFilter"></HMfilterDropdown>
 
 		<!-- 搜索界面 -->
 		<view v-if="searchView">
@@ -114,19 +114,27 @@ export default {
 			return this.goodsData.filter((e,index) => index % 2 === 1)
 		}
 	},
-	onLoad() {
-		console.log('search page onLoad')
-		this.goodsData = _home_data.goodsList(),
+	onLoad(param) {
+		console.log('search page onLoad, param:', param)
+		this.goodsData = _home_data.goodsList()
+		let type_index = 0
+		if(param.type !== undefined){
+			type_index = parseInt(param.type)
+			console.log('type_index',type_index)
+			this.searchView = false // switch to result list
+		}
+		this.searchView = false
 		this.filterDropdownValue = [
-			// [1,1,0],				//第0个菜单选中 一级菜单的第1项，二级菜单的第1项，三级菜单的第3项
-			[0,0],			//第1个菜单选中 都不选中
-			[0],					//第2个菜单选中 一级菜单的第1项
-			[0],
-			[[0],[1,2,7],[1,0]],	//筛选菜单选中 第一个筛选的第0项，第二个筛选的第1,2,7项，第三个筛选的第1,0项
-		];
+			[0, 3 ],			//type
+			[2],					//第2个菜单选中 一级菜单的第1项
+			[1],
+			[[0],[1]],	//筛选菜单选中 第一个筛选的第0项，第二个筛选的第1,2,7项，第三个筛选的第1,0项
+		]
+		console.log(this.filterDropdownValue);
 		this.filterData = filter_data; 
 	},
 	onReady() {
+		console.log('ready',this.filterDropdownValue);
 		_tool.setBarColor(true)
 		uni.pageScrollTo({
 			scrollTop: 0,
@@ -134,8 +142,26 @@ export default {
 		})
 	},
 	methods: {
-		confirmFilter(){
+		confirmFilter(e){
+			if(this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index) ||
+				JSON.stringify(this.filterValues) === JSON.stringify(e.value)) return
 			
+			console.log('previous',this.filterValues);
+			console.log('current',e.value);
+			console.log('dropdown',this.filterDropdownValue);
+			this.filterValues = e.value
+			// do search with filter condition
+			let searchBody = {
+				type: e.value[0][1],
+				address: e.value[1][0],
+				sort: e.value[2][0],
+				outdated: e.value[3][0][e.value[3][0].length - 1] || '',
+				price: e.value[3][1],
+				body: true
+			}
+			console.log('index',e.index);
+			console.log('search body',searchBody);
+			this.doSearch(searchBody)
 		},
 		BackPage() {
 			uni.navigateBack()
@@ -173,25 +199,33 @@ export default {
 			})
 		},
 		doSearch(_key) {
+			uni.showLoading({
+				title: '搜索中',
+				mask: false
+			});
 			// 关键词 模糊搜索
-			let key
 			if (typeof _key === 'string') {
 				this.searchKey = _key
 			}
-			key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
+			let key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
 			let that = this
+			let condition = null
+			if(_key.body) condition = _key
 			this.$api
-				.getSearchResult(key)
+				.getSearchResult(key,condition)
 				.then(res => {
 					this.goodsData = res.data
 					that.searchView = false
+					uni.hideLoading()
 				})
-				.catch(err =>
+				.catch(err =>{
+					uni.hideLoading()
 					uni.showToast({
 						title: '搜索失败，请检查网络',
 						icon: 'none',
 						duration: 2000
 					})
+				}
 				)
 
 			// 虚拟数据加载

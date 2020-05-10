@@ -243,10 +243,10 @@
 			swiperChange(e) {
 				this.swiperInfo.index = e.detail.current;
 			},
-			gridMenuTap(e) {
-				console.log(e);
+			gridMenuTap(e) { // jump to corresponding commodity type
+				console.log('grid menu',e);
 				uni.navigateTo({
-					url: "/pages/home/sort_list"
+					url: "/pages/search/search?type=" + e.data.id
 				});
 			},
 			identifyTap(e) {
