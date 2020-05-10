@@ -5,8 +5,6 @@ import java.lang.reflect.Type;
 
 /**
  * String 类型转换器
- *
- * @author: qiumin
  **/
 public class StringConverter implements Converter {
     @Override

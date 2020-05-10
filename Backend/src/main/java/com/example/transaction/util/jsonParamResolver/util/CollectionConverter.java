@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
 
-/**
- * @author: qiumin
- **/
+
 public class CollectionConverter implements Converter {
 
     /**

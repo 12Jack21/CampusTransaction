@@ -5,8 +5,6 @@ import java.lang.reflect.Type;
 
 /**
  * 布尔类型
- *
- * @author: qiumin
  **/
 public class BooleanConverter implements Converter {
 

@@ -4,9 +4,6 @@ import com.google.gson.Gson;
 
 import java.lang.reflect.ParameterizedType;
 
-/**
- * @author qiumin
- **/
 public class JsonUtil {
 
 

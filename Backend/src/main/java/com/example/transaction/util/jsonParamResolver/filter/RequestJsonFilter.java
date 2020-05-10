@@ -8,8 +8,6 @@ import java.io.IOException;
 
 /**
  * 过滤器
- *
- * @author qiumin
  **/
 public class RequestJsonFilter implements Filter {
 

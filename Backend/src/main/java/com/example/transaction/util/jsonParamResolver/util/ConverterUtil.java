@@ -12,10 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 类型转换工具类
- *
- * @author qiumin
- * @create 2018/12/26 20:26
- * @desc
  **/
 public class ConverterUtil {
 

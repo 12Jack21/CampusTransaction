@@ -2,9 +2,6 @@ package com.example.transaction.util.jsonParamResolver.util;
 
 /**
  * 常量类
- *
- * @author qiumin
- * @desc
  **/
 public class Constant {
 

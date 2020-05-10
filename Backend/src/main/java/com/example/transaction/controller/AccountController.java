@@ -94,7 +94,7 @@ public class AccountController {
      */
 //    @RequestMapping("/logout")
     @ApiOperation(value = "退出登录")
-    @DeleteMapping("/{account_id}")
+    @DeleteMapping()
     public responseFromServer logout(HttpServletRequest request) {
         Account account = new Account();
         if (accountVerify.verify(account, request)) {
@@ -123,8 +123,8 @@ public class AccountController {
      */
 //    @RequestMapping("/verifyUserName")
     @ApiOperation(value = "检查用户名是否被使用")
-    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer")
-    @GetMapping("/{account_id}/name")
+    @ApiImplicitParam(name = "accountId", value = "用户Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/{accountId}/name")
     public responseFromServer verifyUserName(@PathVariable Integer accountId) {
 //    public responseFromServer verifyUserName(@RequestBody Account account){
         Account account = new Account(accountId);
@@ -143,6 +143,7 @@ public class AccountController {
      */
 //    @RequestMapping("/register")
     @ApiOperation(value = "用户注册")
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
     @PostMapping
     public responseFromServer register(@RequestBody Account account) {
 
@@ -163,17 +164,15 @@ public class AccountController {
      */
 //    @RequestMapping("/updateUser")
     @ApiOperation(value = "更新用户信息")
-    @ApiImplicitParam(name = "account_id", value = "用户Id", paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{account_id}")
-    public responseFromServer updateUser(@RequestBody Account account, @PathVariable Integer accountId, HttpServletRequest request) {
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
+    @PutMapping()
+    public responseFromServer updateUser(@RequestBody Account account, HttpServletRequest request) {
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
-        account.setId(accountId);
         if (accountVerify.verify(account, request)) {
             return accountService.updateAccount(account);
         }
         return responseFromServer.error("非法操作");
-
     }
 
 

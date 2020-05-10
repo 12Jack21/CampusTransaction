@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
  * 不能同时出现这两个注解，如
  * error:
  * test1(@RequestJson Integer age,@RequestBody String name), 这是错误的，
- *
- * @author qiumin
  **/
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)

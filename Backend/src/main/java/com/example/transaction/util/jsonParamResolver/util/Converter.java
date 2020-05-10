@@ -4,9 +4,6 @@ import java.lang.reflect.Type;
 
 /**
  * 类型转换接口
- *
- * @author qiumin
- * @desc
  **/
 public interface Converter {
 

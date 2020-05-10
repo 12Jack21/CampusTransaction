@@ -6,8 +6,6 @@ import java.math.BigInteger;
 
 /**
  * 数值类型转换器
- *
- * @author qiumin
  * @desc
  **/
 public class NumberConverter implements Converter {

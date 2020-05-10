@@ -7,8 +7,6 @@ import java.lang.reflect.Type;
 
 /**
  * 普通javabean
- *
- * @author: qiumin
  **/
 public class BeanConverter implements Converter {
 

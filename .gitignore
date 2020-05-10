@@ -4,6 +4,11 @@ Backend/target/
 !Backend/**/src/main/**
 !Backend/**/src/test/**
 Backend/logs/
+Backend/CampusTransactionSourceTrail.srctrlbm
+Backend/CampusTransactionSourceTrail.srctrldb
+Backend/CampusTransactionSourceTrail.srctrlprj
+Backend/sourcetrail_dependencies/
+
 
 ### STS ###
 Backend/.apt_generated

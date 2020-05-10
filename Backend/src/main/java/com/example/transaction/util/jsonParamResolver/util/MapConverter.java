@@ -7,8 +7,6 @@ import java.lang.reflect.Type;
 
 /**
  * map转换器
- *
- * @author: qiumin
  **/
 @Deprecated
 public class MapConverter implements Converter {
