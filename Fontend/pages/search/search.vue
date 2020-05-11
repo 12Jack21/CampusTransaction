@@ -6,7 +6,7 @@
 				<view class="action" @tap="BackPage"><text class="cuIcon-back" /></view>
 				<view class="search-form round">
 					<text class="cuIcon-search" />
-					<input @input="searchInput" :value="searchKey" @focus="searchView = true" :adjust-position="false" type="text" placeholder="高数" confirm-type="search" />
+					<input @input="searchInput" :value="searchKey" @focus="searchView = true" :adjust-position="false" type="text" :placeholder="search_ph" confirm-type="search" />
 					<text class="cuIcon-close close-icon" v-if="search_close" @tap="closeInput" />
 				</view>
 				<view class="action" @tap="doSearch"><text class="text-red">搜索</text></view>
@@ -16,9 +16,17 @@
 			<view class="zaiui-seat-height" />
 		</view>
 		<!-- end -->
-		
+
 		<!-- 筛选界面 -->
-		<HMfilterDropdown v-if="!searchView" class="filterList" :filterData="filterData" :defaultSelected ="filterDropdownValue" @confirm="confirmFilter"></HMfilterDropdown>
+		<HMfilterDropdown
+			v-if="!searchView"
+			class="filterList"
+			:filterData="filterData"
+			:updateMenuName="true"
+			:defaultSelected="filterDropdownValue"
+			@confirm="confirmFilter"
+			dataFormat="Object"
+		></HMfilterDropdown>
 
 		<!-- 搜索界面 -->
 		<view v-if="searchView">
@@ -28,7 +36,7 @@
 				<view class="search-list-view">
 					<view class="search-bar-view">
 						<text class="text-black">历史搜索</text>
-						<text class="cuIcon-delete text-gray icon-right" @tap="deleteView=true" />
+						<text class="cuIcon-delete text-gray icon-right" @tap="deleteView = true" />
 					</view>
 					<view class="btn-view">
 						<button class="cu-btn round" v-for="(history, index) in histories" :key="'history-' + index" @tap="doSearch(history)">{{ history }}</button>
@@ -39,8 +47,7 @@
 				<view class="search-list-view">
 					<view class="search-bar-view"><text class="text-black">推荐搜索</text></view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(r, index) in recommendations" 
-						:key="'recommend-' + index" @tap="doSearch(r)">{{ r }}</button>
+						<button class="cu-btn round" v-for="(r, index) in recommendations" :key="'recommend-' + index" @tap="doSearch(r)">{{ r }}</button>
 					</view>
 				</view>
 			</view>
@@ -53,7 +60,7 @@
 						<text class="text-black">历史搜索</text>
 						<view class="text-sm text-right">
 							<text class="text-gray" @tap="delAllHistory">全部删除</text>
-							<text class="text-red" @tap="deleteView=false">完成</text>
+							<text class="text-red" @tap="deleteView = false">完成</text>
 						</view>
 					</view>
 					<view class="btn-view">
@@ -71,8 +78,8 @@
 		<view class="margin-bottom zaiui-goods-list-box" v-else>
 			<view class="flex flex-wrap ">
 				<!--商品列表-->
-				<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs"/>
-				<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs"/>
+				<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs" />
+				<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs" />
 			</view>
 		</view>
 		<!-- end -->
@@ -82,51 +89,73 @@
 <script>
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import goodsList from '@/components/list/goods-list.vue'
-import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import HMfilterDropdown from '@/components/HM-filterDropdown/HM-filterDropdown.vue'
-import filter_data from '../../static/data/filters.js'
 import { mapState } from 'vuex'
+
+import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
+import filter_data from '../../static/data/filters.js'
 
 export default {
 	components: {
-		goodsList, HMfilterDropdown
+		goodsList,
+		HMfilterDropdown
 	},
 	data() {
 		return {
 			search_close: false,
+			search_ph: '高数',
 			searchKey: '',
 			searchView: true,
 			deleteView: false, // 删除搜索记录的视图
 			histories: ['耳机', '大英课本', '四六级试卷', '电动车'],
 			recommendations: ['耳机', '电动车', '笔记本', '华为手机', 'AJ鞋', '篮球'],
 			goodsData: [],
-			filterData:'',
-			filterDropdownValue:[],
-			filterValues:[]
+			filterData: '',
+			filterDropdownValue: [],
+			filterValues: []
 		}
 	},
-	computed:{
+	computed: {
 		...mapState(['userId']),
-		leftGoods(){
-			return this.goodsData.filter((e,index) => index % 2 === 0)
+		leftGoods() {
+			return this.goodsData.filter((e, index) => index % 2 === 0)
 		},
-		rightGoods(){
-			return this.goodsData.filter((e,index) => index % 2 === 1)
+		rightGoods() {
+			return this.goodsData.filter((e, index) => index % 2 === 1)
 		}
 	},
-	onLoad() {
-		console.log('search page onLoad')
-		this.goodsData = _home_data.goodsList(),
-		this.filterDropdownValue = [
-			// [1,1,0],				//第0个菜单选中 一级菜单的第1项，二级菜单的第1项，三级菜单的第3项
-			[0,0],			//第1个菜单选中 都不选中
-			[0],					//第2个菜单选中 一级菜单的第1项
-			[0],
-			[[0],[1,2,7],[1,0]],	//筛选菜单选中 第一个筛选的第0项，第二个筛选的第1,2,7项，第三个筛选的第1,0项
-		];
-		this.filterData = filter_data; 
+	onLoad(param) {
+		console.log('search page onLoad, param:', param)
+		this.goodsData = _home_data.goodsList()
+		let type_index = 0
+		if (param.type !== undefined) {
+			type_index = parseInt(param.type)
+			console.log('type_index', type_index)
+			this.searchView = false // switch to result list
+			let searchBody = {
+				type: param.typeName,
+				address: '全校',
+				sort: '最新',
+				outdated: '',
+				price: '',
+				body: true
+			}
+			this.doSearch(searchBody)
+			this.search_ph = ''
+		}
+		// Im: 必须用 setTimeout才能初始化
+		setTimeout(() => {
+			this.filterDropdownValue = [
+				[0, type_index || 0], //type
+				[0], //第2个菜单选中 一级菜单的第1项
+				[0],
+				[[], []] //筛选菜单选中 第一个筛选的第0项，第二个筛选的第1,2,7项，第三个筛选的第1,0项
+			]
+			this.filterData = filter_data
+		}, 0)
 	},
 	onReady() {
+		console.log('ready', this.filterDropdownValue)
 		_tool.setBarColor(true)
 		uni.pageScrollTo({
 			scrollTop: 0,
@@ -134,8 +163,26 @@ export default {
 		})
 	},
 	methods: {
-		confirmFilter(){
-			
+		confirmFilter(e) {
+			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
+				return
+
+			console.log('previous', this.filterValues)
+			console.log('current', e.value)
+			console.log('dropdown', this.filterDropdownValue)
+			this.filterValues = e.value
+			// do search with filter condition
+			let searchBody = {
+				type: e.value[0][1],
+				address: e.value[1][0],
+				sort: e.value[2][0],
+				outdated: e.value[3][0][e.value[3][0].length - 1] || '',
+				price: e.value[3][1],
+				body: true
+			}
+			console.log('index', e.index)
+			console.log('search body', searchBody)
+			this.doSearch(searchBody)
 		},
 		BackPage() {
 			uni.navigateBack()
@@ -153,46 +200,51 @@ export default {
 			this.searchKey = ''
 			this.search_close = false
 		},
-		delAllHistory(){
+		delAllHistory() {
 			let that = this
 			uni.showModal({
-				content:'确定要全部删除吗',
+				content: '确定要全部删除吗',
 				success: () => {
-					thi.$api.clearSearchHistory(that.userId)
-						.then(res=>{
-							if(res.data)
-								this.histories = []
-						})
+					thi.$api.clearSearchHistory(that.userId).then(res => {
+						if (res.data) this.histories = []
+					})
 				},
 				fail() {
 					uni.showToast({
-						icon:'none',
-						title:'删除失败'
+						icon: 'none',
+						title: '删除失败'
 					})
 				}
 			})
 		},
 		doSearch(_key) {
+			uni.showLoading({
+				title: '搜索中',
+				mask: false
+			})
 			// 关键词 模糊搜索
-			let key
 			if (typeof _key === 'string') {
 				this.searchKey = _key
 			}
-			key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
+			let key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
 			let that = this
+			let condition = null
+			if (_key.body) condition = _key
 			this.$api
-				.getSearchResult(key)
+				.getSearchResult(key, condition)
 				.then(res => {
 					this.goodsData = res.data
 					that.searchView = false
+					uni.hideLoading()
 				})
-				.catch(err =>
+				.catch(err => {
+					uni.hideLoading()
 					uni.showToast({
 						title: '搜索失败，请检查网络',
 						icon: 'none',
 						duration: 2000
 					})
-				)
+				})
 
 			// 虚拟数据加载
 			this.searchView = false
@@ -207,7 +259,7 @@ export default {
 
 <style lang="scss" scoped>
 @import '../../static/zaiui/style/search.scss';
-.filterList{
+.filterList {
 	position: sticky;
 	top: calc(var(--status-bar-height) + 101rpx);
 }

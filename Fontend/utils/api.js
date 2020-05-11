@@ -51,8 +51,8 @@ export default{
 	testAPI(config){
 		return http.get('/',{...config})
 	},
-	getSearchResult(keyword){
-		return http.get('/commodity/search',{params:{key:keyword}})
+	getSearchResult(keyword, condition){ //TODO add pagination
+		return http.get('/commodity/search',{params:{key:keyword, condition: condition}})
 	},
 	uploadImage(filePath,config){
 		return http.upload('/commodity/image/add',{
@@ -71,5 +71,11 @@ export default{
 	},
 	clearSearchHistory(id){
 		return http.delete('/histories/account/' + id)
+	},
+	getCommodity(id){
+		return http.get('/commodities/' + id)
+	},
+	getCommodities(sort, pagination){ //add last commodity id
+		return http.get('/commodities/sort/' + sort, {params: pagination})
 	}
 }

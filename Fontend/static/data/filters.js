@@ -48,24 +48,16 @@ export default [{
 					"value": "全部"
 				},
 				{
-					"name": "图书类",
-					"value": "图书类"
+					"name": "电子产品",
+					"value": "电子产品"
 				},
 				{
-					"name": "数码类",
-					"value": "数码类"
+					"name": "数码",
+					"value": "数码"
 				},
 				{
-					"name": "电子类",
-					"value": "电子类"
-				},
-				{
-					"name": "交通工具类",
-					"value": "交通工具类"
-				},
-				{
-					"name": "生活用品类",
-					"value": "生活用品类"
+					"name": "家电",
+					"value": "家电"
 				},
 				{
 					"name": "衣服",
@@ -75,6 +67,42 @@ export default [{
 					"name": "鞋子",
 					"value": "鞋子"
 				},
+				{
+					"name": "生活用品",
+					"value": "生活用品"
+				},
+				{
+					"name": "食品",
+					"value": "食品"
+				},
+				{
+					"name": "图书",
+					"value": "图书"
+				},
+				{
+					"name": "交通工具",
+					"value": "交通工具"
+				},
+				{
+					"name": "虚拟物品",
+					"value": "虚拟物品"
+				},
+				{
+					"name": "作业",
+					"value": "作业"
+				},
+				{
+					"name": "代领",
+					"value": "代领"
+				},
+				{
+					"name": "问答",
+					"value": "问答"
+				},
+				{
+					"name": "其他",
+					"value": "其他"
+				},
 			]
 		}]
 	},
@@ -82,23 +110,27 @@ export default [{
 		// name:'区域',
 		"type": 'hierarchy',
 		"submenu": [{
+				"name": "全校",
+				"value": "全校"
+			},
+			{
 				"name": "信息学部",
-				"value": "0"
+				"value": "信息学部"
 			},
 			{
 				"name": "文理学部",
-				"value": "1"
+				"value": "文理学部"
 			},
 			{
 				"name": "工学部",
-				"value": "2"
+				"value": "工学部"
 			},
 			{
 				"name": "医学部",
-				"value": "3"
+				"value": "医学部"
 			}
 		]
-	},
+	}, 
 	{
 		// name:'排序',
 		"type": 'hierarchy',
@@ -127,19 +159,19 @@ export default [{
 				"name": "失效时间",
 				"submenu": [{
 						"name": "1天内",
-						"value": "0"
+						"value": "1天内"
 					},
 					{
 						"name": "3天内",
-						"value": "1"
+						"value": "3天内"
 					},
 					{
 						"name": "1周内",
-						"value": "2"
+						"value": "1周内"
 					},
 					{
 						"name": "1月内",
-						"value": "3"
+						"value": "1月内"
 					}
 				]
 			},
@@ -147,19 +179,19 @@ export default [{
 				"name": "价格",
 				"submenu": [{
 						"name": "50以下",
-						"value": "0"
+						"value": "50以下"
 					},
 					{
 						"name": "50-100",
-						"value": "1"
+						"value": "50-100"
 					},
 					{
 						"name": "100-300",
-						"value": "2"
+						"value": "100-300"
 					},
 					{
 						"name": "300以上",
-						"value": "3"
+						"value": "300以上"
 					}
 				]
 			}
