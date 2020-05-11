@@ -5,6 +5,7 @@
 			// TODO: Handle token in storage
 			// get token and update value in server, store that in vuex state, mount on request header 
 			
+			// this.$api.testAPI().catch(err=>console.log('test err',err))
 		},
 		onShow: function() {
 			// console.log('App Show')

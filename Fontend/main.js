@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App'
 import store from './store/index.js'
-import api from '@/utils/api.js' // 下载的插件
+import api from '@/utils/api.js'
 
 // const http = new Request()
 

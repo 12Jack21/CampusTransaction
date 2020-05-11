@@ -4,15 +4,15 @@ let _home_data = {
 	swiper() {
 		return [
 			{
-				swiper: '/static/images/home/swiper/swiper-1.png',
+				swiper: '/static/images/home/swiper/1.png',
 				background: '/static/images/home/swiper/swiper-background-1.png',
 			},
 			{
-				swiper: '/static/images/home/swiper/swiper-2.png',
+				swiper: '/static/images/home/swiper/2.png',
 				background: '/static/images/home/swiper/swiper-background-2.png',
 			},
 			{
-				swiper: '/static/images/home/swiper/swiper-3.png',
+				swiper: '/static/images/home/swiper/3.png',
 				background: '/static/images/home/swiper/swiper-background-3.png',
 			}
 		];

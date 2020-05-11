@@ -5,7 +5,8 @@ const http = new Request()
 // 静态全局配置
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
-    config.baseUrl = 'http://localhost:9999'; /* 根域名 */
+    // config.baseUrl = 'http://localhost:9999'; /* 根域名 */
+		config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
     config.header = {
         a: 1, // 演示用
         b: 2,
@@ -49,13 +50,10 @@ http.interceptor.response((response) => { /* 对响应成功做点什么 （stat
 
 export default{
 	testAPI(config){
-		return http.get('/',{...config})
-	},
-	getSearchResult(keyword, condition){ //TODO add pagination
-		return http.get('/commodity/search',{params:{key:keyword, condition: condition}})
+		return http.get('/test',{params:{outdated:'',age:12,op:''}})
 	},
 	uploadImage(filePath,config){
-		return http.upload('/commodity/image/add',{
+		return http.upload('/commodities/image',{
 			filePath,
 			name: 'image',
 			...config
@@ -74,6 +72,9 @@ export default{
 	},
 	getCommodity(id){
 		return http.get('/commodities/' + id)
+	},
+	getSearchResult(keyword, condition, pagination){ 
+		return http.post('/commodities/search',{keyword, condition, pagination})
 	},
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})

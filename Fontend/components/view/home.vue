@@ -28,9 +28,11 @@
 		<view class="zaiui-view-content" :class="[viewContent.welcome ? 'welcome' : '', 'show']">
 			<!--轮播图-->
 			<view class="zaiui-swiper-box">
-				<swiper class="screen-swiper square-dot c" autoplay circular indicator-dots :current="swiperInfo.index" @change="swiperChange">
+				<swiper class="screen-swiper square-dot c" :autoplay="false" circular indicator-dots :current="swiperInfo.index" @change="swiperChange">
 					<swiper-item v-for="(item, index) in swiperInfo.list" :key="index">
-						<view class="swiper-padding"><image :src="item.swiper" mode="widthFix" /></view>
+						<view class="swiper-content swiper-padding" style="padding-bottom: 16rpx;">
+							<image :src="item.swiper" mode="widthFix" />
+						</view>
 					</swiper-item>
 				</swiper>
 			</view>
@@ -85,6 +87,8 @@ import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 //======================================================================
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 
+import handles from '@/utils/handles.js'
+
 import { mapState } from 'vuex'
 
 export default {
@@ -124,7 +128,7 @@ export default {
 			goodsData: [],
 
 			// four tabs' goods list: new, near, outdated, cheap
-			storeGoods:[]
+			storeGoods:[],
 		}
 	},
 	props: {
@@ -174,7 +178,10 @@ export default {
 		this.goodsData = GoodsData
 		this.headInfo.Class = 'welcome'
 		
-		for(let i = 0;i < 4;i++) this.storeGoods.push({pageNo:0,pageSize:10,data:[]})
+		// 存取分页查询所需的字段
+		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,startTime:'',finish:false,data:[]})
+		this.storeGoods[0].startTime = new Date().format('yyyy-MM-dd hh:mm')
+		this.getCommodityList()
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -195,27 +202,84 @@ export default {
 		},
 		//触底了
 		setReachBottom() {
-			console.log('home 触底了')
+			console.log('home 触底了,加载更多物品列表')
+			// 全部加载时
+			if(!this.storeGoods[this.goodsTabData.tabCur].finish)
+				this.getCommodityList()
+		},		
+		//商品列表上的分类tab被点击 
+		goodsTab(e) {
+			let current = e.currentTarget.dataset.id
+			this.goodsData = this.storeGoods[current].data
+			if(this.goodsData.length === 0){ 
+				this.storeGoods[current].startTime = new Date().format('yyyy-MM-dd hh:mm')
+				this.getCommodityList()
+			}// 点击相同的 tab 则相当于下拉刷新当前列表
+			else if(this.goodsTabData.tabCur === current){
+				this.storeGoods[current].data = [] //清空来方便 push
+				this.storeGoods[current].finish = false
+				this.getCommodityList()
+			}
+			
+			this.goodsTabData.tabCur = current
+			
+			// #ifdef H5
+			uni.pageScrollTo({
+				scrollTop: 410,
+				duration: 200
+			})
+			// #endif
+			// #ifdef APP-PLUS
+			uni.pageScrollTo({
+				scrollTop: 360,
+				duration: 200
+			})
+			// #endif		
+		},
+		goodsListTap(e) {
+			console.log('goodListTab', e)
+			uni.navigateTo({
+				url: `/pages/detail/com?id=${e.id}`
+			})
+			// TODO: 物品详情界面来加载数据
+			// this.$api.getCommodity(e.id)
+			// 	.then(res=>)
 		},
 		getCommodityList(){
+			this.loadStatus = 'loading'
 			// TODO: 区分上拉和下拉
 			let self = this
 			let tab = this.goodsTabData.tabCur
 			let pagination = {
-				pageNo: this.storeGoods[tab].pageNo,
+				pageIndex: this.storeGoods[tab].pageIndex,
 				pageSize: this.storeGoods[tab].pageSize,
-				lastId: this.storeGoods[tab].data[this.storeGoods[tab].data.length - 1] || '',
+				startTime: this.storeGoods[tab].startTime
 			}
 			// request commodity list data with pagination
-			this.$api.getCommodityList(tab, pagination)
+			this.$api.getCommodities(tab, pagination)
 				.then(res=>{
-					self.storeGoods[tab] = res.data
-					self.goodsData = res.data.data
+					console.log('my resp data field', res.data);
+					let resp = res.data.data
+					self.storeGoods[tab].pageIndex = resp.pageIndex
+					self.storeGoods[tab].pageSize = resp.pageSize
+					self.storeGoods[tab].data.push(...(resp.pageList))
+					self.goodsData = self.storeGoods[tab].data
+					
+					// 取完了数据
+					if(resp.pageIndex === resp.pageCount) {
+						self.storeGoods[tab].finish = true
+						this.loadStatus = 'noMore'
+					}
+					else
+						this.loadStatus = 'more'
 				})
-				.catch(()=>uni.showToast({
+				.catch(()=>{
+					uni.showToast({
 					title:'获取物品失败，请检查网络',
 					icon:'none'
-				}))
+				})
+					this.loadStatus = 'more'
+				})
 		},
 		//欢迎提示关闭事件
 		welcomeClose(bol) {
@@ -234,31 +298,6 @@ export default {
 				url: `/pages/search/search?type=${e.data.id}&typeName=${e.data.name}`
 			})
 		},
-		//商品列表上的分类tab被点击
-		goodsTab(e) {
-			this.goodsTabData.tabCur = e.currentTarget.dataset.id
-			// #ifdef H5
-			uni.pageScrollTo({
-				scrollTop: 410,
-				duration: 200
-			})
-			// #endif
-			// #ifdef APP-PLUS
-			uni.pageScrollTo({
-				scrollTop: 360,
-				duration: 200
-			})
-			// #endif
-		},
-		goodsListTap(e) {
-			console.log('goodListTab', e)
-			uni.navigateTo({
-				url: `/pages/detail/com?id=${e.id}`
-			})
-			// TODO: 物品详情界面来加载数据
-			// this.$api.getCommodity(e.id)
-			// 	.then(res=>)
-		},
 		moreTypeTap() {
 			// 搜索框旁的具体分类按钮
 			uni.navigateTo({
@@ -275,6 +314,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.swiper-content{
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	align-items: flex-end;
+}
 .filter {
 	color: white;
 	font-size: 55rpx;

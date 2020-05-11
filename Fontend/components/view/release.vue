@@ -202,7 +202,7 @@ export default {
 			isShowPicker: false,
 			datetime: '',
 			focus: 0, //0 为通告信息，1为物品详细信息填写
-			scene: 1, // 0,1,2 分别代表发布带物品的闲置通告、需求通告、任务通告
+			scene: -1, // 0,1,2 分别代表发布带物品的闲置通告、需求通告、任务通告
 			noticeTypeListData: [],
 			commodity:{
 				name:'',

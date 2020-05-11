@@ -9,7 +9,7 @@
 					<input @input="searchInput" :value="searchKey" @focus="searchView = true" :adjust-position="false" type="text" :placeholder="search_ph" confirm-type="search" />
 					<text class="cuIcon-close close-icon" v-if="search_close" @tap="closeInput" />
 				</view>
-				<view class="action" @tap="doSearch"><text class="text-red">搜索</text></view>
+				<view class="action" @tap="searchTap"><text class="text-red">搜索</text></view>
 			</view>
 			<!-- end -->
 			<!--占位的-->
@@ -39,7 +39,7 @@
 						<text class="cuIcon-delete text-gray icon-right" @tap="deleteView = true" />
 					</view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(history, index) in histories" :key="'history-' + index" @tap="doSearch(history)">{{ history }}</button>
+						<button class="cu-btn round" v-for="(history, index) in histories" :key="'history-' + index" @tap="searchTap(history)">{{ history }}</button>
 					</view>
 				</view>
 
@@ -47,7 +47,7 @@
 				<view class="search-list-view">
 					<view class="search-bar-view"><text class="text-black">推荐搜索</text></view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(r, index) in recommendations" :key="'recommend-' + index" @tap="doSearch(r)">{{ r }}</button>
+						<button class="cu-btn round" v-for="(r, index) in recommendations" :key="'recommend-' + index" @tap="searchTap(r)">{{ r }}</button>
 					</view>
 				</view>
 			</view>
@@ -83,6 +83,8 @@
 			</view>
 		</view>
 		<!-- end -->
+		<!-- Loading Text -->
+		<uni-load-more :status="loadStatus"></uni-load-more>
 	</view>
 </template>
 
@@ -90,7 +92,9 @@
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import goodsList from '@/components/list/goods-list.vue'
 import HMfilterDropdown from '@/components/HM-filterDropdown/HM-filterDropdown.vue'
+import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 import { mapState } from 'vuex'
+import handles from '@/utils/handles.js'
 
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import filter_data from '../../static/data/filters.js'
@@ -98,7 +102,8 @@ import filter_data from '../../static/data/filters.js'
 export default {
 	components: {
 		goodsList,
-		HMfilterDropdown
+		HMfilterDropdown,
+		uniLoadMore
 	},
 	data() {
 		return {
@@ -112,7 +117,14 @@ export default {
 			goodsData: [],
 			filterData: '',
 			filterDropdownValue: [],
-			filterValues: []
+			filterValues: [],
+			loadStatus: 'more',
+			pagination:{
+				pageIndex:0,
+				pageSize:20,
+				startTime:'',
+				finish: false
+			}
 		}
 	},
 	computed: {
@@ -126,7 +138,8 @@ export default {
 	},
 	onLoad(param) {
 		console.log('search page onLoad, param:', param)
-		this.goodsData = _home_data.goodsList()
+		this.goodsData = _home_data.goodsList() //虚拟
+		
 		let type_index = 0
 		if (param.type !== undefined) {
 			type_index = parseInt(param.type)
@@ -138,7 +151,6 @@ export default {
 				sort: '最新',
 				outdated: '',
 				price: '',
-				body: true
 			}
 			this.doSearch(searchBody)
 			this.search_ph = ''
@@ -163,6 +175,20 @@ export default {
 		})
 	},
 	methods: {
+		//TODO 下拉刷新
+		searchTap(key){
+			if (typeof key === 'string') {
+				this.searchKey = key
+			}
+			// reset
+			this.pagination = {
+				pageIndex:0,
+				pageSize:20,
+				startTime:new Date().format('yyyy-MM-dd hh:mm'),
+				finish: false
+			}
+			doSearch(null) // pass condition
+		},
 		confirmFilter(e) {
 			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
 				return
@@ -171,6 +197,14 @@ export default {
 			console.log('current', e.value)
 			console.log('dropdown', this.filterDropdownValue)
 			this.filterValues = e.value
+			
+			this.pagination = {
+				pageIndex:0,
+				pageSize:20,
+				startTime:new Date().format('yyyy-MM-dd hh:mm'),
+				finish: false
+			}
+			
 			// do search with filter condition
 			let searchBody = {
 				type: e.value[0][1],
@@ -178,7 +212,6 @@ export default {
 				sort: e.value[2][0],
 				outdated: e.value[3][0][e.value[3][0].length - 1] || '',
 				price: e.value[3][1],
-				body: true
 			}
 			console.log('index', e.index)
 			console.log('search body', searchBody)
@@ -217,28 +250,29 @@ export default {
 				}
 			})
 		},
-		doSearch(_key) {
-			uni.showLoading({
-				title: '搜索中',
-				mask: false
-			})
+		doSearch(condition) {
+			this.loadStatus = 'loading'
+			
 			// 关键词 模糊搜索
-			if (typeof _key === 'string') {
-				this.searchKey = _key
-			}
 			let key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
 			let that = this
-			let condition = null
-			if (_key.body) condition = _key
 			this.$api
-				.getSearchResult(key, condition)
+				.getSearchResult(key, condition, this.pagination)
 				.then(res => {
-					this.goodsData = res.data
 					that.searchView = false
-					uni.hideLoading()
+					let resp = res.data.data
+					this.goodsData.push(...resp.pageList)
+					this.pagination.pageIndex = resp.pageIndex
+					
+					if(resp.pageIndex === resp.pageCount){
+						// 没有更多数据了
+						this.loadStatus = 'noMore'
+						this.pagination.finish = true
+					}
+					this.loadStatus = 'more'
 				})
 				.catch(err => {
-					uni.hideLoading()
+					this.loadStatus = 'more'
 					uni.showToast({
 						title: '搜索失败，请检查网络',
 						icon: 'none',
