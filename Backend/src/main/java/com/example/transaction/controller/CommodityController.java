@@ -88,7 +88,6 @@ public class CommodityController {
 
     /**
      * 根据id获取商品信息
-     *
      * @param commodityId 商品id
      * @return 执行结果
      */
