@@ -59,14 +59,15 @@
 					<view class="search-bar-view">
 						<text class="text-black">历史搜索</text>
 						<view class="text-sm text-right">
-							<text class="text-gray" @tap="delAllHistory">全部删除</text>
-							<text class="text-red" @tap="deleteView = false">完成</text>
+							<text class="text-yellow" @tap="delAllHistory">全部删除</text>
+							<text class="text-gray" @tap="cancelDel">取消</text>
+							<text class="text-red" @tap="finishDel">完成</text>
 						</view>
 					</view>
 					<view class="btn-view">
 						<button class="cu-btn round" v-for="(history, index) in histories" :key="'del-' + index">
 							<text>{{ history }}</text>
-							<view class="cuIcon-roundclosefill close-icon"></view>
+							<view class="cuIcon-roundclosefill close-icon" @tap="histories.splice(index,1)"></view>
 						</button>
 					</view>
 				</view>
@@ -74,36 +75,49 @@
 		</view>
 		<!-- end -->
 
-		<!-- 搜索结果 -->
-		<view class="margin-bottom zaiui-goods-list-box" v-else>
-			<view class="flex flex-wrap ">
-				<!--商品列表-->
-				<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs" />
-				<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs" />
+		<!-- 局部下拉刷新范围 -->
+		<you-scroll ref="scroll" @onPullDown="onPullDown"  @onLoadMore="onLoadMore" v-else>
+			<!-- 搜索结果 -->
+			<view class="zaiui-goods-list-box" >
+				<view class="flex flex-wrap ">
+					<!--商品列表-->
+					<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs" />
+					<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs" />
+				</view>
 			</view>
-		</view>
-		<!-- end -->
-		<!-- Loading Text -->
-		<uni-load-more :status="loadStatus"></uni-load-more>
+			<!-- end -->
+			<!-- Loading Text -->
+			<uni-load-more v-show="!searchView" :status="loadStatus" class="margin-bottom"></uni-load-more>
+		</you-scroll>
 	</view>
 </template>
-
+ 
 <script>
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import goodsList from '@/components/list/goods-list.vue'
 import HMfilterDropdown from '@/components/HM-filterDropdown/HM-filterDropdown.vue'
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
+import youScroll from '@/components/you-scroll/you-scroll.vue'
 import { mapState } from 'vuex'
 import handles from '@/utils/handles.js'
 
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import filter_data from '../../static/data/filters.js'
 
+const iniPagination = {
+				pageIndex:0,
+				pageSize:20,
+				startTime:new Date().format('yyyy-MM-dd hh:mm'),
+				finish: false
+			}
+const searchHistories = () => ['耳机', '大英课本', '四六级试卷', '电动车'] // virtual
+
 export default {
 	components: {
 		goodsList,
 		HMfilterDropdown,
-		uniLoadMore
+		uniLoadMore,
+		youScroll
 	},
 	data() {
 		return {
@@ -112,7 +126,8 @@ export default {
 			searchKey: '',
 			searchView: true,
 			deleteView: false, // 删除搜索记录的视图
-			histories: ['耳机', '大英课本', '四六级试卷', '电动车'],
+			backHistories: searchHistories(),
+			histories: searchHistories(),
 			recommendations: ['耳机', '电动车', '笔记本', '华为手机', 'AJ鞋', '篮球'],
 			goodsData: [],
 			filterData: '',
@@ -124,7 +139,8 @@ export default {
 				pageSize:20,
 				startTime:'',
 				finish: false
-			}
+			},
+			searchBody:null
 		}
 	},
 	computed: {
@@ -174,20 +190,75 @@ export default {
 			duration: 0
 		})
 	},
+	onReachBottom(){
+		console.log('search 触底');
+		this.doSearch(this.searchBody)
+	},
 	methods: {
-		//TODO 下拉刷新
+		finishDel(){
+			// Arrow function's this will inherit from its nearest parent
+			let delIds = this.backHistories.filter(v=>this.histories.indexOf(v) === -1)
+			console.log('delIds',delIds);
+			if(delIds.length !== 0)
+				this.$api.delSearchHistory(delIds)
+					.then(({data})=>{
+						if(data.success){ //删除成功 success == true
+							this.backHistories = this.histories.slice(0)
+							deleteView = false
+						}
+						uni.showToast({
+							title: '删除搜索记录失败',
+							icon: 'none'
+						})
+					})// 删除失败，恢复历史记录
+					.catch(err=>{
+						// this.histories = this.backHistories
+						uni.showToast({
+							title: '删除搜索记录失败',
+							icon: 'none'
+						})
+					})
+			else
+				this.deleteView = false
+		},
+		cancelDel(){
+			[...this.histories] = this.backHistories //数组展开,可作为左值，但对象展开不可作为左值
+			this.deleteView = false
+		},
+		delAllHistory() {
+			uni.showModal({
+				content: '确定要全部删除吗',
+				success: (e) => {
+					if(!e.cancel)
+						this.$api.clearSearchHistory(this.userId).then(res => {
+							if (res.data.success){
+								this.histories = []
+								this.backHistories = []
+								this.deleteView = false
+							}
+						})
+						.catch(()=>uni.showToast({
+							title: '删除失败',
+							icon: 'none'
+						}))
+				}
+			})
+		},
+		getSearchHistory() {
+			this.$appi.getSearchHistory(this.userId).then(res => (this.histories = res.data.data))
+		},
+		async onPullDown(done){
+			this.pagination = {...iniPagination} //对象展开
+			await this.doSearch(this.searchBody)
+			done() // 结束下拉刷新
+		},
 		searchTap(key){
 			if (typeof key === 'string') {
 				this.searchKey = key
 			}
 			// reset
-			this.pagination = {
-				pageIndex:0,
-				pageSize:20,
-				startTime:new Date().format('yyyy-MM-dd hh:mm'),
-				finish: false
-			}
-			doSearch(null) // pass condition
+			this.pagination = {...iniPagination}
+			this.doSearch(null) // pass condition
 		},
 		confirmFilter(e) {
 			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
@@ -198,12 +269,7 @@ export default {
 			console.log('dropdown', this.filterDropdownValue)
 			this.filterValues = e.value
 			
-			this.pagination = {
-				pageIndex:0,
-				pageSize:20,
-				startTime:new Date().format('yyyy-MM-dd hh:mm'),
-				finish: false
-			}
+			this.pagination = {...iniPagination}
 			
 			// do search with filter condition
 			let searchBody = {
@@ -213,6 +279,7 @@ export default {
 				outdated: e.value[3][0][e.value[3][0].length - 1] || '',
 				price: e.value[3][1],
 			}
+			this.searchBody = Object.assign({},searchBody)
 			console.log('index', e.index)
 			console.log('search body', searchBody)
 			this.doSearch(searchBody)
@@ -233,33 +300,17 @@ export default {
 			this.searchKey = ''
 			this.search_close = false
 		},
-		delAllHistory() {
-			let that = this
-			uni.showModal({
-				content: '确定要全部删除吗',
-				success: () => {
-					thi.$api.clearSearchHistory(that.userId).then(res => {
-						if (res.data) this.histories = []
-					})
-				},
-				fail() {
-					uni.showToast({
-						icon: 'none',
-						title: '删除失败'
-					})
-				}
-			})
-		},
-		doSearch(condition) {
+		async doSearch(condition) {
 			this.loadStatus = 'loading'
+			// 虚拟数据加载
+			this.searchView = false
 			
 			// 关键词 模糊搜索
 			let key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
-			let that = this
-			this.$api
+			await this.$api
 				.getSearchResult(key, condition, this.pagination)
 				.then(res => {
-					that.searchView = false
+					this.searchView = false
 					let resp = res.data.data
 					this.goodsData.push(...resp.pageList)
 					this.pagination.pageIndex = resp.pageIndex
@@ -279,13 +330,6 @@ export default {
 						duration: 2000
 					})
 				})
-
-			// 虚拟数据加载
-			this.searchView = false
-		},
-		getSearchHistory() {
-			let that = this
-			this.$appi.getSearchHistory(that.userId).then(res => (that.histories = res.data))
 		}
 	}
 }

@@ -8,7 +8,9 @@
 		},
 		{
 			"path": "pages/search/search",
-			"style": {}
+			"style": {
+				"enablePullDownRefresh":false
+			}
 		}
 	],
 	"globalStyle": {
