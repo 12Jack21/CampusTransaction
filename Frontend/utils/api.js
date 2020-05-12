@@ -52,6 +52,15 @@ export default{
 	testAPI(config){
 		return http.get('/test',{params:{outdated:'',age:12,op:''}})
 	},
+	getMyNotices(id,pagination){
+		return http.get('/notices/account/' + id, {params:pagination})
+	},
+	getNotices(type,pagination){
+		return http.get('/notices', {params:{type,...pagination}})
+	},
+	getNotice(id){
+		return http.get('/notices/' + id)
+	},
 	uploadImage(filePath,config){
 		return http.upload('/commodities/image',{
 			filePath,
@@ -59,14 +68,8 @@ export default{
 			...config
 		})
 	},
-	getMyNotices(id,pagination){
-		return http.get('/notices/account/' + id, {params:pagination})
-	},
-	getNotices(type,pagination){
-		return http.get('/notices', {params:{type,...pagination}})
-	},
 	addNotice(data){
-		return http.post('/notice/add',{
+		return http.post('/notices/add',{
 			data
 		})
 	},
@@ -79,13 +82,19 @@ export default{
 	clearSearchHistory(id){
 		return http.delete('/histories/account/' + id)
 	},
-	getCommodity(id){
-		return http.get('/commodities/' + id)
-	},
 	getSearchResult(keyword, condition, pagination){ 
 		return http.post('/commodities/search',{keyword, condition, pagination})
 	},
+	getCommodity(id){
+		return http.get('/commodities/' + id)
+	},
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
+	},
+	getAccount(id){
+		return http.get('/accounts/' + id)
+	},
+	getMyAccount(id){
+		return http.get('/accounts/my/' + id)
 	}
 }

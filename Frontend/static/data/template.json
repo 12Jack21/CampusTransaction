@@ -1,0 +1,21 @@
+{
+	"data": {
+		"title": "通告标题",
+		"description": "这是通告描述",
+		"condition": "通告的限定条件",
+		"address": "信息学部二食堂",
+		"outdatedTime": "2020/05/17 21:14",
+		"type": 0,
+		"comList": [{
+			"name": "毛巾",
+			"description": "物品的描述",
+			"count": "2",
+			"oriPrice": "10",
+			"newPrice": "11",
+			"type": "电子产品",
+			"newness": "全新",
+			"imgList": [],
+			"images": []
+		}]
+	}
+}

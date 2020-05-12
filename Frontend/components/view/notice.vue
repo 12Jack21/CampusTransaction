@@ -34,9 +34,9 @@
 				<trends-list
 					:list_data="notices.list"
 					:viewBtn="true"
-					@userTap="trends_userTap"
-					@contentTap="trends_contentTap"
-					@imgTap="trends_imgTap"
+					@userTap="userTap"
+					@contentTap="contentTap"
+					@imgTap="imgTap"
 				/>
 			</view>
 
@@ -45,9 +45,9 @@
 				<trends-list
 					:list_data="sellNotices.list"
 					:isMax="2"
-					@userTap="trends_userTap"
-					@contentTap="trends_contentTap"
-					@imgTap="trends_imgTap"
+					@userTap="userTap"
+					@contentTap="contentTap"
+					@imgTap="imgTap"
 				/>
 			</view>
 
@@ -56,9 +56,9 @@
 				<trends-list
 					:list_data="demandNotices.list"
 					:isMax="2"
-					@userTap="trends_userTap"
-					@contentTap="trends_contentTap"
-					@imgTap="trends_imgTap"
+					@userTap="userTap"
+					@contentTap="contentTap"
+					@imgTap="imgTap"
 				/>
 			</view>
 		
@@ -67,9 +67,9 @@
 				<trends-list
 					:list_data="myNotices.list"
 					:isMax="2"
-					@userTap="trends_userTap"
-					@contentTap="trends_contentTap"
-					@imgTap="trends_imgTap"
+					@userTap="userTap"
+					@contentTap="contentTap"
+					@imgTap="imgTap"
 				/>
 			</view>
 			<!-- Loading Text -->
@@ -223,22 +223,26 @@ export default {
 			}else
 				this.tabCur = current
 		},
-		trends_userTap(e) {
-			console.log('用户区域被点击：' + JSON.stringify(e))
+		userTap({data}) {
+			console.log('用户区域被点击：',data)
+			
+			// uni.navigateTo({
+			// 	animationType:'auto',
+			// 	url:'../../pages/account/'
+			// })
 		},
-		trends_contentTap(e) {
-			console.log('文字内容被点击：' + JSON.stringify(e))
+		contentTap({data}) {
+			console.log('文字内容被点击：',data)
+			
+			// uni.navigateTo({
+			// 	animationType:'auto',
+			// 	url:'../../pages/notices/detail'
+			// })
 		},
-		trends_imgTap(e) {
+		imgTap(e) {
 			console.log('图片被点击：' + JSON.stringify(e))
 		},
 		viewAllTap() {
-			console.log('点击了查看全部')
-		},
-		r_userTap(e) {
-			console.log('用户信息被点击：' + JSON.stringify(e))
-		},
-		r_viewAllTap() {
 			console.log('点击了查看全部')
 		}
 	}

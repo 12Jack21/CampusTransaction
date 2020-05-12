@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<block v-for="(item, index) in list_data" :key="index" v-if="getMinToMax(index)">
+		<block v-for="(item, index) in list_data" :key="index">
 			<view class="bg-white margin-top padding radius zaiui-trends">
 				<!--用户信息-->
 				<view class="cu-list menu-avatar">
@@ -89,14 +89,6 @@ export default {
 				return []
 			}
 		},
-		isMin: {
-			type: Number,
-			default: 0
-		},
-		isMax: {
-			type: Number,
-			default: 0
-		},
 		viewBtn: {
 			type: Boolean,
 			default: true
@@ -115,33 +107,6 @@ export default {
 				arr,
 				index
 			})
-		},
-		getMinToMax(index) {
-			let isMin = this.isMin,
-				isMax = this.isMax
-			if (isMin == 0 && isMax == 0) {
-				return true
-			} else if (isMin > 0 && isMax == 0) {
-				if (index >= isMin) {
-					return true
-				} else {
-					return false
-				}
-			} else if (isMin == 0 && isMax > 0) {
-				if (index < isMax) {
-					return true
-				} else {
-					return false
-				}
-			} else if (isMin > 0 && isMax > 0) {
-				if (index >= isMin && index < isMax) {
-					return true
-				} else {
-					return false
-				}
-			} else {
-				return false
-			}
 		}
 	},
 	filters:{

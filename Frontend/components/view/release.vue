@@ -19,7 +19,8 @@
 			<view class="zaiui-seat-height"></view>
 
 			<!--中间内容区域-->
-			<view class="zaiui-view-content"><type-list :list_data="noticeTypeListData" @listTap="typeListTap"></type-list></view>
+			<view class="zaiui-view-content"><type-list :list_data="noticeTypeListData" 
+			@listTap="typeListTap"></type-list></view>
 		</view>
 
 		<view v-else>
@@ -38,7 +39,8 @@
 					<!-- end -->
 
 					<!-- 描述 -->
-					<view class="cu-form-group margin-top"><textarea name="description" maxlength="1000" :placeholder="noticeDesc" key="description"></textarea></view>
+					<view class="cu-form-group margin-top"><textarea name="description" maxlength="1000" 
+					:placeholder="noticeDesc" key="description"></textarea></view>
 					<!-- end -->
 
 					<!-- 条件 -->
@@ -48,25 +50,26 @@
 					<!-- 任务的出价钱 -->
 					<view class="cu-form-group" v-if="scene == 2">
 						<view class="title">出价:</view>
-						<input type="digit" key="demandPrice" placeholder="请输入出价金额" maxlength="7" name="demandPrice" />
+						<input type="digit" key="demandPrice" placeholder="请输入出价金额" maxlength="7" 
+						name="demandPrice" />
 					</view>
 					<!-- end -->
 					<!-- 地址选择 -->
 					<view class="cu-form-group margin-top">
 						<view class="title">地址</view>
-						<input type="text" name="address" />
+						<input type="text" name="address" :value="userAddress"/>
 					</view>
 					<!-- end -->
 
 					<!-- 失效时间选择 -->
 					<view class="cu-form-group">
 						<view class="title">失效日期</view>
-						<input type="text" @focus="showPicker" :value="datetime" name="datetime" placeholder="日期选择" />
+						<input type="text" @focus="showPicker" :value="outdatedTime" name="outdatedTime" placeholder="日期选择" />
 					</view>
 					<mx-date-picker
 						:show="isShowPicker"
 						type="datetime"
-						:value="datetime"
+						:value="outdatedTime"
 						:show-tips="true"
 						:begin-text="'选择'"
 						:show-seconds="false"
@@ -76,13 +79,13 @@
 					<!-- end -->
 
 					<!-- 物品列表 -->
-					<view class="comList">
+					<view class="comList" v-show="scene !== 2">
 						<view class="commodity" v-for="(com, index) in comList" :key="index">
 							<text style="margin-right: 20rpx;">{{ com.name }}</text>
 							<text class="cuIcon-close" @tap="delCom(index)"></text>
 						</view>
 					</view>
-					<view v-if="scene != 2">
+					<view v-if="scene !== 2">
 						<view class="add-com-btn" @tap="addComTap">
 							<text>添加新物品</text>
 							<text class="cuIcon-add"></text>
@@ -145,7 +148,7 @@
 					<view class="cu-form-group" v-if="scene == 0">
 						<view class="title">新旧:</view>
 						<input disabled="true" name="newness" :value="newnessList[newnessListIndex]" />
-						<button class="cu-btn" plain type="warn" role="button" aria-disabled="false" @tap="newState">选择</button>
+						<button class="cu-btn" plain type="warn" role="button" aria-disabled="false" @tap="newnessState">选择</button>
 					</view>
 					<!-- end -->
 					<!-- 图片 -->
@@ -190,6 +193,7 @@ import typeList from '@/components/list/type-list'
 import MxDatePicker from '@/components/mx-datepicker/mx-datepicker.vue'
 import _release_data from '@/static/zaiui/data/release.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
+import {mapState} from 'vuex'
 
 export default {
 	name: 'release',
@@ -200,7 +204,7 @@ export default {
 	data() {
 		return {
 			isShowPicker: false,
-			datetime: '',
+			outdatedTime: '',
 			focus: 0, //0 为通告信息，1为物品详细信息填写
 			scene: -1, // 0,1,2 分别代表发布带物品的闲置通告、需求通告、任务通告
 			noticeTypeListData: [],
@@ -211,9 +215,9 @@ export default {
 			modalName: '', //模态框开关
 			comList: [], // commodity addition list
 			newnessListIndex: 0, //几层新下标（默认全新）
-			newnessList: ['全新', '九五新', '九成新', '八五新', '八成新', '七成新'], //几层新
-			comType: '数码类', //分类选择默认
-			comTypeList: ['数码类', '家电类', '交通工具类', '其他'], // 分类列表
+			newnessList: [], //几成新
+			comType: '电子产品', //分类选择默认
+			comTypeList: [], // 分类列表
 			newPrice: '', //出售价
 			oriPrice: '', //原价
 			imgList: [] ,//图片 url 列表
@@ -228,7 +232,7 @@ export default {
 	},
 	watch: {
 		scene(newVal,oldVal){
-			console.log('scene new value',newVal);
+			// console.log('scene new value',newVal);
 			if(oldVal== -1 && newVal != -1) this.$emit('switchTab',false) // close tabbar
 			else if(oldVal != -1 && newVal == -1) this.$emit('switchTab',true)
 		}
@@ -246,11 +250,14 @@ export default {
 		noticeDesc(){
 			if(this.scene == 0) return '通告整体的描述'
 			else return '描述具体的任务，如到某地取快递等'
-		}
+		},
+		...mapState(['userAddress'])
 	},
 	created() {
-		//加载虚拟数据
+		// 加载备选的菜单 List
 		this.noticeTypeListData = _release_data.noticeTypeListData()
+		this.comTypeList = _release_data.comTypeData()
+		this.newnessList = _release_data.newnessData()
 	},
 	mounted() {
 		_tool.setBarColor(true)
@@ -262,13 +269,13 @@ export default {
 	methods: {
 		comfirmDatetime(e) {
 			this.isShowPicker = false
-			if (e) this.datetime = e.value
+			if (e) this.outdatedTime = e.value
 		},
 		showPicker() {
 			this.isShowPicker = true
 		},
 		// 新旧程度
-		newState: function(e) {
+		newnessState: function(e) {
 			var that = this
 			uni.showActionSheet({
 				itemList: that.newnessList,
@@ -276,10 +283,6 @@ export default {
 					that.newnessListIndex = e.tapIndex
 				}
 			})
-		},
-		// 拦截模态框滚动事件
-		modeMove: function() {
-			console.log('modal has moved')
 		},
 		// 图片上传
 		ChooseImage() {
@@ -315,49 +318,155 @@ export default {
 			})
 		},
 		async uploadImage(){
-			//TODO: 同步所有上传图片的请求
-			let that = this
-			// upload one by one, get responsed image url
+			// upload one by one, get responsed image url sychronously
 			for(let i = 0;i < this.comList.length;i++){
 				let c = this.comList[i]
 				c.images = []
 				for(let j = 0;j < c.imgList.length;j++){
-					await that.$api.uploadImage(c.imgList[j])
-					.then(res=>{c.images.push(res.data)})
+					await this.$api.uploadImage(c.imgList[j])
+					.then(res=>{c.images.push(res.data)}) //未判断返回的是否是个 URL 字符串
 					.catch(err=>{
-						that.imgError = true
-						console.log('一张图片上传失败',that.imgError);
+						this.imgError = true
+						console.log('一张图片上传失败',this.imgError);
 					})
 				}
 			}
 		},
+		validateNotice(data){// 验证通告表单
+			if(data.title.length === 0){
+			 uni.showToast({
+				title: '通告标题不能为空',
+				icon: 'none',
+			 });
+				return false
+			}
+			else if(data.title.length > 15){
+				uni.showToast({
+					title: '通告标题不能超过15个字',
+					icon: 'none'
+				});
+				return false
+			}
+			
+			// validate address
+			let prefixs = ['信息学部','文理学部','工学部','医学部']
+			if(data.address.length === 0){
+				uni.showToast({
+					title: '地址不能为空',
+					icon: 'none'
+				});
+				return false
+			}
+			else if(!prefixs.some(v=>data.address.startsWith(v))){
+				uni.showToast({
+					title: '地址需要以某个学部开头',
+					icon: 'none'
+				});
+				return false
+			}
+			
+			// validate outdatedTime
+			let now = new Date()
+			let val = new Date(data.outdatedTime)
+			if(data.outdatedTime.length === 0){
+				uni.showToast({
+					title: '失效日期不能为空',
+					icon: 'none'
+				});
+				return false
+			}
+			else if(val < now){
+				uni.showToast({
+					title: '失效日期不能小于当前日期',
+					icon: 'none'
+				});
+				return false
+			}
+			return true
+		},
+		validateCommodity(data){ // 验证物品表单
+			// validate name
+			if(data.name.length === 0){
+			 uni.showToast({
+				title: '物品名称不能为空',
+				icon: 'none',
+			 });
+				return false
+			}
+			
+			// validate price
+			if(isNaN(data.newPrice)){
+				uni.showToast({
+					title: '预期价格不能为空',
+					icon: 'none'
+				});
+				return false
+			}
+			
+			// validate count
+			if(isNaN(data.count)){
+				uni.showToast({
+					title: '数量不能为空',
+					icon: 'none'
+				})
+				return false
+			}
+			else if( data.count.toString().includes('.')){
+				uni.showToast({
+					title: '数量应为整数',
+					icon: 'none'
+				});
+				return false
+			}
+			
+			return true
+		},
 		async noticeSubmit(e){
 			let notice = e.detail.value
-			let that = this
+			console.log('notice data',notice);
+			if(!this.validateNotice(notice)) return
 
 			// upload all commodity first and get image url to set property
 			uni.showLoading({
 				title: '发布中',
-				mask: false,
+				mask: true,
 			});
-			await this.uploadImage()
-			console.log('图片处理完毕，isError:',this.imgError);
-			if(this.imgError){
-				console.log('存在失败上传的图片，请重新发布通告');
-				this.imgError = false
-				uni.hideLoading()
-				uni.showToast({
-					title:'存在失败上传的图片，请重新发布通告',
-					icon:'none',
-					duration: 4000
-				})
-				return
+			if(this.scene === 2){
+				// 任务通告
+				console.log('任务通告发布');
+				delete notice.demandPrice
+				let commodity = {
+					name: notice.title,
+					description: notice.description,
+					count: 1,
+					oriPrice: -1,
+					newPrice: parseFloat(notice.demandPrice) || -1,
+					type: '代领',
+					newness: '',
+					imgList: ''
+				}
+				this.comList.push(commodity)
+			}
+			else{		
+				await this.uploadImage()
+				console.log('图片处理完毕，isError:',this.imgError)
+				if(this.imgError){
+					console.log('存在失败上传的图片，请重新发布通告')
+					this.imgError = false
+					uni.hideLoading()
+					uni.showToast({
+						title:'存在失败上传的图片，请重新发布通告',
+						icon:'none',
+						duration: 3000
+					})
+					return
+				}
 			}
 			
 			// submit notice data to server
 			this.$api.addNotice({
 				...notice,
-				type: this.scene,
+				type: this.scene === 0 ? 0:1,
 				comList: this.comList
 				})
 				.then(res=>{
@@ -380,18 +489,19 @@ export default {
 				})
 		},
 		comFormSubmit(e) { // 添加物品
-			console.log('com',this.commodity)
 			let comFormData = e.detail.value
+			console.log('commodityform data',comFormData)
 			let commodity = {
 				name: comFormData.comName,
 				description: comFormData.comDescription,
-				count: comFormData.count,
-				oriPrice: comFormData.oriPrice,
-				newPrice: comFormData.newPrice,
+				count:  parseFloat(comFormData.count),
+				oriPrice: parseFloat(comFormData.oriPrice) || -1,
+				newPrice: parseFloat(comFormData.newPrice),
 				type: comFormData.comType,
-				newness: comFormData.newness,
+				newness: comFormData.newness || '',
 				imgList: this.imgList
 			}
+			if(!this.validateCommodity(commodity)) return
 			this.comList.push(commodity)
 			console.log('Commodity',commodity)
 			this.focus = 0
@@ -415,7 +525,6 @@ export default {
 			this.focus = 1
 		},
 		backTap() {
-			console.log('click back tap', 'ok?')
 			if (this.focus == 0) this.scene = -1
 			else this.focus = 0
 		},
@@ -423,7 +532,6 @@ export default {
 			this.$emit('closeReleaseTap')
 		},
 		typeListTap(e) {
-			console.log('click type', e)
 			this.scene = e.index
 			if(this.scene != 0) this.comList = []
 		},
@@ -438,7 +546,8 @@ export default {
 		// 得到物品分类的值
 		getComType: function(e) {
 			console.log('com type list', e)
-			;(this.comType = e.currentTarget.dataset.name), this.hideModal()
+			this.comType = e.currentTarget.dataset.name
+			this.hideModal()
 		}
 	}
 }
@@ -448,7 +557,6 @@ export default {
 $item_lh: 66rpx;
 $border_color: #e54d42;
 .com-type-item {
-	margin: 20rpx 0;
 	text-align: center;
 }
 .release_btn {
