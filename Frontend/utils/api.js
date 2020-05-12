@@ -52,6 +52,15 @@ export default{
 	testAPI(config){
 		return http.get('/test',{params:{outdated:'',age:12,op:''}})
 	},
+	accountLogin(data){
+		return http.post('/accounts/login',data) //username and password
+	},
+	accountRegister(data){
+		return http.post('/accounts',data) // whole information
+	},
+	accountReLogin(){
+		return http.get('accounts/relogin')
+	},
 	getMyNotices(id,pagination){
 		return http.get('/notices/account/' + id, {params:pagination})
 	},
