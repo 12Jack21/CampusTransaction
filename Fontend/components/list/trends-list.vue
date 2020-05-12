@@ -5,7 +5,8 @@
 				<!--用户信息-->
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
-						<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + item.avatar + ')' }]" @tap="listTap('userTap', item, index)" />
+						<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + item.avatar + ')' }]" 
+						@tap="listTap('userTap', item, index)" />
 						<view class="content" @tap="listTap('userTap', item, index)">
 							<view class="text-black">
 								<view class="text-cut">{{ item.username }}</view>
@@ -17,18 +18,21 @@
 						<view class="action">
 							<text class="rate" v-if="viewBtn">
 								<text class="cuIcon-goods" />
-								<text class="margin-left-xs">成功率：{{item.rate}}%</text>
+								<text class="margin-left-xs">成功率：{{ item.rate }}%</text>
 							</text>
 						</view>
 					</view>
 				</view>
 
-				<view class="notice-title"><text>Title-{{item.title}}</text></view>
+				<view class="notice-title">
+					<text>Title-{{ item.title }}</text>
+				</view>
 
 				<!--内容-->
-				<view class="margin-tb text-black zaiui-text-content" @tap="listTap('contentTap', item, index)">
-					<text v-html="item.text">{{ item.text }}</text>
-					<text class="text-blue margin-left-xs" v-if="item.text_btn">
+				<view class="margin-tb text-black zaiui-text-content" 
+				@tap="listTap('contentTap', item, index)">
+					<text v-html="item.description">{{ item.description }}</text>
+					<text class="text-blue margin-left-xs" v-if="item.showAll">
 						<text>查看全文</text>
 						<text class="cuIcon-right" />
 					</text>
@@ -61,11 +65,13 @@
 
 				<view style="display: flex; justify-content: space-between;">
 					<!--下方部分-->
-					<view class="cu-tag light bg-red round margin-top" >
+					<view class="cu-tag light bg-red round margin-top">
 						<text class="cuIcon-creativefill"></text>
-						<text class="margin-left-xs">{{ item.location }}</text>
+						<text class="margin-left-xs">{{ item.address | addressFilter}}</text>
 					</view>
-					<text class="margin-top cu-tag" style="background-color: transparent;">浏览量:{{item.browseCount}}次</text>
+					<text class="margin-top cu-tag" style="background-color: transparent;">
+						浏览量:{{ item.browseCount }}次
+					</text>
 				</view>
 			</view>
 		</block>
@@ -73,200 +79,205 @@
 </template>
 
 <script>
-	export default {
-		name: 'trends-list',
-		components: {},
-		props: {
-			list_data: {
-				type: Array,
-				default: () => {
-					return []
-				}
-			},
-			isMin: {
-				type: Number,
-				default: 0
-			},
-			isMax: {
-				type: Number,
-				default: 0
-			},
-			viewBtn: {
-				type: Boolean,
-				default: false
+export default {
+	name: 'trends-list',
+	components: {},
+	props: {
+		list_data: {
+			type: Array,
+			default: () => {
+				return []
 			}
 		},
-		methods: {
-			listTap(tap, data, index) {
-				this.$emit(tap, {
-					data,
-					index
-				})
-			},
-			imgTap(img, arr, index) {
-				this.$emit('imgTap', {
-					img,
-					arr,
-					index
-				})
-			},
-			getMinToMax(index) {
-				let isMin = this.isMin,
-					isMax = this.isMax
-				if (isMin == 0 && isMax == 0) {
+		isMin: {
+			type: Number,
+			default: 0
+		},
+		isMax: {
+			type: Number,
+			default: 0
+		},
+		viewBtn: {
+			type: Boolean,
+			default: true
+		}
+	},
+	methods: {
+		listTap(tap, data, index) {
+			this.$emit(tap, {
+				data,
+				index
+			})
+		},
+		imgTap(img, arr, index) {
+			this.$emit('imgTap', {
+				img,
+				arr,
+				index
+			})
+		},
+		getMinToMax(index) {
+			let isMin = this.isMin,
+				isMax = this.isMax
+			if (isMin == 0 && isMax == 0) {
+				return true
+			} else if (isMin > 0 && isMax == 0) {
+				if (index >= isMin) {
 					return true
-				} else if (isMin > 0 && isMax == 0) {
-					if (index >= isMin) {
-						return true
-					} else {
-						return false
-					}
-				} else if (isMin == 0 && isMax > 0) {
-					if (index < isMax) {
-						return true
-					} else {
-						return false
-					}
-				} else if (isMin > 0 && isMax > 0) {
-					if (index >= isMin && index < isMax) {
-						return true
-					} else {
-						return false
-					}
 				} else {
 					return false
 				}
+			} else if (isMin == 0 && isMax > 0) {
+				if (index < isMax) {
+					return true
+				} else {
+					return false
+				}
+			} else if (isMin > 0 && isMax > 0) {
+				if (index >= isMin && index < isMax) {
+					return true
+				} else {
+					return false
+				}
+			} else {
+				return false
 			}
 		}
+	},
+	filters:{
+		addressFilter(addr){
+			return addr
+		}
 	}
+}
 </script>
 
 <style lang="scss" scoped>
-	.rate {
-		font-size: 25rpx;
-	}
+.rate {
+	font-size: 25rpx;
+}
 
-	.notice-title {
-		color: #e54242c9;
-		font-size: 36rpx;
-		line-height: 40rpx;
-		font-weight: bold;
-		margin: 30rpx 0 10rpx 0;
-		word-wrap: break-word;
-	}
+.notice-title {
+	color: #e54242c9;
+	font-size: 36rpx;
+	line-height: 40rpx;
+	font-weight: bold;
+	margin: 30rpx 0 10rpx 0;
+	word-wrap: break-word;
+}
 
-	.zaiui-trends {
-		border-radius: 18.18rpx;
+.zaiui-trends {
+	border-radius: 18.18rpx;
 
-		.cu-list {
-			.cu-item {
-				padding-right: 0;
-				height: 99.99rpx;
+	.cu-list {
+		.cu-item {
+			padding-right: 0;
+			height: 99.99rpx;
 
-				.cu-avatar {
-					left: 0;
-					width: 81.81rpx;
-					height: 81.81rpx;
-				}
+			.cu-avatar {
+				left: 0;
+				width: 81.81rpx;
+				height: 81.81rpx;
+			}
 
-				.content {
-					left: 99.99rpx;
-					line-height: 1.5em;
-				}
+			.content {
+				left: 99.99rpx;
+				line-height: 1.5em;
+			}
 
-				.action {
-					width: 254.54rpx;
-					text-align: right;
-					color: #e54d42;
+			.action {
+				width: 254.54rpx;
+				text-align: right;
+				color: #e54d42;
 
-					.cu-btn {
-						&:after {
-							border-radius: 18.18rpx;
-						}
+				.cu-btn {
+					&:after {
+						border-radius: 18.18rpx;
+					}
 
-						.cuIcon-add {
-							font-size: 27.27rpx;
-						}
+					.cuIcon-add {
+						font-size: 27.27rpx;
 					}
 				}
+			}
 
-				&:after {
-					width: 0;
-					height: 0;
-					border-bottom: 0;
-				}
+			&:after {
+				width: 0;
+				height: 0;
+				border-bottom: 0;
 			}
 		}
+	}
 
-		.zaiui-text-content {
-			line-height: 1.6;
+	.zaiui-text-content {
+		line-height: 1.6;
 
-			.cuIcon-right {
-				position: relative;
-				top: 1rpx;
-			}
-		}
-
-		.zaiui-img-grid-col {
+		.cuIcon-right {
 			position: relative;
-			width: 100%;
+			top: 1rpx;
+		}
+	}
 
-			.one-img {
-				position: relative;
+	.zaiui-img-grid-col {
+		position: relative;
+		width: 100%;
+
+		.one-img {
+			position: relative;
+
+			.img-grid {
+				width: 100%;
+				height: 363.63rpx;
+				border-radius: 9.09rpx;
+				background-size: cover;
+				background-position: center;
+				background-repeat: no-repeat;
+			}
+		}
+
+		.col-2 {
+			.img-grid-view {
+				padding: 5.45rpx;
 
 				.img-grid {
-					width: 100%;
-					height: 363.63rpx;
-					border-radius: 9.09rpx;
+					position: relative;
+					width: 309.09rpx;
+					height: 218.18rpx;
 					background-size: cover;
 					background-position: center;
-					background-repeat: no-repeat;
-				}
-			}
-
-			.col-2 {
-				.img-grid-view {
-					padding: 5.45rpx;
-
-					.img-grid {
-						position: relative;
-						width: 309.09rpx;
-						height: 218.18rpx;
-						background-size: cover;
-						background-position: center;
-						border-radius: 9.09rpx;
-					}
-				}
-			}
-
-			.col-3 {
-				.img-grid-view {
-					padding: 5.45rpx;
-
-					.img-grid {
-						position: relative;
-						width: 204.79rpx;
-						height: 204.79rpx;
-						background-size: cover;
-						background-position: center;
-						border-radius: 9.09rpx;
-					}
+					border-radius: 9.09rpx;
 				}
 			}
 		}
 
-		.zaiui-footer-tool {
-			margin: 40rpx 0 18.18rpx;
+		.col-3 {
+			.img-grid-view {
+				padding: 5.45rpx;
 
-			.margin-right-lg {
-				margin-right: 94.54rpx;
-			}
-
-			.icon {
-				position: relative;
-				font-size: 36.36rpx;
-				top: 4rpx;
+				.img-grid {
+					position: relative;
+					width: 204.79rpx;
+					height: 204.79rpx;
+					background-size: cover;
+					background-position: center;
+					border-radius: 9.09rpx;
+				}
 			}
 		}
 	}
+
+	.zaiui-footer-tool {
+		margin: 40rpx 0 18.18rpx;
+
+		.margin-right-lg {
+			margin-right: 94.54rpx;
+		}
+
+		.icon {
+			position: relative;
+			font-size: 36.36rpx;
+			top: 4rpx;
+		}
+	}
+}
 </style>

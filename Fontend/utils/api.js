@@ -59,8 +59,11 @@ export default{
 			...config
 		})
 	},
+	getMyNotices(id,pagination){
+		return http.get('/notices/account/' + id, {params:pagination})
+	},
 	getNotices(type,pagination){
-		return http.get('/notices/', {params:{type,...pagination}})
+		return http.get('/notices', {params:{type,...pagination}})
 	},
 	addNotice(data){
 		return http.post('/notice/add',{

@@ -12,7 +12,8 @@
 				<view class="basis-l">
 					<scroll-view scroll-x class="nav z">
 						<block v-for="(item, index) in tabData" :key="index">
-							<view class="cu-item text-black" :class="index == tabCur ? 'select' : ''" @tap="tabSelect" :data-id="index">
+							<view class="cu-item text-black" :class="index == tabCur ? 'select' : ''" 
+							@tap="tabSelect" :data-id="index">
 								<view>{{ item }}</view>
 								<view class="tab-dot bg-red" />
 							</view>
@@ -28,7 +29,7 @@
 		<!-- 局部下拉刷新范围 -->
 		<you-scroll ref="scroll" @onPullDown="onPullDown">
 			<!--广场内容区域-->
-			<view class="zaiui-view-content" v-if="tabCur == 0">			
+			<view class="zaiui-view-content" v-show="tabCur === 0">			
 				<!--动态列表--> 
 				<trends-list
 					:list_data="notices.list"
@@ -40,7 +41,7 @@
 			</view>
 
 			<!--出售内容区域-->
-			<view class="zaiui-view-content" v-if="tabCur == 1">
+			<view class="zaiui-view-content" v-show="tabCur === 1">
 				<trends-list
 					:list_data="sellNotices.list"
 					:isMax="2"
@@ -51,7 +52,7 @@
 			</view>
 
 			<!--需求内容区域-->
-			<view class="zaiui-view-content" v-show="tabCur == 2">
+			<view class="zaiui-view-content" v-show="tabCur === 2">
 				<trends-list
 					:list_data="demandNotices.list"
 					:isMax="2"
@@ -62,7 +63,7 @@
 			</view>
 		
 			<!--我发布的 区域-->
-			<view class="zaiui-view-content" v-show="tabCur == 3">
+			<view class="zaiui-view-content" v-show="tabCur === 3">
 				<trends-list
 					:list_data="myNotices.list"
 					:isMax="2"
@@ -73,9 +74,10 @@
 			</view>
 			<!-- Loading Text -->
 			<uni-load-more :status="loadStatus" class="margin-bottom"></uni-load-more>
+			
+			<!--占位底部距离-->
+			<view class="cu-tabbar-height" />
 		</you-scroll>
-		<!--占位底部距离-->
-		<view class="cu-tabbar-height" />
 		
 	</view>
 </template>
@@ -86,6 +88,7 @@ import youScroll from '@/components/you-scroll/you-scroll.vue'
 //======================================================================
 import _find_data from '@/static/zaiui/data/find.js' //虚拟数据
 import handles from '@/utils/handles.js'
+import {mapState} from 'vuex'
 
 const iniNotice = ()=> ({
 	pageIndex:0,
@@ -126,6 +129,9 @@ export default {
 			loadStatus: 'more'
 		}
 	},
+	computed:{
+		...mapState(['userId'])
+	},
 	props: {
 		show: {
 			type: Boolean,
@@ -159,13 +165,44 @@ export default {
 	methods: {
 		async loadNotices(){
 			this.loadStatus = 'loading'
-			await this.$api.getNotices(type, pagination)
-				.then(({data})=> {
-					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					
-				})
-				.catch()
-			this.loadStatus = 'more'
+			let curNotices = this[noticeMap(this.tabCur)]
+			let pagination = {
+				pageIndex:curNotices.pageIndex,
+				pageSize: curNotices.pageSize,
+				startTime:curNotices.startTime
+			}
+			if(this.tabCur > 2){
+				await this.$api.getMyNotices(this.userId,pagination)
+					.then(({data})=>{
+						curNotices.list.push(...data.list)
+						// 取完了数据
+						if(data.pageIndex === data.pageCount)
+							curNotices.finish = true
+					})
+					.catch(()=>uni.showToast({
+						title: '我的通告获取失败',
+						icon: 'none'
+					}))
+			}
+			else
+				await this.$api.getNotices(this.tabCur, pagination)
+					.then(({data})=> {
+						// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
+						curNotices.list.push(...data.list)
+						// 取完了数据
+						if(data.pageIndex === data.pageCount)
+							curNotices.finish = true
+					})
+					.catch(() => uni.showToast({
+						title: '通告获取失败',
+						icon: 'none'
+					}))
+			
+			console.log('运行到此，设置 loadingText');
+			if(curNotices.finish)
+				this.loadStatus = 'noMore'
+			else
+				this.loadStatus = 'more'
 		},
 		async onPullDown(done){
 			this[noticeMap(this.tabCur)] = iniNotice()
@@ -174,22 +211,20 @@ export default {
 		},
 		setReachBottom() {
 			console.log('notice 触底了')
-			this.loadNotices()
+			if(!this[noticeMap(this.tabCur)].finish)
+				this.loadNotices()
 		},
 		tabSelect(e) {
-			let current = parseInt(e.currentTarget.dataset.id)
-			
+			let current = parseInt(e.currentTarget.dataset.id)		
 			if(this.tabCur !== current && this[noticeMap(current)].list.length === 0){
 				this[noticeMap(current)] = iniNotice()
+				this.tabCur = current
 				this.loadNotices()
-			}
-			this.tabCur = e.currentTarget.dataset.id
+			}else
+				this.tabCur = current
 		},
 		trends_userTap(e) {
 			console.log('用户区域被点击：' + JSON.stringify(e))
-		},
-		trends_followTap(e) {
-			console.log('关注按钮被点击：' + JSON.stringify(e))
 		},
 		trends_contentTap(e) {
 			console.log('文字内容被点击：' + JSON.stringify(e))
@@ -197,29 +232,11 @@ export default {
 		trends_imgTap(e) {
 			console.log('图片被点击：' + JSON.stringify(e))
 		},
-		trends_talkTap(e) {
-			console.log('话题被点击：' + JSON.stringify(e))
-		},
-		trends_forwardTap(e) {
-			console.log('分享被点击：' + JSON.stringify(e))
-		},
-		trends_commentTap(e) {
-			console.log('评论被点击：' + JSON.stringify(e))
-		},
-		trends_appreciateTap(e) {
-			console.log('点赞被点击：' + JSON.stringify(e))
-		},
-		trends_viewBtnTap(e) {
-			console.log('查看TA被点击：' + JSON.stringify(e))
-		},
 		viewAllTap() {
 			console.log('点击了查看全部')
 		},
 		r_userTap(e) {
 			console.log('用户信息被点击：' + JSON.stringify(e))
-		},
-		r_followTap(e) {
-			console.log('关注按钮被点击：' + JSON.stringify(e))
 		},
 		r_viewAllTap() {
 			console.log('点击了查看全部')
