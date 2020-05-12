@@ -35,31 +35,31 @@ let _home_data = {
 			name: '家电',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/5.png',
+			img: '/static/images/home/grid-icon/jiadian.png',
 		},{
 			id: 4,
 			name: '衣服',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/5.png',
+			img: '/static/images/home/grid-icon/clothes.png',
 		},{
 			id: 5,
 			name: '鞋子',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/5.png',
+			img: '/static/images/home/grid-icon/shoe.png',
 		},{
 			id: 6,
 			name: '生活用品',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/5.png',
+			img: '/static/images/home/grid-icon/yongpin.png',
 		},{
 			id: 7,
 			name: '食品',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/5.png',
+			img: '/static/images/home/grid-icon/food.png',
 		},{
 			id: 8,
 			name: '图书',
@@ -74,34 +74,40 @@ let _home_data = {
 			img: '/static/images/home/grid-icon/10.png',
 		},{
 			id: 10,
+			name: '护肤品',
+			color: '',
+			badge: '',
+			img: '/static/images/home/grid-icon/hufu.png',
+		},{
+			id: 11,
 			name: '虚拟物品',
 			color: '',
 			badge: '',
 			img: '/static/images/home/grid-icon/9.png',
 		},{
-			id: 11,
+			id: 12,
 			name: '作业',
 			color: '',
 			badge: '',
 			img: '/static/images/home/grid-icon/11.png',
 		},{
-			id: 12,
+			id: 13,
 			name: '代领',
 			color: '',
 			badge: '',
-			img: '/static/images/home/grid-icon/12.png',
+			img: '/static/images/home/grid-icon/27.png',
 		},{
-			id:13,
+			id:14,
 			name: '问答',
 			color: 'red',
 			badge: '解惑',
-			img: '/static/images/home/grid-icon/12.png'
+			img: '/static/images/home/grid-icon/28.png'
 		},{
-			id:14,
+			id:15,
 			name: '其他',
 			color: 'green',
 			badge: '更多',
-			img: '/static/images/home/grid-icon/12.png'
+			img: '/static/images/home/grid-icon/25.png'
 		}];
 	},
 	goodsTab() {

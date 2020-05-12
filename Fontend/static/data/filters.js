@@ -84,6 +84,10 @@ export default [{
 					"value": "交通工具"
 				},
 				{
+					"name": "护肤品",
+					"value": "护肤品"
+				},
+				{
 					"name": "虚拟物品",
 					"value": "虚拟物品"
 				},

@@ -37,7 +37,7 @@
 		props: {
 			pullDownDistance: {
 				type: Number,
-				default: 50 // 下拉刷新距离
+				default: 60 // 下拉刷新距离
 			},
 			reachBottomDistance: {
 				type: Number,
@@ -188,8 +188,8 @@
 	}
 	.you-scroll .pullDown .down-icon {
 		margin-right: 12rpx;
-		width: 40px;
-		height: 40px;
+		width: 30px;
+		height: 30px;
 		display: inline-block;
 		vertical-align: middle;
 	}

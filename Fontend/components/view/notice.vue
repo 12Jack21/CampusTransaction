@@ -11,8 +11,8 @@
 			<view class="flex flex-wrap">
 				<view class="basis-l">
 					<scroll-view scroll-x class="nav z">
-						<block v-for="(item, index) in TabData" :key="index">
-							<view class="cu-item text-black" :class="index == TabCur ? 'select' : ''" @tap="tabSelect" :data-id="index">
+						<block v-for="(item, index) in tabData" :key="index">
+							<view class="cu-item text-black" :class="index == tabCur ? 'select' : ''" @tap="tabSelect" :data-id="index">
 								<view>{{ item }}</view>
 								<view class="tab-dot bg-red" />
 							</view>
@@ -24,100 +24,106 @@
 
 		<!--占位的-->
 		<view class="zaiui-seat-height" />
+		
+		<!-- 局部下拉刷新范围 -->
+		<you-scroll ref="scroll" @onPullDown="onPullDown">
+			<!--广场内容区域-->
+			<view class="zaiui-view-content" v-if="tabCur == 0">			
+				<!--动态列表--> 
+				<trends-list
+					:list_data="notices.list"
+					:viewBtn="true"
+					@userTap="trends_userTap"
+					@contentTap="trends_contentTap"
+					@imgTap="trends_imgTap"
+				/>
+			</view>
 
-		<!--广场内容区域-->
-		<view class="zaiui-view-content" v-if="TabCur == 0">
-			
-			<!--动态列表-->
-			<trends-list
-				:list_data="followTrendsData"
-				:viewBtn="true"
-				@userTap="trends_userTap"
-				@followTap="trends_followTap"
-				@contentTap="trends_contentTap"
-				@imgTap="trends_imgTap"
-				@talkTap="trends_talkTap"
-				@viewBtnTap="trends_viewBtnTap"
-				@commentTap="trends_commentTap"
-				@appreciateTap="trends_appreciateTap"
-			/>
+			<!--出售内容区域-->
+			<view class="zaiui-view-content" v-if="tabCur == 1">
+				<trends-list
+					:list_data="sellNotices.list"
+					:isMax="2"
+					@userTap="trends_userTap"
+					@contentTap="trends_contentTap"
+					@imgTap="trends_imgTap"
+				/>
+			</view>
 
-			<!--占位底部距离-->
-			<view class="cu-tabbar-height" />
-		</view>
-
-		<!--出售内容区域-->
-		<view class="zaiui-view-content" v-if="TabCur == 1">
-			<!--动态列表1-->
-			<trends-list
-				:list_data="trendsData"
-				:isMax="2"
-				@userTap="trends_userTap"
-				@followTap="trends_followTap"
-				@contentTap="trends_contentTap"
-				@imgTap="trends_imgTap"
-				@talkTap="trends_talkTap"
-				@forwardTap="trends_forwardTap"
-				@commentTap="trends_commentTap"
-				@appreciateTap="trends_appreciateTap"
-			/>
-
-			<!--动态列表2-->
-			<trends-list
-				:list_data="trendsData"
-				:isMin="2"
-				@userTap="trends_userTap"
-				@followTap="trends_followTap"
-				@contentTap="trends_contentTap"
-				@imgTap="trends_imgTap"
-				@talkTap="trends_talkTap"
-				@forwardTap="trends_forwardTap"
-				@commentTap="trends_commentTap"
-				@appreciateTap="trends_appreciateTap"
-			/>
-
-			<!--占位底部距离-->
-			<view class="cu-tabbar-height" />
-		</view>
-
-		<!--需求内容区域-->
-		<view class="zaiui-view-content" v-show="TabCur == 2">
-			<!--动态列表1-->
-			<trends-list
-				:list_data="trendsData"
-				:isMax="2"
-				@userTap="trends_userTap"
-				@followTap="trends_followTap"
-				@contentTap="trends_contentTap"
-				@imgTap="trends_imgTap"
-				@talkTap="trends_talkTap"
-				@forwardTap="trends_forwardTap"
-				@commentTap="trends_commentTap"
-				@appreciateTap="trends_appreciateTap"
-			/>
-			<!--占位底部距离-->
-			<view class="cu-tabbar-height" />
-		</view>
+			<!--需求内容区域-->
+			<view class="zaiui-view-content" v-show="tabCur == 2">
+				<trends-list
+					:list_data="demandNotices.list"
+					:isMax="2"
+					@userTap="trends_userTap"
+					@contentTap="trends_contentTap"
+					@imgTap="trends_imgTap"
+				/>
+			</view>
+		
+			<!--我发布的 区域-->
+			<view class="zaiui-view-content" v-show="tabCur == 3">
+				<trends-list
+					:list_data="myNotices.list"
+					:isMax="2"
+					@userTap="trends_userTap"
+					@contentTap="trends_contentTap"
+					@imgTap="trends_imgTap"
+				/>
+			</view>
+			<!-- Loading Text -->
+			<uni-load-more :status="loadStatus" class="margin-bottom"></uni-load-more>
+		</you-scroll>
+		<!--占位底部距离-->
+		<view class="cu-tabbar-height" />
+		
 	</view>
 </template>
 
 <script>
 import trendsList from '@/components/list/trends-list'
+import youScroll from '@/components/you-scroll/you-scroll.vue'
 //======================================================================
 import _find_data from '@/static/zaiui/data/find.js' //虚拟数据
-import _tool from '@/static/zaiui/util/tools.js'
+import handles from '@/utils/handles.js'
+
+const iniNotice = ()=> ({
+	pageIndex:0,
+	pageSize:20,
+	startTime:new Date().format('yyyy-MM-dd hh:mm'),
+	finish: false,
+	list:[]
+})
+const noticeMap = tabCur => {
+	switch(tabCur){
+		case 0:
+			return 'notices'
+		case 1:
+			return 'sellNotices'
+		case 2:
+			return 'demandNotices'
+		case 3:
+			return 'myNotices'
+		default:
+			console.log('case default');
+	}
+}
 
 export default {
 	name: 'find',
 	components: {
-		trendsList
+		trendsList,
+		youScroll
 	},
 	data() {
 		return {
-			TabCur: 0,
-			TabData: ['广场', '出售', '需求'],
-			followTrendsData: [],
-			trendsData: []
+			tabCur: 0,
+			tabData: ['广场', '出售', '需求','我发布的'],
+			notices: {list:[]},
+			sellNotices:{list:[]},
+			demandNotices:{list:[]},
+			myNotices:{list:[]},
+			loadStatus: 'more'
 		}
 	},
 	props: {
@@ -138,28 +144,46 @@ export default {
 		}
 	},
 	created() {
+		this.notices = iniNotice()
 		//加载虚拟数据
-		this.trendsData = _find_data.trendsData()
-		this.followTrendsData = _find_data.followTrendsData()
+		this.notices.list = _find_data.trendsData()		
+		// 请求
+		
 	},
 	mounted() {
-		_tool.setBarColor(true)
 		uni.pageScrollTo({
 			scrollTop: 0,
-			duration: 0
+			duration: 101
 		})
 	},
 	methods: {
-		//触底了
+		async loadNotices(){
+			this.loadStatus = 'loading'
+			await this.$api.getNotices(type, pagination)
+				.then(({data})=> {
+					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
+					
+				})
+				.catch()
+			this.loadStatus = 'more'
+		},
+		async onPullDown(done){
+			this[noticeMap(this.tabCur)] = iniNotice()
+			await this.loadNotices()
+			done()		
+		},
 		setReachBottom() {
 			console.log('notice 触底了')
+			this.loadNotices()
 		},
 		tabSelect(e) {
-			this.TabCur = e.currentTarget.dataset.id
-			uni.pageScrollTo({
-				scrollTop: 0,
-				duration: 0
-			})
+			let current = parseInt(e.currentTarget.dataset.id)
+			
+			if(this.tabCur !== current && this[noticeMap(current)].list.length === 0){
+				this[noticeMap(current)] = iniNotice()
+				this.loadNotices()
+			}
+			this.tabCur = e.currentTarget.dataset.id
 		},
 		trends_userTap(e) {
 			console.log('用户区域被点击：' + JSON.stringify(e))

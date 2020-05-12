@@ -60,8 +60,8 @@
 				</view>
 
 				<view style="display: flex; justify-content: space-between;">
-					<!--话题-->
-					<view class="cu-tag light bg-red round margin-top" @tap="listTap('talkTap', item, index)">
+					<!--下方部分-->
+					<view class="cu-tag light bg-red round margin-top" >
 						<text class="cuIcon-creativefill"></text>
 						<text class="margin-left-xs">{{ item.location }}</text>
 					</view>

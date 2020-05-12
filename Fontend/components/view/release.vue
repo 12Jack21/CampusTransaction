@@ -511,7 +511,6 @@ $border_color: #e54d42;
 .zaiui-release-box {
 	background: #fafafa;
 	position: relative;
-	min-height: 100vh;
 	z-index: 99999;
 	width: 100%;
 	display: block;

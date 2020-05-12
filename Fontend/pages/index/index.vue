@@ -26,8 +26,8 @@ export default {
 			isTabShow: true,
 			scrollBottom: false,
 			prevTabID: 0,
-			tabID: 0,
-			loaded: [true, false, true, false, false]
+			tabID: 1,
+			loaded: [false,true,true, false, false]
 		}
 	},
 	onLoad() {},

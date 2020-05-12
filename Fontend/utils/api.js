@@ -59,6 +59,9 @@ export default{
 			...config
 		})
 	},
+	getNotices(type,pagination){
+		return http.get('/notices/', {params:{type,...pagination}})
+	},
 	addNotice(data){
 		return http.post('/notice/add',{
 			data
