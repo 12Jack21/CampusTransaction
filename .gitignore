@@ -42,3 +42,6 @@ Backend/.vscode/
 .idea
 node_modules/
 docs/
+
+# wechat mini-program related directory
+Frontend/unpackage/

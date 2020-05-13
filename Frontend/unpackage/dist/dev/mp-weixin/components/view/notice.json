@@ -1,8 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "you-scroll": "/components/you-scroll/you-scroll",
-    "uni-load-more": "/components/uni-load-more/uni-load-more",
-    "trends-list": "/components/list/trends-list"
-  }
-}
