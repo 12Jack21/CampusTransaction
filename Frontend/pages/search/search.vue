@@ -76,7 +76,7 @@
 		<!-- end -->
 
 		<!-- 局部下拉刷新范围 -->
-		<you-scroll ref="scroll" @onPullDown="onPullDown"  @onLoadMore="onLoadMore" v-else>
+		<you-scroll ref="scroll" @onPullDown="onPullDown" v-else>
 			<!-- 搜索结果 -->
 			<view class="zaiui-goods-list-box" >
 				<view class="flex flex-wrap ">
@@ -195,6 +195,12 @@ export default {
 		this.doSearch(this.searchBody)
 	},
 	methods: {
+		goodsListTap(e){
+			// TODO: 某个物品的详情
+			uni.navigateTo({
+				url:'/pages/id=' + e.id
+			})
+		},
 		finishDel(){
 			// Arrow function's this will inherit from its nearest parent
 			let delIds = this.backHistories.filter(v=>this.histories.indexOf(v) === -1)

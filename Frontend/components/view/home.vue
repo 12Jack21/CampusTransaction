@@ -25,7 +25,7 @@
 		<view class="zaiui-view-content show">
 			<!--轮播图-->
 			<view class="zaiui-swiper-box">
-				<swiper class="screen-swiper square-dot c" :autoplay="false" circular indicator-dots :current="swiperInfo.index" @change="swiperChange">
+				<swiper class="screen-swiper square-dot c" :autoplay="true" circular indicator-dots :current="swiperInfo.index" @change="swiperChange">
 					<swiper-item v-for="(item, index) in swiperInfo.list" :key="index">
 						<view class="swiper-content swiper-padding" style="padding-bottom: 16rpx;">
 							<image :src="item.swiper" mode="widthFix" />

@@ -7,6 +7,7 @@
 					title:'登录中',
 					mask: true
 				})
+				
 				// get token and update value in server, store that in vuex state, mount on request header 
 				await this.$api.accountReLogin()
 					.then(({data}) => {
@@ -33,7 +34,7 @@
 							animationType:'fade-in'
 						})
 					})		
-				console.log('处理 APP 启动的重新登录完成')
+				console.log('处理 APP 启动的重新登录完成')			
 				// this.$api.testAPI().catch(err=>console.log('test err',err))
 			}
 		},

@@ -101,6 +101,19 @@ export default {
 			uni.showLoading({
 				title: '登录中'
 			});
+			
+			
+			// Debug 不验证登录
+			uni.hideLoading()
+			uni.navigateTo({
+				url:'/pages/index/index',
+				animationType:'slide-in-bottom',
+				animationDuration:3000
+			})
+			return true
+			// end
+			
+			
 			this.$api.accountLogin({
 				username: this.usernameData,
 				password: this.passData
