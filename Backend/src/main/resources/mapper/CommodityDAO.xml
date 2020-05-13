@@ -51,4 +51,15 @@
         and n.end_time &gt;= CURRENT_TIMESTAMP
         order by (e.purchase_credit + e.sell_credit) DESC, c.expected_price ASC
     </select>
+
+    <!--    <resultMap id="commodityInfo2" type="commodity">-->
+    <!--        <id property="id" column="id"/>-->
+    <!--        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.getAllTypeByCommodityId"/>-->
+    <!--        <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"/>-->
+    <!--    </resultMap>-->
+
+    <!--    <select id="search" parameterType="com.example.transaction.dto.Condition" resultMap="commodityInfo2">-->
+    <!--        select * from commodity c, notice n-->
+    <!--        where-->
+    <!--    </select>-->
 </mapper>

@@ -1,5 +1,6 @@
 package com.example.transaction.service;
 
+import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.responseFromServer;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
  */
 
 public interface CommodityService {
+    responseFromServer search(Condition condition);
+
     //根据id获取商品
     public responseFromServer getById(Integer id);
 

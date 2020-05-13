@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @Date: 2020/4/29 1:02
  */
 @RestController
-@RequestMapping("/searchs")
+@RequestMapping("/histories")
 @Api(tags = "SearchController")
 public class SearchController {
 
@@ -31,17 +31,17 @@ public class SearchController {
     /**
      * 获取搜索记录分页
      *
-     * @param pageIndex
+     * @param accountId
      * @param request
      * @return
      */
     @ApiOperation(value = "获取搜索记录分页")
     @ApiImplicitParam(name = "pageIndex", value = "分页下标", paramType = "Integer", dataType = "Integer")
-    @GetMapping
-    public responseFromServer getSearchRecordsPage(@RequestJson Integer pageIndex, HttpServletRequest request) {
-        Account account = new Account();
+    @GetMapping("/account/{accountId}")
+    public responseFromServer getSearchRecordsPage(@PathVariable Integer accountId, HttpServletRequest request) {
+        Account account = new Account(accountId);
         accountVerify.verifyWithReturn(account, request);
-        return searchService.getSearchRecordsPage(account.getId(), pageIndex);
+        return searchService.getSearchRecordsPage(account.getId(), 1);
     }
 
     @ApiOperation(value = "删除一条搜索记录")
@@ -56,9 +56,9 @@ public class SearchController {
 
     @ApiOperation(value = "删除用户所有搜索记录")
     @ApiImplicitParam(name = "searchId", value = "搜索记录id", paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/all")
-    public responseFromServer deleteAllSearches(HttpServletRequest request) {
-        Account account = new Account();
+    @DeleteMapping("/{accountId}")
+    public responseFromServer deleteAllSearches(@PathVariable Integer accountId, HttpServletRequest request) {
+        Account account = new Account(accountId);
         accountVerify.verifyWithReturn(account, request);
         return searchService.deleteAllSearchRecords(account.getId());
     }

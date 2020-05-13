@@ -7,9 +7,11 @@ import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.CommodityImageDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.TypeDAO;
+import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.util.MyPage;
+import com.example.transaction.util.code.Address;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +54,114 @@ public class CommodityServiceImpl implements CommodityService {
         this.commodityImageDAO = commodityImageDAO;
         this.noticeDAO = noticeDAO;
     }
+
+    @Override
+    public responseFromServer search(Condition condition) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+
+        /*处理排序规则*/
+
+        if (condition.getSortType() != null && condition.sortType >= 0) {
+            switch (condition.getSortType()) {
+                case 0:/*最新*/
+                    queryWrapper.orderByDesc("c.create_time");
+                    break;
+                case 1:/*附近,地址在参数中*/
+                    queryWrapper.eq("n.address", condition.getUserAddress());
+                    break;
+                case 2:/*失效时间*/
+                    condition.recent = true;
+                    condition.setOutdated(2);
+                    break;
+                case 3:/*便宜好物*/
+                    queryWrapper.le("c.price", 10.0);
+                    break;
+                case 4:/*todo*/
+                    break;
+                case 5:/*todo*/
+                    break;
+                case 6:/*todo*/
+                    break;
+                case 7:/*todo*/
+                    break;
+            }
+        }
+
+        /*处理分页条件*/
+        Page<Commodity> page;
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            page = new Page<>(Nums.pageSize, 1);
+        } else {
+            page = new Page<>(Nums.pageSize, condition.getPageIndex());
+        }
+
+        /*处理时间条件*/
+        Timestamp timestamp;
+        if (condition.getEndTime() == null) {
+            timestamp = new Timestamp(System.currentTimeMillis());
+        } else {
+            timestamp = new Timestamp(condition.getEndTime().getTime());
+        }
+        queryWrapper.eq("n.id", "c.notice_id");
+        queryWrapper.le("n.create_time", timestamp);
+
+        if (condition.recent) {
+            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
+            queryWrapper.ge("n.end_time", timestamp);
+        } else if (condition.getOutdated() != null || condition.getOutdated() > 0) {
+            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * condition.getOutdated());
+            queryWrapper.ge("n.end_time", timestamp);
+        }
+
+        /*处理地址*/
+
+        if (condition.getUserAddress() != null || condition.getUserAddress() != "全校") {
+            int addressCode;
+            String address = condition.getUserAddress();
+            try {
+                addressCode = Address.valueOf(address).getCode();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return responseFromServer.error();
+            }
+            /*这里没有用到地址码,枚举只是用了检测该地址是否有效*/
+            queryWrapper.eq("n.address", address);
+        }
+
+        /*处理搜索串*/
+        String searchStr = condition.getKeyword();
+        if (searchStr != null) {
+            queryWrapper.like("c.name", "%" + searchStr + "%");
+        }
+
+        /*价格区间*/
+        if (condition.getLowPrice() != null) {
+            queryWrapper.ge("c.price", condition.getLowPrice());
+        }
+        if (condition.getHighPrice() != null) {
+            queryWrapper.le("c.price", condition.getHighPrice());
+        }
+
+
+
+        /*处理类型*/
+        if (condition.getType() != null) {
+            queryWrapper.eq("c.id", "t.commodity_id");
+            queryWrapper.eq("t.value", condition.getType());
+        }
+
+        try {
+            IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+            if (resultPage == null)
+                throw new Exception();
+            return responseFromServer.success(new MyPage<Commodity>(resultPage));
+        } catch (Exception e) {
+            return responseFromServer.error();
+        }
+
+
+    }
+
 
     /**
      * 根据id获取商品信息

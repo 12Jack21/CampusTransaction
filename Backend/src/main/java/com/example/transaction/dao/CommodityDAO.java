@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.Commodity;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -57,14 +58,23 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
 
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
+
     //商品名模糊分页查询，新旧程度排序
     IPage<Commodity> sortByNewness(Page<?> page, String name);
+
     //商品类型分页查询
     IPage<Commodity> sortByType(Page<?> page, Integer typeId);
+
     //商品价格区间分页查询
     IPage<Commodity> betweenPrice(Page<?> page, String name, Integer low, Integer high);
+
     //商品名模糊分页查询, 所有者信誉排序
     IPage<Commodity> sortByCredit(Page<?> page, String name);
+
+    /*搜索*/
+    @ResultMap(value = "detailedCommodity_map2")
+    @Select("select * from commodity c, notice n, type t where c.notice_id = n.id and c.id = t.commodity_id ${ew.customSqlSegment}")
+    IPage<Commodity> search(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 
 
 }

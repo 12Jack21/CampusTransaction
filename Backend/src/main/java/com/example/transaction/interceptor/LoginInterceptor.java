@@ -21,17 +21,26 @@ import java.util.Date;
  * @Author: 曾志昊
  * @Date: 2020/5/7 16:59
  */
-@Component
+/**
+ * ZZH
+ * TODO : 去掉注释
+ */
+//@Component
 public class LoginInterceptor extends HandlerInterceptorAdapter {
     @Autowired
     protected TokenDAO tokenDAO;
+
     //提供查询
     @Override
     public void afterCompletion(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, Exception arg3)
-            throws Exception {}
+            throws Exception {
+    }
+
     @Override
     public void postHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2, ModelAndView arg3)
-            throws Exception {}
+            throws Exception {
+    }
+
     @Override
     public boolean preHandle(HttpServletRequest arg0, HttpServletResponse arg1, Object arg2) throws Exception {
         //此处为不需要登录的接口放行
@@ -55,7 +64,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             resultWriter.write("你没有token,需要登录".getBytes());
             resultWriter.flush();
             resultWriter.close();
-            return false;
+            /**
+             * ZZH
+             * TODO : 此处先默认无token为登录状态,之后修改为返回false
+             * return false;
+             */
+            return true;
         }
         //解析Token信息
         try {
