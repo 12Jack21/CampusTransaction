@@ -164,8 +164,8 @@ export default {
 		this.goodsData = _home_data.goodsList()
 		
 		// 存取分页查询所需的字段
-		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,startTime:'',finish:false,data:[]})
-		this.storeGoods[0].startTime = new Date().format('yyyy-MM-dd hh:mm')
+		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,endTime:'',finish:false,data:[]})
+		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
 		this.getCommodityList()
 	},
 	mounted() {
@@ -197,7 +197,7 @@ export default {
 			let current = e.currentTarget.dataset.id
 			this.goodsData = this.storeGoods[current].data
 			if(this.goodsData.length === 0){ 
-				this.storeGoods[current].startTime = new Date().format('yyyy-MM-dd hh:mm')
+				this.storeGoods[current].endTime = new Date().format('yyyy-MM-dd hh:mm')
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
@@ -238,7 +238,7 @@ export default {
 			let pagination = {
 				pageIndex: this.storeGoods[tab].pageIndex,
 				pageSize: this.storeGoods[tab].pageSize,
-				startTime: this.storeGoods[tab].startTime
+				endTime: this.storeGoods[tab].endTime
 			}
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)

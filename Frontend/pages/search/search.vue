@@ -107,10 +107,46 @@ import filter_data from '../../static/data/filters.js'
 const iniPagination = {
 				pageIndex:0,
 				pageSize:20,
-				startTime:new Date().format('yyyy-MM-dd hh:mm'),
+				endtime:new Date().format('yyyy-MM-dd hh:mm'),
 				finish: false
 			}
 const searchHistories = () => ['耳机', '大英课本', '四六级试卷', '电动车'] // virtual
+const conditionMap = (outdated,price) =>{
+	let oVal, highprice = -1, lowprice = -1
+	switch(outdated){
+		case '1天内':
+			oVal = 1
+			break
+		case '3天内':
+			oVal = 3
+			break
+		case '1周内':
+			oVal = 7
+			break
+		case '1月内':
+			oVal = 30
+			break
+	}
+	switch(price){
+		case '50以下':
+			highprice = 50
+			lowprice = 0
+			break
+		case '50-100':
+			highprice = 100
+			lowprice 50
+			break
+		case '100-300':
+			highprice = 300
+			lowprice = 100
+			break
+		case '300以上':
+			lowprice = 300
+	}
+	return {
+		outdated: oVal,highprice,lowprice
+	}
+}
 
 export default {
 	components: {
@@ -137,7 +173,7 @@ export default {
 			pagination:{
 				pageIndex:0,
 				pageSize:20,
-				startTime:'',
+				endtime:'',
 				finish: false
 			},
 			searchBody:null
@@ -165,8 +201,9 @@ export default {
 				type: param.typeName,
 				address: '全校',
 				sort: '最新',
-				outdated: '',
-				price: '',
+				outdated: -1, //没有限制
+				highprice: -1,
+				lowprice:-1
 			}
 			this.doSearch(searchBody)
 			this.search_ph = ''
@@ -278,14 +315,13 @@ export default {
 			this.pagination = {...iniPagination}
 			
 			// do search with filter condition
-			let searchBody = {
+			let searchBody = Object.assign({
 				type: e.value[0][1],
 				address: e.value[1][0],
-				sort: e.value[2][0],
-				outdated: e.value[3][0][e.value[3][0].length - 1] || '',
-				price: e.value[3][1],
-			}
-			this.searchBody = Object.assign({},searchBody)
+				sort: e.value[2][0]
+			},conditionMap(e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
+			
+			this.searchBody = searchBody
 			console.log('index', e.index)
 			console.log('search body', searchBody)
 			this.doSearch(searchBody)
