@@ -1,12 +1,9 @@
 <template>
 	<view class="zaiui-home-box" :class="show ? 'show' : ''">
-		<!--欢迎-->
-		<welcome-tip content="中午好, John" :show="true" :c_s="3000" @closeFinish="welcomeClose" />
-
 		<!--轮播背景-->
-		<swiper-background :list_data="swiperInfo.list" :indexs="swiperInfo.index" :show="swiperInfo.show" :welcome="swiperInfo.welcome" />
+		<swiper-background :list_data="swiperInfo.list" :indexs="swiperInfo.index" :show="true" />
 
-		<view class="zaiui-head-search-box" :class="headInfo.Class" :style="[{ backgroundColor: 'rgba(229, 77, 66,' + headInfo.opacity + ')' }]">
+		<view class="zaiui-head-search-box"  :style="[{ backgroundColor: 'rgba(229, 77, 66,' + headInfo.opacity + ')' }]">
 			<!--小程序端的标题-->
 			<!-- #ifdef MP -->
 			<view class="text-center text-white zaiui-small-routine-title">首页</view>
@@ -25,7 +22,7 @@
 		</view>
 
 		<!--中间内容区域-->
-		<view class="zaiui-view-content" :class="[viewContent.welcome ? 'welcome' : '', 'show']">
+		<view class="zaiui-view-content show">
 			<!--轮播图-->
 			<view class="zaiui-swiper-box">
 				<swiper class="screen-swiper square-dot c" :autoplay="false" circular indicator-dots :current="swiperInfo.index" @change="swiperChange">
@@ -77,10 +74,8 @@
 
 <script>
 //加载组件
-import welcomeTip from '@/components/basics/welcome-tip.vue'
 import swiperBackground from '@/components/basics/swiper-background'
 import gridMenuList from '@/components/list/grid-menu-list'
-import identifyList from '@/components/list/identify-list'
 import goodsList from '@/components/list/goods-list'
 import footerTabbar from '@/components/footer/footer-tabbar'
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
@@ -94,10 +89,8 @@ import { mapState } from 'vuex'
 export default {
 	name: 'home',
 	components: {
-		welcomeTip,
 		swiperBackground,
 		gridMenuList,
-		identifyList,
 		goodsList,
 		footerTabbar,
 		uniLoadMore
@@ -112,7 +105,6 @@ export default {
 				list: []
 			},
 			headInfo: {
-				Class: '',
 				opacity: 0
 			},
 			goodsShow: true,
@@ -126,7 +118,6 @@ export default {
 			},
 			// showing goods data
 			goodsData: [],
-
 			// four tabs' goods list: new, near, outdated, cheap
 			storeGoods:[],
 		}
@@ -170,13 +161,7 @@ export default {
 		this.gridMenuData = _home_data.nav()
 		this.goodsTabData.list = _home_data.goodsTab()
 		//商品列表数据
-		let GoodsData = _home_data.goodsList()
-		//推荐感兴趣数据
-		let recommendData = _home_data.recommend()
-		//把推荐感兴趣的数据，添加到商品数据里，可扩展为随机位置显示。
-		GoodsData.splice(1, 0, recommendData)
-		this.goodsData = GoodsData
-		this.headInfo.Class = 'welcome'
+		this.goodsData = _home_data.goodsList()
 		
 		// 存取分页查询所需的字段
 		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,startTime:'',finish:false,data:[]})
@@ -275,19 +260,11 @@ export default {
 				})
 				.catch(()=>{
 					uni.showToast({
-					title:'获取物品失败，请检查网络',
+					title:'获取物品失败,请检查网络',
 					icon:'none'
 				})
 					this.loadStatus = 'more'
 				})
-		},
-		//欢迎提示关闭事件
-		welcomeClose(bol) {
-			this.swiperInfo.welcome = bol
-			let Class = this.headInfo.Class
-			this.headInfo.Class = Class.replace(/welcome/g, '')
-			this.viewContent.welcome = bol
-			console.log('Welcome close: ', bol)
 		},
 		swiperChange(e) {
 			this.swiperInfo.index = e.detail.current
@@ -328,7 +305,7 @@ export default {
 }
 
 .zaiui-head-search-box {
-	position: fixed;
+	position: sticky;
 	width: 100%;
 	top: 0;
 	z-index: 9999;
@@ -344,11 +321,6 @@ export default {
 	}
 }
 
-.zaiui-head-search-box.welcome {
-	top: calc(var(--status-bar-height) + 101rpx);
-	transition: top 0.25s;
-}
-
 .zaiui-view-content {
 	display: none;
 	width: 100%;
@@ -357,22 +329,6 @@ export default {
 		position: relative;
 		width: 100%;
 	}
-}
-
-.zaiui-view-content.welcome {
-	/* #ifdef APP-PLUS */
-	margin-top: calc(var(--status-bar-height) + 180rpx);
-	/* #endif */
-
-	/* #ifdef H5 */
-	margin-top: calc(var(--status-bar-height) + 220rpx);
-	/* #endif */
-
-	/* #ifdef MP */
-	margin-top: calc(var(--status-bar-height) + 220rpx);
-	/* #endif */
-
-	transition: all 0.25s;
 }
 
 .zaiui-view-content.show {
@@ -400,9 +356,9 @@ export default {
 	position: sticky;
 	padding: 2rpx 0;
 	transition: all 0.25s;
-	z-index: 9999;
+	z-index: 9;
 	background: #fff;
-
+ 
 	/* #ifndef MP */
 	top: calc(var(--status-bar-height) + 101rpx);
 	/* #endif */

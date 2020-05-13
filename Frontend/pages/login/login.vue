@@ -5,7 +5,7 @@
 			<view class="header"><image src="@/static/images/login.png"></image></view>
 			<!-- 主体表单 -->
 			<view class="main">
-				<wInput v-model="phoneData" type="text" maxlength="11" placeholder="用户名/电话"></wInput>
+				<wInput v-model="usernameData" type="text" maxlength="11" placeholder="用户名"></wInput>
 				<wInput v-model="passData" type="password" maxlength="11" placeholder="密码"></wInput>
 			</view>
 			<wButton text="登 录" :rotate="isRotate" @click.native="startLogin()" class="wbutton"></wButton>
@@ -24,12 +24,12 @@
 var _this
 import wInput from '@/components/watch-login/watch-input.vue' //input
 import wButton from '@/components/watch-login/watch-button.vue' //button
-import {mapMutatinos} from 'vuex'
+import { mapMutations } from 'vuex'
 
 export default {
 	data() {
 		return {
-			phoneData: '', //用户/电话
+			usernameData: '', //用户/电话
 			passData: '', //密码
 			isRotate: false //是否加载旋转
 		}
@@ -41,8 +41,21 @@ export default {
 	mounted() {
 		// this.isLogin()
 	},
+	onLoad(param){
+		if(param.type == '1'){
+			uni.showToast({
+				title:'登录token过期，请重新登录',
+				icon:'none'
+			})
+		}else if(param.type == '2'){
+			uni.showToast({
+				title:'无法登录,请检查网络',
+				icon:'none'
+			})
+		}
+	},
 	methods: {
-		...mapMutatinos(['login']),
+		...mapMutations(['login']),
 		isLogin() {
 			//判断缓存中是否登录过，直接登录(由于跳到该页说明未登录，所以这个判断应置于别处)
 			const token = uni.getStorageSync('token') //setUserData
@@ -57,7 +70,7 @@ export default {
 			}
 		},
 		validate(){
-			if (this.phoneData.length == '') {
+			if (this.usernameData.length == '') {
 				uni.showToast({
 					icon: 'none',
 					position: 'bottom',
@@ -84,13 +97,51 @@ export default {
 			if(!this.validate()) return
 
 			console.log('登录开始')
-
-			_this.isRotate = true
-			
+			this.isRotate = true // 登录按钮动画			
 			uni.showLoading({
 				title: '登录中'
 			});
-			
+			this.$api.accountLogin({
+				username: this.usernameData,
+				password: this.passData
+			}).then(({data})=>{
+				if(data.success){
+					uni.hideLoading()
+					uni.showToast({
+						title:'登录成功',
+						position:'bottom'
+					})
+					this.isRotate = false
+					// 存入缓存
+					uni.setStorage('token',data.token)
+					// 存入 vuex		
+					this.login({
+						userId: data.userId,
+						userAddress: data.userAddress,
+						token: data.token
+					})
+					setTimeout(()=>uni.navigateTo({
+						url:'/pages/index/index',
+						animationType:'pop-in'
+					}),1000)
+				}else{
+					uni.hideLoading()
+					uni.showToast({
+						title:'登录失败，用户名或密码错误',
+						icon:'none',
+						position:'bottom'
+					})
+					this.isRotate = false
+				}
+			}).catch(()=>{
+					uni.hideLoading()
+					uni.showToast({
+						title:'登录失败，请检查网络',
+						icon:'none',
+						position:'bottom'
+					})
+					this.isRotate = false
+			})
 			// setTimeout(function() {
 			// 	_this.isRotate = false
 			// }, 3000)
@@ -101,7 +152,7 @@ export default {
 			// .then(res => {
 			// 	//console.log(res)
 			// 	//简单验证下登录（不安全）
-			// 	if(_this.phoneData==res.data.username && _this.passData==res.data.password){
+			// 	if(_this.usernameData==res.data.username && _this.passData==res.data.password){
 			// 		let userdata={
 			// 			"username":res.data.username,
 			// 			"nickname":res.data.nickname,

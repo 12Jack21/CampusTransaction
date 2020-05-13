@@ -123,7 +123,7 @@ export default {
 }
 
 .notice-title {
-	color: #e54242c9;
+	color: #ec4707; 
 	font-size: 36rpx;
 	line-height: 40rpx;
 	font-weight: bold;

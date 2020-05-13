@@ -39,7 +39,7 @@
 						<text class="cuIcon-delete text-gray icon-right" @tap="deleteView = true" />
 					</view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(history, index) in histories" :key="'history-' + index" @tap="searchTap(history)">{{ history }}</button>
+						<button class="cu-btn round" v-for="(history, index) in histories" :key="index" @tap="searchTap(history)">{{ history }}</button>
 					</view>
 				</view>
 
@@ -47,7 +47,7 @@
 				<view class="search-list-view">
 					<view class="search-bar-view"><text class="text-black">推荐搜索</text></view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(r, index) in recommendations" :key="'recommend-' + index" @tap="searchTap(r)">{{ r }}</button>
+						<button class="cu-btn round" v-for="(r, index) in recommendations" :key="index" @tap="searchTap(r)">{{ r }}</button>
 					</view>
 				</view>
 			</view>
@@ -65,7 +65,7 @@
 						</view>
 					</view>
 					<view class="btn-view">
-						<button class="cu-btn round" v-for="(history, index) in histories" :key="'del-' + index">
+						<button class="cu-btn round" v-for="(history, index) in histories" :key="index">
 							<text>{{ history }}</text>
 							<view class="cuIcon-roundclosefill close-icon" @tap="histories.splice(index,1)"></view>
 						</button>

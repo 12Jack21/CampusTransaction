@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "Campus Transaction",
+  "usingComponents": {
+    "home": "/components/view/home",
+    "notice": "/components/view/notice",
+    "release": "/components/view/release",
+    "footer-tabbar": "/components/footer/footer-tabbar"
+  }
+}

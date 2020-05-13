@@ -4,7 +4,7 @@
 		<view class="bg-white zaiui-title-tab-box">
 			<!--小程序端的标题-->
 			<!-- #ifdef MP -->
-			<view class="text-center text-black zaiui-small-routine-title">发现</view>
+			<view class="text-center text-black zaiui-small-routine-title">发现通告</view>
 			<!-- #endif -->
 
 			<!-- 顶层 tab -->

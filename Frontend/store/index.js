@@ -13,8 +13,13 @@ const store = new Vuex.Store({
 	mutations:{
 		login(state, {userId,userAddress,token}){
 			state.userId = userId
-			state.userAddress - userAddress
+			state.userAddress = userAddress
 			state.token = token
+			state.hasLogin = true
+		},
+		relogin(state,{userId,userAddress}){
+			state.userId = userId,
+			state.userAddress = userAddress
 			state.hasLogin = true
 		},
 		logout(state){

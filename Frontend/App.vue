@@ -1,11 +1,44 @@
 <script>
 	export default {
-		onLaunch: function() {
-			console.log('App Launch')
-			// TODO: Handle token in storage
-			// get token and update value in server, store that in vuex state, mount on request header 
-			
-			// this.$api.testAPI().catch(err=>console.log('test err',err))
+		methods:{
+			async reLogin(){
+				console.log('App Launch, relogin to server...')
+				uni.showLoading({
+					title:'登录中',
+					mask: true
+				})
+				// get token and update value in server, store that in vuex state, mount on request header 
+				await this.$api.accountReLogin()
+					.then(({data}) => {
+						if(data.success){
+							console.log('重新登录成功')
+							// 存入vuex
+							this.$store.commit('relogin',{
+								userId: data.userId,
+								userAddress: data.userAddress
+							})
+							uni.hideLoading()
+						}else{
+							uni.hideLoading()
+							uni.navigateTo({
+								url:'/pages/login/login?type=1',
+								animationType:'fade-in'
+							})
+						}
+					})
+					.catch(err=>{
+						uni.hideLoading()
+						uni.navigateTo({
+							url:'/pages/login/login?type=2',
+							animationType:'fade-in'
+						})
+					})		
+				console.log('处理 APP 启动的重新登录完成')
+				// this.$api.testAPI().catch(err=>console.log('test err',err))
+			}
+		},
+		onLaunch: async function() {
+			// await this.reLogin()
 		},
 		onShow: function() {
 			// console.log('App Show')

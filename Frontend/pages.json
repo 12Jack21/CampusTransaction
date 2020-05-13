@@ -1,5 +1,10 @@
 { //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 	"pages": [{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "Campus Transaction"
+			}
+		},{
 			"path": "pages/login/login",
 			"style": {}
 		}, {
@@ -8,12 +13,7 @@
 		}, {
 			"path": "pages/login/register",
 			"style": {}
-		}, {
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "Campus Transaction"
-			}
-		},
+		}, 
 		{
 			"path": "pages/search/search",
 			"style": {
@@ -23,5 +23,6 @@
 	],
 	"globalStyle": {
 		"navigationStyle": "custom"
-	}
+	},
+	"sitemapLocation":"sitemap.json"
 }

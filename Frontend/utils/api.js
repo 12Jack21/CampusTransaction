@@ -8,7 +8,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
     // config.baseUrl = 'http://localhost:9999'; /* 根域名 */
 		config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
     config.header = {
-        a: 1, // 演示用
+        sample_header: "yeahitsmejohn", // 演示用
     }
 		config.responseType = 'json'
     return config

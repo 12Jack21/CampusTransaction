@@ -23,7 +23,7 @@
 			@listTap="typeListTap"></type-list></view>
 		</view>
 
-		<view v-else>
+		<view class="margin-status" v-else>
 			<view v-show="focus == 0">
 				<!--标题栏-->
 				<view class="text-gray detail-topbox">
@@ -556,6 +556,9 @@ export default {
 <style lang="scss" scoped>
 $item_lh: 66rpx;
 $border_color: #e54d42;
+.margin-status{
+	margin-top: calc(var(--status-bar-height) + 10rpx); //适配 APP的状态栏
+}
 .com-type-item {
 	text-align: center;
 }
