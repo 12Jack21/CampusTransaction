@@ -92,6 +92,8 @@ public class CommodityController {
     }
 
 
+    @ApiOperation(value = "搜索商品")
+    @ApiImplicitParam(name = "condition", value = "condition", paramType = "Condition", dataType = "Condition")
     @PostMapping("/search")
     public responseFromServer search(@RequestBody Condition condition, HttpServletRequest request) {
         responseFromServer response = commodityService.search(condition);
@@ -107,6 +109,15 @@ public class CommodityController {
         return responseFromServer.error();
     }
 
+    @ApiOperation(value = "商品排序")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "sortType", value = "sortType", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "pageIndex", value = "pageIndex", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "endTime", value = "endTime", paramType = "String", dataType = "String"),
+                    @ApiImplicitParam(name = "userAddress", value = "userAddress", paramType = "String", dataType = "String")
+            }
+    )
     @GetMapping("/sort/{sortType}")
     public responseFromServer getSortedCommodity(@PathVariable Integer sortType,
                                                  @RequestBody Condition condition,

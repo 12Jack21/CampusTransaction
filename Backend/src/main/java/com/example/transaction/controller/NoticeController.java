@@ -1,12 +1,12 @@
 package com.example.transaction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.code.NoticeCode;
-import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
 
 /**
  * @ClassName: NoticeController
@@ -61,36 +60,66 @@ public class NoticeController {
     }
 
     /**
-     * 取消一个通告:::修改通告状态为CANCELLED
+     * 创建通告(包含上传的商品信息)
+     *
      * @param notice
+     * @param request
+     * @return 通告
+     */
+//    @RequestMapping("/setupNotice")
+    @ApiOperation("创建通告(包含上传的商品信息)")
+    @PostMapping("/add")
+    public responseFromServer addNotice(@RequestBody Notice notice, HttpServletRequest request) {
+        Account account = new Account(notice.getAccountId());
+        if (accountVerify.verify(account, request)) {
+            /*此时account已更新*/
+            notice.setAccountId(account.getId());
+            /*必须传入通告类型*/
+            if (notice.getType() == null)
+                return responseFromServer.error();
+            return noticeService.setupNotice(notice);
+        } else {
+            /*非法操作：为他人创建通告*/
+            return responseFromServer.illegal();
+        }
+        /*创建成功返回通告，添加商品根据通告id进行添加*/
+    }
+
+    /**
+     * 取消一个通告:::修改通告状态为CANCELLED
+     *
+     * @param noticeId
      * @param request
      * @return
      */
 //    @RequestMapping("/cancelNotice")
     @ApiOperation(value = "取消通告")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/{notice_id}/cancel")
-    public responseFromServer cancelNotice(@RequestBody Notice notice,HttpServletRequest request){
-       return updateNoticeState(notice,request,NoticeCode.CANCELLED.getCode());
+    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/{noticeId}/cancel")
+    public responseFromServer cancelNotice(@PathVariable Integer noticeId, HttpServletRequest request) {
+        Notice notice = new Notice(noticeId);
+        return updateNoticeState(notice, request, NoticeCode.CANCELLED.getCode());
     }
 
 
     /**
      * 将已经上传完的通告发布
+     *
      * @param notice
      * @param request
      * @return
      */
 //    @RequestMapping("/publishNotice")
     @ApiOperation(value = "发布通告")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{notice_id}")
-    public responseFromServer publishNotice(@RequestBody Notice notice,HttpServletRequest request){
-        return updateNoticeState(notice,request,NoticeCode.PUBLISHED.getCode());
+    @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer")
+    @PutMapping()
+    public responseFromServer publishNotice(@RequestBody Notice notice, HttpServletRequest request) {
+        return updateNoticeState(notice, request, NoticeCode.PUBLISHED.getCode());
     }
 
     /**
      * 修改状态，进行用户校验，非法操作检查，
+     *
      * @param notice
      * @param request
      * @param code
@@ -98,11 +127,15 @@ public class NoticeController {
      */
     @ApiOperation(value = "修改通告")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer"),
-            @ApiImplicitParam(name = "code", value = "状态码",  paramType = "Integer", dataType = "Integer")
+            @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer"),
+            @ApiImplicitParam(name = "code", value = "状态码", paramType = "Integer", dataType = "Integer")
     })
     @PutMapping("/{notice_id}/{code}")
-    public responseFromServer updateNoticeState(@RequestBody  Notice notice, HttpServletRequest request, int code){
+    public responseFromServer updateNoticeState(@RequestBody Notice notice, HttpServletRequest request, int code) {
+        /**
+         * ZZH
+         * TODO : 修改
+         */
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
             QueryWrapper queryWrapper = new QueryWrapper();
@@ -122,15 +155,16 @@ public class NoticeController {
 
     /**
      * 删除通告
+     *
      * @param notice
      * @param request
      * @return
      */
 //    @RequestMapping("/deleteNotice")
     @ApiOperation(value = "删除通告")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id",  paramType = "Integer", dataType = "Integer")
+    @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer")
     @DeleteMapping("/{notice_id}/delete")
-    public responseFromServer deleteNotice(@RequestBody Notice notice,HttpServletRequest request){
+    public responseFromServer deleteNotice(@RequestBody Notice notice, HttpServletRequest request) {
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
             QueryWrapper queryWrapper = new QueryWrapper();
@@ -146,49 +180,53 @@ public class NoticeController {
     /**
      * 获取首页最近通告
      *
-     * @param pageIndex
-     * @param isCommodity
+     * @param condition
      * @return
      */
 //    @RequestMapping("/getRecentNoticePage")
     @ApiOperation("获取首页通告")
     @GetMapping
-    public responseFromServer getRecentNoticePage(@RequestJson Integer pageIndex, @RequestJson Boolean isCommodity) {
-//        Integer pageIndex = (Integer) map.get("pageIndex");
-//        Boolean isCommodity = (Boolean)map.get("isCommodity");
-        if (pageIndex == null) return responseFromServer.error();
-        QueryWrapper queryWrapper = new QueryWrapper();
-        /*按照时间倒序排序*/
-        queryWrapper.orderByDesc("update_time");
-        /*只查看确认发布的通告*/
-        queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
-        /*是商品还是需求*/
-        if (isCommodity != null) {
-            queryWrapper.eq("type", isCommodity);
+    public responseFromServer getRecentNoticePage(@RequestBody NoticeCondition condition) {
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            condition.setPageIndex(1);
         }
-        return noticeService.getNoticePage(queryWrapper, pageIndex);
+        condition.setAccountId(null);
+        return noticeService.getRecentNotice(condition);
     }
 
     /**
      * 通过用户id获取通告分页
      *
-     * @param pageIndex
+     * @param condition
+     * @param accountId
      * @param request
      * @return
      */
 //    @RequestMapping("/getNoticePageForAccount")
     @ApiOperation(value = "获取用户公告列表")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer"),
-            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
-    })
-    @GetMapping("/account/{account_id}")
-    public responseFromServer getNoticePageByAccountId(@RequestJson Integer pageIndex, HttpServletRequest request) {
+    @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/account/{accountId}")
+    public responseFromServer getNoticePageByAccountId(@RequestBody NoticeCondition condition,
+                                                       @PathVariable Integer accountId,
+                                                       HttpServletRequest request) {
 //        Integer pageIndex = (Integer) map.get("pageIndex");
-        Account account = (Account) request.getAttribute("currentAccount");
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account_id", account.getId());
-        return noticeService.getNoticePage(queryWrapper, pageIndex);
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            condition.setPageIndex(1);
+        }
+        /*todo 获取用户自己的通告暂时先不处理时间问题*/
+        condition.setEndTime(null);
+        /**
+         * ZZH
+         * TODO :
+         * Account account = (Account) accountVerify.verifyWithReturn(new Account(accountId));
+         */
+        condition.setAccountId(accountId);
+
+//        Account account = new Account(accountId);
+//        QueryWrapper queryWrapper = new QueryWrapper();
+//        queryWrapper.eq("account_id", account.getId());
+//        return noticeService.getNoticePage(queryWrapper, condition.getPageIndex());
+        return noticeService.getRecentNotice(condition);
     }
 
 }

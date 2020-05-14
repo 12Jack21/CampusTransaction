@@ -3,15 +3,19 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
 public class Notice {
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Boolean type;
+    private String address;
+
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "end_time")
     private Timestamp endTime;
     private String title;
@@ -27,7 +31,7 @@ public class Notice {
     private Integer accountId;
 
     @TableField(exist = false)
-    private List<CommodityList> commodityLists;
+    private List<Commodity> commodityLists;
     @TableField(exist = false)
     private Account user;
 

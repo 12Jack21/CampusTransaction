@@ -29,15 +29,20 @@ public class Commodity {
     @TableField(value = "initial_count")
     private Integer initialCount;
     private Integer count;
+    private String type;
 
     @TableField(exist = false)
     private List<Type> types;
+
     @TableField(exist = false)
     private List<CommodityImage> commodityImages;
     @TableField(exist = false)
     private Notice notice;
     @TableField(exist = false)
     private List<Reservation> reservation;
+
+    @TableField(exist = false)
+    private List<String> images;
 
     public Commodity() {
     }

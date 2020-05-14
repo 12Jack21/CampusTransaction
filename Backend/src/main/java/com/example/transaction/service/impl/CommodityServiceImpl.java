@@ -222,6 +222,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 根据价格区间筛选物品
+     *
      * @param low  最低价
      * @param high 最高价
      * @return Commodity数组
@@ -316,16 +317,17 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public boolean insertCommodityInfo(Commodity commodity) {
-//        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
-        List<Type> typeList = commodity.getTypes();
+        for (String url : commodity.getImages()) {
+            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
 
-//        for(CommodityImage commodityImage:commodityImageList){
-//            commodityImage.setCommodityId(commodity.getId());
-//            if(commodityImageDAO.insert(commodityImage) != 1){
-//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//                return false;
-//            }
-//        }
+        /*已经取消了多类型标签的功能*/
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+
+        List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
             type.setCommodityId(commodity.getId());
             if (typeDAO.insert(type) != 1) {
@@ -344,16 +346,16 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Transactional
     public boolean updateCommodityInfo(Commodity commodity) {
-//        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
-        List<Type> typeList = commodity.getTypes();
-
-        /*for(CommodityImage commodityImage:commodityImageList){
-            commodityImage.setCommodityId(commodity.getId());
-            if(commodityImageDAO.updateById(commodityImage) != 1){
+        for (String url : commodity.getImages()) {
+            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             }
-        }*/
+        }
+        /*已经取消了多类型标签的功能*/
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+
+        List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
             type.setCommodityId(commodity.getId());
             if (typeDAO.updateById(type) != 1) {
@@ -405,13 +407,14 @@ public class CommodityServiceImpl implements CommodityService {
         List<CommodityImage> commodityImageList = commodity.getCommodityImages();
         for (CommodityImage commodityImage : commodityImageList) {
             String path = commodityImage.getImageUrl();
-            File file = new File(ResourcePath.imagePath+path);
+            File file = new File(ResourcePath.imagePath + path);
             file.delete();
         }
     }
 
     /**
      * 返回图片路径
+     *
      * @param files 文件数组
      * @return 执行结果
      */
@@ -453,9 +456,51 @@ public class CommodityServiceImpl implements CommodityService {
         return false;
     }
 
+    /**
+     * 更新商品图片的商品id
+     *
+     * @param commodityId
+     * @param url
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer validateCommodityImageUrl(Integer commodityId, String url) {
+        CommodityImage image = new CommodityImage();
+        image.setCommodityId(commodityId);
+        image.setImageUrl(url);
+        if (1 != commodityImageDAO.updateByUrl(url, commodityId))
+            return responseFromServer.error();
+        /**
+         * ZZH
+         * TODO : 将图片从temp文件夹移动到images文件夹下
+         */
+        return responseFromServer.success();
+    }
 
     /**
-     * 上传商品图片
+     * 更新多个商品图片的商品id
+     *
+     * @param commodityId
+     * @param urls
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer validateCommodityImageUrls(Integer commodityId, List<String> urls) {
+        if (urls != null && urls.size() != 0 && commodityId != null) {
+            for (String url : urls) {
+                if (validateCommodityImageUrl(commodityId, url).isFailure()) {
+                    return responseFromServer.error();
+                }
+            }
+        }
+        return responseFromServer.success();
+    }
+
+    /**
+     * 上传多个商品图片
+     *
      * @param files
      * @param commodityId
      * @return
@@ -476,7 +521,7 @@ public class CommodityServiceImpl implements CommodityService {
             }
             //通过UUID生成唯一文件名
             String filename = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
-            if(commodityImageDAO.insert((new CommodityImage(filePath,commodityId)))!=1){
+            if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
                 /*插入数据库错误*/
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error();
