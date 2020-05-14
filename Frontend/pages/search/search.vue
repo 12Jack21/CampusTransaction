@@ -111,8 +111,22 @@ const iniPagination = {
 				finish: false
 			}
 const searchHistories = () => ['耳机', '大英课本', '四六级试卷', '电动车'] // virtual
-const conditionMap = (outdated,price) =>{
-	let oVal, highprice = -1, lowprice = -1
+const conditionMap = (sort,outdated,price) =>{
+	let sortVal, oVal = -1, highprice = -1, lowprice = -1
+	switch(sort){
+		case 'time':
+			sortVal = 4
+			break
+		case 'price':
+			sortVal = 5 
+			break
+		case 'outdatedTime':
+			sortVal = 6
+			break
+		case 'evaluation':
+			sortVal = 7
+			break
+	}
 	switch(outdated){
 		case '1天内':
 			oVal = 1
@@ -134,7 +148,7 @@ const conditionMap = (outdated,price) =>{
 			break
 		case '50-100':
 			highprice = 100
-			lowprice 50
+			lowprice = 50
 			break
 		case '100-300':
 			highprice = 300
@@ -144,7 +158,9 @@ const conditionMap = (outdated,price) =>{
 			lowprice = 300
 	}
 	return {
-		outdated: oVal,highprice,lowprice
+		outdated: oVal,
+		sort: sortVal,
+		highprice,lowprice
 	}
 }
 
@@ -318,8 +334,7 @@ export default {
 			let searchBody = Object.assign({
 				type: e.value[0][1],
 				address: e.value[1][0],
-				sort: e.value[2][0]
-			},conditionMap(e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
+			},conditionMap(e.value[2][0], e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
 			
 			this.searchBody = searchBody
 			console.log('index', e.index)
