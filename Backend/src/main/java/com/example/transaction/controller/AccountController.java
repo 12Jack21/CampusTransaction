@@ -31,15 +31,15 @@ public class AccountController {
      * 使用shiro进行登录验证
      *
      * @param account
-     * @param session
+     * @param request
      * @return
      */
 //    @RequestMapping("/login")
     @ApiOperation(value = "登录验证")
-    @PostMapping("/verify")
-    public responseFromServer login(@RequestBody Account account, HttpServletRequest session) {
+    @PostMapping("/login")
+    public responseFromServer login(@RequestBody Account account, HttpServletRequest request) {
         //验证参数，用户名和密码是否为空
-        if(account==null||account.getUsername()==null||account.getPassword()==null)
+        if (account == null || account.getUsername() == null || account.getPassword() == null)
             return responseFromServer.error();
         return accountService.login(account);
         //添加用户认证信息

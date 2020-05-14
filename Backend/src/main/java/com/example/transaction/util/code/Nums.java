@@ -8,6 +8,8 @@ package com.example.transaction.util.code;
  */
 public class Nums {
     /*分页大小*/
-    public static int pageSize = 10;
+    public static int pageSize = 15;
+    /*时间限制大小*/
+    public static int recentDays = 2;
 
 }

@@ -1,10 +1,10 @@
 package com.example.transaction.controller;
 
-import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.Notice;
+import com.example.transaction.dto.Condition;
+import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
+import com.example.transaction.service.SearchService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
@@ -12,13 +12,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.util.Date;
 
 /**
  * @ClassName: CommodityController
@@ -33,13 +32,17 @@ public class CommodityController {
     CommodityService commodityService;
     NoticeService noticeService;
     AccountVerify accountVerify;
+    SearchService searchService;
+
 
     @Autowired
-    CommodityController(CommodityService commodityService, NoticeService noticeService, AccountVerify accountVerify) {
+    CommodityController(SearchService searchService, CommodityService commodityService, NoticeService noticeService, AccountVerify accountVerify) {
         this.commodityService = commodityService;
         this.noticeService = noticeService;
         this.accountVerify = accountVerify;
+        this.searchService = searchService;
     }
+
 
     /**
      * 上传商品图片
@@ -50,14 +53,13 @@ public class CommodityController {
      * @return responseFromServer
      */
 //    @PostMapping("/uploadPicture")
-    @ApiOperation(value = "上传商品图片")
+    @ApiOperation(value = "为已经创建的商品上传新的图片")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer"),
                     @ApiImplicitParam(name = "files", value = "商品图片列表", paramType = "MultipartFile[]", dataType = "MultipartFile[]")
             }
     )
-    @PostMapping("/pictures/{commodityId}")
+    @PostMapping("/images/{commodityId}")
     public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
                                      @PathVariable Integer commodityId,
                                      HttpServletRequest request) {
@@ -82,12 +84,53 @@ public class CommodityController {
         if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
         }
-        return commodityService.uploadCommodityImages(files,commodityId);
+        return commodityService.uploadCommodityImages(files, commodityId, true);
+    }
+
+
+    @ApiOperation(value = "搜索商品")
+    @ApiImplicitParam(name = "condition", value = "condition", paramType = "Condition", dataType = "Condition")
+    @PostMapping("/search")
+    public responseFromServer search(@RequestBody Condition condition, HttpServletRequest request) {
+        responseFromServer response = commodityService.search(condition);
+        if (response.isSuccess()) {
+            if (condition.getKeyword() != null || condition.getKeyword() != "") {
+                Account account = accountVerify.getCurrentAccount(request);
+                if (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess())
+                    return responseFromServer.success();
+            }
+            /*暂时先:插入搜索记录失败时也返回成功*/
+            return responseFromServer.success();
+        }
+        return responseFromServer.error();
+    }
+
+    @ApiOperation(value = "商品排序")
+    @ApiImplicitParams(
+            {
+                    @ApiImplicitParam(name = "sortType", value = "sortType", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "pageIndex", value = "pageIndex", paramType = "Integer", dataType = "Integer"),
+                    @ApiImplicitParam(name = "endTime", value = "endTime", paramType = "String", dataType = "String"),
+                    @ApiImplicitParam(name = "userAddress", value = "userAddress", paramType = "String", dataType = "String")
+            }
+    )
+    @GetMapping("/sort/{sortType}")
+    public responseFromServer getSortedCommodity(@PathVariable Integer sortType,
+                                                 @RequestBody Condition condition,
+                                                 HttpServletRequest request) {
+//        Condition condition = new Condition();
+//        condition.setPageIndex(pageIndex);
+//        condition.setEndTime(endTime);
+//        condition.setUserAddress(userAddress);
+        condition.setSortType(sortType);
+        return commodityService.search(condition);
+
     }
 
 
     /**
      * 根据id获取商品信息
+     *
      * @param commodityId 商品id
      * @return 执行结果
      */
@@ -303,6 +346,7 @@ public class CommodityController {
 
     /**
      * 返回图片路径
+     *
      * @param files 文件数组
      * @return 执行结果
      */
@@ -313,13 +357,44 @@ public class CommodityController {
         return commodityService.imageUrl(files);
     }
 
-
-    @RequestMapping("/{firstVariable}/test")
-    public responseFromServer test(@RequestJson String age, @PathVariable(name = "firstVariable") Integer firstVariable) {
-        String hahahahaha = "";
-        return responseFromServer.success();
+    /**
+     * 返回图片路径
+     *
+     * @param image
+     * @return 执行结果
+     */
+    @ApiOperation(value = "返回上传图片路径")
+    @ApiImplicitParam(name = "image", value = "商品图像文件", paramType = "MultipartFile", dataType = "MultipartFile")
+    @PostMapping("/image")
+    public responseFromServer imageUrl(@RequestParam MultipartFile image) {
+        MultipartFile[] images = {image};
+        responseFromServer response = commodityService.uploadCommodityImages(images, null, false);
+        if (response.isSuccess()) {
+            CommodityImage commodityImage = (CommodityImage) response.getData();
+            if (commodityImage != null && commodityImage.getImageUrl() != null && commodityImage.getImageUrl() != "")
+                return responseFromServer.success(commodityImage);
+        }
+        return responseFromServer.error();
     }
 
 
+    /**
+     * 返回多个图片路径
+     *
+     * @param images
+     * @return 执行结果
+     */
+    @ApiOperation(value = "返回上传图片路径")
+    @ApiImplicitParam(name = "images", value = "商品图像文件", paramType = "MultipartFile[]", dataType = "MultipartFile")
+    @PostMapping("/images")
+    public responseFromServer imageUrls(@RequestParam MultipartFile[] images) {
+        return commodityService.uploadCommodityImages(images, null, false);
+    }
 
+
+    @RequestMapping("/test/{second}")
+    public responseFromServer test(@RequestJson String age, @PathVariable(value = "second") Integer second) {
+        String hahahahaha = "";
+        return responseFromServer.success();
+    }
 }

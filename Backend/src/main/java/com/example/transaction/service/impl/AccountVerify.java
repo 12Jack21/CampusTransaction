@@ -28,6 +28,7 @@ public class AccountVerify {
     @Autowired
     TokenDAO tokenDAO;
 
+    /*todo:先把所有的token验证都置为通过*/
 
     public Account getCurrentAccount(HttpServletRequest request) {
         final String headerToken = request.getHeader("token");
@@ -46,8 +47,7 @@ public class AccountVerify {
         if (account.getId() != null && account.getId().intValue() != currentAccount.getId().intValue()) {
             /*非法操作*/
             return false;
-        }
-        else{
+        } else {
             /*当用户id为空时*/
             account.setId(currentAccount.getId());
             return true;
@@ -75,9 +75,7 @@ public class AccountVerify {
             if (commodity == null || commodity.getNotice() == null || commodity.getNotice().getAccountId() == null)
                 return false;
             Account account = new Account(commodity.getNotice().getAccountId());
-            if (!verify(account, request))
-                return false;
-            return true;
+            return verify(account, request);
         }
         return false;
 
@@ -103,24 +101,22 @@ public class AccountVerify {
         if (account.getId() != null && account.getId().intValue() != currentAccount.getId().intValue()) {
             /*非法操作*/
             return false;
-        }
-        else{
+        } else {
             /*当用户id为空时*/
             account.setId(currentAccount.getId());
             return true;
         }
     }
 
-    public static Account verifyWithReturn( Account account,HttpSession session){
-        if(account==null)
+    public static Account verifyWithReturn(Account account, HttpSession session) {
+        if (account == null)
             return null;
         Account currentAccount = (Account) session.getAttribute("currentAccount");
 
-        if(currentAccount == null||account.getId()!=null&&currentAccount.getId()!=currentAccount.getId()){
+        if (currentAccount == null || account.getId() != null && currentAccount.getId() != currentAccount.getId()) {
             /*非法操作*/
             return null;
-        }
-        else{
+        } else {
             /*当用户id为空时*/
             return currentAccount;
         }
@@ -132,9 +128,7 @@ public class AccountVerify {
             if (commodity == null || commodity.getNotice() == null || commodity.getNotice().getAccountId() == null)
                 return false;
             Account account = new Account(commodity.getNotice().getAccountId());
-            if (!verify(account, session))
-                return false;
-            return true;
+            return verify(account, session);
         }
         return false;
 

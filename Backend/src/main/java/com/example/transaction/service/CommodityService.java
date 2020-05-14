@@ -1,11 +1,14 @@
 package com.example.transaction.service;
 
+import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.responseFromServer;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @Author: 高战立
@@ -14,6 +17,8 @@ import javax.servlet.http.HttpSession;
  */
 
 public interface CommodityService {
+    responseFromServer search(Condition condition);
+
     //根据id获取商品
     public responseFromServer getById(Integer id);
 
@@ -33,14 +38,24 @@ public interface CommodityService {
     public responseFromServer insertCommodity(Commodity commodity);
     //更新商品信息
     public responseFromServer updateCommodity(Commodity commodity);
+
     //删除商品信息
     public responseFromServer deleteCommodity(Commodity commodity);
+
     //查询某一notice下所有商品
     public responseFromServer selectAllByNotice(Notice notice);
+
     //删除某一notice下所有商品
     public responseFromServer deleteAllByNotice(Notice notice);
+
     //返回商品图片路径
     public responseFromServer imageUrl(MultipartFile[] files);
 
-    public responseFromServer uploadCommodityImages( MultipartFile[] files, Integer commodityId);
+    @Transactional
+    responseFromServer validateCommodityImageUrl(Integer commodityId, String url);
+
+    @Transactional
+    responseFromServer validateCommodityImageUrls(Integer commodityId, List<String> urls);
+
+    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId, Boolean updateToCommodity);
 }

@@ -21,6 +21,12 @@ web:
   avatar-path: E:/CampusTransactionResources/avatars
 
 spring:
+  # redis配置
+  redis:
+    database: 0
+    host: 39.96.69.108
+    port: 6379
+
   resources:
     static-locations: file:${web.upload-path},file:${web.front-path},file:${web.avarar-path}
 
@@ -36,7 +42,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/transaction?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
     username: root
-    password: zaoMENG45
+    password: 123456
 
     # 配置日志输出
     druid:

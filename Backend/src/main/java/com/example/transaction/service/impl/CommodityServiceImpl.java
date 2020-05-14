@@ -7,9 +7,11 @@ import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.CommodityImageDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.TypeDAO;
+import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.util.MyPage;
+import com.example.transaction.util.code.Address;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
@@ -26,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,6 +54,113 @@ public class CommodityServiceImpl implements CommodityService {
         this.commodityImageDAO = commodityImageDAO;
         this.noticeDAO = noticeDAO;
     }
+
+    @Override
+    public responseFromServer search(Condition condition) {
+        QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
+
+        /*处理排序规则*/
+
+        if (condition.getSortType() != null && condition.sortType >= 0) {
+            switch (condition.getSortType()) {
+                case 0:/*最新*/
+                    queryWrapper.orderByDesc("c.create_time");
+                    break;
+                case 1:/*附近,地址在参数中*/
+                    break;
+                case 2:/*失效时间*/
+                    condition.recent = true;
+                    condition.setOutdated(2);
+                    break;
+                case 3:/*便宜好物*/
+                    queryWrapper.le("c.price", 10.0);
+                    break;
+                case 4:/*todo*/
+                    break;
+                case 5:/*todo*/
+                    break;
+                case 6:/*todo*/
+                    break;
+                case 7:/*todo*/
+                    break;
+            }
+        }
+
+        /*处理分页条件*/
+        Page<Commodity> page;
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            page = new Page<>(Nums.pageSize, 1);
+        } else {
+            page = new Page<>(Nums.pageSize, condition.getPageIndex());
+        }
+
+        /*处理时间条件*/
+        Timestamp timestamp;
+        if (condition.getEndTime() == null) {
+            timestamp = new Timestamp(System.currentTimeMillis());
+        } else {
+            timestamp = new Timestamp(condition.getEndTime().getTime());
+        }
+//todo        queryWrapper.eq("n.id", "c.notice_id");
+        queryWrapper.le("n.create_time", timestamp);
+
+        if (condition.recent) {
+            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
+            queryWrapper.ge("n.end_time", timestamp);
+        } else if (condition.getOutdated() != null && condition.getOutdated() > 0) {
+            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * condition.getOutdated());
+            queryWrapper.ge("n.end_time", timestamp);
+        }
+
+        /*处理地址*/
+
+        if (condition.getUserAddress() != null || condition.getUserAddress() != "全校") {
+            int addressCode;
+            String address = condition.getUserAddress();
+            try {
+                addressCode = Address.valueOf(address).getCode();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return responseFromServer.error();
+            }
+            /*这里没有用到地址码,枚举只是用了检测该地址是否有效*/
+            queryWrapper.eq("n.address", address);
+        }
+
+        /*处理搜索串*/
+        String searchStr = condition.getKeyword();
+        if (searchStr != null) {
+            queryWrapper.like("c.name", "%" + searchStr + "%");
+        }
+
+        /*价格区间*/
+        if (condition.getLowPrice() != null) {
+            queryWrapper.ge("c.price", condition.getLowPrice());
+        }
+        if (condition.getHighPrice() != null) {
+            queryWrapper.le("c.price", condition.getHighPrice());
+        }
+
+
+
+        /*处理类型*/
+        if (condition.getType() != null) {
+//todo            queryWrapper.eq("c.id", "t.commodity_id");
+            queryWrapper.eq("t.value", condition.getType());
+        }
+
+        try {
+            IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+            if (resultPage == null)
+                throw new Exception();
+            return responseFromServer.success(new MyPage<Commodity>(resultPage));
+        } catch (Exception e) {
+            return responseFromServer.error();
+        }
+
+
+    }
+
 
     /**
      * 根据id获取商品信息
@@ -112,6 +222,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 根据价格区间筛选物品
+     *
      * @param low  最低价
      * @param high 最高价
      * @return Commodity数组
@@ -206,16 +317,17 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     public boolean insertCommodityInfo(Commodity commodity) {
-//        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
-        List<Type> typeList = commodity.getTypes();
+        for (String url : commodity.getImages()) {
+            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return false;
+            }
+        }
 
-//        for(CommodityImage commodityImage:commodityImageList){
-//            commodityImage.setCommodityId(commodity.getId());
-//            if(commodityImageDAO.insert(commodityImage) != 1){
-//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//                return false;
-//            }
-//        }
+        /*已经取消了多类型标签的功能*/
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+
+        List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
             type.setCommodityId(commodity.getId());
             if (typeDAO.insert(type) != 1) {
@@ -234,16 +346,16 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Transactional
     public boolean updateCommodityInfo(Commodity commodity) {
-//        List<CommodityImage> commodityImageList = commodity.getCommodityImages();
-        List<Type> typeList = commodity.getTypes();
-
-        /*for(CommodityImage commodityImage:commodityImageList){
-            commodityImage.setCommodityId(commodity.getId());
-            if(commodityImageDAO.updateById(commodityImage) != 1){
+        for (String url : commodity.getImages()) {
+            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return false;
             }
-        }*/
+        }
+        /*已经取消了多类型标签的功能*/
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+
+        List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
             type.setCommodityId(commodity.getId());
             if (typeDAO.updateById(type) != 1) {
@@ -295,7 +407,7 @@ public class CommodityServiceImpl implements CommodityService {
         List<CommodityImage> commodityImageList = commodity.getCommodityImages();
         for (CommodityImage commodityImage : commodityImageList) {
             String path = commodityImage.getImageUrl();
-            File file = new File(ResourcePath.imagePath+path);
+            File file = new File(ResourcePath.imagePath + path);
             file.delete();
         }
     }
@@ -312,7 +424,8 @@ public class CommodityServiceImpl implements CommodityService {
         for (MultipartFile file : files) {
             try {
                 byte[] bytes = file.getBytes();
-                String base = System.getProperty("user.dir") + "\\images\\";
+                String base = "E:/CampusTransactionImages/images/";
+//                String base = System.getProperty("user.dir") + "\\images\\";
                 Path path = Paths.get(base + commodityImages.size() + 1);
                 //如果没有files文件夹，则创建
                 if (!Files.isWritable(path)) {
@@ -343,16 +456,61 @@ public class CommodityServiceImpl implements CommodityService {
         return false;
     }
 
+    /**
+     * 更新商品图片的商品id
+     *
+     * @param commodityId
+     * @param url
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer validateCommodityImageUrl(Integer commodityId, String url) {
+        CommodityImage image = new CommodityImage();
+        image.setCommodityId(commodityId);
+        image.setImageUrl(url);
+        if (1 != commodityImageDAO.updateByUrl(url, commodityId))
+            return responseFromServer.error();
+        /**
+         * ZZH
+         * TODO : 将图片从temp文件夹移动到images文件夹下
+         */
+        return responseFromServer.success();
+    }
 
     /**
-     * 上传商品图片
+     * 更新多个商品图片的商品id
+     *
+     * @param commodityId
+     * @param urls
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer validateCommodityImageUrls(Integer commodityId, List<String> urls) {
+        if (urls != null && urls.size() != 0 && commodityId != null) {
+            for (String url : urls) {
+                if (validateCommodityImageUrl(commodityId, url).isFailure()) {
+                    return responseFromServer.error();
+                }
+            }
+        }
+        return responseFromServer.success();
+    }
+
+    /**
+     * 上传多个商品图片
+     *
      * @param files
      * @param commodityId
      * @return
      */
+    @Override
     @Transactional
-    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId) {
-        String filePath = ResourcePath.imagePath;
+    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId, Boolean updateToCommodity) {
+        /*如果是上传到已经创建的商品,直接存到images文件夹下*/
+        String filePath = updateToCommodity ? ResourcePath.imagePath : ResourcePath.imageTempPath;
+        List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
             //获取文件后缀
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
@@ -366,21 +524,25 @@ public class CommodityServiceImpl implements CommodityService {
             }
             //通过UUID生成唯一文件名
             String filename = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
-            if(commodityImageDAO.insert((new CommodityImage(filePath,commodityId)))!=1){
-                /*插入数据库错误*/
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return responseFromServer.error();
+            if (updateToCommodity) {
+                /*上传到已经创建的商品中*/
+                if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
+                    /*插入数据库错误*/
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return responseFromServer.error();
+                }
             }
+
             try {
                 //将文件保存指定目录
                 file.transferTo(new File(filePath + filename));
+                fileNames.add(filename);
             } catch (Exception e) {
                 e.printStackTrace();
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }
         }
-
-        return responseFromServer.success();
+        return responseFromServer.success(fileNames);
     }
 }

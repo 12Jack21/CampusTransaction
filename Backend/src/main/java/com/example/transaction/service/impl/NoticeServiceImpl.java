@@ -5,16 +5,23 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
+import com.example.transaction.dto.notice.NoticeCondition;
+import com.example.transaction.dto.notice.NoticeInfo;
+import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.MyPage;
+import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @ClassName: NoticeServiceImpl
@@ -26,6 +33,7 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 建立一个通告
+     *
      * @param notice
      * @return
      */
@@ -35,20 +43,51 @@ public class NoticeServiceImpl implements NoticeService {
         /*此时默认notice中各项数据正常*/
         /*添加商品*/
         notice.setId(null);
-        if(noticeDAO.insert(notice)!=1){
+        if (noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
-        }else{
+        } else {
             /*创建notice成功*/
             Integer noticeId = notice.getId();
             return responseFromServer.success(notice);
         }
-
     }
 
+    @Override
+    public responseFromServer getRecentNotice(NoticeCondition condition) {
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0)
+            condition.setPageIndex(1);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        /*按照时间倒序排序*/
+        queryWrapper.orderByDesc("create_time");
+        /*只查看确认发布的通告*/
+        queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
+        /*是商品还是需求*/
+        switch (condition.getType()) {
+            case 0:/*全部*/
+                break;
+            case 1:/*出售*/
+                queryWrapper.eq("type", true);
+                break;
+            case 2:/*需求*/
+                queryWrapper.eq("type", false);
+                break;
+        }
+        if (condition.getAccountId() != null)
+            queryWrapper.eq("account_id", condition.getAccountId());
+        if (condition.getEndTime() != null) {
+            queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
+        }
+        responseFromServer response = getNoticePage(queryWrapper, condition.getPageIndex());
+        if (response.isSuccess()) {
+            return responseFromServer.success(new NoticeInfo((Notice) response.getData()));
+        }
+        return responseFromServer.error();
+    }
 
     /**
      * 删除特定的notice
+     *
      * @param queryWrapper
      * @return
      */
@@ -57,9 +96,9 @@ public class NoticeServiceImpl implements NoticeService {
     public responseFromServer deleteNotice(QueryWrapper queryWrapper) {
 //        if(commodityService.deleteAllByNoticeId(notice))
         Notice notice = noticeDAO.getNoticeWithAllCommodity(queryWrapper);
-        if(notice == null)return responseFromServer.error();
+        if (notice == null) return responseFromServer.error();
         commodityService.deleteAllByNotice(notice);
-        if(noticeDAO.delete(queryWrapper)!=1){
+        if (noticeDAO.delete(queryWrapper) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -68,7 +107,37 @@ public class NoticeServiceImpl implements NoticeService {
 
 
     /**
+     * 添加通告
+     *
+     * @param notice
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer addNotice(Notice notice) {
+        if (notice == null || notice.getCommodityLists() == null || notice.getCommodityLists().size() == 0)
+            return responseFromServer.error();
+        if (noticeDAO.insert(notice) != 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        } else {
+            List<Commodity> commodityList = notice.getCommodityLists();
+            for (Commodity commodity : commodityList) {
+                commodity.setNoticeId(notice.getId());
+                if (commodityService.insertCommodity(commodity).isFailure()) {
+                    /*函数中包含了对类型还有商品图像的处理*/
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return responseFromServer.error();
+                }
+            }
+            return responseFromServer.success();
+        }
+    }
+
+
+    /**
      * 取消通告
+     *
      * @param notice
      * @param queryWrapper
      * @return
@@ -76,50 +145,52 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public responseFromServer updateNotice(Notice notice, QueryWrapper queryWrapper) {
-
-        if(noticeDAO.update(notice,queryWrapper)!=1){
+        if (noticeDAO.update(notice, queryWrapper) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
-        }else{
+        } else {
             return responseFromServer.success();
         }
     }
 
     /**
      * 查询通告分页
+     *
      * @param queryWrapper
      * @param pageIndex
      * @return
      */
     @Override
-    public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex){
-        Page<Notice> page = new Page<>(pageIndex,Nums.pageSize);
-        IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page,queryWrapper);
+    public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
+        Page<Notice> page = new Page<>(pageIndex, Nums.pageSize);
+        IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         MyPage myPage = new MyPage(noticeIPage);
         return responseFromServer.success(myPage);
     }
 
     /**
      * 获取通告信息
+     *
      * @param noticeId
      * @return
      */
     @Override
     public responseFromServer getSimpleNotice(Integer noticeId) {
         Notice notice = noticeDAO.selectById(noticeId);
-        if(notice == null)return responseFromServer.error();
+        if (notice == null) return responseFromServer.error();
         return responseFromServer.success(notice);
     }
 
     /**
      * 获得详细通告内容，包括商品信息
+     *
      * @param noticeId
      * @return
      */
     @Override
     public responseFromServer getDetailedNotice(Integer noticeId) {
         Notice notice = noticeDAO.getNoticeWithAllCommodityById(noticeId);
-        if(notice == null)return responseFromServer.error();
+        if (notice == null) return responseFromServer.error();
         return responseFromServer.success(notice);
     }
 
@@ -142,7 +213,7 @@ public class NoticeServiceImpl implements NoticeService {
     CommodityService commodityService;
 
     @Autowired
-    public NoticeServiceImpl(NoticeDAO noticeDAO,CommodityDAO commodityDAO, CommodityService commodityService){
+    public NoticeServiceImpl(NoticeDAO noticeDAO, CommodityDAO commodityDAO, CommodityService commodityService) {
         this.noticeDAO = noticeDAO;
         this.commodityDAO = commodityDAO;
         this.commodityService = commodityService;

@@ -39,4 +39,11 @@ public class Reservation {
     private Account user;
     @TableField(exist = false)
     private Commodity commodity;
+
+    public Reservation() {
+    }
+
+    public Reservation(Integer reservationId) {
+        this.id = reservationId;
+    }
 }

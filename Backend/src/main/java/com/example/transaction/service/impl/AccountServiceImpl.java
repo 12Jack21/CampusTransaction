@@ -42,7 +42,6 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * 登录 调用loginservice操作
-     *
      * @param account
      * @return
      */
@@ -52,10 +51,7 @@ public class AccountServiceImpl implements AccountService {
         if (response.isSuccess()) {
             Account account1 = (Account) response.getData();
             if (account.getPassword().equals(account1.getPassword())) {
-
                 return tokenService.loginOperationOnToken(account.getId());
-//                session.setAttribute("currentAccount",account1);
-//                return responseFromServer.success();
             } else {
                 return responseFromServer.error();
             }
@@ -66,7 +62,6 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * 退登 调用tokenservice操作
-     *
      * @param account
      * @return
      */
@@ -83,7 +78,6 @@ public class AccountServiceImpl implements AccountService {
 
     /**
      * 注册用户
-     *
      * @param newAccout
      * @return
      */

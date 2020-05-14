@@ -19,7 +19,11 @@ import java.util.List;
  * @Author: 曾志昊
  * @Date: 2020/5/7 18:32
  */
-@Configuration
+/**
+ * ZZH
+ * TODO : 去掉注释
+ */
+//@Configuration
 public class InterceptorConfiguration implements WebMvcConfigurer {
 
 
