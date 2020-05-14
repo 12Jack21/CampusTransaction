@@ -67,7 +67,6 @@ public class CommodityServiceImpl implements CommodityService {
                     queryWrapper.orderByDesc("c.create_time");
                     break;
                 case 1:/*附近,地址在参数中*/
-                    queryWrapper.eq("n.address", condition.getUserAddress());
                     break;
                 case 2:/*失效时间*/
                     condition.recent = true;
@@ -102,13 +101,13 @@ public class CommodityServiceImpl implements CommodityService {
         } else {
             timestamp = new Timestamp(condition.getEndTime().getTime());
         }
-        queryWrapper.eq("n.id", "c.notice_id");
+//todo        queryWrapper.eq("n.id", "c.notice_id");
         queryWrapper.le("n.create_time", timestamp);
 
         if (condition.recent) {
             timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
             queryWrapper.ge("n.end_time", timestamp);
-        } else if (condition.getOutdated() != null || condition.getOutdated() > 0) {
+        } else if (condition.getOutdated() != null && condition.getOutdated() > 0) {
             timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * condition.getOutdated());
             queryWrapper.ge("n.end_time", timestamp);
         }
@@ -146,7 +145,7 @@ public class CommodityServiceImpl implements CommodityService {
 
         /*处理类型*/
         if (condition.getType() != null) {
-            queryWrapper.eq("c.id", "t.commodity_id");
+//todo            queryWrapper.eq("c.id", "t.commodity_id");
             queryWrapper.eq("t.value", condition.getType());
         }
 

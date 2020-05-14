@@ -35,6 +35,11 @@ public class DateConverter implements Converter {
     private static final String REGEX_DATE_TIME_NOT_CONTAIN_SECOND = "^\\d{4}([-]\\d{2}){2}[ ]([0-1][0-9]|[2][0-4]):[0-5][0-9]$";
 
     /**
+     * 校验 yyyy-MM-dd HH:mm
+     */
+    private static final String MY_DATE = "^\\d{4}([/]\\d{2}){2}[ ]([0-1][0-9]|[2][0-4]):[0-5][0-9]$";
+
+    /**
      * 默认格式
      */
     private static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
@@ -52,6 +57,7 @@ public class DateConverter implements Converter {
         PATTERN_MAP.put(REGEX_DATE_TIME, "yyyy-MM-dd HH:mm:ss");
         PATTERN_MAP.put(REGEX_TIME, "HH:mm:ss");
         PATTERN_MAP.put(REGEX_DATE_TIME_NOT_CONTAIN_SECOND, "yyyy-MM-dd HH:mm");
+        PATTERN_MAP.put(MY_DATE, "yyyy/MM/dd HH:mm");
     }
 
     @Override

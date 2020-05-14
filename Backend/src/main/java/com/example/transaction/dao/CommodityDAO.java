@@ -73,7 +73,8 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
 
     /*搜索*/
     @ResultMap(value = "detailedCommodity_map2")
-    @Select("select * from commodity c, notice n, type t where c.notice_id = n.id and c.id = t.commodity_id ${ew.customSqlSegment}")
+//    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
+    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and c.notice_id = n.id and c.id = t.commodity_id ")
     IPage<Commodity> search(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 
 

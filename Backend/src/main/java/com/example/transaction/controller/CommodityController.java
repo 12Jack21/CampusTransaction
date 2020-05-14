@@ -109,14 +109,12 @@ public class CommodityController {
 
     @GetMapping("/sort/{sortType}")
     public responseFromServer getSortedCommodity(@PathVariable Integer sortType,
-                                                 @RequestParam Integer pageIndex,
-                                                 @RequestParam Date endTime,
-                                                 @RequestParam String userAddress,
+                                                 @RequestBody Condition condition,
                                                  HttpServletRequest request) {
-        Condition condition = new Condition();
-        condition.setPageIndex(pageIndex);
-        condition.setEndTime(endTime);
-        condition.setUserAddress(userAddress);
+//        Condition condition = new Condition();
+//        condition.setPageIndex(pageIndex);
+//        condition.setEndTime(endTime);
+//        condition.setUserAddress(userAddress);
         condition.setSortType(sortType);
         return commodityService.search(condition);
 
