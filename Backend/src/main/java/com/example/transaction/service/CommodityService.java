@@ -57,5 +57,5 @@ public interface CommodityService {
     @Transactional
     responseFromServer validateCommodityImageUrls(Integer commodityId, List<String> urls);
 
-    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId);
+    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId, Boolean updateToCommodity);
 }

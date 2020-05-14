@@ -1,10 +1,7 @@
 package com.example.transaction.controller;
 
 import com.example.transaction.dto.Condition;
-import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.Notice;
-import com.example.transaction.pojo.Search;
+import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.SearchService;
@@ -56,14 +53,13 @@ public class CommodityController {
      * @return responseFromServer
      */
 //    @PostMapping("/uploadPicture")
-    @ApiOperation(value = "上传商品图片")
+    @ApiOperation(value = "为已经创建的商品上传新的图片")
     @ApiImplicitParams(
             {
-                    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer"),
                     @ApiImplicitParam(name = "files", value = "商品图片列表", paramType = "MultipartFile[]", dataType = "MultipartFile[]")
             }
     )
-    @PostMapping("/pictures/{commodityId}")
+    @PostMapping("/images/{commodityId}")
     public responseFromServer upload(@RequestParam(name = "file") MultipartFile[] files,
                                      @PathVariable Integer commodityId,
                                      HttpServletRequest request) {
@@ -88,7 +84,7 @@ public class CommodityController {
         if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
         }
-        return commodityService.uploadCommodityImages(files, commodityId);
+        return commodityService.uploadCommodityImages(files, commodityId, true);
     }
 
 
@@ -350,6 +346,7 @@ public class CommodityController {
 
     /**
      * 返回图片路径
+     *
      * @param files 文件数组
      * @return 执行结果
      */
@@ -358,6 +355,40 @@ public class CommodityController {
     @PostMapping("/{files}")
     public responseFromServer imageUrl(MultipartFile[] files) {
         return commodityService.imageUrl(files);
+    }
+
+    /**
+     * 返回图片路径
+     *
+     * @param image
+     * @return 执行结果
+     */
+    @ApiOperation(value = "返回上传图片路径")
+    @ApiImplicitParam(name = "image", value = "商品图像文件", paramType = "MultipartFile", dataType = "MultipartFile")
+    @PostMapping("/image")
+    public responseFromServer imageUrl(@RequestParam MultipartFile image) {
+        MultipartFile[] images = {image};
+        responseFromServer response = commodityService.uploadCommodityImages(images, null, false);
+        if (response.isSuccess()) {
+            CommodityImage commodityImage = (CommodityImage) response.getData();
+            if (commodityImage != null && commodityImage.getImageUrl() != null && commodityImage.getImageUrl() != "")
+                return responseFromServer.success(commodityImage);
+        }
+        return responseFromServer.error();
+    }
+
+
+    /**
+     * 返回多个图片路径
+     *
+     * @param images
+     * @return 执行结果
+     */
+    @ApiOperation(value = "返回上传图片路径")
+    @ApiImplicitParam(name = "images", value = "商品图像文件", paramType = "MultipartFile[]", dataType = "MultipartFile")
+    @PostMapping("/images")
+    public responseFromServer imageUrls(@RequestParam MultipartFile[] images) {
+        return commodityService.uploadCommodityImages(images, null, false);
     }
 
 

@@ -414,7 +414,6 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 返回图片路径
-     *
      * @param files 文件数组
      * @return 执行结果
      */
@@ -425,7 +424,8 @@ public class CommodityServiceImpl implements CommodityService {
         for (MultipartFile file : files) {
             try {
                 byte[] bytes = file.getBytes();
-                String base = System.getProperty("user.dir") + "\\images\\";
+                String base = "E:/CampusTransactionImages/images/";
+//                String base = System.getProperty("user.dir") + "\\images\\";
                 Path path = Paths.get(base + commodityImages.size() + 1);
                 //如果没有files文件夹，则创建
                 if (!Files.isWritable(path)) {
@@ -505,9 +505,12 @@ public class CommodityServiceImpl implements CommodityService {
      * @param commodityId
      * @return
      */
+    @Override
     @Transactional
-    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId) {
-        String filePath = ResourcePath.imagePath;
+    public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId, Boolean updateToCommodity) {
+        /*如果是上传到已经创建的商品,直接存到images文件夹下*/
+        String filePath = updateToCommodity ? ResourcePath.imagePath : ResourcePath.imageTempPath;
+        List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
             //获取文件后缀
             String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
@@ -521,21 +524,25 @@ public class CommodityServiceImpl implements CommodityService {
             }
             //通过UUID生成唯一文件名
             String filename = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
-            if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
-                /*插入数据库错误*/
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return responseFromServer.error();
+            if (updateToCommodity) {
+                /*上传到已经创建的商品中*/
+                if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
+                    /*插入数据库错误*/
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return responseFromServer.error();
+                }
             }
+
             try {
                 //将文件保存指定目录
                 file.transferTo(new File(filePath + filename));
+                fileNames.add(filename);
             } catch (Exception e) {
                 e.printStackTrace();
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }
         }
-
-        return responseFromServer.success();
+        return responseFromServer.success(fileNames);
     }
 }
