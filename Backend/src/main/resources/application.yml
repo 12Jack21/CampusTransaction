@@ -21,6 +21,12 @@ web:
   avatar-path: E:/CampusTransactionResources/avatars
 
 spring:
+  # redis配置
+  redis:
+    database: 0
+    host: 39.96.69.108
+    port: 6379
+
   resources:
     static-locations: file:${web.upload-path},file:${web.front-path},file:${web.avarar-path}
 
