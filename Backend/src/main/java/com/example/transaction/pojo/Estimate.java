@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: 高战立
  * @Date: 2020/4/24 15:47
@@ -12,8 +14,8 @@ import lombok.Data;
  */
 
 @Data
-public class Estimate {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Estimate implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField(value = "success_rate")
     private Double successRate;
@@ -22,5 +24,6 @@ public class Estimate {
     @TableField(value = "sell_credit")
     private Double sellCredit;
     @TableField(value = "account_id")
-    private Integer accountId;;
+    private Integer accountId;
+    ;
 }

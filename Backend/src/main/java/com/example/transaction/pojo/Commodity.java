@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,15 +15,15 @@ import java.util.List;
  */
 
 @Data
-public class Commodity {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Commodity implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField(value = "original_price")
     private Double originalPrice;
     @TableField(value = "expected_price")
     private Double expectedPrice;
     private String name;
-    private Integer newness;
+    private String newness;
     private String description;
     @TableField(value = "notice_id")
     private Integer noticeId;

@@ -4,6 +4,8 @@ import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.interceptor.KeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.DefaultStringRedisConnection;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
@@ -24,6 +26,7 @@ public class RedisConfig extends CachingConfigurerSupport {
             RedisConnectionFactory redisConnectionFactory)
             throws UnknownHostException {
         RedisTemplate<Object, Object> template = new RedisTemplate<Object, Object>();
+        RedisConnection connection;
         template.setConnectionFactory(redisConnectionFactory);
 //		Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
         GenericJackson2JsonRedisSerializer serializer = new GenericJackson2JsonRedisSerializer();

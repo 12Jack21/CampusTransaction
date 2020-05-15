@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -14,8 +15,8 @@ import java.sql.Timestamp;
  */
 
 @Data
-public class Comment {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Comment implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Boolean type;
     private String content;

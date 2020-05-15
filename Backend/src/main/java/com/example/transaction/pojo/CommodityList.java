@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: 高战立
  * @Date: 2020/4/24 15:41
@@ -14,8 +16,8 @@ import lombok.Data;
 
 @Data
 @TableName(value = "com_list")
-public class CommodityList {
-    @TableId(value = "id",type = IdType.AUTO)
+public class CommodityList implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Integer count;
     @TableField(value = "initial_count")
