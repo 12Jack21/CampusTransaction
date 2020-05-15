@@ -28,7 +28,7 @@ module.exports = {
       ['/Demand','需求说明'],
       ['/DataBase','数据库设计'],
       ['/System','系统设计'],
-      ['/Test','测试结果']
+      ['/Test','测试说明']
     ]
     // sidebar: {
     //   '/': [
