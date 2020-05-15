@@ -6,7 +6,7 @@ const http = new Request()
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
     // config.baseUrl = 'http://localhost:9999'; /* 根域名 */
-		config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
+		config.baseUrl = 'http://39.96.69.108:8080/'
     config.header = {
         sample_header: "yeahitsmejohn", // 演示用
     }
@@ -105,5 +105,11 @@ export default{
 	},
 	getMyAccount(id){
 		return http.get('/accounts/my/' + id)
+	},
+	updateNotice(id, update){
+		return http.put('/notice/' + id, update)
+	},
+	updateCommodity(id, update){
+		return http.put('/commodities/' + id, update)
 	}
 }
