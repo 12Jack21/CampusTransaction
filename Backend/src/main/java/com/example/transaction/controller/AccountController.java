@@ -36,6 +36,7 @@ public class AccountController {
      */
 //    @RequestMapping("/login")
     @ApiOperation(value = "登录验证")
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
     @PostMapping("/login")
     public responseFromServer login(@RequestBody Account account, HttpServletRequest request) {
         //验证参数，用户名和密码是否为空
