@@ -27,57 +27,57 @@ date: 2020/05/14 22:00
 
 ![account](./assets/pojo/account.png)
 
-<img src=".\assets\pojo\account_reference.png" alt="account_reference" style="zoom: 50%;" />
+<img src="./assets/pojo/account_reference.png" alt="account_reference" style="zoom: 50%;" />
 
 #### 2.3 AccountNotify
 
-![account_notify](.\assets\pojo\account_notify.png)
+![account_notify](./assets/pojo/account_notify.png)
 
 #### 2.4 Comment
 
-![comment](.\assets\pojo\comment.png)
+![comment](./assets/pojo/comment.png)
 
-![comment_reference](.\assets\pojo\comment_reference.png)
+![comment_reference](./assets/pojo/comment_reference.png)
 
 #### 2.5 Commodity
 
-![commodity](.\assets\pojo\commodity.png)
+![commodity](./assets/pojo/commodity.png)
 
-![commodity_reference](.\assets\pojo\commodity_reference.png)
+![commodity_reference](./assets/pojo/commodity_reference.png)
 
 #### 2.6 Notice
 
-![notice](.\assets\pojo\notice.png)
+![notice](./assets/pojo/notice.png)
 
-![notice_reference](.\assets\pojo\notice_reference.png)
+![notice_reference](./assets/pojo/notice_reference.png)
 
 #### 2.7 Notify
 
-![notify](.\assets\pojo\notify.png)
+![notify](./assets/pojo/notify.png)
 
 #### 2.8 Reservation
 
-![reservation](.\assets\pojo\reservation.png)
+![reservation](./assets/pojo/reservation.png)
 
-![reservation_reference](.\assets\pojo\reservation_reference.png)
+![reservation_reference](./assets/pojo/reservation_reference.png)
 
 #### 2.9 Search 
 
-![search](.\assets\pojo\search.png)
+![search](./assets/pojo/search.png)
 
 #### 2.10 Token
 
-![token](.\assets\pojo\token.png)
+![token](./assets/pojo/token.png)
 
 #### 2.11 Type
 
-![type](.\assets\pojo\type.png)
+![type](./assets/pojo/type.png)
 
 ### 3 DAO层
 
 本项目DAO层均继承自BaseMapper，数据访问层总览如下：
 
-![BaseMapper](.\assets\dao\BaseMapper.png)
+![BaseMapper](./assets/dao/BaseMapper.png)
 
 ### 4 Service层
 
@@ -85,35 +85,35 @@ Service层，即服务层，通过调用DAO层实现，对一些操作进行封�
 
 #### 4.1 AccountService
 
-![accountService](.\assets\service\accountService.png)
+![accountService](./assets/service/accountService.png)
 
 #### 4.2 CommentService
 
-![commentService](.\assets\service\commentService.png)
+![commentService](./assets/service/commentService.png)
 
 #### 4.3 CommodityService
 
-![commodityService](.\assets\service\commodityService.png)
+![commodityService](./assets/service/commodityService.png)
 
 #### 4.4 NoticeService
 
-![noticeService](.\assets\service\noticeService.png)
+![noticeService](./assets/service/noticeService.png)
 
 #### 4.5 NotifyService
 
-![notifyService](.\assets\service\notifyService.png)
+![notifyService](./assets/service/notifyService.png)
 
 #### 4.6 ReservationService
 
-![reservationService](.\assets\service\reservationService.png)
+![reservationService](./assets/service/reservationService.png)
 
 #### 4.7 SearchService
 
-![searchService](.\assets\service\searchService.png)
+![searchService](./assets/service/searchService.png)
 
 #### 4.8 TokenService
 
-![tokenService](.\assets\service\tokenService.png)
+![tokenService](./assets/service/tokenService.png)
 
 ### 5 Controller层
 
@@ -123,43 +123,43 @@ Service层，即服务层，通过调用DAO层实现，对一些操作进行封�
 
 AccountController主要处理针对于用户信息的请求：如登录，登出，注册，上传头像，更新信息等等，调用AccountService来实现相对应业务的处理。
 
-![accountController](.\assets\controller\accountController.png)
+![accountController](./assets/controller/accountController.png)
 
 #### 5.2 CommentController
 
 CommentController主要处理针对评论的请求，比如：获取商品的评论列表、发送评论以及删除评论。
 
-![commentController](.\assets\controller\commentController.png)
+![commentController](./assets/controller/commentController.png)
 
 #### 5.3 CommodityController
 
 CommodityController主要处理有关商品的请求，比如：商品信息修改、商品发布、删除商品、商品名称模糊查找、商品排序、商品类别查找、获取同一通告下全部商品等。
 
-![commodityController](.\assets\controller\commodityController.png)
+![commodityController](./assets/controller/commodityController.png)
 
 #### 5.4 NoticeController
 
 NoticeController主要处理有关通告的请求，比如创建通告、修改通告、删除通告、取消通告、获取最新发布的通告以及获取用户发布的通告等。
 
-![noticeController](.\assets\controller\noticeController.png)
+![noticeController](./assets/controller/noticeController.png)
 
 #### 5.5 NotifyController
 
 NotifyController主要处理有关通知的请求，比如获取未读消息、获取所有通知、用户查看通知后设为已读等。
 
-![notifyController](.\assets\controller\notifyController.png)
+![notifyController](./assets/controller/notifyController.png)
 
 #### 5.6 ReservationController
 
 ReservationController主要处理有关预约的请求，比如创建预约、取消预约、完成预约、获取预约记录、获取被预约记录等。
 
-![reservationController](.\assets\controller\reservationController.png)
+![reservationController](./assets/controller/reservationController.png)
 
 #### 5.7 SearchController
 
 SearchController主要处理有关历史记录的请求，比如获取用户搜索记录、删除某一历史记录、删除全部历史记录等。
 
-![searchController](.\assets\controller\searchController.png)
+![searchController](./assets/controller/searchController.png)
 
 ### 6 拦截验证
 
@@ -184,7 +184,7 @@ final String headerToken = arg0.getHeader("token");
 
 ​	如下图所示，我们定义了token实体类，以及对应的dao。
 
-![token](.\assets\other\token.png)
+![token](./assets/other/token.png)
 
 ### 7 RESTful API：Swagger
 
@@ -192,9 +192,9 @@ final String headerToken = arg0.getHeader("token");
 
 本项目后端API总览：
 
-![swagger](.\assets\other\swagger.png)
+![swagger](./assets/other/swagger.png)
 
 以AccountController为例展现 API列表：
 
-![swagger](.\assets\other\swagger2.png)
+![swagger](./assets/other/swagger2.png)
 
