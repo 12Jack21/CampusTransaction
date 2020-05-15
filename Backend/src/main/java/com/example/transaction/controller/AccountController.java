@@ -124,7 +124,6 @@ public class AccountController {
      */
 //    @RequestMapping("/verifyUserName")
     @ApiOperation(value = "检查用户名是否被使用")
-    @ApiImplicitParam(name = "accountId", value = "用户Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/{accountId}/name")
     public responseFromServer verifyUserName(@PathVariable Integer accountId) {
 //    public responseFromServer verifyUserName(@RequestBody Account account){
@@ -186,7 +185,6 @@ public class AccountController {
      */
 //    @RequestMapping("/getAccountInfo")
     @ApiOperation(value = "获取账号信息，在a2a中验证")
-    @ApiImplicitParam(name = "accountId", value = "用户Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/{accountId}")
     public responseFromServer getAccountInfo(@PathVariable Integer accountId, HttpServletRequest request) {
         Account account = new Account(accountId);

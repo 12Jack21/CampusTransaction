@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -78,11 +79,7 @@ public class NoticeServiceImpl implements NoticeService {
         if (condition.getEndTime() != null) {
             queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
         }
-        responseFromServer response = getNoticePage(queryWrapper, condition.getPageIndex());
-        if (response.isSuccess()) {
-            return responseFromServer.success(new NoticeInfo((Notice) response.getData()));
-        }
-        return responseFromServer.error();
+        return getNoticePage(queryWrapper, condition.getPageIndex());
     }
 
     /**
@@ -155,7 +152,6 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 查询通告分页
-     *
      * @param queryWrapper
      * @param pageIndex
      * @return
@@ -164,8 +160,12 @@ public class NoticeServiceImpl implements NoticeService {
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
         Page<Notice> page = new Page<>(pageIndex, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
-        MyPage myPage = new MyPage(noticeIPage);
-        return responseFromServer.success(myPage);
+        MyPage<Notice> myPage = new MyPage(noticeIPage);
+        List<NoticeInfo> noticeList = new ArrayList<>();
+        for (Notice notice : myPage.getPageList()) {
+            noticeList.add(new NoticeInfo(notice));
+        }
+        return responseFromServer.success(new MyPage<>(myPage, noticeList));
     }
 
     /**
@@ -194,19 +194,6 @@ public class NoticeServiceImpl implements NoticeService {
         return responseFromServer.success(notice);
     }
 
-
-    /*
-    @Override
-    public responseFromServer getRecentNoticePage(Map<String, Object> map) {
-
-        return null;
-    }
-
-    @Override
-    public responseFromServer getNoticePageByAccountId(Map<String, Object> map) {
-        return null;
-    }
-*/
 
     NoticeDAO noticeDAO;
     CommodityDAO commodityDAO;

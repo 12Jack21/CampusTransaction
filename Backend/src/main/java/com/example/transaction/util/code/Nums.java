@@ -12,4 +12,9 @@ public class Nums {
     /*时间限制大小*/
     public static int recentDays = 2;
 
+    public static final long year = (long) 1000 * 60 * 60 * 24 * 365;
+    public static final long month = (long) 1000 * 60 * 60 * 24 * 30;
+    public static final long weak = (long) 1000 * 60 * 60 * 24 * 7;
+    public static final long day = (long) 1000 * 60 * 60 * 24;
+
 }

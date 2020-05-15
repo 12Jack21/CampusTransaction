@@ -1,11 +1,14 @@
 package com.example.transaction.dto.notice;
 
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.util.code.Nums;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: NoticeInfo
@@ -52,24 +55,33 @@ public class NoticeInfo {
             this.showAll = false;
         }
         this.address = notice.getAddress();
-        this.image = notice.getCommodityLists().get(0).getCommodityImages().get(0).getImageUrl();
+        for (int i = 0; i < notice.getCommodityLists().size(); i++) {
+            List<CommodityImage> images = notice.getCommodityLists().get(i).getCommodityImages();
+            if (images == null || images.size() == 0)
+                continue;
+            else {
+                this.image = images.get(0).getImageUrl();
+            }
+        }
         this.avatar = notice.getUser().getAvatarUrl();
         this.userName = notice.getUser().getUsername();
-        this.rate = notice.getUser().getEstimate().getSuccessRate();
+        if (notice.getUser().getEstimate() != null)
+            this.rate = notice.getUser().getEstimate().getSuccessRate();
+        Date now = new Date();
+        Long millis = notice.getCreateTime().getTime();
+        Long deviance = (new Date()).getTime() - notice.getCreateTime().getTime();
 
-        Long deviance = (new Timestamp(System.currentTimeMillis())).getTime() - notice.getCreateTime().getTime();
-        if (deviance / (1000 * 60 * 60 * 24 * 365) > 0) {
-            this.time = (int) (1000 * 60 * 60 * 24 * 365) + "年前";
-        } else if (deviance / (1000 * 60 * 60 * 24 * 30) > 0) {
-            this.time = (int) (1000 * 60 * 60 * 24 * 30) + "月前";
-        } else if (deviance / (1000 * 60 * 60 * 24 * 7) > 0) {
-            this.time = (int) (1000 * 60 * 60 * 24 * 7) + "周前";
-        } else if (deviance / (1000 * 60 * 60 * 24) > 0) {
-            this.time = (int) (1000 * 60 * 60 * 24) + "天前";
+        if (deviance / Nums.year > 0) {
+            this.time = (deviance / Nums.year) + "年前";
+        } else if (deviance / Nums.month > 0) {
+            this.time = (deviance / Nums.month) + "月前";
+        } else if (deviance / Nums.weak > 0) {
+            this.time = (deviance / Nums.weak) + "周前";
+        } else if (deviance / Nums.day > 0) {
+            this.time = (deviance / Nums.day) + "天前";
         } else {
             this.time = "今天";
         }
-
     }
 
 }

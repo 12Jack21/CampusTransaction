@@ -97,8 +97,7 @@ public class NoticeController {
     @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
     @DeleteMapping("/{noticeId}/cancel")
     public responseFromServer cancelNotice(@PathVariable Integer noticeId, HttpServletRequest request) {
-        Notice notice = new Notice(noticeId);
-        return updateNoticeState(notice, request, NoticeCode.CANCELLED.getCode());
+        return updateNoticeState(noticeId, NoticeCode.CANCELLED.getCode(), request);
     }
 
 
@@ -114,15 +113,15 @@ public class NoticeController {
     @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer")
     @PutMapping()
     public responseFromServer publishNotice(@RequestBody Notice notice, HttpServletRequest request) {
-        return updateNoticeState(notice, request, NoticeCode.PUBLISHED.getCode());
+        return updateNoticeState(notice.getId(), NoticeCode.PUBLISHED.getCode(), request);
     }
 
     /**
-     * 修改状态，进行用户校验，非法操作检查，
+     * 修改状态，进行用户校验，非法操作检查
      *
-     * @param notice
-     * @param request
+     * @param noticeId
      * @param code
+     * @param request
      * @return
      */
     @ApiOperation(value = "修改通告")
@@ -130,20 +129,22 @@ public class NoticeController {
             @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer"),
             @ApiImplicitParam(name = "code", value = "状态码", paramType = "Integer", dataType = "Integer")
     })
-    @PutMapping("/{notice_id}/{code}")
-    public responseFromServer updateNoticeState(@RequestBody Notice notice, HttpServletRequest request, int code) {
+    @PutMapping("/{noticeId}/{code}")
+    public responseFromServer updateNoticeState(@PathVariable Integer noticeId,
+                                                @PathVariable Integer code,
+                                                HttpServletRequest request) {
         /**
          * ZZH
          * TODO : 修改
          */
-        Account account = new Account(notice.getAccountId());
+        Account account = new Account();
         if (accountVerify.verify(account, request)) {
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("account_id", account.getId());
-            queryWrapper.eq("id", notice.getId());
+            queryWrapper.eq("id", noticeId);
             Notice updateNotice = new Notice();
             updateNotice.setAccountId(account.getId());
-            updateNotice.setId(notice.getId());
+            updateNotice.setId(noticeId);
             updateNotice.setStateEnum(code);
             return noticeService.updateNotice(updateNotice, queryWrapper);
         } else {
