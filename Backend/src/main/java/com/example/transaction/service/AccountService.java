@@ -3,6 +3,7 @@ package com.example.transaction.service;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -31,4 +32,6 @@ public interface AccountService {
     public responseFromServer verifyPassword(Account account);
 
     public responseFromServer getA2a(Integer accountId1, Integer accountId2);
+
+    responseFromServer uploadAvatar(MultipartFile file, Integer accountId);
 }

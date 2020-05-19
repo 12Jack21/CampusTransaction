@@ -21,8 +21,8 @@ public class Estimate implements Serializable {
     private Double successRate;
     @TableField(value = "purchase_credit")
     private Double purchaseCredit;
-    @TableField(value = "sell_credit")
-    private Double sellCredit;
+    @TableField(value = "credit")
+    private Double credit;
     @TableField(value = "account_id")
     private Integer accountId;
     ;

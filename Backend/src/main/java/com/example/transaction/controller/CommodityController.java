@@ -6,6 +6,7 @@ import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.SearchService;
 import com.example.transaction.service.impl.AccountVerify;
+import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import io.swagger.annotations.Api;
@@ -62,17 +63,17 @@ public class CommodityController {
         if (files == null) {
             return responseFromServer.error(0, "请选择要上传的图片");
         }
-        if( files.length >6 ){
+        if (files.length > Nums.maxUploadingFilesCount) {
             return responseFromServer.error();
         }
-        for(MultipartFile file:files){
-            if(file.getSize()> 1024 * 1024 * 10){
+        for (MultipartFile file : files) {
+            if (file.getSize() > 1024 * 1024 * 10) {
                 return responseFromServer.error(0, "文件大小不能大于10M");
             }
         }
 
         responseFromServer response = commodityService.getDetailedCommodity(commodityId);
-        if(!response.isSuccess()){
+        if (!response.isSuccess()) {
             return responseFromServer.error();
         }
         Commodity commodity = (Commodity) response.getData();
@@ -92,8 +93,9 @@ public class CommodityController {
         if (response.isSuccess()) {
             if (condition.getKeyword() != null || condition.getKeyword() != "") {
                 Account account = accountVerify.getCurrentAccount(request);
-                if (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess())
+                if (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess()) {
                     return responseFromServer.success();
+                }
             }
             /*暂时先:插入搜索记录失败时也返回成功*/
             return responseFromServer.success();
@@ -141,7 +143,6 @@ public class CommodityController {
      * @param pageIndex
      * @return
      */
-//    @RequestMapping("/search/SortByNewness")
     @ApiOperation(value = "商品名称模糊查找，崭新程度排序")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
@@ -190,7 +191,6 @@ public class CommodityController {
      * @param searchStr
      * @return
      */
-//    @RequestMapping("/search/betweenPrice")
     @ApiOperation(value = "根据价格区间筛选物品")
     @ApiImplicitParams(
             {
@@ -215,26 +215,6 @@ public class CommodityController {
         return commodityService.getBetweenPrice(pageIndex, searchStr, low, high);
     }
 
-    /**
-     * 根据所有者信誉排序
-     *
-     * @param pageIndex
-     * @param searchStr
-     * @return
-     */
-//    @ApiOperation(value = "根据所有者信誉排序")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "searchStr", value = "搜索字符串", paramType = "String", dataType = "String"),
-//            @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
-//    })
-//    @GetMapping("/{searchStr}/credit")
-//    public responseFromServer sortByCredit(@RequestJson Integer pageIndex, @PathVariable String searchStr) {
-////        Integer pageIndex = (Integer) map.get("pageIndex");
-//        if (searchStr == null || searchStr == "") {
-//            return responseFromServer.error();
-//        }
-//        return commodityService.sortByCredit(pageIndex, searchStr);
-//    }
 
     /**
      * 插入商品
@@ -245,16 +225,17 @@ public class CommodityController {
      */
     @ApiOperation(value = "插入商品")
     @PostMapping
-    public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpServletRequest request){
-        if(commodity.getNoticeId()==null)
+    public responseFromServer insertCommodity(@RequestBody Commodity commodity, HttpServletRequest request) {
+        if (commodity.getNoticeId() == null) {
             return responseFromServer.error();
+        }
         responseFromServer response = noticeService.getSimpleNotice(commodity.getNoticeId());
-        if(!response.isSuccess()){
+        if (!response.isSuccess()) {
             return responseFromServer.error();
-        }else{
+        } else {
             Notice notice = (Notice) response.getData();
             Account account = (Account) request.getAttribute("currentAccount");
-            if(notice.getAccountId()==null || notice.getAccountId() == account.getId().intValue()){
+            if (notice.getAccountId() == null || notice.getAccountId() == account.getId().intValue()) {
                 return responseFromServer.error();
             }
             /*当前插入商品的notice不属于该用户*/
@@ -264,6 +245,7 @@ public class CommodityController {
 
     /**
      * 更新商品信息
+     *
      * @param commodityId
      * @param request
      * @return
@@ -271,7 +253,6 @@ public class CommodityController {
     @ApiOperation(value = "更新商品信息")
     @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer")
     @PutMapping("/{commodityId}")
-//    @RequestMapping("/updateCommodity")
     public responseFromServer updateCommodity(@PathVariable Integer commodityId, HttpServletRequest request) {
         Commodity commodity = new Commodity(commodityId);
         responseFromServer response = getById(commodity.getId());
@@ -284,11 +265,11 @@ public class CommodityController {
 
     /**
      * 删除商品
+     *
      * @param commodityId
      * @param request
      * @return
      */
-//    @RequestMapping("/deleteCommodity")
     @ApiOperation(value = "删除商品")
     @DeleteMapping("/{commodityId}")
     public responseFromServer deleteCommodity(@PathVariable Integer commodityId, HttpServletRequest request) {
@@ -302,10 +283,10 @@ public class CommodityController {
 
     /**
      * 查询某一notice下所有商品
+     *
      * @param noticeId
      * @return
      */
-//    @RequestMapping("/selectByNoticeId")
     @ApiOperation(value = "查询某一notice下所有商品")
     @GetMapping("/notice/{noticeId}")
     public responseFromServer selectAllByNoticeId(@PathVariable Integer noticeId) {
@@ -315,36 +296,26 @@ public class CommodityController {
 
     /**
      * 删除某一notice下所有商品
+     *
      * @param noticeId
      * @param request
      * @return
      */
-//    @RequestMapping("/deleteByNoticeId")
     @ApiOperation(value = "删除某一notice下所有商品")
     @DeleteMapping("/notice/{noticeId}")
     public responseFromServer deleteAllByNoticeId(@PathVariable Integer noticeId, HttpServletRequest request) {
         Notice notice = new Notice(noticeId);
         Account account = new Account(notice.getAccountId());
-        if (!accountVerify.verify(account, request))  //用户合法性检查
+        //用户合法性检查
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.error();
+        }
         return commodityService.deleteAllByNotice(notice);
     }
 
-    /**
-     * 返回图片路径
-     * @param files 文件数组
-     * @return 执行结果
-    //     */
-//    @ApiOperation(value = "返回上传图片路径")
-//    @ApiImplicitParam(name = "files", value = "商品图片列表", paramType = "MultipartFile[]", dataType = "MultipartFile[]")
-//    @PostMapping("/{files}")
-//    public responseFromServer imageUrl(MultipartFile[] files) {
-//        return commodityService.imageUrl(files);
-//    }
 
     /**
      * 返回图片路径
-     *
      * @param image
      * @return 执行结果
      */
@@ -356,8 +327,9 @@ public class CommodityController {
         responseFromServer response = commodityService.uploadCommodityImages(images, null, false);
         if (response.isSuccess()) {
             CommodityImage commodityImage = (CommodityImage) response.getData();
-            if (commodityImage != null && commodityImage.getImageUrl() != null && commodityImage.getImageUrl() != "")
+            if (commodityImage != null && commodityImage.getImageUrl() != null && commodityImage.getImageUrl() != "") {
                 return responseFromServer.success(commodityImage);
+            }
         }
         return responseFromServer.error();
     }
@@ -375,7 +347,6 @@ public class CommodityController {
     public responseFromServer uploadImages(@RequestParam MultipartFile[] images) {
         return commodityService.uploadCommodityImages(images, null, false);
     }
-
 
 
 }

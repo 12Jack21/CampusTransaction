@@ -11,10 +11,13 @@ public class Nums {
     public static int pageSize = 15;
     /*时间限制大小*/
     public static int recentDays = 2;
+    /*每次最大上传的文件数量*/
+    public static int maxUploadingFilesCount = 6;
 
     public static final long year = (long) 1000 * 60 * 60 * 24 * 365;
     public static final long month = (long) 1000 * 60 * 60 * 24 * 30;
     public static final long weak = (long) 1000 * 60 * 60 * 24 * 7;
     public static final long day = (long) 1000 * 60 * 60 * 24;
+
 
 }

@@ -16,6 +16,7 @@ import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.apache.ibatis.annotations.Options;
+import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,26 +65,42 @@ public class CommodityServiceImpl implements CommodityService {
 
         if (condition.getSortType() != null && condition.sortType >= 0) {
             switch (condition.getSortType()) {
-                case 0:/*最新*/
+                /*最新*/
+                case 0:
                     queryWrapper.orderByDesc("c.create_time");
                     break;
-                case 1:/*附近,地址在参数中*/
+
+                /*附近,地址在参数中*/
+                case 1:
                     break;
-                case 2:/*失效时间*/
+
+                /*失效时间*/
+                case 2:
                     condition.recent = true;
                     condition.setOutdated(2);
                     break;
-                case 3:/*便宜好物*/
+
+                /*便宜好物*/
+                case 3:
                     queryWrapper.le("c.price", 10.0);
                     break;
-                case 4:/*todo*/
+
+                /*todo*/
+                case 4:
                     break;
-                case 5:/*todo*/
+
+                /*todo*/
+                case 5:
                     break;
-                case 6:/*todo*/
+
+                /*todo*/
+                case 6:
                     break;
-                case 7:/*todo*/
+
+                /*todo*/
+                case 7:
                     break;
+                default:
             }
         }
 
@@ -151,8 +169,9 @@ public class CommodityServiceImpl implements CommodityService {
 
         try {
             IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
-            if (resultPage == null)
+            if (resultPage == null) {
                 throw new Exception();
+            }
             return responseFromServer.success(new MyPage<Commodity>(resultPage));
         } catch (Exception e) {
             return responseFromServer.error();
@@ -168,16 +187,19 @@ public class CommodityServiceImpl implements CommodityService {
      * @param id 商品id
      * @return 执行结果
      */
+    @Override
     public responseFromServer getById(Integer id) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("id", id);
         //id查找是唯一的
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-        if (commodities == null || commodities.size() != 1)
+        if (commodities == null || commodities.size() != 1) {
             return responseFromServer.error();
+        }
         return responseFromServer.success(commodities.get(0));
     }
 
+    @Override
     public responseFromServer getSimpleCommodity(Integer id) {
         Commodity commodity = commodityDAO.getSimpleCommodityById(id);
         if (commodity == null) {
@@ -186,6 +208,7 @@ public class CommodityServiceImpl implements CommodityService {
         return responseFromServer.success();
     }
 
+    @Override
     public responseFromServer getDetailedCommodity(Integer id) {
         return getById(id);
     }
@@ -198,6 +221,7 @@ public class CommodityServiceImpl implements CommodityService {
      *                  count为偶数:顺序（从小到大）；奇数:倒序
      * @return Commodity数组
      */
+    @Override
     public responseFromServer getByNameSortedByNewness(Integer pageIndex, String name) {
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
@@ -212,6 +236,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param typeId 标签
      * @return Commodity数组
      */
+    @Override
     public responseFromServer getByTypeId(Integer pageIndex, Integer typeId) {
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
@@ -227,6 +252,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param high 最高价
      * @return Commodity数组
      */
+    @Override
     public responseFromServer getBetweenPrice(Integer pageIndex, String name, Integer low, Integer high) {
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
@@ -241,6 +267,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param name 商品名
      * @return Commodity数组
      */
+    @Override
     public responseFromServer sortByCredit(Integer pageIndex, String name) {
         Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
@@ -255,6 +282,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param commodity 商品
      * @return 执行结果
      */
+    @Override
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     @Transactional
     public responseFromServer insertCommodity(Commodity commodity) {
@@ -272,6 +300,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param commodity 商品
      * @return 执行结果
      */
+    @Override
     @Transactional
     public responseFromServer updateCommodity(Commodity commodity) {
 /*        if(isIdentityError(commodity, session))  //身份检查
@@ -291,6 +320,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param commodity 商品名
      * @return 执行结果
      */
+    @Override
     @Transactional
     public responseFromServer deleteCommodity(Commodity commodity) {
         /*身份检查放到controller层，避免批量删除时重复多次验证信息*/
@@ -325,7 +355,9 @@ public class CommodityServiceImpl implements CommodityService {
         }
 
         /*已经取消了多类型标签的功能*/
-        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
+            return true;
+        }
 
         List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
@@ -353,7 +385,9 @@ public class CommodityServiceImpl implements CommodityService {
             }
         }
         /*已经取消了多类型标签的功能*/
-        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) return true;
+        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
+            return true;
+        }
 
         List<Type> typeList = commodity.getTypes();
         for (Type type : typeList) {
@@ -372,6 +406,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param notice 通告
      * @return 执行结果
      */
+    @Override
     public responseFromServer selectAllByNotice(Notice notice) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("notice_id", notice.getId());
@@ -385,16 +420,18 @@ public class CommodityServiceImpl implements CommodityService {
      * @param notice 通告
      * @return 执行结果
      */
+    @Override
     @Transactional
     public responseFromServer deleteAllByNotice(Notice notice) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("notice_id", notice.getId());
         List<Commodity> commodities = commodityDAO.selectWithCondition(queryWrapper);
-        for (Commodity commodity : commodities)
+        for (Commodity commodity : commodities) {
             if (!deleteCommodity(commodity).isSuccess()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error();
             }
+        }
         return responseFromServer.success();
     }
 
@@ -417,6 +454,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @param files 文件数组
      * @return 执行结果
      */
+    @Override
     public responseFromServer imageUrl(MultipartFile[] files) {
         QueryWrapper<CommodityImage> queryWrapper = new QueryWrapper<>();
         List<CommodityImage> commodityImages = commodityImageDAO.selectList(queryWrapper);
@@ -469,12 +507,20 @@ public class CommodityServiceImpl implements CommodityService {
         CommodityImage image = new CommodityImage();
         image.setCommodityId(commodityId);
         image.setImageUrl(url);
-        if (1 != commodityImageDAO.updateByUrl(url, commodityId))
+//        File file = new File("E:/CampusTra nsaction/temp/"+url);
+//        file.renameTo(new File("E:/CampusTransaction/images/"+url));
+        try {
+            /*将图片从temp文件夹移动到images文件夹下*/
+            Files.move(Paths.get("E:/CampusTransactionResources/temp/" + url), Paths.get("E:/CampusTransactionResources/images/" + url), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException e) {
+            e.printStackTrace();
             return responseFromServer.error();
-        /**
-         * ZZH
-         * TODO : 将图片从temp文件夹移动到images文件夹下
-         */
+        }
+
+        if (1 != commodityImageDAO.updateByUrl(url, commodityId)) {
+            return responseFromServer.error();
+        }
+
         return responseFromServer.success();
     }
 

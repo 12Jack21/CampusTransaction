@@ -47,8 +47,9 @@ public class NotifyServiceImpl implements NotifyService {
      */
     @Override
     public responseFromServer getSimpleAccountNotifyById(Integer id){
-        if(id==null)
+        if (id == null) {
             return responseFromServer.error();
+        }
         AccountNotify tempNotify = new AccountNotify();
         tempNotify.setId(id);
         AccountNotify accountNotify = accountNotifyDAO.selectById(id);
@@ -62,8 +63,9 @@ public class NotifyServiceImpl implements NotifyService {
      */
     @Override
     public responseFromServer getSimpleAccountNotifyByNotifyId(Integer id){
-        if(id==null)
+        if (id == null) {
             return responseFromServer.error();
+        }
         AccountNotify tempNotify = new AccountNotify();
         tempNotify.setId(id);
         AccountNotify accountNotify = accountNotifyDAO.getSimpleNotifyByNotifyId(id);
@@ -150,8 +152,9 @@ public class NotifyServiceImpl implements NotifyService {
     @Transactional
     @Override
     public responseFromServer insertAccountNotify(AccountNotify accountNotify){
-        if(accountNotify==null)
+        if (accountNotify == null) {
             return responseFromServer.error();
+        }
         accountNotify.setId(null);
         accountNotify.setNotifyId(null);
         Notify notify = accountNotify.getNotify();

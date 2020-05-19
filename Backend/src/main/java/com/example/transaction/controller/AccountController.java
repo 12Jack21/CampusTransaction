@@ -2,6 +2,7 @@ package com.example.transaction.controller;
 
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
+import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import com.example.transaction.service.impl.AccountVerify;
 import io.swagger.annotations.Api;
@@ -9,6 +10,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +29,12 @@ public class AccountController {
     @Autowired
     AccountVerify accountVerify;
 
+    @PostMapping("/testLogin")
+    public responseFromServer testLogin(@RequestJson String username, @RequestJson String password, HttpServletRequest request) {
+        System.out.printf(username + password);
+        return responseFromServer.success();
+    }
+
     /**
      * 使用shiro进行登录验证
      *
@@ -40,8 +48,9 @@ public class AccountController {
     @PostMapping("/login")
     public responseFromServer login(@RequestBody Account account, HttpServletRequest request) {
         //验证参数，用户名和密码是否为空
-        if (account == null || account.getUsername() == null || account.getPassword() == null)
+        if (account == null || account.getUsername() == null || account.getPassword() == null) {
             return responseFromServer.error();
+        }
         return accountService.login(account);
         //添加用户认证信息
        /* Subject subject = SecurityUtils.getSubject();
@@ -53,9 +62,8 @@ public class AccountController {
         try {
             //进行验证，这里可以捕获异常，然后返回对应信息
             subject.login(usernamePasswordToken);
-            *//*subject.checkRole("admin");
-            subject.checkPermissions("query", "add");*/
-        /*
+            subject.checkRole("admin");
+            subject.checkPermissions("query", "add");
         } catch (AuthorizationException e) {
             e.printStackTrace();
             return responseFromServer.error("没有权限");
@@ -77,13 +85,13 @@ public class AccountController {
         }
 
         if (subject.isAuthenticated()) {
-            *//*登录成功*//*
+            //登录成功
             return responseFromServer.success();
         } else {
             usernamePasswordToken.clear();
             return responseFromServer.error();
         }
-*/
+        */
     }
 
 
@@ -109,10 +117,10 @@ public class AccountController {
 
 
     /*todo 上传图片*/
-//    @RequestMapping("/uploadAvatar")
     //上传图片可归入个人信息修改，用户账号刚创建时初始化头像
-    public responseFromServer uploadAvatar(HttpServletRequest session){
-        return null;
+    @PostMapping("/{accountId}/avatar/upload")
+    public responseFromServer uploadAvatar(@PathVariable(required = true) Integer accountId, @RequestParam(required = true) MultipartFile avatar, HttpServletRequest request) {
+        return accountService.uploadAvatar(avatar, accountId);
     }
 
 
