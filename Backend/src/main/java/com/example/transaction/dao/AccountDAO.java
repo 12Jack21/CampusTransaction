@@ -18,7 +18,7 @@ public interface AccountDAO extends BaseMapper<Account> {
                     select = "com.example.transaction.dao.EstimateDAO.getByAccountId"
             ))
     })
-    @Select("select id,username,gender from account where id = #{id}")
+    @Select("select id,username,gender,avatar_url from account where id = #{id}")
     //该函数附带信用等信息，和上面的getAccountCreditById返回结果相同
     Account getAccountWithPublicInfoById(Integer id);
 

@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -18,13 +20,15 @@ import java.util.List;
 
 @Data
 @TableName(value = "acc_notify")
-public class AccountNotify {
-    @TableId(value = "id",type = IdType.AUTO)
+public class AccountNotify implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField(value = "is_read")
     private Boolean isRead;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "creat_time")
     private Timestamp createTime;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "read_time")
     private Timestamp readTime;
     @TableField(value = "notify_id")

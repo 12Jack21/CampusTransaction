@@ -48,7 +48,7 @@ public class ReservationController {
      */
 //    @RequestMapping("/setupReservation")
     @ApiOperation(value = "创建预约")
-    @ApiImplicitParam(name = "reservation", value = "@RequestBody 预约请求体",  paramType = "Reservation", dataType = "Reservation")
+    @ApiImplicitParam(name = "reservation", value = "@RequestBody 预约请求体", paramType = "Reservation", dataType = "Reservation")
     @PostMapping
     public responseFromServer setupReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
@@ -65,22 +65,21 @@ public class ReservationController {
     /**
      * 取消预约
      *
-     * @param reservation
+     * @param reservationId
      * @param request
      * @return
      */
 //    @RequestMapping("/cancelReservation")
     @ApiOperation(value = "取消预约")
-    @ApiImplicitParam(name = "reservation_id", value = "reservation_id",  paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{reservation_id}/cancel")
-    public responseFromServer cancelReservation(@RequestBody Reservation reservation, HttpServletRequest request) {
+    @PutMapping("/{reservationId}/cancel")
+    public responseFromServer cancelReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
-
-        if (reservation.getId() != null)
-            return reservationService.cancelReservation(reservation.getId(), account.getId());
-        else
+        if (reservationId != null) {
+            return reservationService.cancelReservation(reservationId, account.getId());
+        } else {
             return responseFromServer.error();
+        }
     }
 
 
@@ -91,9 +90,7 @@ public class ReservationController {
      * @param request
      * @return
      */
-//    @RequestMapping("/deleteReservation")
     @ApiOperation(value = "删除预约")
-    @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
     @DeleteMapping("/{reservationId}")
     public responseFromServer deleteReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
         Reservation reservation = verifySeller(reservationId, request);
@@ -114,15 +111,14 @@ public class ReservationController {
      * @return
      */
     @ApiOperation(value = "用户身份验证")
-    @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/{reservationId}/verify")
     public Reservation verifySeller(@PathVariable Integer reservationId, HttpServletRequest request) {
         Reservation reservation = new Reservation(reservationId);
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
-        if (reservation.getId() == null)
+        if (reservation.getId() == null) {
             return null;
-        else {
+        } else {
             responseFromServer response = reservationService.getDetailedReservation(reservation.getId());
             if (response.isSuccess()) {
                 /*用户身份验证*/
@@ -132,8 +128,9 @@ public class ReservationController {
                         && commodity.getNotice() != null
                         && commodity.getNotice().getAccountId() != null) {
                     if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
-                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/
+                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/ {
                         return null;
+                    }
                 } else {
                     /*查询错误*/
                     return null;
@@ -212,7 +209,9 @@ public class ReservationController {
     public responseFromServer getReservationPageForCommodity(@PathVariable Integer commodityId, @RequestJson Integer pageIndex, HttpServletRequest request) {
 //        Commodity commodity = (Commodity) map.get("commodity");
 //        Integer pageIndex = (Integer) map.get("pageIndex");
-        if (commodityId == null) return responseFromServer.error();
+        if (commodityId == null) {
+            return responseFromServer.error();
+        }
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /*用户核对*/
         responseFromServer response = commodityService.getSimpleCommodity(commodityId);
@@ -273,7 +272,6 @@ public class ReservationController {
      * @param request
      * @return
      */
-//    @RequestMapping("/getReservationRequest")
     @ApiOperation(value = "接收预约列表")
     @ApiImplicitParams(
             {
@@ -283,11 +281,8 @@ public class ReservationController {
     )
     @GetMapping("/account/{accountId}/receive")
     public responseFromServer getReservationRequest(@RequestJson Integer pageIndex, @PathVariable Integer accountId, HttpServletRequest request) {
-
-        //        Integer pageIndex = (Integer) map.get("pageIndex");
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /**
-         * ZZH
          * TODO : token过后直接根据token获取当前的id
          * return reservationService.getReservationRequest(accountVerify.getCurrentAccount(request).getId(), pageIndex);
          */
@@ -301,7 +296,6 @@ public class ReservationController {
      * @param request
      * @return
      */
-//    @RequestMapping("/getDetailedReservation")
     @ApiOperation("获取详细预约内容")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/detailed/{reservationId}")

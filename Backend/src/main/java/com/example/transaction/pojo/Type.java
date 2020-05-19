@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: 高战立
  * @Date: 2020/4/24 15:39
@@ -12,8 +14,8 @@ import lombok.Data;
  */
 
 @Data
-public class Type {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Type implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String value;
     @TableField(value = "commodity_id")

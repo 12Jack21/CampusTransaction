@@ -3,8 +3,10 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -14,10 +16,11 @@ import java.sql.Timestamp;
  * @Date: 2020/5/7 16:46
  */
 @Data
-public class Token {
+public class Token implements Serializable {
     @TableId(value = "account_id")
     private int accountId;
 
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "token_str")

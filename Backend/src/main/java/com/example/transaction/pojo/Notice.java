@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class Notice {
+public class Notice implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private Boolean type;
@@ -23,8 +25,12 @@ public class Notice {
     private String description;
     @TableField(value = "state_enum")
     private Integer stateEnum;
+
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "update_time")
     private Timestamp updateTime;
+
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "account_id")

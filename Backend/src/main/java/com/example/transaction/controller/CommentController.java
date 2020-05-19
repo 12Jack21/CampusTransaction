@@ -42,7 +42,6 @@ public class CommentController {
      */
 //    @RequestMapping("/getCommentByCommodityId")
     @ApiOperation(value = "获取关于商品的评论")
-    @ApiImplicitParam(name = "commodity_id", value = "商品Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/commodity/{commodityId}")
     //pageIndex以ParamRequest形式后缀
     public responseFromServer getCommentByCommodityId(@RequestJson Integer pageIndex, @PathVariable Integer commodityId) {

@@ -3,8 +3,10 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -14,13 +16,15 @@ import java.sql.Timestamp;
  */
 
 @Data
-public class Search {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Search implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String content;
     private Integer count;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "update_time")
     private Timestamp updateTime;
+    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "account_id")
     private Integer accountId;
 }

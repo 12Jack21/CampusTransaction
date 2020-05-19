@@ -2,6 +2,7 @@ package com.example.transaction.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.transaction.dto.notice.NoticeInfo;
 import lombok.Data;
 
 import java.util.List;
@@ -31,11 +32,20 @@ public class MyPage<T> {
         this.pageCount = pageCount;
     }
 
-    public MyPage(IPage page){
+    public MyPage(IPage page) {
         this.totalCount = page.getTotal();
         this.pageIndex = page.getCurrent();
         this.pageCount = page.getPages();
         this.pageList = page.getRecords();
+        this.pageSize = pageList.size();
+    }
+
+
+    public MyPage(MyPage page, List<T> list) {
+        this.totalCount = page.totalCount;
+        this.pageIndex = page.pageIndex;
+        this.pageCount = page.pageCount;
+        this.pageList = list;
         this.pageSize = pageList.size();
     }
 }

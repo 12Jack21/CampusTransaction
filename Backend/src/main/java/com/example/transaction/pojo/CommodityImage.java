@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author: 高战立
  * @Date: 2020/4/24 15:40
@@ -14,17 +16,18 @@ import lombok.Data;
 
 @Data
 @TableName(value = "com_image")
-public class CommodityImage {
-    @TableId(value = "id",type = IdType.AUTO)
+public class CommodityImage implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     @TableField(value = "image_url")
     private String imageUrl;
     @TableField(value = "commodity_id")
     private Integer commodityId;
 
-    public CommodityImage(){}
+    public CommodityImage() {
+    }
 
-    public CommodityImage(String imageUrl,Integer commodityId){
+    public CommodityImage(String imageUrl, Integer commodityId) {
         this.imageUrl = imageUrl;
         this.commodityId = commodityId;
     }

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -14,8 +15,8 @@ import java.sql.Timestamp;
  */
 
 @Data
-public class Notify {
-    @TableId(value = "id",type = IdType.AUTO)
+public class Notify implements Serializable {
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /*公告，提醒，信息*/
     private Integer type;

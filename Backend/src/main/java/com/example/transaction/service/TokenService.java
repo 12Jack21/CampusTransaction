@@ -1,5 +1,6 @@
 package com.example.transaction.service;
 
+import com.example.transaction.pojo.Account;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date: 2020/5/7 20:29
  */
 public interface TokenService {
-    responseFromServer loginOperationOnToken(Integer accountId);
 
     @Transactional
-    responseFromServer logoutOperationOnToken(Integer accountId);
+    responseFromServer loginOperationOnToken(Account account);
+
+    @Transactional
+    responseFromServer logoutOperationOnToken(Account account);
 }
