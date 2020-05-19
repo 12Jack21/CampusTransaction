@@ -95,6 +95,16 @@ public class AccountController {
     }
 
 
+    @ApiOperation(value = "重新登录")
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
+    @PostMapping("/relogin")
+    public responseFromServer relogin(HttpServletRequest request) {
+        //验证参数，用户名和密码是否为空
+        String tokenStr = request.getHeader("token");
+        return accountService.reLogin(tokenStr);
+    }
+
+
     /**
      * 退登
      *

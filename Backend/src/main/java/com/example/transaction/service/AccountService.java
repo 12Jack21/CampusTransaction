@@ -22,6 +22,8 @@ public interface AccountService {
 
     responseFromServer login(Account account);
 
+    responseFromServer reLogin(String tokenStr);
+
     @Transactional
     responseFromServer logout(Account account);
 

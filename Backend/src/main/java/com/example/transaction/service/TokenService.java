@@ -16,5 +16,8 @@ public interface TokenService {
     responseFromServer loginOperationOnToken(Account account);
 
     @Transactional
+    responseFromServer reloginOperationOnToken(String tokenStr);
+
+    @Transactional
     responseFromServer logoutOperationOnToken(Account account);
 }

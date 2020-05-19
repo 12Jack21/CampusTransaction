@@ -94,8 +94,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return false;
             }
             //判断Token过期
-            Date tokenDate= claims.getExpiration();
-            int overTime=(int)(new Date().getTime()-tokenDate.getTime())/1000;
+            Date tokenDate = claims.getExpiration();
+            int overTime = (int) (System.currentTimeMillis() - tokenDate.getTime()) / 1000;
             if(overTime>60*60*24*3){
                 resultWriter.write("你的token过期了？,需要登录".getBytes());
                 resultWriter.flush();

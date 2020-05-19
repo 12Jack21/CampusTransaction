@@ -58,6 +58,7 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
+    @Transactional
     public responseFromServer search(Condition condition) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
 
@@ -159,8 +160,6 @@ public class CommodityServiceImpl implements CommodityService {
             queryWrapper.le("c.price", condition.getHighPrice());
         }
 
-
-
         /*处理类型*/
         if (condition.getType() != null) {
 //todo            queryWrapper.eq("c.id", "t.commodity_id");
@@ -174,6 +173,7 @@ public class CommodityServiceImpl implements CommodityService {
             }
             return responseFromServer.success(new MyPage<Commodity>(resultPage));
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
 

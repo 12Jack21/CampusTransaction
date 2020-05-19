@@ -68,7 +68,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * 重新登录
+     *
+     * @param tokenStr
+     * @return
+     */
+    @Override
+    public responseFromServer reLogin(String tokenStr) {
+        return tokenService.reloginOperationOnToken(tokenStr);
+    }
+
+    /**
      * 退登 调用tokenservice操作
+     *
      * @param account
      * @return
      */

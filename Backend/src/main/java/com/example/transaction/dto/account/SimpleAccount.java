@@ -1,9 +1,10 @@
-package com.example.transaction.pojo;
+package com.example.transaction.dto.account;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.example.transaction.pojo.Estimate;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,7 +23,6 @@ public class SimpleAccount implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String username;
-    private String password;
     private Boolean gender;
     private String avatarUrl;
 
