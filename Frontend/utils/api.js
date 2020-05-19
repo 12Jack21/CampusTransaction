@@ -5,8 +5,8 @@ const http = new Request()
 // 静态全局配置
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
-    // config.baseUrl = 'http://localhost:9999'; /* 根域名 */
-		config.baseUrl = 'http://39.96.69.108:8080/'
+    config.baseUrl = 'http://localhost:9012'; /* 根域名 */
+		// config.baseUrl = 'http://39.96.69.108:8080/'
     config.header = {
         sample_header: "yeahitsmejohn", // 演示用
     }
@@ -111,5 +111,11 @@ export default{
 	},
 	updateCommodity(id, update){
 		return http.put('/commodities/' + id, update)
+	},
+	getMessages(id,params){
+		return http.get('/messages/account/' + id, {params})
+	},
+	readMessages(ids){
+		return http.put('/messsages',{ids})
 	}
 }

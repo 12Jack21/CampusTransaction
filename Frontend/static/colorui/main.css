@@ -1185,14 +1185,14 @@ button.cuIcon.lg {
 }
 
 .cu-list>.cu-item.move-cur {
-	transform: translateX(-260upx)
+	transform: translateX(-140rpx)
 }
 
 .cu-list>.cu-item .move {
 	position: absolute;
 	right: 0;
 	display: flex;
-	width: 260upx;
+	width: 140rpx;
 	height: 100%;
 	transform: translateX(100%)
 }
