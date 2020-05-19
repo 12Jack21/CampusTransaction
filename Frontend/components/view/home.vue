@@ -69,9 +69,9 @@
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height margin-bottom" />
 			
-			<!-- modal -->
-			<modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice>
-			<modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com>
+			<!-- debug update modal -->
+			<!-- <modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice> -->
+			<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
 			<!-- end -->
 		</view>
 	</view>
