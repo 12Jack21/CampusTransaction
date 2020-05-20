@@ -29,7 +29,7 @@ export default {
 			isTabShow: true,
 			scrollBottom: false,
 			prevTabID: 0,
-			tabID: 3,
+			tabID: 0,
 			loaded: [true,false,false, true, false]
 		}
 	},

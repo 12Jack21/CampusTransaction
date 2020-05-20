@@ -50,6 +50,7 @@
 					<view class="basis-lg text-center"><text class="text-black text-bold">您可能感兴趣</text></view>
 					<view class="basis-xs text-left"><image class="img-aat" src="/static/zaiui/img/aat.png" lazy-load mode="widthFix" /></view>
 				</view>
+				
 				<view class="grid col-2 text-center margin-top-sm">
 					<block v-for="(items, indexs) in item.list" :key="indexs" v-if="item.list.length < 5">
 						<view class="padding-xs" @tap="listTap(items, indexs)">

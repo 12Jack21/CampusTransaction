@@ -70,7 +70,7 @@
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height margin-bottom" />
 			
-			<!-- debug update modal -->
+			<!-- debug update modal used in update notice and commodity -->
 			<!-- <modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice> -->
 			<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
 			<!-- end -->
