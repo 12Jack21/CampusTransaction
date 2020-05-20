@@ -1,14 +1,15 @@
 <template>
-	<view class="zaiui-home-box" :class="show ? 'show' : ''">
+	<view class="zaiui-home-box" :class="show ? 'show' : ''">	
+		<view class="bar-title"></view>
 		<!--轮播背景-->
 		<swiper-background :list_data="swiperInfo.list" :indexs="swiperInfo.index" :show="true" />
-
+		
 		<view class="zaiui-head-search-box"  :style="[{ backgroundColor: 'rgba(229, 77, 66,' + headInfo.opacity + ')' }]">
+			
 			<!--小程序端的标题-->
 			<!-- #ifdef MP -->
-			<view class="text-center text-white zaiui-small-routine-title">首页</view>
+			<view class="text-center text-white bar-title">首页</view>
 			<!-- #endif -->
-
 			<!--搜索框-->
 			<view class="cu-bar search zaiui-search-box">
 				<view class="search-form round" @tap="searchTap">
@@ -426,6 +427,7 @@ export default {
 
 .zaiui-home-box {
 	display: none;
+	// top: var(--status-bar-height)
 }
 
 .zaiui-home-box.show {

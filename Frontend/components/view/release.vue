@@ -4,7 +4,7 @@
 			<view class="zaiui-bar-view-box">
 				<!--小程序端的标题-->
 				<!-- #ifdef MP -->
-				<view class="text-center text-black zaiui-small-routine-title">卖二手</view>
+				<view class="text-center text-black bar-title">发布页</view>
 				<!-- #endif -->
 
 				<!--标题栏-->

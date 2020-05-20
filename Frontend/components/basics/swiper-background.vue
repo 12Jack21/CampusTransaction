@@ -39,7 +39,7 @@
 		position: absolute;
 		height: 300rpx;
 		width: 100%;
-		top: 0;
+		top: var(--status-bar-height);
 		display: none;
 		transition: 0s;
 		.swiper-background {

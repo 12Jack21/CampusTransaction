@@ -127,7 +127,7 @@
             "port" : 9985
         },
         "router" : {
-            "mode" : "hash"
+            "mode" : "history"
         },
         "title" : "CampusTP"
     }
