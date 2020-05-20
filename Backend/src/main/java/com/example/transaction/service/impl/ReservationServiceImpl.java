@@ -295,6 +295,14 @@ public class ReservationServiceImpl implements ReservationService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+
+        /*将所有的其他用户的reservation修改状态*/
+        Reservation failedWaitingReservation = new Reservation();
+        failedWaitingReservation.setStateEnum(ReservationCode.FAILWAITING.getCode());
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("commodity_id",reservation.getCommodityId());
+        reservationDAO.update(failedWaitingReservation,queryWrapper);
+
         return responseFromServer.success();
     }
 
