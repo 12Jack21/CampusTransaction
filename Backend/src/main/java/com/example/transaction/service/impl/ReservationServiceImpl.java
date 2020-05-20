@@ -40,9 +40,13 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public responseFromServer setUpReservation(Reservation reservation) {
         responseFromServer response = commodityService.getDetailedCommodity(reservation.getCommodityId());
-        if (response.isFailure()) return responseFromServer.error();
+        if (response.isFailure()) {
+            return responseFromServer.error();
+        }
         Commodity commodity = (Commodity) response.getData();
-        if (commodity.getCount() < reservation.getCount()) return responseFromServer.error();
+        if (commodity.getCount() < reservation.getCount()) {
+            return responseFromServer.error();
+        }
         if (commodity.getNotice().getEndTime().before(new Timestamp(System.currentTimeMillis()))) {
             /*已经过了时间期限*/
             return responseFromServer.error();
@@ -51,16 +55,20 @@ public class ReservationServiceImpl implements ReservationService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
-        AccountNotify accountNotify = new AccountNotify();
-        accountNotify.setAccountId(commodity.getNotice().getAccountId());
-        Notify notify = new Notify();
-        notify.setSender(reservation.getAccountId());
-        notify.setTarget(commodity.getId());
-        notify.setAction(NotifyActionCode.SUBMITS.getCode());
+        AccountNotify accountNotify = new AccountNotify(
+                reservation.getAccountId(),
+                commodity.getNotice().getAccountId(),
+                NotifyTargetCode.COMMODITY.getCode(),
+                commodity.getId(),
+                NotifyActionCode.RESERVES.getCode()
+        );
+
         Account account = accountDAO.selectById(reservation.getAccountId());
-        if (account == null) return responseFromServer.error();
-        notify.setContent("用户" + account.getUsername() + "预约了你的" + commodity.getName());
-        accountNotify.setNotify(notify);
+        if (account == null) {
+            return responseFromServer.error();
+        }
+        accountNotify.getNotify().setContent("用户" + account.getUsername() + "预约了你的" + commodity.getName());
+
         if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
@@ -115,16 +123,20 @@ public class ReservationServiceImpl implements ReservationService {
          * ZZH
          * 添加到notify
          */
-        AccountNotify accountNotify = new AccountNotify();
-        accountNotify.setAccountId(receiverId);
-        Notify notify = new Notify();
-        notify.setSender(accountId);
-        notify.setTarget(reservation.getId());
-        notify.setAction(NotifyActionCode.CANCELS.getCode());
+        AccountNotify accountNotify = new AccountNotify(
+                receiverId,
+                accountId,
+                NotifyTargetCode.RESERVATION.getCode(),
+                reservation.getId(),
+                NotifyActionCode.CANCELS.getCode()
+        );
+
         Account account = accountDAO.selectById(accountId);
-        if (account == null) return responseFromServer.error();
-        notify.setContent("用户" + account.getUsername() + "取消了你的预约");
-        accountNotify.setNotify(notify);
+        if (account == null) {
+            return responseFromServer.error();
+        }
+
+        accountNotify.getNotify().setContent("用户" + account.getUsername() + "取消了你的预约");
         if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
@@ -228,7 +240,9 @@ public class ReservationServiceImpl implements ReservationService {
     public responseFromServer validateReservation(Reservation reservation, Integer sellerId) {
         /*用户验证在controller层中处理*/
         /*获取reservation 检查id和用户id*/
-        if (reservation.getCommodityId() == null) return responseFromServer.error();
+        if (reservation.getCommodityId() == null) {
+            return responseFromServer.error();
+        }
         /*验证reservation状态是否是等待状态*/
         if (reservation.getStateEnum() != ReservationCode.WAITING.getCode()) {
             return responseFromServer.error("预约状态错误");
@@ -269,19 +283,26 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         /*添加到notify*/
-        AccountNotify accountNotify = new AccountNotify();
-        accountNotify.setAccountId(buyerId);
-        Notify notify = new Notify();
-        notify.setSender(sellerId);
-        notify.setTarget(reservation.getId());
-        notify.setTargetType(NotifyTargetCode.RESERVATION.getCode());
-        notify.setAction(NotifyActionCode.VALIDATES.getCode());
-        notify.setContent("你预约的" + commodity.getName()+"被确认");
-        accountNotify.setNotify(notify);
+        AccountNotify accountNotify = new AccountNotify(
+                sellerId,
+                reservation.getId(),
+                NotifyTargetCode.RESERVATION.getCode(),
+                reservation.getId(),
+                NotifyActionCode.VALIDATES.getCode()
+        );
+        accountNotify.getNotify().setContent("你预约的" + commodity.getName() + "被确认");
         if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+
+        /*将所有的其他用户的reservation修改状态*/
+        Reservation failedWaitingReservation = new Reservation();
+        failedWaitingReservation.setStateEnum(ReservationCode.FAILWAITING.getCode());
+        QueryWrapper queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("commodity_id",reservation.getCommodityId());
+        reservationDAO.update(failedWaitingReservation,queryWrapper);
+
         return responseFromServer.success();
     }
 
@@ -300,15 +321,14 @@ public class ReservationServiceImpl implements ReservationService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {
-            AccountNotify accountNotify = new AccountNotify();
+            AccountNotify accountNotify = new AccountNotify(
+                    reservation.getCommodity().getNotice().getAccountId(),
+                    reservation.getAccountId(),
+                    NotifyTargetCode.RESERVATION.getCode(),
+                    reservation.getId(),
+                    NotifyActionCode.FINISHS.getCode());
             accountNotify.setAccountId(reservation.getAccountId());
-            Notify notify = new Notify();
-            notify.setSender(reservation.getCommodity().getNotice().getAccountId());
-            notify.setTarget(reservation.getId());
-            notify.setTargetType(NotifyTargetCode.RESERVATION.getCode());
-            notify.setAction(NotifyActionCode.FINISHS.getCode());
-            notify.setContent("你预约的"+reservation.getCommodity().getName()+"成功结束交易");
-            accountNotify.setNotify(notify);
+            accountNotify.getNotify().setContent("你预约的" + reservation.getCommodity().getName() + "成功结束交易");
             if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error();
@@ -324,10 +344,14 @@ public class ReservationServiceImpl implements ReservationService {
      * @param reservationId
      * @return
      */
+    @Override
     public responseFromServer getDetailedReservation(Integer reservationId) {
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        if (reservation == null) return responseFromServer.error();
-        else return responseFromServer.success(reservation);
+        if (reservation == null) {
+            return responseFromServer.error();
+        } else {
+            return responseFromServer.success(reservation);
+        }
     }
 
 
@@ -337,10 +361,14 @@ public class ReservationServiceImpl implements ReservationService {
      * @param reservationId
      * @return
      */
+    @Override
     public responseFromServer getSimpleReservation(Integer reservationId) {
         Reservation reservation = reservationDAO.selectById(reservationId);
-        if (reservation == null) return responseFromServer.error();
-        else return responseFromServer.success(reservation);
+        if (reservation == null) {
+            return responseFromServer.error();
+        } else {
+            return responseFromServer.success(reservation);
+        }
     }
 
     NotifyService notifyService;

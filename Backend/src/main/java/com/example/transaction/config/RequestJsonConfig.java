@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-public class WebConfig implements WebMvcConfigurer {
+public class RequestJsonConfig implements WebMvcConfigurer {
     @Autowired
     private RequestJsonHandler requestJsonHandler;
 

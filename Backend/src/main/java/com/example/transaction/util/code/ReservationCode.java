@@ -1,12 +1,16 @@
 package com.example.transaction.util.code;
 
 public enum ReservationCode {
+    /**
+     *
+     */
     FAIL(-2, "FAIL"),
     CANCELLED(-1, "CANCELLED"),
     WAITING(0, "WAITING"),
     VALIDATE(1, "VALIDATE"),
     FINISHED(2, "FINISHED"),
-    FAILWAITING(3, "FAILWAITING");//等待失败,交易已经完成
+    //等待失败,交易已经完成
+    FAILWAITING(3, "FAILWAITING");
 
     private final int code;
     private final String desc;

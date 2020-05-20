@@ -1,5 +1,6 @@
 package com.example.transaction.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -9,9 +10,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @Author: 曾志昊
  * @Date: 2020/5/3 16:19
  */
-public class MyWebAppConfigurator   implements WebMvcConfigurer {
+@Configuration
+public class ImageResourcesConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/image/**").addResourceLocations("file:E:/CampusTransactionImages/");
+        registry.addResourceHandler("/static/images/avatar/**").addResourceLocations("file:E:/CampusTransactionImages/");
+        registry.addResourceHandler("/static/images/home/goods/**").addResourceLocations("file:E:/CampusTransactionImages/");
+
     }
 }
