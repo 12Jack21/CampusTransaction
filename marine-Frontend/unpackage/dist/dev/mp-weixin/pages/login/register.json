@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "xfl-select": "/components/xfl-select/xfl-select",
+    "w-input": "/components/watch-login/watch-input",
+    "w-button": "/components/watch-login/watch-button"
+  }
+}

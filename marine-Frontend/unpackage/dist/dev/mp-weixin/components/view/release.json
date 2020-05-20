@@ -1,0 +1,7 @@
+{
+  "component": true,
+  "usingComponents": {
+    "type-list": "/components/list/type-list",
+    "mx-date-picker": "/components/mx-datepicker/mx-datepicker"
+  }
+}
