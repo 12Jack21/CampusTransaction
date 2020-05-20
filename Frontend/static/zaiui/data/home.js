@@ -176,7 +176,7 @@ let _home_data = {
 				username: '仔仔',
 				time: '1个小时前来过',
 				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/4.png',
+				img: '',
 				avatar: '/static/images/avatar/4.jpg'
 			},
 			{
@@ -212,7 +212,7 @@ let _home_data = {
 				username: '仔仔',
 				time: '1个小时前来过',
 				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/7.png',
+				img: '',
 				avatar: '/static/images/avatar/7.jpg'
 			}
 		];

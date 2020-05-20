@@ -3,7 +3,7 @@
 		<block v-for="(item, index) in list_data" :key="index">
 			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" @tap="listTap(item, index)">
 				<view class="goods-img">
-					<image :src="item.img" mode="widthFix" lazy-load />
+					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />
 					<view class="count-view">
 						<text class="cu-tag radius sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">剩余{{ item.count }}件</text>
 					</view>

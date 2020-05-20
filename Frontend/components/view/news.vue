@@ -28,283 +28,56 @@
 					@touchmove="ListTouchMove"
 					@touchend="ListTouchEnd"
 					:data-target="'move-box-' + index"
-					@tap="tapNews(index)">
+					>
 					
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
-					:style="'background-image:url(/static/images' + msg.src.length===0? 
-					'/news/az3.png:' : '/avatar/1.jpg' +');'">
-						<view class="cu-tag badge"></view>
+					v-bind:style="[{'background-image':'url('+ (msg.sender==-1? 
+					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatarURL.length === 0? '/static/images/avatar/default.png':msg.avatarURL) ) + ')' }]" 
+					@tap="accTap(msg.sender, msg.avatarURL.length!==0)">
+						<!-- 已读/未读 -->
+						<view class="cu-tag badge" v-if="!msg.isRead"></view>
 					</view>
 					<!-- 内容区 -->
 					<view class="content">
 						<view class="text-black">		
 							<!-- 标题 -->
-							<text class="margin-right-xs" v-if="msg.notify.targetType===3">失效通知</text>
-							<text class="margin-right-xs" v-else-if="msg.notify.targetType===1">交易通知</text>
-							<text class="margin-right-xs" v-else>{{msg.src}}</text>
+							<text class="margin-right-xs" v-if="msg.accountName">{{msg.accountName}}</text>
+							<text class="margin-right-xs" v-else-if="msg.action===7">失效通知</text>
+							<text class="margin-right-xs" v-else-if="msg.action===5||msg.action===10">交易通知</text>
 							
 							<!-- 某用户 评论了某用户,某用户预约了 -->
-							<text class="cu-tag bg-pink sm radius" v-if="msg.notify.sender.length!==0">
-								<text :class="msg.notify.gender ===0 ? 'cuIcon-female':'cuIcon-male'"></text>
+							<text class="cu-tag sm radius" :class="msg.accountGender === 0 ? 'bg-pink':'bg-blue'" 
+								v-if="msg.accountName">
+								<text :class="msg.accountGender === 0 ? 'cuIcon-female':'cuIcon-male'">
+								</text>
 							</text>
 						</view>
 						<view class="text-gray text-sm text-cut">
-							预约了你的物品: 
-							<text style="text-align: right;width: 100%;color: red;">
-								华为手机
+							{{preSentence(msg.action, msg.commodity.name.length!==0)}} 
+							<text style="color: red;">
+								{{msg.commodity.name}}
 							</text>
+							{{postSentence(msg.action,msg.commodity.name.length!==0)}}
 						</view>
-						<view class="text-gray text-sm">{{msg.time}}</view>
+						<view class="text-gray text-sm">{{msg.createTime}}</view>
 					</view>
 					<!-- action 区-->
-					<view class="action">
+					<view class="action" @tap="actionTap(msg.targetId,msg.targetType)">
 						<view class="cu-avatar radius"
-						:style="'background-image:url(' + msg.comImage + ');'" v-if="msg.comImage"></view>
+						:style="'background-image:url(' + (msg.commodity.imageURL.length!==0?msg.commodity.imageURL:'/static/images/comDefault.png') + ');'" v-if="msg.commodity.name">
+						</view>
 						<text style="vertical-align: middle;" v-else>去看看
 							<text class="cuIcon-right"></text>
 						</text>
 					</view>
 					
 					<view class="move">
-						<view class="bg-red">已读</view>
+						<view class="bg-red" @tap="readTap(index)">已读</view>
 					</view>
-					
 					
 				</view>
 					
-				
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 1 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 1"
-					@tap="tapNews(1)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(/static/images/avatar/1.jpg);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-black">
-							<text class="margin-right-xs">仔仔</text>
-							<text class="cu-tag bg-pink sm radius"><text class="cuIcon-female">
-							</text></text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							预约了你的物品: 
-							<text style="text-align: right;width: 100%;color: red;">华为手机</text>
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<view class="cu-avatar radius" style="background-image:url(/static/images/home/goods/11.png);" />
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-					
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 1 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 1"
-					@tap="tapNews(1)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(/static/images/avatar/1.jpg);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-black">
-							<text class="margin-right-xs">仔仔</text>
-							<text class="cu-tag bg-pink sm radius"><text class="cuIcon-male">
-							</text></text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							评论了你的物品: 
-							<text style="text-align: right;width: 100%;color: red;">一加手机</text>
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<view class="cu-avatar radius" style="background-image:url(/static/images/home/goods/11.png);" />
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 1 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 1"
-					@tap="tapNews(1)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(/static/images/avatar/1.jpg);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-black">
-							<text class="margin-right-xs">仔仔</text>
-							<text class="cu-tag bg-pink sm radius"><text class="cuIcon-female">
-							</text></text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							在
-							<text style="text-align: right;width: 100%;color: red;">华为手机</text>
-							里回复了你的评论 
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<text style="vertical-align: middle;">去看看 ></text>
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 2 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 2"
-					@tap="tapNews(2)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(/static/images/avatar/1.jpg);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-black">
-							<text class="margin-right-xs">仔仔</text>
-							<text class="cu-tag bg-pink sm radius"><text class="cuIcon-female">
-							</text></text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							确认了你的预约: 
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<text style="vertical-align: middle;">去看看 ></text>
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 3 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 3"
-					@tap="tapNews(2)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(../../static/images/news/az3.png);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-orange">
-							<text class="margin-right-xs">失效通知</text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							您预约的物品 
-							 <text class="text-red">小米手机</text>
-							 已失效
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<text style="vertical-align: middle;">去看看
-							<text class="cuIcon-right"></text>
-						</text>
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-
-				<!-- 通告 已失效 -->
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 3 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 3"
-					@tap="tapNews(2)">
-					
-					<view class="cu-avatar round" style="background-image:url(../../static/images/news/az3.png);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-orange">
-							<text class="margin-right-xs">失效通知</text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							您的通告已失效
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<text style="vertical-align: middle;">去看看
-							<text class="cuIcon-right"></text>
-						</text>
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-				
-				<!-- 交易已完成/失败 -->
-				<view
-					class="cu-item goods"
-					:class="modalName == 'move-box-' + 3 ? 'move-cur' : ''"
-					@touchstart="ListTouchStart"
-					@touchmove="ListTouchMove"
-					@touchend="ListTouchEnd"
-					:data-target="'move-box-' + 3"
-					@tap="tapNews(2)">
-					
-					<view class="cu-avatar round" 
-					style="background-image:url(../../static/images/news/azg.png);">
-						<view class="cu-tag badge"></view>
-					</view>
-					<view class="content">
-						<view class="text-orange">
-							<text class="margin-right-xs">交易通知</text>
-						</view>
-						<view class="text-gray text-sm text-cut">
-							您的交易已成功完成/失败
-						</view>
-						<view class="text-gray text-sm">4小时前</view>
-					</view>
-					<view class="action">
-						<text style="vertical-align: middle;">去看看 
-							<text class="cuIcon-right"></text>
-						</text>
-					</view>
-					<view class="move">
-						<view class="bg-red">已读</view>
-					</view>
-				</view>
-
 			</view>
 		</view>
 
@@ -321,7 +94,7 @@ import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 
 import handles from '@/utils/handles.js' // handle date format
 import {mapState} from 'vuex'
-
+import news from '@/static/data/messages.js'
  /*
 	 * 预约:
 	 *   a 预约了 你的商品(b)
@@ -369,7 +142,7 @@ export default {
 			type:0,
 			newsData:{
 				...iniPagination(),
-				data:[]
+				data: []
 			},
 		}
 	},
@@ -388,6 +161,7 @@ export default {
 	},
 	created(){
 		this.getMessages()
+		this.newsData.data = news
 	},
 	watch: {
 		scrollBottom(newVal){
@@ -405,6 +179,52 @@ export default {
 		})
 	},
 	methods: {
+		actionTap(targetId,targetType){
+			console.log('actionTap targetType',targetType);
+			switch(targetType){
+				case 0:
+					uni.navigateTo({
+						url: `/pages/commodity?id=${targetId}`
+					});
+					break
+				case 1:
+					uni.navigateTo({
+						url: `/pages/reservation?id=${targetId}`
+					});
+					break
+				case 2:
+					uni.navigateTo({
+						url: `/pages/commodity?id=${targetId}&comment=1` //评论区
+					});
+					break
+				case 3:
+					uni.navigateTo({
+						url: `/pages/notice?id=${targetId}`
+					});
+					break
+			}
+		},
+		accTap(sender, bool){
+			console.log('account tap');
+			if(bool){
+				uni.navigateTo({
+					url: `/pages/account?id=${sender}`
+				});
+			}
+		},
+		readTap(index){
+			//点击已读
+			let msg = this.newsData.data[index]
+			let ids = []
+			ids.push(msg.id)
+			this.$api.readMessages(ids)
+				.then(({data})=>{
+					if(data.success){
+						msg.isRead = true
+						this.newsData.data.splice(index,1,msg) // 更新已读状态
+					}
+				})
+		},
 		menuTap(type){
 			if(!(this.type == type)){
 				this.type = type
@@ -431,8 +251,7 @@ export default {
 					if(data.pageIndex === data.pageCount){
 						this.newsData.finish = true
 						this.loadStatus = 'noMore'
-					}
-					
+					}			
 					this.newsData.data.push(...data.data)
 					this.loadStatus = 'more'
 				})
@@ -464,19 +283,47 @@ export default {
 			}
 			this.listTouchDirection = null
 		},
-		//被点击
-		tapNews(index) {
-			console.log(index)
-			if (index == 0) {
-				uni.navigateTo({
-					url: '/pages/news/notice'
-				})
-			} else if (index == 1) {
-				uni.navigateTo({
-					url: '/pages/news/chat'
-				})
+		preSentence(action,isCom){
+			switch(action){
+				case 1:
+					return '取消了你的预约'
+				case 2:
+					return '评论了你的物品'
+				case 3:
+					return '确认了你的预约'
+				case 3:
+					return '在' // 回复评论
+				case 5:
+					return '您的交易已完成'
+				case 7:
+					if(isCom) //物品
+						return '您预约的物品'
+					else //通告
+						return '您的通告已失效'
+				case 8:
+					return '在'
+				case 9:
+					return '预约了你的物品'
+				case 10:
+					return '您的交易已失败'
+				default:
+					return ''
+			}
+		},
+		postSentence(action,isCom){
+			switch(action){
+				case 7:
+					if(isCom)
+						return '已失效'
+					else
+						return ''
+				case 8:
+					return '里回复了你的评论' // 回复评论
+				default:
+					return ''
 			}
 		}
+		
 	}
 }
 </script>
