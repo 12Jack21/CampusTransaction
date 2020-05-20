@@ -1,14 +1,15 @@
 <template>
-	<view class="zaiui-home-box" :class="show ? 'show' : ''">
+	<view class="zaiui-home-box" :class="show ? 'show' : ''">	
+		<view class="bar-title"></view>
 		<!--轮播背景-->
 		<swiper-background :list_data="swiperInfo.list" :indexs="swiperInfo.index" :show="true" />
-
+		
 		<view class="zaiui-head-search-box"  :style="[{ backgroundColor: 'rgba(229, 77, 66,' + headInfo.opacity + ')' }]">
+			
 			<!--小程序端的标题-->
 			<!-- #ifdef MP -->
-			<view class="text-center text-white zaiui-small-routine-title">首页</view>
+			<view class="text-center text-white bar-title">首页</view>
 			<!-- #endif -->
-
 			<!--搜索框-->
 			<view class="cu-bar search zaiui-search-box">
 				<view class="search-form round" @tap="searchTap">
@@ -68,10 +69,15 @@
 			<!-- end -->
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height margin-bottom" />
+			
+			<!-- debug update modal -->
+			<!-- <modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice> -->
+			<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
+			<!-- end -->
 		</view>
 	</view>
 </template>
-
+ 
 <script>
 //加载组件
 import swiperBackground from '@/components/basics/swiper-background'
@@ -79,6 +85,8 @@ import gridMenuList from '@/components/list/grid-menu-list'
 import goodsList from '@/components/list/goods-list'
 import footerTabbar from '@/components/footer/footer-tabbar'
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
+import modalNotice from '@/components/basics/modal-notice.vue'
+import modalCom from '@/components/basics/modal-commodity.vue'
 //======================================================================
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 
@@ -93,10 +101,13 @@ export default {
 		gridMenuList,
 		goodsList,
 		footerTabbar,
-		uniLoadMore
+		uniLoadMore,
+		modalNotice,
+		modalCom
 	},
 	data() {
 		return {
+			...mapState['userAddress'],
 			loadStatus: 'more', //'loading'、 'noMore'
 			swiperInfo: {
 				index: 0,
@@ -120,6 +131,7 @@ export default {
 			goodsData: [],
 			// four tabs' goods list: new, near, outdated, cheap
 			storeGoods:[],
+			modalShow:true
 		}
 	},
 	props: {
@@ -232,13 +244,13 @@ export default {
 		},
 		getCommodityList(){
 			this.loadStatus = 'loading'
-			// TODO: 区分上拉和下拉
 			let self = this
 			let tab = this.goodsTabData.tabCur
 			let pagination = {
 				pageIndex: this.storeGoods[tab].pageIndex,
 				pageSize: this.storeGoods[tab].pageSize,
-				endTime: this.storeGoods[tab].endTime
+				endTime: this.storeGoods[tab].endTime,
+				userAddress: this.userAddress
 			}
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)
@@ -415,6 +427,7 @@ export default {
 
 .zaiui-home-box {
 	display: none;
+	// top: var(--status-bar-height)
 }
 
 .zaiui-home-box.show {

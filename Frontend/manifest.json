@@ -103,9 +103,10 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wx464797debd653635",
         "setting" : {
-            "urlCheck" : false
+            "urlCheck" : false,
+            "es6" : true
         },
         "usingComponents" : true
     },
@@ -126,7 +127,8 @@
             "port" : 9985
         },
         "router" : {
-            "mode" : "hash"
-        }
+            "mode" : "history"
+        },
+        "title" : "CampusTP"
     }
 }

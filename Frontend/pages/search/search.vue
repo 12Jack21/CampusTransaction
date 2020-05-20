@@ -3,6 +3,10 @@
 		<!-- 搜索框 -->
 		<view class="zaiui-bar-search-title-box">
 			<view class="cu-bar search bg-white fixed no-shadow">
+				<!-- 小程序端的标题 -->
+				<!-- #ifdef MP -->
+				<!-- <view class="text-center text-black bar-title">搜索页</view> -->
+				<!-- #endif -->
 				<view class="action" @tap="BackPage"><text class="cuIcon-back" /></view>
 				<view class="search-form round">
 					<text class="cuIcon-search" />

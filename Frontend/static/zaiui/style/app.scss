@@ -4,6 +4,11 @@
 page, .bg-page {
 	background: #FAFAFA;
 }
+.bar-title{
+	font-size: 14px;
+	height: var(--status-bar-height);
+	vertical-align: middle;
+}
 .cu-avatar {
 	background-color: #FFFFFF;
 }

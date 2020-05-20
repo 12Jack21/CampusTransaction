@@ -3,6 +3,7 @@
 		<home :scrollY="scrollY" :scrollBottom="scrollBottom && tabID == 0" :show="tabID == 0" v-if="loaded[0]"></home>
 		<notice :scrollBottom="scrollBottom && tabID == 1" :show="tabID == 1" v-if="loaded[1]"></notice>
 		<release :show="tabID == 2"  v-if="loaded[2]" @closeReleaseTap="closeReleaseTap" @switchTab="switchTab"></release>
+		<news :scrollBottom="scrollBottom && tabID == 3" :show="tabID == 3" v-if="loaded[3]"></news>
 		<!--底部导航-->
 		<footer-tabbar :tabID="tabID" :msgDot="true" @tabTap="tabTap" v-show="isTabShow"/>
 	</view>
@@ -13,11 +14,13 @@ import home from '../../components/view/home.vue'
 import notice from '../../components/view/notice.vue'
 import footerTabbar from '../../components/footer/footer-tabbar.vue'
 import release from '../../components/view/release.vue'
+import news from '../../components/view/news.vue'
 export default {
 	components: {
 		home,
 		notice,
 		release,
+		news,
 		footerTabbar
 	},
 	data() {
@@ -26,8 +29,8 @@ export default {
 			isTabShow: true,
 			scrollBottom: false,
 			prevTabID: 0,
-			tabID: 0,
-			loaded: [true,false,false, false, false]
+			tabID: 3,
+			loaded: [true,false,false, true, false]
 		}
 	},
 	onLoad() {},

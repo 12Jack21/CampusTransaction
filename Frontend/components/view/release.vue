@@ -4,7 +4,7 @@
 			<view class="zaiui-bar-view-box">
 				<!--小程序端的标题-->
 				<!-- #ifdef MP -->
-				<view class="text-center text-black zaiui-small-routine-title">卖二手</view>
+				<view class="text-center text-black bar-title">发布页</view>
 				<!-- #endif -->
 
 				<!--标题栏-->
@@ -127,7 +127,7 @@
 						<input type="digit" key="newPrice" placeholder="请输入价钱" maxlength="7" name="newPrice" />
 
 						<view class="title">原价:</view>
-						<input type="digit" key="oriPrice" :value="oriPrice" placeholder="请输入原价" maxlength="7" name="oriPrice" />
+						<input type="digit" key="originalPrice" :value="originalPrice" placeholder="请输入原价" maxlength="7" name="originalPrice" />
 					</view>
 					<!-- end -->
 
@@ -176,7 +176,7 @@
 		</view>
 
 		<!-- 分类选择的模态框 -->
-		<view @touchmove.stop="modeMove" class=" cu-modal drawer-modal justify-start " :class="modalName == 'DrawerModal' ? 'show' : ''" @tap="hideModal">
+		<view class=" cu-modal drawer-modal justify-start " :class="modalName == 'DrawerModal' ? 'show' : ''" @tap="hideModal">
 			<scroll-view scroll-with-animation="true" scroll-y="true" class="cu-dialog basis-df">
 				<view class="cu-list menu text-left">
 					<view class="cu-item com-type-item" v-for="(item, index) in comTypeList" :key="index" @tap="getComType" :data-name="item">{{ item }}</view>
@@ -218,8 +218,8 @@ export default {
 			newnessList: [], //几成新
 			comType: '电子产品', //分类选择默认
 			comTypeList: [], // 分类列表
-			newPrice: '', //出售价
-			oriPrice: '', //原价
+			expectedPrice: '', //出售价
+			originalPrice: '', //原价
 			imgList: [] ,//图片 url 列表
 			imgError: false
 		}
@@ -395,7 +395,7 @@ export default {
 			}
 			
 			// validate price
-			if(isNaN(data.newPrice)){
+			if(isNaN(data.expectedPrice)){
 				uni.showToast({
 					title: '预期价格不能为空',
 					icon: 'none'
@@ -439,8 +439,8 @@ export default {
 					name: notice.title,
 					description: notice.description,
 					count: 1,
-					oriPrice: -1,
-					newPrice: parseFloat(notice.demandPrice) || -1,
+					originalPrice: -1,
+					expectedPrice: parseFloat(notice.demandPrice) || -1,
 					type: '代领',
 					newness: '',
 					imgList: ''
@@ -495,8 +495,8 @@ export default {
 				name: comFormData.comName,
 				description: comFormData.comDescription,
 				count:  parseFloat(comFormData.count),
-				oriPrice: parseFloat(comFormData.oriPrice) || -1,
-				newPrice: parseFloat(comFormData.newPrice),
+				originalPrice: parseFloat(comFormData.originalPrice) || -1,
+				expectedPrice: parseFloat(comFormData.expectedPrice),
 				type: comFormData.comType,
 				newness: comFormData.newness || '',
 				imgList: this.imgList
@@ -573,13 +573,6 @@ $border_color: #e54d42;
 	border-radius: 20rpx;
 	line-height: $item_lh;
 }
-.commodity {
-	line-height: $item_lh;
-	border: 1rpx solid $border_color;
-	border-radius: 30rpx;
-	padding: 0 20rpx;
-	margin: 2rpx;
-}
 .comList {
 	margin: 10rpx;
 	background-color: white;
@@ -587,6 +580,13 @@ $border_color: #e54d42;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
+}
+.commodity {
+	line-height: $item_lh;
+	border: 1rpx solid $border_color;
+	border-radius: 30rpx;
+	padding: 0 20rpx;
+	margin: 2rpx;
 }
 .detail-topbox {
 	position: relative;

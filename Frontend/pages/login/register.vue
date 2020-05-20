@@ -30,6 +30,9 @@
 				<text @tap="isShowAgree" class="cuIcon" :class="showAgree ? 'cuIcon-radiobox' : 'cuIcon-round'">同意</text>
 				<!-- 协议地址 -->
 				<navigator url="" open-type="navigate">《协议》</navigator>
+				<br>
+				<text> | </text>
+				<navigator url="login" open-type="navigate">返回登录</navigator>
 			</view>
 		</view>
 	</view>

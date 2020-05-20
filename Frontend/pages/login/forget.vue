@@ -12,6 +12,9 @@
 
 			<wButton text="重置密码" :rotate="isRotate" @click.native="startRePass()"></wButton>
 		</view>
+		<view class="footer">
+			<navigator url="login" open-type="navigate">返回登录</navigator>
+		</view>
 	</view>
 </template>
 
