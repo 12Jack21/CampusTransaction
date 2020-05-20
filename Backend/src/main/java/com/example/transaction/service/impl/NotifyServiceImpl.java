@@ -3,10 +3,7 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.transaction.dao.AccountNotifyDAO;
-import com.example.transaction.dao.CommodityDAO;
-import com.example.transaction.dao.NoticeDAO;
-import com.example.transaction.dao.NotifyDAO;
+import com.example.transaction.dao.*;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.dto.notify.NotifyCondition;
 import com.example.transaction.dto.notify.SimpleNotify;
@@ -254,13 +251,27 @@ public class NotifyServiceImpl implements NotifyService {
     public responseFromServer fillInSimpleNotifyData(SimpleNotify simpleNotify) {
         int targetType = simpleNotify.getTargetType();
         if (targetType == NotifyTargetCode.COMMODITY.getCode()) {
+            /*当前的target是商品,放入商品信息*/
             Commodity commodity = commodityDAO.getSimpleCommodityById(simpleNotify.getTargetId());
             if (commodity == null) {
                 return responseFromServer.error();
             }
             SimpleCommodity simpleCommodity = new SimpleCommodity(commodity);
             simpleNotify.setCommodity(simpleCommodity);
+        } else if (targetType == NotifyTargetCode.RESERVATION.getCode()) {
+            /*当前的target是预约,也要放入商品信息*/
+            Reservation reservation = reservationDAO.selectById(simpleNotify.getTargetId());
+            if (reservation == null) {
+                return responseFromServer.error();
+            }
+            Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
+            if (commodity == null) {
+                return responseFromServer.error();
+            }
+            SimpleCommodity simpleCommodity = new SimpleCommodity(commodity);
+            simpleNotify.setCommodity(simpleCommodity);
         } else if (targetType == NotifyTargetCode.NOTICE.getCode()) {
+            /*当前target是通告,只需要放入标题*/
             Notice notice = noticeDAO.selectById(simpleNotify.getTargetId());
             if (notice == null) {
                 return responseFromServer.error();
@@ -337,6 +348,8 @@ public class NotifyServiceImpl implements NotifyService {
     private CommodityDAO commodityDAO;
     @Autowired
     NoticeDAO noticeDAO;
+    @Autowired
+    ReservationDAO reservationDAO;
 
     @Autowired
     public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO, CommodityDAO commodityDAO) {
