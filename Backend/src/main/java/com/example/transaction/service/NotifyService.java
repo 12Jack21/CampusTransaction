@@ -2,6 +2,7 @@ package com.example.transaction.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dto.notify.NotifyCondition;
+import com.example.transaction.dto.notify.SimpleNotify;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
@@ -36,6 +37,8 @@ public interface NotifyService {
     responseFromServer readNotify(Integer notifyId);
 
     responseFromServer deleteNotify(AccountNotify accountNotify);
+
+    responseFromServer fillInSimpleNotifyData(SimpleNotify simpleNotify);
 
     @Transactional
     responseFromServer searchSimpleAccountNotifyPage(NotifyCondition condition);

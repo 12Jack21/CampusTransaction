@@ -5,7 +5,9 @@ import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
+import com.example.transaction.util.code.NotifyTargetCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.sql.Timestamp;
 
@@ -15,7 +17,8 @@ import java.sql.Timestamp;
  * @Author: 曾志昊
  * @Date: 2020/5/20 0:16
  */
-public class SimpleNotify {
+@Data
+public class SimpleNotify<T> {
     /**
      * 接收者
      */
@@ -41,7 +44,6 @@ public class SimpleNotify {
     Integer targetType = -1;
 
     SimpleCommodity commodity = null;
-
     /**
      * 通告标题
      */

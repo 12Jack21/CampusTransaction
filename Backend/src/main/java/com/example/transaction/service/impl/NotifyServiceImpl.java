@@ -4,14 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.AccountNotifyDAO;
+import com.example.transaction.dao.CommodityDAO;
+import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.NotifyDAO;
+import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.dto.notify.NotifyCondition;
 import com.example.transaction.dto.notify.SimpleNotify;
-import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.AccountNotify;
-import com.example.transaction.pojo.Notify;
+import com.example.transaction.pojo.*;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.util.MyPage;
+import com.example.transaction.util.code.NotifyTargetCode;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,6 +244,34 @@ public class NotifyServiceImpl implements NotifyService {
         return responseFromServer.success();
     }
 
+    /**
+     * 将对应的对象填充到返回的简单notify对象中
+     *
+     * @param simpleNotify
+     * @return
+     */
+    @Override
+    public responseFromServer fillInSimpleNotifyData(SimpleNotify simpleNotify) {
+        int targetType = simpleNotify.getTargetType();
+        if (targetType == NotifyTargetCode.COMMODITY.getCode()) {
+            Commodity commodity = commodityDAO.getSimpleCommodityById(simpleNotify.getTargetId());
+            if (commodity == null) {
+                return responseFromServer.error();
+            }
+            SimpleCommodity simpleCommodity = new SimpleCommodity(commodity);
+            simpleNotify.setCommodity(simpleCommodity);
+        } else if (targetType == NotifyTargetCode.NOTICE.getCode()) {
+            Notice notice = noticeDAO.selectById(simpleNotify.getTargetId());
+            if (notice == null) {
+                return responseFromServer.error();
+            }
+            simpleNotify.setTitle(notice.getTitle());
+            /*data为string*/
+        }
+        return responseFromServer.success();
+
+    }
+
     @Override
     @Transactional
     public responseFromServer searchSimpleAccountNotifyPage(NotifyCondition condition) {
@@ -286,7 +316,12 @@ public class NotifyServiceImpl implements NotifyService {
         List<SimpleNotify> simpleNotifyList = new ArrayList<>();
         for (AccountNotify accountNotify : myPage.getPageList()) {
             try {
-                simpleNotifyList.add(new SimpleNotify(accountNotify));
+                /**填充显示所需的数据*/
+                SimpleNotify simpleNotify = new SimpleNotify(accountNotify);
+                if (fillInSimpleNotifyData(simpleNotify).isFailure()) {
+                    throw new Exception();
+                }
+                simpleNotifyList.add(simpleNotify);
             } catch (Exception e) {
                 return responseFromServer.error();
             }
@@ -299,10 +334,14 @@ public class NotifyServiceImpl implements NotifyService {
 
     private AccountNotifyDAO accountNotifyDAO;
     private NotifyDAO notifyDAO;
+    private CommodityDAO commodityDAO;
+    @Autowired
+    NoticeDAO noticeDAO;
 
     @Autowired
-    public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO) {
+    public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO, CommodityDAO commodityDAO) {
         this.accountNotifyDAO = accountNotifyDAO;
         this.notifyDAO = notifyDAO;
+        this.commodityDAO = commodityDAO;
     }
 }
