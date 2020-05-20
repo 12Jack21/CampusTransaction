@@ -32,8 +32,63 @@ import java.util.List;
 @Service(value = "noticeService")
 public class NoticeServiceImpl implements NoticeService {
 
+
+
+    @Override
+    public responseFromServer getRecentNotice(NoticeCondition condition) {
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            condition.setPageIndex(1);
+        }
+        QueryWrapper queryWrapper = new QueryWrapper();
+        /*按照时间倒序排序*/
+        queryWrapper.orderByDesc("create_time");
+        /*只查看确认发布的通告*/
+        queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
+        /*是商品还是需求*/
+        switch (condition.getType()) {
+            case 0:/*全部*/
+                break;
+            case 1:/*出售*/
+                queryWrapper.eq("type", true);
+                break;
+            case 2:/*需求*/
+                queryWrapper.eq("type", false);
+                break;
+        }
+        if (condition.getAccountId() != null) {
+            queryWrapper.eq("account_id", condition.getAccountId());
+        }
+        if (condition.getEndTime() != null) {
+            queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
+        }
+        return getNoticePage(queryWrapper, condition.getPageIndex());
+    }
+
     /**
-     * 建立一个通告
+     * 删除特定的notice
+     *
+     * @param queryWrapper
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer deleteNotice(QueryWrapper queryWrapper) {
+//        if(commodityService.deleteAllByNoticeId(notice))
+        Notice notice = noticeDAO.getNoticeWithAllCommodity(queryWrapper);
+        if (notice == null) {
+            return responseFromServer.error();
+        }
+        commodityService.deleteAllByNotice(notice);
+        if (noticeDAO.delete(queryWrapper) != 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
+    }
+
+
+    /**
+     * 建立一个不包含商品的通告
      *
      * @param notice
      * @return
@@ -54,57 +109,8 @@ public class NoticeServiceImpl implements NoticeService {
         }
     }
 
-    @Override
-    public responseFromServer getRecentNotice(NoticeCondition condition) {
-        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0)
-            condition.setPageIndex(1);
-        QueryWrapper queryWrapper = new QueryWrapper();
-        /*按照时间倒序排序*/
-        queryWrapper.orderByDesc("create_time");
-        /*只查看确认发布的通告*/
-        queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
-        /*是商品还是需求*/
-        switch (condition.getType()) {
-            case 0:/*全部*/
-                break;
-            case 1:/*出售*/
-                queryWrapper.eq("type", true);
-                break;
-            case 2:/*需求*/
-                queryWrapper.eq("type", false);
-                break;
-        }
-        if (condition.getAccountId() != null)
-            queryWrapper.eq("account_id", condition.getAccountId());
-        if (condition.getEndTime() != null) {
-            queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
-        }
-        return getNoticePage(queryWrapper, condition.getPageIndex());
-    }
-
     /**
-     * 删除特定的notice
-     *
-     * @param queryWrapper
-     * @return
-     */
-    @Override
-    @Transactional
-    public responseFromServer deleteNotice(QueryWrapper queryWrapper) {
-//        if(commodityService.deleteAllByNoticeId(notice))
-        Notice notice = noticeDAO.getNoticeWithAllCommodity(queryWrapper);
-        if (notice == null) return responseFromServer.error();
-        commodityService.deleteAllByNotice(notice);
-        if (noticeDAO.delete(queryWrapper) != 1) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return responseFromServer.error();
-        }
-        return responseFromServer.success();
-    }
-
-
-    /**
-     * 添加通告
+     * 添加通告(包含商品信息)
      *
      * @param notice
      * @return
@@ -112,13 +118,14 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     @Transactional
     public responseFromServer addNotice(Notice notice) {
-        if (notice == null || notice.getCommodityLists() == null || notice.getCommodityLists().size() == 0)
+        if (notice == null || notice.getComList() == null || notice.getComList().size() == 0) {
             return responseFromServer.error();
+        }
         if (noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {
-            List<Commodity> commodityList = notice.getCommodityLists();
+            List<Commodity> commodityList = notice.getComList();
             for (Commodity commodity : commodityList) {
                 commodity.setNoticeId(notice.getId());
                 if (commodityService.insertCommodity(commodity).isFailure()) {
@@ -177,7 +184,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public responseFromServer getSimpleNotice(Integer noticeId) {
         Notice notice = noticeDAO.selectById(noticeId);
-        if (notice == null) return responseFromServer.error();
+        if (notice == null) {
+            return responseFromServer.error();
+        }
         return responseFromServer.success(notice);
     }
 
@@ -190,7 +199,9 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public responseFromServer getDetailedNotice(Integer noticeId) {
         Notice notice = noticeDAO.getNoticeWithAllCommodityById(noticeId);
-        if (notice == null) return responseFromServer.error();
+        if (notice == null) {
+            return responseFromServer.error();
+        }
         return responseFromServer.success(notice);
     }
 

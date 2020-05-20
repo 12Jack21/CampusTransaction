@@ -1,12 +1,10 @@
 package com.example.transaction.dto.notice;
 
-import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.code.Nums;
 import lombok.Data;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -55,8 +53,8 @@ public class NoticeInfo {
             this.showAll = false;
         }
         this.address = notice.getAddress();
-        for (int i = 0; i < notice.getCommodityLists().size(); i++) {
-            List<CommodityImage> images = notice.getCommodityLists().get(i).getCommodityImages();
+        for (int i = 0; i < notice.getComList().size(); i++) {
+            List<CommodityImage> images = notice.getComList().get(i).getCommodityImages();
             if (images == null || images.size() == 0)
                 continue;
             else {

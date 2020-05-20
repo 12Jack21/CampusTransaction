@@ -45,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
      * @param commodityId 商品id
      * @return 执行结果
      */
+    @Override
     public responseFromServer getCommentByCommodityId(Integer pageIndex, Integer commodityId){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("commodity_id", commodityId);
@@ -60,6 +61,7 @@ public class CommentServiceImpl implements CommentService {
      * @param comment 评论
      * @return 执行结果
      */
+    @Override
     @Transactional
     public responseFromServer sendComment(Comment comment) {
         if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null)
@@ -88,6 +90,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //删除评论
+    @Override
     @Transactional
     public responseFromServer deleteComment(Comment comment){
         if(commentDAO.deleteById(comment.getId()) != 1){

@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.AccountNotifyDAO;
 import com.example.transaction.dao.NotifyDAO;
+import com.example.transaction.dto.notify.NotifyCondition;
+import com.example.transaction.dto.notify.SimpleNotify;
+import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.NotifyService;
@@ -17,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,23 +35,25 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 根据notifyid查询notify
+     *
      * @param notifyId
      * @return
      */
     @Override
-    public responseFromServer getNotifyByNotifyId(Integer notifyId){
+    public responseFromServer getNotifyByNotifyId(Integer notifyId) {
         Notify notify = notifyDAO.selectById(notifyId);
-        return notify==null?responseFromServer.error():responseFromServer.success(notify);
+        return notify == null ? responseFromServer.error() : responseFromServer.success(notify);
     }
 
 
     /**
      * 根据id获取notify
+     *
      * @param id
      * @return
      */
     @Override
-    public responseFromServer getSimpleAccountNotifyById(Integer id){
+    public responseFromServer getSimpleAccountNotifyById(Integer id) {
         if (id == null) {
             return responseFromServer.error();
         }
@@ -58,11 +65,12 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 根据id获取notify
+     *
      * @param id
      * @return
      */
     @Override
-    public responseFromServer getSimpleAccountNotifyByNotifyId(Integer id){
+    public responseFromServer getSimpleAccountNotifyByNotifyId(Integer id) {
         if (id == null) {
             return responseFromServer.error();
         }
@@ -75,12 +83,13 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 根据id获取详细的notify
+     *
      * @param id
      * @return
      */
     @Override
-    public responseFromServer getDetailedAccountNotifyById(Integer id){
-        if(id==null){
+    public responseFromServer getDetailedAccountNotifyById(Integer id) {
+        if (id == null) {
             return responseFromServer.error();
         }
         AccountNotify accountNotify = accountNotifyDAO.getDetailedNotifyById(id);
@@ -89,12 +98,13 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 获取未读的消息
+     *
      * @param id
      * @return
      */
     @Override
     public responseFromServer getUnreadNotifyByAccountId(Integer id) {
-        if(id == null){
+        if (id == null) {
             return responseFromServer.error();
         }
         List<AccountNotify> accountNotifies = accountNotifyDAO.getUnreadNotifyByAccountId(id);
@@ -104,12 +114,13 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 获取所有的消息
+     *
      * @param id
      * @return
      */
     @Override
     public responseFromServer getAllNoticeByAccountId(Integer id) {
-        if(id == null){
+        if (id == null) {
             return responseFromServer.error();
         }
         List<AccountNotify> accountNotifies = accountNotifyDAO.getAllNotifyByAccountId(id);
@@ -118,26 +129,27 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 查询新消息个数
+     *
      * @param accountId
      * @return
      */
     @Override
     public responseFromServer getUnreadNotifyCount(Integer accountId) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("account_id",accountId);
+        queryWrapper.eq("account_id", accountId);
         Integer count = accountNotifyDAO.selectCount(queryWrapper);
-        return count==null?responseFromServer.error():responseFromServer.success(count);
+        return count == null ? responseFromServer.error() : responseFromServer.success(count);
     }
 
     @Override
     @Transactional
     public responseFromServer insertNotify(Notify notify) {
-        if(notify == null){
+        if (notify == null) {
             return responseFromServer.error();
         }
 //        notify.setAccountNotifyId(null);
         notify.setId(null);
-        if(notifyDAO.insert(notify)!=1){
+        if (notifyDAO.insert(notify) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -146,19 +158,20 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 插入一条notify
+     *
      * @param accountNotify
      * @return
      */
     @Transactional
     @Override
-    public responseFromServer insertAccountNotify(AccountNotify accountNotify){
+    public responseFromServer insertAccountNotify(AccountNotify accountNotify) {
         if (accountNotify == null) {
             return responseFromServer.error();
         }
         accountNotify.setId(null);
         accountNotify.setNotifyId(null);
         Notify notify = accountNotify.getNotify();
-        if(insertNotify(notify).isSuccess()) {
+        if (insertNotify(notify).isSuccess()) {
             Integer notifyId = notify.getId();
             accountNotify.setNotifyId(notifyId);
             if (accountNotifyDAO.insert(accountNotify) == 1) {
@@ -174,13 +187,14 @@ public class NotifyServiceImpl implements NotifyService {
 
     /**
      * 删除
+     *
      * @param accountNotify
      * @return
      */
     @Override
     @Transactional
     public responseFromServer deleteNotify(AccountNotify accountNotify) {
-        if(accountNotify.getId()==null||accountNotifyDAO.deleteById(accountNotify.getId())!=1){
+        if (accountNotify.getId() == null || accountNotifyDAO.deleteById(accountNotify.getId()) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -188,18 +202,29 @@ public class NotifyServiceImpl implements NotifyService {
     }
 
 
-
     @Override
-    public responseFromServer getNotifyPage(QueryWrapper queryWrapper,Integer pageIndex) {
-        Page<Notify> page = new Page<>(pageIndex, Nums.pageSize);
+    public responseFromServer getNotifyPage(QueryWrapper queryWrapper, Integer pageIndex) {
+        Page<AccountNotify> page = new Page<>(pageIndex, Nums.pageSize);
+        queryWrapper.orderByAsc("is_read");
         queryWrapper.orderByDesc("create_time");
-        IPage<Notify> notifyIPage = notifyDAO.selectPage(page,queryWrapper);
-        MyPage myPage = new MyPage(notifyIPage);
-        return responseFromServer.success(myPage);
+        IPage<AccountNotify> notifyIPage = accountNotifyDAO.getNotifyPage(page, queryWrapper);
+        MyPage<AccountNotify> myPage = new MyPage(notifyIPage);
+        List<SimpleNotify> simpleNotifyList = new ArrayList<>();
+        for (AccountNotify accountNotify : myPage.getPageList()) {
+            try {
+                simpleNotifyList.add(new SimpleNotify(accountNotify));
+            } catch (Exception e) {
+                return responseFromServer.error();
+            }
+        }
+        MyPage<SimpleNotify> myPage2 = new MyPage(notifyIPage);
+        myPage2.setPageList(simpleNotifyList);
+        return responseFromServer.success(myPage2);
     }
 
     /**
      * 设置通知为已读
+     *
      * @param notifyId
      * @return
      */
@@ -210,20 +235,74 @@ public class NotifyServiceImpl implements NotifyService {
         accountNotify.setId(notifyId);
         accountNotify.setIsRead(true);
         accountNotify.setReadTime(new Timestamp(System.currentTimeMillis()));
-        if(accountNotifyDAO.updateById(accountNotify)!=1)
-        {
+        if (accountNotifyDAO.updateById(accountNotify) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
         return responseFromServer.success();
     }
 
+    @Override
+    @Transactional
+    public responseFromServer searchSimpleAccountNotifyPage(NotifyCondition condition) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        switch (condition.getType()) {
+            case 0:
+                /**未读消息*/
+                queryWrapper.eq("acc_notify.is_read", false);
+            case 1:
+                /**全部消息*/
+                break;
+            case 2:
+                /**交易相关消息*/
+                queryWrapper.in("notify.target_type", Arrays.asList(0, 1));
+                break;
+            case 3:
+                /**通告相关消息*/
+                queryWrapper.in("notify.target_type", Arrays.asList(2, 3));
+                break;
+            default:
+        }
+        Page<AccountNotify> page;
+        if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
+            page = new Page<>(Nums.pageSize, 1);
+        } else {
+            page = new Page<>(Nums.pageSize, condition.getPageIndex());
+        }
+        Timestamp timestamp;
+        if (condition.getEndTime() == null) {
+            timestamp = new Timestamp(System.currentTimeMillis());
+        } else {
+            timestamp = new Timestamp(condition.getEndTime().getTime());
+        }
+        queryWrapper.le("acc_notify.create_time", timestamp);
+        queryWrapper.eq("acc_notify.account_id", condition.getAccountId());
+        /*未阅读的显示在前*/
+        queryWrapper.orderByAsc("acc_notify.is_read");
+        /*按照逆时间顺序*/
+        queryWrapper.orderByDesc("acc_notify.create_time");
+        IPage<AccountNotify> notifyIPage = accountNotifyDAO.searchNotify(page, queryWrapper);
+        MyPage<AccountNotify> myPage = new MyPage<>(notifyIPage);
+        List<SimpleNotify> simpleNotifyList = new ArrayList<>();
+        for (AccountNotify accountNotify : myPage.getPageList()) {
+            try {
+                simpleNotifyList.add(new SimpleNotify(accountNotify));
+            } catch (Exception e) {
+                return responseFromServer.error();
+            }
+        }
+        MyPage<SimpleNotify> myPage2 = new MyPage(notifyIPage);
+        myPage2.setPageList(simpleNotifyList);
+        myPage2.setEndTime(timestamp);
+        return responseFromServer.success(myPage2);
+    }
+
     private AccountNotifyDAO accountNotifyDAO;
     private NotifyDAO notifyDAO;
 
     @Autowired
-    public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO){
-        this.accountNotifyDAO  = accountNotifyDAO;
+    public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO) {
+        this.accountNotifyDAO = accountNotifyDAO;
         this.notifyDAO = notifyDAO;
     }
 }

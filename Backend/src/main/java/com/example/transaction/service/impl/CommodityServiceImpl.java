@@ -171,7 +171,10 @@ public class CommodityServiceImpl implements CommodityService {
             if (resultPage == null) {
                 throw new Exception();
             }
-            return responseFromServer.success(new MyPage<Commodity>(resultPage));
+            MyPage myPage = new MyPage<Commodity>(resultPage);
+            /*将查询的截止时间返回*/
+            myPage.setEndTime(timestamp);
+            return responseFromServer.success(myPage);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();

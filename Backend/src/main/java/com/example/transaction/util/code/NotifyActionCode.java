@@ -179,6 +179,7 @@ public enum NotifyActionCode {
      * }
      * }
      */
+
     COMMENTS(0, "评论了"),
     SETSUP(1, "创建了"),
     CANCELS(2, "取消了"),
@@ -188,7 +189,8 @@ public enum NotifyActionCode {
     EXPIREDSOON(6, "即将失效"),
     EXPIRED(7, "失效了"),
     REPLIES(8, "回复了"),
-    RESERVES(9, "预约了");
+    RESERVES(9, "预约了"),
+    FAIL(10, "失败");
 
     private final int code;
     private final String desc;

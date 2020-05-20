@@ -41,4 +41,11 @@ public class AccountNotify implements Serializable {
     private Notify notify;
     @TableField(exist = false)
     private Account owner;
+
+    public AccountNotify() {
+    }
+
+    public AccountNotify(Integer id) {
+        this.id = id;
+    }
 }
