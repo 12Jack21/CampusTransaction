@@ -98,10 +98,10 @@
 		<!-- 发布者信息-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-goods-info-view-box">
 			<view class="zaiui-shop-view">
-				<view class="cu-avatar lg round" style="background-image:url(/static/images/avatar/1.jpg)"/>
+				<view class="cu-avatar lg round" :style="{backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/1.jpg)': account.avatar}"/>
 				<view class="text-view">
-					<view class="margin-bottom-xs">仔仔店铺</view>
-					<view class="text-sm text-cut">仔仔店铺，正品保障，售后无忧</view>
+					<view class="margin-bottom-xs">{{account.username}}</view>
+					<view class="text-sm text-cut">正品保障，售后无忧</view>
 				</view>
 			</view>
 			<view class="zaiui-border-view"/>
@@ -110,8 +110,8 @@
 		
 		<!--图片详情-->
 		<view class="margin-top zaiui-goods-details-box">
-			<image src="/static/images/home/goods/goods-1.png" mode="widthFix"/>
-			<image src="/static/images/home/goods/goods-2.png" mode="widthFix"/>
+			<image src="/static/images/comDefault.png" mode="widthFix" v-if="commodity.images.length===0"/>
+			<image :src="item" v-for="(item,index) in commodity.images" :key="index"></image>
 		</view>
 
 		<!--占位底部距离-->
@@ -229,9 +229,13 @@
 					expectedPrice: 1000,
 					originalPrice: 2000,
 					count: 79,
+					images:[]
 				},
-				account:{},
-				otherComs:[], // 发布者的其他物品
+				account:{
+					username: 'CV',
+					avatar: ''
+				},
+				otherComs:[], // 发布者的其他物品,放到其他用户页面中
 				comments:[
 					{fromId:1,fromName:'大牛',fromImage:'',toName:'',content:'真的是我觉得性价比最高的机器了'},
 					{fromId:2,fromName:'小哈',fromImage:'',toName:'',content:'想问一下这个能便宜一点吗'}

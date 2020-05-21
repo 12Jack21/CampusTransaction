@@ -23,12 +23,13 @@
 						</view>
 					</view>
 					<!-- end -->
+					
 					<view class="margin-top-sm margin-bottom-xs text-gray user-info-box">
 						<view class="flex">
 							<view class="flex-sub">
 								<view class="flex flex-wrap user-info">
 									<view class="basis-xs"><image class="cu-avatar sm round img"
-									 :src="item.avatar.length===0?'@/static/images/comDefault.png':item.avatar" 
+									 :src="item.avatar.length===0?'@/static/images/avatar/default.png':item.avatar" 
 									 lazy-load mode="widthFix" /></view>
 									<view class="basis-xl text-cut line-height">
 										<text class="text-sm margin-left-xs">{{ item.username }}</text>
@@ -43,6 +44,7 @@
 					</view>
 				</view>
 				<!-- end -->
+				
 			</view>
 		</block>
 	</view>
