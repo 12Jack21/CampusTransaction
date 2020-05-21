@@ -19,5 +19,9 @@ public class Nums {
     public static final long weak = (long) 1000 * 60 * 60 * 24 * 7;
     public static final long day = (long) 1000 * 60 * 60 * 24;
 
+    public static final String commodityImagePath = "http://39.96.69.108:9999/static/images/home/goods/";
+    public static final String avatarPath = "http://39.96.69.108:9999/static/images/avatar/";
+    public static String basePath = System.getProperty("user.dir");
+
 
 }

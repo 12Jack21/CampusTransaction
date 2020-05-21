@@ -15,6 +15,7 @@ import com.example.transaction.util.MyPage;
 import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.responseFromServer;
+import io.netty.util.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +32,6 @@ import java.util.List;
  */
 @Service(value = "noticeService")
 public class NoticeServiceImpl implements NoticeService {
-
 
 
     @Override
@@ -99,7 +99,10 @@ public class NoticeServiceImpl implements NoticeService {
         /*此时默认notice中各项数据正常*/
         /*添加商品*/
         notice.setId(null);
-        if (noticeDAO.insert(notice) != 1) {
+        /**
+         * 处理地址
+         */
+        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {
@@ -107,6 +110,30 @@ public class NoticeServiceImpl implements NoticeService {
             Integer noticeId = notice.getId();
             return responseFromServer.success(notice);
         }
+    }
+
+    /**
+     * 处理详细地址
+     *
+     * @param notice
+     * @return
+     */
+    private responseFromServer splitAddress(Notice notice) {
+        String addressStr = notice.getAddress(),address,detailedAddress;
+        if (StringUtil.isNullOrEmpty(addressStr)) {
+            return responseFromServer.error();
+        }
+        char temp = addressStr.charAt(3);
+        if(temp == '部'){
+            address = addressStr.substring(0,4);
+            detailedAddress = addressStr.substring(4,addressStr.length());
+        }else{
+            address = addressStr.substring(0,3);
+            detailedAddress = addressStr.substring(3,addressStr.length());
+        }
+        notice.setAddress(address);
+        notice.setDetailedAddress(detailedAddress);
+        return responseFromServer.success(notice);
     }
 
     /**
@@ -121,7 +148,7 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null || notice.getComList() == null || notice.getComList().size() == 0) {
             return responseFromServer.error();
         }
-        if (noticeDAO.insert(notice) != 1) {
+        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {
@@ -159,13 +186,14 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 查询通告分页
+     *
      * @param queryWrapper
      * @param pageIndex
      * @return
      */
     @Override
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
-        Page<Notice> page = new Page<>(pageIndex, Nums.pageSize);
+        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         MyPage<Notice> myPage = new MyPage(noticeIPage);
         List<NoticeInfo> noticeList = new ArrayList<>();

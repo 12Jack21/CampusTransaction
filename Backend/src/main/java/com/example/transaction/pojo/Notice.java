@@ -16,6 +16,8 @@ public class Notice implements Serializable {
     private Integer id;
     private Boolean type;
     private String address;
+    @TableField(value = "detailed_address")
+    private String detailedAddress;
 
     @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @TableField(value = "end_time")

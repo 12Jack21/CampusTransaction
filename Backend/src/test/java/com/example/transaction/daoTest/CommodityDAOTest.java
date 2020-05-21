@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.awt.desktop.QuitEvent;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -89,6 +90,16 @@ public class CommodityDAOTest {
     void testSortByCredit(){
         Page<Commodity> page = new Page<>(1,2);
         IPage<Commodity> iPage = commodityDAO.sortByCredit(page, "yell");
+        System.out.println(page.getPages());
+        System.out.println(page.getTotal());
+        System.out.println(page.getRecords());
+    }
+
+    @Test
+    void searchTest(){
+        Page<Commodity> page = new Page<>(1,2);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        IPage<Commodity> iPage = commodityDAO.search(page, queryWrapper);
         System.out.println(page.getPages());
         System.out.println(page.getTotal());
         System.out.println(page.getRecords());

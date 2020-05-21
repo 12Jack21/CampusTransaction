@@ -13,7 +13,7 @@
     <appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <!--只接受程序中DEBUG级别的日志进行处理-->
-            <ThresholdFilter level="Info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="Debug" onMatch="ACCEPT" onMismatch="DENY"/>
             <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
             <!--            <PatternLayout pattern="[%d{HH:mm:ss.SSS}] %-5level %class{36} %L %M - %msg%xEx%n"/>-->
         </Console>
@@ -98,7 +98,7 @@
         </root>
 
         <!--记录druid-sql的记录-->
-        <logger name="druid.sql.Statement" level="debug" additivity="false">
+        <logger name="druid.sql.Statement" level="debug" additivity="true">
             <appender-ref ref="druidSqlRollingFile"/>
             <appender-ref ref="Console"/>
         </logger>
@@ -118,9 +118,9 @@
         <logger name="org.thymeleaf" level="warn"/>
 
         <!--过滤掉spring和mybatis、mybatis-plus 的一些无用的DEBUG信息-->
-        <logger name="org.springframework" level="INFO"/>
-        <logger name="org.mybatis" level="INFO"/>
-        <logger name="com.baomidou.mybatisplus" level="INFO"/>
+        <logger name="org.springframework" level="DEBUG"/>
+        <logger name="org.mybatis" level="DEBUG"/>
+        <logger name="com.baomidou.mybatisplus" level="DEBUG"/>
         <logger name="org.hibernate" level="INFO"/>
 
 

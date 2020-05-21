@@ -45,6 +45,8 @@ public class Commodity implements Serializable {
     @TableField(exist = false)
     private List<String> images;
 
+    
+    
     public Commodity() {
     }
 

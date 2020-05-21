@@ -318,10 +318,7 @@ public class NotifyServiceImpl implements NotifyService {
         }
         queryWrapper.le("acc_notify.create_time", timestamp);
         queryWrapper.eq("acc_notify.account_id", condition.getAccountId());
-        /*未阅读的显示在前*/
-        queryWrapper.orderByAsc("acc_notify.is_read");
-        /*按照逆时间顺序*/
-        queryWrapper.orderByDesc("acc_notify.create_time");
+
         IPage<AccountNotify> notifyIPage = accountNotifyDAO.searchNotify(page, queryWrapper);
         MyPage<AccountNotify> myPage = new MyPage<>(notifyIPage);
         List<SimpleNotify> simpleNotifyList = new ArrayList<>();

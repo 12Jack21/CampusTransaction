@@ -41,7 +41,7 @@ public class NotifyController {
     @ApiImplicitParam(name = "accountId", value = "用户Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/account/{accountId}")
     public responseFromServer getAccountNotifyWithCondition(@PathVariable Integer accountId,
-                                                            @RequestBody NotifyCondition condition,
+                                                            NotifyCondition condition,
                                                             HttpServletRequest request) {
         Account account = new Account(accountId);
         condition.setAccountId(accountId);

@@ -8,8 +8,10 @@ import com.example.transaction.dao.CommodityImageDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.dto.Condition;
+import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
+import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.FileUtil;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.code.Address;
@@ -33,6 +35,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +54,9 @@ public class CommodityServiceImpl implements CommodityService {
     private int count = 0;
 
     @Autowired
+    NoticeService noticeService;
+
+    @Autowired
     CommodityServiceImpl(CommodityDAO commodityDAO, TypeDAO typeDAO, CommodityImageDAO commodityImageDAO, NoticeDAO noticeDAO) {
         this.commodityDAO = commodityDAO;
         this.typeDAO = typeDAO;
@@ -62,56 +68,16 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     public responseFromServer search(Condition condition) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-
         /*处理排序规则*/
 
-        if (condition.getSortType() != null && condition.sortType >= 0) {
-            switch (condition.getSortType()) {
-                /*最新*/
-                case 0:
-                    queryWrapper.orderByDesc("c.create_time");
-                    break;
 
-                /*附近,地址在参数中*/
-                case 1:
-                    break;
-
-                /*失效时间*/
-                case 2:
-                    condition.recent = true;
-                    condition.setOutdated(2);
-                    break;
-
-                /*便宜好物*/
-                case 3:
-                    queryWrapper.le("c.price", 10.0);
-                    break;
-
-                /*todo*/
-                case 4:
-                    break;
-
-                /*todo*/
-                case 5:
-                    break;
-
-                /*todo*/
-                case 6:
-                    break;
-
-                /*todo*/
-                case 7:
-                    break;
-                default:
-            }
-        }
 
         /*处理分页条件*/
         Page<Commodity> page;
         if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
-            page = new Page<>(Nums.pageSize, 1);
+            page = new Page<>(1, Nums.pageSize);
         } else {
-            page = new Page<>(Nums.pageSize, condition.getPageIndex());
+            page = new Page<>(condition.getPageIndex(), Nums.pageSize);
         }
 
         /*处理时间条件*/
@@ -125,7 +91,11 @@ public class CommodityServiceImpl implements CommodityService {
         queryWrapper.le("n.create_time", timestamp);
 
         if (condition.recent) {
-            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
+            /**
+             * ZZH
+             * TODO : 时间计算
+             */
+            timestamp = new Timestamp((new Date()).getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
             queryWrapper.ge("n.end_time", timestamp);
         } else if (condition.getOutdated() != null && condition.getOutdated() > 0) {
             timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * condition.getOutdated());
@@ -134,7 +104,7 @@ public class CommodityServiceImpl implements CommodityService {
 
         /*处理地址*/
 
-        if (condition.getUserAddress() != null || condition.getUserAddress() != "全校") {
+        if (condition.getUserAddress() != null && !condition.getUserAddress().equals("全校")) {
             int addressCode;
             String address = condition.getUserAddress();
             try {
@@ -150,7 +120,7 @@ public class CommodityServiceImpl implements CommodityService {
         /*处理搜索串*/
         String searchStr = condition.getKeyword();
         if (searchStr != null) {
-            queryWrapper.like("c.name", "%" + searchStr + "%");
+            queryWrapper.like("c.name", searchStr);
         }
 
         /*价格区间*/
@@ -164,20 +134,78 @@ public class CommodityServiceImpl implements CommodityService {
         /*处理类型*/
         if (condition.getType() != null) {
 //todo            queryWrapper.eq("c.id", "t.commodity_id");
-            queryWrapper.eq("t.value", condition.getType());
+            queryWrapper.eq("c.type", condition.getType());
         }
 
         try {
-            IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+            IPage<Commodity> resultPage;
+            if (condition.getSortType() != null && condition.sortType >= 0) {
+                switch (condition.getSortType()) {
+
+                    /*失效时间*/
+                    case 2:
+                        condition.recent = true;
+                        condition.setOutdated(2);
+                        resultPage = commodityDAO.searchEndTimeDESC(page, queryWrapper);
+                        break;
+                    /*便宜好物*/
+                    case 3:
+                        queryWrapper.le("c.expected_price", 10.0);
+                        resultPage = commodityDAO.search(page, queryWrapper);
+                        break;
+                    /*失效时间*/
+                    case 5:
+                        resultPage = commodityDAO.searchEndTimeDESC(page, queryWrapper);
+                        break;
+                    /*价格从低到高*/
+                    case 6:
+                        resultPage = commodityDAO.searchPriceASC(page, queryWrapper);
+                        break;
+                    /*发布者信誉值(成功率)*/
+                    case 7:
+                        resultPage = commodityDAO.searchEstimateASC(page, queryWrapper);
+                        break;
+                    /*最新*/
+                    case 0:
+                    /*附近,地址在参数中*/
+                    case 1:
+                    /*最新*/
+                    case 4:
+                    default:
+                        resultPage = commodityDAO.search(page, queryWrapper);
+                }
+            } else {
+                resultPage = commodityDAO.search(page, queryWrapper);
+            }
             if (resultPage == null) {
                 throw new Exception();
             }
+            /**将commodity转换为commodityInfo*/
             MyPage myPage = new MyPage<Commodity>(resultPage);
+            List<CommodityInfo> commodityInfoList = new ArrayList<>();
+            for (Commodity commodity : resultPage.getRecords()) {
+                /**查询对应的notice信息*/
+                QueryWrapper queryWrapper1 = new QueryWrapper();
+                queryWrapper1.eq("id", commodity.getNoticeId());
+                responseFromServer noticeResposne = noticeService.getNoticePage(queryWrapper1, 1);
+                if (noticeResposne.isFailure()) {
+                    throw new Exception();
+                }
+                MyPage noticePage = (MyPage) noticeResposne.getData();
+                if (noticePage.getPageList().size() != 1) {
+                    throw new Exception();
+                }
+                NoticeInfo noticeInfo = (NoticeInfo) noticePage.getPageList().get(0);
+                commodityInfoList.add(new CommodityInfo(commodity, noticeInfo));
+            }
+            myPage.setPageList(commodityInfoList);
+
             /*将查询的截止时间返回*/
             myPage.setEndTime(timestamp);
             return responseFromServer.success(myPage);
         } catch (Exception e) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            e.printStackTrace();
             return responseFromServer.error();
         }
 
@@ -227,7 +255,7 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Override
     public responseFromServer getByNameSortedByNewness(Integer pageIndex, String name) {
-        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Page<Commodity> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         IPage<Commodity> iPage = commodityDAO.sortByNewness(page, name);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
@@ -242,7 +270,7 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Override
     public responseFromServer getByTypeId(Integer pageIndex, Integer typeId) {
-        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Page<Commodity> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         IPage<Commodity> iPage = commodityDAO.sortByType(page, typeId);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
@@ -258,7 +286,7 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Override
     public responseFromServer getBetweenPrice(Integer pageIndex, String name, Integer low, Integer high) {
-        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Page<Commodity> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         IPage<Commodity> iPage = commodityDAO.betweenPrice(page, name, low, high);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
@@ -273,7 +301,7 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Override
     public responseFromServer sortByCredit(Integer pageIndex, String name) {
-        Page<Commodity> page = new Page<>(pageIndex, Nums.pageSize);
+        Page<Commodity> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
 //        Timestamp timestamp = new Timestamp(System.currentTimeMillis()); //当前时间
         IPage<Commodity> iPage = commodityDAO.sortByCredit(page, name);
         MyPage<Commodity> myPage = new MyPage<>(iPage);
@@ -455,6 +483,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 返回图片路径
+     *
      * @param files 文件数组
      * @return 执行结果
      */
@@ -559,11 +588,10 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     public responseFromServer uploadCommodityImages(MultipartFile[] files, Integer commodityId, Boolean updateToCommodity) {
         /*如果是上传到已经创建的商品,直接存到images文件夹下*/
-        String filePath = updateToCommodity ? ResourcePath.imagePath : ResourcePath.imageTempPath;
         List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
             /*获得文件名*/
-            responseFromServer response = FileUtil.checkImageFile(file, updateToCommodity);
+            responseFromServer response = FileUtil.checkImageFile(file, updateToCommodity, false);
             if (response.isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error();
@@ -572,14 +600,14 @@ public class CommodityServiceImpl implements CommodityService {
 
             if (updateToCommodity) {
                 /*上传到已经创建的商品中*/
-                if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
+                if (commodityImageDAO.insert((new CommodityImage(filename, commodityId))) != 1) {
                     /*插入数据库错误*/
                     TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                     return responseFromServer.error();
                 }
             }
             /*保存文件*/
-            if (FileUtil.saveFile(file, updateToCommodity, filename).isFailure()) {
+            if (FileUtil.saveFile(file, updateToCommodity, filename, false).isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }

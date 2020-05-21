@@ -1,6 +1,8 @@
 package com.example.transaction.controller;
 
+import com.example.transaction.dto.CommoditySearch;
 import com.example.transaction.dto.Condition;
+import com.example.transaction.dto.commodity.Pagination;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
@@ -89,17 +91,27 @@ public class CommodityController {
     @ApiOperation(value = "搜索商品")
     @ApiImplicitParam(name = "condition", value = "condition", paramType = "Condition", dataType = "Condition")
     @PostMapping("/search")
-    public responseFromServer search(@RequestBody Condition condition, HttpServletRequest request) {
-        responseFromServer response = commodityService.search(condition);
+    public responseFromServer search(@RequestBody CommoditySearch commoditySearch, HttpServletRequest request) {
+        Condition condition = commoditySearch.getCondition();
+        condition.setPageIndex(commoditySearch.getPagination()==null?-1:commoditySearch.getPagination().getPageIndex());
+        condition.setEndTime(commoditySearch.getPagination()==null?(new Date()):commoditySearch.getPagination().getEndTime());
+        condition.setKeyword(commoditySearch.getKeyword()==null?null:commoditySearch.getKeyword());
+        if(condition.getLowPrice().equals(-1)){
+            condition.setLowPrice(null);
+        }
+        if(condition.getHighPrice().equals(-1)){
+            condition.setHighPrice(null);
+        }
+        responseFromServer response = commodityService.search(commoditySearch.getCondition());
         if (response.isSuccess()) {
             if (condition.getKeyword() != null || condition.getKeyword() != "") {
                 Account account = accountVerify.getCurrentAccount(request);
-                if (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess()) {
+                /*如果用户登录则添加到搜索记录中*/
+                if (account !=null && (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess())) {
                     return response;
                 }
             }
             /*暂时先:插入搜索记录失败时也返回成功*/
-
         }
         return response;
     }
@@ -114,15 +126,10 @@ public class CommodityController {
     )
     @GetMapping("/sort/{sortType}")
     public responseFromServer getSortedCommodity(@PathVariable Integer sortType,
-                                                 @RequestBody Condition condition,
+                                                 Condition condition,
                                                  HttpServletRequest request) {
-//        Condition condition = new Condition();
-//        condition.setPageIndex(pageIndex);
-//        condition.setEndTime(endTime);
-//        condition.setUserAddress(userAddress);
         condition.setSortType(sortType);
         return commodityService.search(condition);
-
     }
 
 
