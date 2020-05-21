@@ -116,7 +116,7 @@ import news from '@/static/data/messages.js'
 		 
 const iniPagination = ()=>{
 	return {
-		pageIndex:0,
+		pageIndex:1,
 		endTime: new Date().format('yyyy-MM-dd hh:mm'),
 		finish:false,
 	}

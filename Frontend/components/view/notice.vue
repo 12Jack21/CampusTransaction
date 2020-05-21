@@ -91,7 +91,7 @@ import handles from '@/utils/handles.js'
 import {mapState} from 'vuex'
 
 const iniNotice = ()=> ({
-	pageIndex:0,
+	pageIndex:1,
 	pageSize:20,
 	startTime:new Date().format('yyyy-MM-dd hh:mm'),
 	finish: false,

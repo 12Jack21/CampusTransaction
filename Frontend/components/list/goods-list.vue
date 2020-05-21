@@ -28,11 +28,12 @@
 						<view class="flex">
 							<view class="flex-sub">
 								<view class="flex flex-wrap user-info">
-									<view class="basis-xs"><image class="cu-avatar sm round img"
-									 :src="item.avatar.length===0?'@/static/images/avatar/default.png':item.avatar" 
+									<view class="basis-xs">
+										<image class="cu-avatar sm round img"
+									 :src="item.avatar.length===0?'/static/images/avatar/default.png':item.avatar" 
 									 lazy-load mode="widthFix" /></view>
 									<view class="basis-xl text-cut line-height">
-										<text class="text-sm margin-left-xs">{{ item.username }}</text>
+										<text class="text-sm margin-left-xs">{{ item.accountName }}</text>
 									</view>
 									<image class="v-icon" src="/static/zaiui/img/v.png" lazy-load mode="widthFix" v-if="item.avatar.length===0" />
 								</view>

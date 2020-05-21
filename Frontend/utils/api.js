@@ -42,10 +42,10 @@ http.interceptor.response((response) => { /* 对响应成功做点什么 （stat
  // if (response.config.custom.verification) { // 演示自定义参数的作用
   //   return response.data
   // }
-  console.log('response',response)
+  console.log('http intercept response',response)
   return response
 }, (response) => { /*  对响应错误做点什么 （statusCode !== 200），必须return response*/
-  console.log('error',response)
+  console.log('http intercept error',response)
   return response
 })
 
@@ -100,6 +100,12 @@ export default{
 	},
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
+	},
+	addReservation(data){
+		return http.post('/reservations', data)
+	},
+	getReservationsByCommodity(id){
+		return http.get('/reservations/commodity/' + id)
 	},
 	getReservations(accountId){
 		return http.get('/reservations/account/' + accountId)

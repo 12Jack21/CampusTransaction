@@ -33,7 +33,7 @@ export default {
 			scrollBottom: false,
 			prevTabID: 0,
 			tabID: 0,
-			loaded: [true,false,false, true, false]
+			loaded: [true,false,false, false, false]
 		}
 	},
 	onLoad() {},

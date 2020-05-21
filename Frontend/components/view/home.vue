@@ -176,9 +176,10 @@ export default {
 		this.goodsData = _home_data.goodsList()
 		
 		// 存取分页查询所需的字段
-		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,endTime:'',finish:false,data:[]})
+		for(let i = 0;i < 4;i++) 
+			this.storeGoods.push({pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]})
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
-		// this.getCommodityList()
+		this.getCommodityList()
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -210,15 +211,18 @@ export default {
 			this.goodsData = this.storeGoods[current].data
 			if(this.goodsData.length === 0){ 
 				this.storeGoods[current].endTime = new Date().format('yyyy-MM-dd hh:mm')
+				this.goodsTabData.tabCur = current // TODO 陷阱
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
 				this.storeGoods[current].data = [] //清空来方便 push
 				this.storeGoods[current].finish = false
+				this.goodsTabData.tabCur = current
 				this.getCommodityList()
 			}
+			else
+				this.goodsTabData.tabCur = current 
 			
-			this.goodsTabData.tabCur = current
 			
 			// #ifdef H5
 			uni.pageScrollTo({
@@ -263,7 +267,7 @@ export default {
 					self.goodsData = self.storeGoods[tab].data
 					
 					// 取完了数据
-					if(resp.pageIndex === resp.pageCount) {
+					if(resp.pageIndex - 1 === resp.pageCount) {
 						self.storeGoods[tab].finish = true
 						this.loadStatus = 'noMore'
 					}

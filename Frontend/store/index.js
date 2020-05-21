@@ -6,7 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
 	state:{
 		hasLogin: false,
-		userId: '100',
+		userId: '1',
 		userAddress:'信息学部',
 		token: ''
 	},

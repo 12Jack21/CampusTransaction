@@ -109,7 +109,7 @@ import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import filter_data from '../../static/data/filters.js'
 
 const iniPagination = {
-				pageIndex:0,
+				pageIndex:1,
 				pageSize:20,
 				endtime:new Date().format('yyyy-MM-dd hh:mm'),
 				finish: false
@@ -226,7 +226,8 @@ export default {
 				highPrice: -1,
 				lowPrice:-1
 			}
-			this.doSearch(searchBody)
+			this.searchKey = ''
+			this.doSearch(searchBody,true)
 			this.search_ph = ''
 		}
 		// Im: 必须用 setTimeout才能初始化
@@ -328,12 +329,9 @@ export default {
 			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
 				return
 
-			console.log('previous', this.filterValues)
-			console.log('current', e.value)
-			console.log('dropdown', this.filterDropdownValue)
 			this.filterValues = e.value
-			
 			this.pagination = {...iniPagination}
+			this.goodsData = []
 			
 			// do search with filter condition
 			let searchBody = Object.assign({
@@ -342,9 +340,7 @@ export default {
 			},conditionMap(e.value[2][0], e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
 			
 			this.searchBody = searchBody
-			console.log('index', e.index)
-			console.log('search body', searchBody)
-			this.doSearch(searchBody)
+			this.doSearch(searchBody,true)
 		},
 		BackPage() {
 			uni.navigateBack()
@@ -362,13 +358,17 @@ export default {
 			this.searchKey = ''
 			this.search_close = false
 		},
-		async doSearch(condition) {
+		async doSearch(condition,keyNull=false) {
 			this.loadStatus = 'loading'
 			// 虚拟数据加载
 			this.searchView = false
 			
+			let key
 			// 关键词 模糊搜索
-			let key = this.searchKey.trim().length == 0 ? '高数' : this.searchKey.trim()
+			if(!keyNull)
+				key = this.searchKey.trim().length == 0 ? this.search_ph : this.searchKey.trim()
+			else 
+				key = this.searchKey.trim()
 			await this.$api
 				.getSearchResult(key, condition, this.pagination)
 				.then(res => {
