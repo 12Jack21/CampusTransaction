@@ -138,10 +138,10 @@ let _home_data = {
 				price: '2280.12',
 				originalPrice:'12.3',
 				state: '',
-				username: '仔仔',
 				time: '1小时前发布',
 				title: '商品标题，商品标题',
 				img: '/static/images/home/goods/1.png',
+				username: '仔仔',
 				avatar: '/static/images/avatar/1.jpg'
 			},
 			{

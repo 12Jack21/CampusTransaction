@@ -38,7 +38,11 @@
 			"path": "pages/reservations/reservations", // 预约列表
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "pages/account/account",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationStyle": "custom"
 	},

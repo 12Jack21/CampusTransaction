@@ -9,9 +9,6 @@
 			</block>
 		</bar-title>
 		
-		<!--提示-->
-		<view class="bg-grey text-sm text-center padding-tb-xs text-white">真机实拍部分为真机样张，您购买的机型大致符合图中成色效果</view>
-		
 		<!--轮播图-->
 		<view class="zaiui-banner-swiper-box">
 			<swiper class="screen-swiper" circular autoplay @change="bannerSwiper">
@@ -25,40 +22,34 @@
 		
 		<!--限时秒杀-->
 		<view class="zaiui-limited-seckill-box">
-			<text class="text-price text-xxl">2999</text>
+			<text class="text-price text-xxl">{{commodity.expectedPrice}}</text>
 			<view class="text-xs zaiui-cost-price-num price-4">
-				<view class="text-through">原价￥6999</view>
-				<view>剩余79件</view>
+				<view class="text-through">原价{{commodity.originalPrice}}</view>
+				<view>剩余{{commodity.count}}件</view>
 			</view>
 			<view class="text-right zaiui-time-right">
-				<view>自营限时秒杀</view>
-				<view class="text-xs">距结束剩余10时07分50秒</view>
+				<view class="text-xs">{{expiredTime}}</view>
+				<view class="text-xs">时过期</view>
 			</view>
 		</view>
 		
 		<!--标题-->
 		<view class="bg-white zaiui-view-box zaiui-title-view-box">
 			<view class="title-view">
-				<text class="cu-tag bg-red radius sm">自营</text>
-				<text class="text-black text-lg text-bold">99新苹果iPhoneX 64G深空灰色国行</text>
+				<text class="text-black text-lg text-bold" style="font-size: 40rpx;">99新苹果{{commodity.name}}</text>
 			</view>
-			<view class="light bg-red radius margin-top-sm zaiui-title-tip-box">
-				<view class="text-cut">
-					<text class="margin-right-sm">官方自营</text>
-					<text class="text-sm">官方自营正品保障新品体验售后无忧</text>
-				</view>
-				<text class="cuIcon-right icon"/>
-			</view>
+			<br>
+			<view>物品描述{{commodity.description}}</view>
 		</view>
 
 		<!--选择-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-select-view-box">
 			<view class="flex flex-wrap text-sm">
 				<view class="basis-1">
-					<text class="text-gray">发货</text>
+					<text class="text-gray">条件</text>
 				</view>
 				<view class="basis-9">
-					<text class="text-sm">16:00前下单，当日发货，顺丰包邮(部分地区除外)</text>
+					<text class="text-sm">只限女生{{condition}}</text>
 				</view>
 			</view>
 			
@@ -69,7 +60,7 @@
 					<text class="text-gray">已选</text>
 				</view>
 				<view class="basis-8">
-					<text class="text-sm">99新深空灰色64G国行三网通</text>
+					<text class="text-sm">{{selectedCount}} 件</text>
 				</view>
 				<view class="basis-1">
 					<view class="text-gray text-right">
@@ -83,39 +74,22 @@
 		<view class="margin-top bg-white zaiui-comment-view-box">
 			<view class="cu-bar bg-white">
 				<view class="action">
-					<text class="text-black text-lg">评价（3699）</text>
-				</view>
-				<view class="action">
-					<view class="text-sm">
-						<text class="margin-right-xs">好评率</text>
-						<text class="text-black text-lg">97%</text>
-						<text class="cuIcon-right icon margin-left-xs"/>
-					</view>
+					<text class="text-black text-lg text-bold">评论</text>
 				</view>
 			</view>
-			<view class="zaiui-border-view"/>
-			<view class="zaiui-view-box">
-				<view class="flex flex-wrap text-sm">
-					<view class="basis-1">
-						<view class="cu-avatar sm round" style="background-image:url(/static/images/avatar/1.jpg)"/>
-					</view>
-					<view class="basis-9 text-sm">
-						<view>仔仔</view>
-						<view class="margin-top-xs">X真的是我觉得性价比最高的机器了，大小合适，全面屏操作流畅，灰色也很漂亮，超喜欢</view>
-						<view class="text-gray margin-top-sm">iPhone X 64G深空灰色</view>
-					</view>
-				</view>
-			</view>
-			<view class="zaiui-border-view"/>
-			<view class="zaiui-view-box">
-				<view class="flex flex-wrap text-sm">
-					<view class="basis-1">
-						<view class="cu-avatar sm round" style="background-image:url(/static/images/avatar/2.jpg)"/>
-					</view>
-					<view class="basis-9 text-sm">
-						<view>仔仔</view>
-						<view class="margin-top-xs">X真的是我觉得性价比最高的机器了，大小合适，全面屏操作流畅，灰色也很漂亮，超喜欢</view>
-						<view class="text-gray margin-top-sm">iPhone X 64G深空灰色</view>
+			<!-- 评论列表 -->
+			<view v-for="(item,index) in comments" :key="index">			
+				<view class="zaiui-border-view"/>
+				<view class="zaiui-view-box">
+					<view class="flex flex-wrap text-sm">
+						<view class="basis-1" @tap="fromAccTap(item.fromId)">
+							<view class="cu-avatar sm round" 
+							:style="{backgroundImage:item.fromImage.length===0?'url(/static/images/avatar/1.jpg)':item.fromImage}"/>
+						</view>
+						<view class="basis-9 text-sm">
+							<view>item.fromName</view>
+							<view class="margin-top-xs">{{item.content}}</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -129,7 +103,6 @@
 					<view class="margin-bottom-xs">仔仔店铺</view>
 					<view class="text-sm text-cut">仔仔店铺，正品保障，售后无忧</view>
 				</view>
-				<button class="cu-btn radius sm line-red">全部商品</button>
 			</view>
 			<view class="zaiui-border-view"/>
 			<view class="zaiui-recommend-list-box">
@@ -156,42 +129,6 @@
 			<image src="/static/images/home/goods/goods-2.png" mode="widthFix"/>
 		</view>
 
-		<!--相似推荐-->
-		<view class="margin-top zaiui-view-box zaiui-recommend-list-view-box">
-			<view class="flex flex-wrap">
-				<view class="basis-sm text-right">
-					<image class="img-aau" src="/static/zaiui/img/aau.png" lazy-load mode="widthFix"/>
-				</view>
-				<view class="basis-xs text-center">
-					<text class="text-black text-lg">相似推荐</text>
-				</view>
-				<view class="basis-sm text-left">
-					<image class="img-aau" src="/static/zaiui/img/aau.png" lazy-load mode="widthFix"/>
-				</view>
-			</view>
-			
-			<view class="margin-bottom zaiui-goods-list-box">
-				<view class="grid col-2">
-					<block v-for="(items,indexs) in goodsList" :key="indexs">
-						<view class="list-itme">
-							<view class="bg-white list-radius">
-								<view class="goods-img">
-									<view class="cu-avatar" :style="[{backgroundImage:'url('+ items.img +')'}]"/>
-									<view class="mold-view" v-if="items.mold">
-										<text class="cu-tag radius sm bg-red">自营</text>
-									</view> 
-								</view>
-								<view class="view-goods-info">
-									<view class="text-cut-2 text-black text-sm margin-bottom-sm">{{items.title}}</view>
-									<view class="text-price text-red text-lg">{{items.price}}</view>
-								</view>
-							</view>
-						</view>
-					</block>
-				</view>
-			</view>
-		</view>
-		
 		<!--占位底部距离-->
 		<view class="cu-tabbar-height"/>
 		
@@ -302,9 +239,20 @@
 		data() {
 			return {
 				bannerCur: 0, bannerList: [], bottomModal: false, modalTitle: '', modalType: 'promotion', selectType: '',
-				commodity:{},
+				selectedCount: 2,
+				commodity:{
+					expectedPrice: 1000,
+					originalPrice: 2000,
+					count: 79,
+				},
 				account:{},
-				otherComs:[] // 发布者的其他物品
+				otherComs:[], // 发布者的其他物品
+				comments:[
+					{fromId:1,fromName:'大牛',fromImage:'',toName:'',content:'真的是我觉得性价比最高的机器了'},
+					{fromId:2,fromName:'小哈',fromImage:'',toName:'',content:'想问一下这个能便宜一点吗'}
+					],
+				condition: '只限男生',
+				expiredTime: '2020-05-20 10:07',
 			}
 		},
 		onLoad(params) {
@@ -327,6 +275,7 @@
 				this.$api.getCommodity(id)
 					.then(({data})=>{
 						console.log('commodity detail',data);
+						this.commodity = data.commodity
 					})
 					.catch(()=>{
 						console.log('请求商品数据失败');

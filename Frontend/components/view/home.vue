@@ -178,7 +178,7 @@ export default {
 		// 存取分页查询所需的字段
 		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,endTime:'',finish:false,data:[]})
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
-		this.getCommodityList()
+		// this.getCommodityList()
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -255,7 +255,7 @@ export default {
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)
 				.then(res=>{
-					console.log('my resp data field', res.data);
+					console.log('home resp', res.data.data);
 					let resp = res.data.data
 					self.storeGoods[tab].pageIndex = resp.pageIndex
 					self.storeGoods[tab].pageSize = resp.pageSize

@@ -5,10 +5,11 @@ const http = new Request()
 // 静态全局配置
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
-    config.baseUrl = 'http://localhost:9012'; /* 根域名 */
-		// config.baseUrl = 'http://39.96.69.108:8080/'
+    // config.baseUrl = 'http://localhost:9012'; /* 根域名 */
+		config.baseUrl = 'http://39.96.69.108:9999/'
     config.header = {
         sample_header: "yeahitsmejohn", // 演示用
+				"Content-Type": 'application/x-www-form-urlencoded'
     }
 		config.responseType = 'json'
     return config
@@ -86,7 +87,7 @@ export default{
 		return http.get('/histories/account/' + id)
 	},
 	delSearchHistory(ids){
-		return http.delete('/histories',{ids})
+		return http.delete('/histories',{ids}) 
 	},
 	clearSearchHistory(id){
 		return http.delete('/histories/account/' + id)
@@ -103,11 +104,11 @@ export default{
 	getReservations(accountId){
 		return http.get('/reservations/account/' + accountId)
 	},
-	getAccount(id){
-		return http.get('/accounts/' + id)
+	getOtherAccount(otherId, id){
+		return http.get('/accounts/other/' + otherId, {params:{id}})
 	},
 	getMyAccount(id){
-		return http.get('/accounts/my/' + id)
+		return http.get('/accounts/' + id)
 	},
 	updateNotice(id, update){
 		return http.put('/notice/' + id, update)

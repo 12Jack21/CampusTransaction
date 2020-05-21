@@ -116,7 +116,7 @@ const iniPagination = {
 			}
 const searchHistories = () => ['耳机', '大英课本', '四六级试卷', '电动车'] // virtual
 const conditionMap = (sort,outdated,price) =>{
-	let sortVal, oVal = -1, highprice = -1, lowprice = -1
+	let sortVal, oVal = -1, highPrice = -1, lowPrice = -1
 	switch(sort){
 		case 'time':
 			sortVal = 4
@@ -147,24 +147,24 @@ const conditionMap = (sort,outdated,price) =>{
 	}
 	switch(price){
 		case '50以下':
-			highprice = 50
-			lowprice = 0
+			highPrice = 50
+			lowPrice = 0
 			break
 		case '50-100':
-			highprice = 100
-			lowprice = 50
+			highPrice = 100
+			lowPrice = 50
 			break
 		case '100-300':
-			highprice = 300
-			lowprice = 100
+			highPrice = 300
+			lowPrice = 100
 			break
 		case '300以上':
-			lowprice = 300
+			lowPrice = 300
 	}
 	return {
 		outdated: oVal,
 		sort: sortVal,
-		highprice,lowprice
+		highPrice,lowPrice
 	}
 }
 
@@ -193,7 +193,7 @@ export default {
 			pagination:{
 				pageIndex:0,
 				pageSize:20,
-				endtime:'',
+				endTime:'',
 				finish: false
 			},
 			searchBody:null
@@ -219,11 +219,11 @@ export default {
 			this.searchView = false // switch to result list
 			let searchBody = {
 				type: param.typeName,
-				address: '全校',
-				sort: '最新',
+				userAddress: '全校',
+				sort: 4, //最新
 				outdated: -1, //没有限制
-				highprice: -1,
-				lowprice:-1
+				highPrice: -1,
+				lowPrice:-1
 			}
 			this.doSearch(searchBody)
 			this.search_ph = ''
@@ -337,7 +337,7 @@ export default {
 			// do search with filter condition
 			let searchBody = Object.assign({
 				type: e.value[0][1],
-				address: e.value[1][0],
+				userAddress: e.value[1][0],
 			},conditionMap(e.value[2][0], e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
 			
 			this.searchBody = searchBody

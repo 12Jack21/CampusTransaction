@@ -7,7 +7,7 @@ const store = new Vuex.Store({
 	state:{
 		hasLogin: false,
 		userId: '100',
-		userAddress:'',
+		userAddress:'信息学部',
 		token: ''
 	},
 	mutations:{

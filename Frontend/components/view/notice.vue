@@ -153,8 +153,9 @@ export default {
 		this.notices = iniNotice()
 		//加载虚拟数据
 		this.notices.list = _find_data.trendsData()		
-		// 请求
 		
+		// TODO: Requests, like others
+		this.loadNotices()
 	},
 	mounted() {
 		uni.pageScrollTo({
