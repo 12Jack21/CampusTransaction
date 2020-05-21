@@ -44,20 +44,20 @@ public class NoticeInfo {
     }
 
     public NoticeInfo(Notice notice) {
-                this.id = notice.getId();
-                if (notice.getTitle().length() > 50) {
-                    this.title = notice.getTitle().substring(0, 49) + "...";
-                    this.showAll = true;
-                } else {
-                    this.title = notice.getTitle();
-                    this.showAll = false;
-                }
-                this.address = notice.getAddress();
-                for (int i = 0; i < notice.getComList().size(); i++) {
-                    List<CommodityImage> images = notice.getComList().get(i).getCommodityImages();
-                    if (images == null || images.size() == 0) {
-                        continue;
-                    } else {
+        this.id = notice.getId();
+        if (notice.getTitle().length() > 50) {
+            this.title = notice.getTitle().substring(0, 49) + "...";
+            this.showAll = true;
+        } else {
+            this.title = notice.getTitle();
+            this.showAll = false;
+        }
+        this.address = notice.getAddress();
+        for (int i = 0; i < notice.getComList().size(); i++) {
+            List<CommodityImage> images = notice.getComList().get(i).getCommodityImages();
+            if (images == null || images.size() == 0) {
+                continue;
+            } else {
                 this.image = images.get(0).getImageUrl();
             }
         }

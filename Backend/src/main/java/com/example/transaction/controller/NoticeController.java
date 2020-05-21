@@ -134,16 +134,17 @@ public class NoticeController {
     /**
      * 删除通告
      *
-     * @param notice
+     * @param noticeId
      * @param request
      * @return
      */
 //    @RequestMapping("/deleteNotice")
     @ApiOperation(value = "删除通告")
-    @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/{notice_id}/delete")
-    public responseFromServer deleteNotice(@RequestBody Notice notice, HttpServletRequest request) {
-        Account account = new Account(notice.getAccountId());
+    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
+    @DeleteMapping("/{noticeId}")
+    public responseFromServer deleteNotice(@PathVariable Integer noticeId, HttpServletRequest request) {
+        Account account = new Account(noticeId);
+        Notice notice = new Notice(noticeId);
         if (accountVerify.verify(account, request)) {
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("account_id", account.getId());
@@ -170,6 +171,20 @@ public class NoticeController {
         }
         condition.setAccountId(null);
         return noticeService.getRecentNotice(condition);
+    }
+
+    /**
+     * 根据id查询通告
+     *
+     * @param noticeId
+     * @param request
+     * @return
+     */
+//    @RequestMapping("/getRecentNoticePage")
+    @ApiOperation("根据id查询通告")
+    @GetMapping("/{noticeId}")
+    public responseFromServer getNoticeById(@PathVariable Integer noticeId, HttpServletRequest request) {
+        return noticeService.getDetailedNotice(noticeId);
     }
 
     /**

@@ -31,9 +31,12 @@ public class CommodityInfo {
             this.originalPrice = commodity.getOriginalPrice();
             this.expectedPrice = commodity.getExpectedPrice();
             this.name = commodity.getName();
-            if (!StringUtil.isNullOrEmpty(noticeInfo.getImage())) {
-                this.img = Nums.commodityImagePath + noticeInfo.getImage();
+            if(commodity.getCommodityImages()!=null&&!commodity.getCommodityImages().isEmpty()){
+                this.img = Nums.commodityImagePath + commodity.getCommodityImages().get(0).getImageUrl();
             }
+//            if (!StringUtil.isNullOrEmpty(noticeInfo.getImage())) {
+//                this.img = Nums.commodityImagePath + noticeInfo.getImage();
+//            }
 
             if (noticeInfo == null) {
                 /**

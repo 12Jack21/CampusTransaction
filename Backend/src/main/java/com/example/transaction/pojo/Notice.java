@@ -38,8 +38,15 @@ public class Notice implements Serializable {
     @TableField(value = "account_id")
     private Integer accountId;
 
+    /**
+     * ZZH
+     * TODO : 返回的commodity类型,属性?
+     */
     @TableField(exist = false)
     private List<Commodity> comList;
+
+    @TableField(exist = false)
+    private List<CommodityInfo> comInfoList;
     @TableField(exist = false)
     private Account user;
 
