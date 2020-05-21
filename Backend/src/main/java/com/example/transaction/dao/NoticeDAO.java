@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.CommodityList;
 import com.example.transaction.pojo.Notice;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
@@ -23,7 +22,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
 
     @Results(id = "noticeMap", value = {
             @Result(id = true, property = "id", column = "id"),
-            @Result(property = "commodityLists", column = "id", javaType = List.class, many = @Many(
+            @Result(property = "comList", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
             ))
     })
@@ -46,7 +45,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
 
     @Results(id = "noticeMapwithUser", value = {
             @Result(id = true, property = "id", column = "id"),
-            @Result(property = "commodityLists", column = "id", javaType = List.class, many = @Many(
+            @Result(property = "comList", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
             )),
             @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(

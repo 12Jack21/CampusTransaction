@@ -14,9 +14,9 @@ import java.util.UUID;
  * @Date: 2020/5/18 16:41
  */
 public class FileUtil {
-    public static responseFromServer checkImageFile(MultipartFile file, boolean update) {
+    public static responseFromServer checkImageFile(MultipartFile file, boolean update,boolean isAvatar) {
         /*如果是上传到已经创建的商品,直接存到images文件夹下*/
-        String filePath = update ? ResourcePath.imagePath : ResourcePath.imageTempPath;
+        String filePath = update ? (isAvatar? ResourcePath.avatarPath:ResourcePath.imagePath ): ResourcePath.imageTempPath;
         //获取文件后缀
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
         if (!"jpg,jpeg,gif,png".toUpperCase().contains(suffix.toUpperCase())) {
@@ -32,8 +32,8 @@ public class FileUtil {
         return responseFromServer.success(filename);
     }
 
-    public static responseFromServer saveFile(MultipartFile file, boolean update, String fileName) {
-        String filePath = update ? ResourcePath.imagePath : ResourcePath.imageTempPath;
+    public static responseFromServer saveFile(MultipartFile file, boolean update, String fileName, boolean isAvatar) {
+        String filePath = update ? (isAvatar? ResourcePath.avatarPath:ResourcePath.imagePath ): ResourcePath.imageTempPath;
         try {
             //将文件保存指定目录
             file.transferTo(new File(filePath + fileName));

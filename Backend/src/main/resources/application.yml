@@ -3,17 +3,21 @@
 mybatis-plus:
   type-aliases-package:
     com.example.transaction.pojo
-  #xml文件位置
+#xml文件位置
   mapper-locations:
     classpath*:/mapper/*.xml
   configuration:
     map-underscore-to-camel-case:
       true
-  #mybatis-plus.global-config.db-config.id-type=auto
-  #mybatis-plus配置控制台打印完整带参数SQL语句
-  #mybatis-plus.configuration.log-impl= org.apache.ibatis.logging.log4j2.Log4j2Impl
+    log-impl: org.apache.ibatis.logging.log4j2.Log4j2Impl
+  global-config:
+    db-config:
+      d-type: auto
+  logging.level.com.looedu.mapper: info
 
-  #logging.level.com.looedu.mapper= info
+
+#  mybatis-plus配置控制台打印完整带参数SQL语句
+#  logging.level.com.looedu.mapper= info
 
 web:
   upload-path: E:/CampusTransactionResources/images
@@ -45,16 +49,16 @@ spring:
     password: 123456
 
     # 配置日志输出
-    druid:
-      filter:
-        slf4j:
-          enabled: true
-          statement-log-enabled: true
-          statement-executable-sql-log-enable: true
-          statement-create-after-log-enabled: false
-          statement-close-after-log-enabled: false
-          result-set-open-after-log-enabled: false
-          result-set-close-after-log-enabled: false
+#    druid:
+#      filter:
+#        slf4j:
+#          enabled: true
+#          statement-log-enabled: true
+#          statement-executable-sql-log-enable: true
+#          statement-create-after-log-enabled: false
+#          statement-close-after-log-enabled: false
+#          result-set-open-after-log-enabled: false
+#          result-set-close-after-log-enabled: false
 
 # ---- 下面 暂时不设置 ----
 ##初始化时建立物理连接的个数。

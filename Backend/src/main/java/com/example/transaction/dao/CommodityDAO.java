@@ -74,8 +74,28 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     /*搜索*/
     @ResultMap(value = "detailedCommodity_map2")
 //    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
-    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and c.notice_id = n.id and c.id = t.commodity_id ")
+    @Select("select * from commodity c, notice n ${ew.customSqlSegment} and c.notice_id = n.id  ORDER BY n.create_time DESC ")
     IPage<Commodity> search(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 
+    /*搜索*/
+    /*价格低到高*/
+    @ResultMap(value = "detailedCommodity_map2")
+//    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
+    @Select("select * from commodity c, notice n ${ew.customSqlSegment} and c.notice_id = n.id  ORDER BY n.create_time DESC,c.expected_price ASC")
+    IPage<Commodity> searchPriceASC(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
+
+    /*搜索*/
+    /*失效时间少到多*/
+    @ResultMap(value = "detailedCommodity_map2")
+//    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
+    @Select("select * from commodity c, notice n ${ew.customSqlSegment} and c.notice_id = n.id  ORDER BY n.create_time DESC,n.end_time DESC")
+    IPage<Commodity> searchEndTimeDESC(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
+
+    /*搜索*/
+    /*信誉低到高*/
+    @ResultMap(value = "detailedCommodity_map2")
+//    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
+    @Select("select * from commodity c, notice n, account a,estimate e ${ew.customSqlSegment} and c.notice_id = n.id and a.id = e.account_id ORDER BY n.create_time DESC,n.end_time ASC,e.success_rate ASC")
+    IPage<Commodity> searchEstimateASC(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 
 }
