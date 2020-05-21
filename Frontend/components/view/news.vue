@@ -242,7 +242,8 @@ export default {
 			this.loadStatus = 'loading'
 			let params = {
 				pageIndex: this.newsData.pageIndex,
-				type: this.type
+				type: this.type,
+				endTime: this.newsData.endTime
 			}
 			console.log('userId', this.userId);
 			this.$api.getMessages(this.userId, params)

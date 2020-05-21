@@ -6,8 +6,8 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
 						<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + item.avatar + ')' }]" 
-						@tap="listTap('userTap', item, index)" />
-						<view class="content" @tap="listTap('userTap', item, index)">
+						@tap="listTap('userTap', item.userId)" />
+						<view class="content" @tap="listTap('userTap', item.userId)">
 							<view class="text-black">
 								<view class="text-cut">{{ item.username }}</view>
 							</view>
@@ -30,7 +30,7 @@
 
 				<!--内容-->
 				<view class="margin-tb text-black zaiui-text-content" 
-				@tap="listTap('contentTap', item, index)">
+				@tap="listTap('contentTap', item.id)">
 					<text v-html="item.description">{{ item.description }}</text>
 					<text class="text-blue margin-left-xs" v-if="item.showAll">
 						<text>查看全文</text>
@@ -95,11 +95,8 @@ export default {
 		}
 	},
 	methods: {
-		listTap(tap, data, index) {
-			this.$emit(tap, {
-				data,
-				index
-			})
+		listTap(tap, id) {
+			this.$emit(tap, id)
 		},
 		imgTap(img, arr, index) {
 			this.$emit('imgTap', {

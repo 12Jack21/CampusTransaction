@@ -70,7 +70,7 @@
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height margin-bottom" />
 			
-			<!-- debug update modal -->
+			<!-- debug update modal used in update notice and commodity -->
 			<!-- <modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice> -->
 			<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
 			<!-- end -->
@@ -178,7 +178,7 @@ export default {
 		// 存取分页查询所需的字段
 		for(let i = 0;i < 4;i++) this.storeGoods.push({pageIndex:0,pageSize:10,endTime:'',finish:false,data:[]})
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
-		this.getCommodityList()
+		// this.getCommodityList()
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -233,10 +233,10 @@ export default {
 			})
 			// #endif		
 		},
-		goodsListTap(e) {
-			console.log('goodListTab', e)
+		goodsListTap(id) {
+			console.log('goodListTab', id)
 			uni.navigateTo({
-				url: `/pages/detail/com?id=${e.id}`
+				url: `../../pages/detail/commodity?id=${id}`,			
 			})
 			// TODO: 物品详情界面来加载数据
 			// this.$api.getCommodity(e.id)
@@ -255,7 +255,7 @@ export default {
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)
 				.then(res=>{
-					console.log('my resp data field', res.data);
+					console.log('home resp', res.data.data);
 					let resp = res.data.data
 					self.storeGoods[tab].pageIndex = resp.pageIndex
 					self.storeGoods[tab].pageSize = resp.pageSize
