@@ -5,11 +5,11 @@ const http = new Request()
 // 静态全局配置
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
+		
     // config.baseUrl = 'http://localhost:9012'; /* 根域名 */
 		config.baseUrl = 'http://39.96.69.108:9999/'
     config.header = {
-        sample_header: "yeahitsmejohn", // 演示用
-				"Content-Type": 'application/x-www-form-urlencoded'
+				// "Content-Type": 'application/x-www-form-urlencoded'
     }
 		config.responseType = 'json'
     return config

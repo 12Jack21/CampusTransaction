@@ -10,11 +10,11 @@
 				</view>
 				<!-- Price -->
 				<view class="padding-xs">
-					<view class="text-cut-2 text-black">{{ item.title }}</view>
+					<view class="text-cut-2 text-black">{{ item.name }}</view>
 					<view class="margin-top-xs">
 						<view class="flex">
 							<view class="flex-sub">
-								<text class="text-price text-red text-xl text-left">{{ item.price }}</text>
+								<text class="text-price text-red text-xl text-left">{{ item.expectedPrice }}</text>
 								<text class="originalPricce" v-if="item.originalPrice">{{ item.originalPrice }}</text>
 							</view>
 							<view class="flex-sub text-right" v-if="item.state">
@@ -27,11 +27,13 @@
 						<view class="flex">
 							<view class="flex-sub">
 								<view class="flex flex-wrap user-info">
-									<view class="basis-xs"><image class="cu-avatar sm round img" :src="item.avatar" lazy-load mode="widthFix" /></view>
+									<view class="basis-xs"><image class="cu-avatar sm round img"
+									 :src="item.avatar.length===0?'@/static/images/comDefault.png':item.avatar" 
+									 lazy-load mode="widthFix" /></view>
 									<view class="basis-xl text-cut line-height">
 										<text class="text-sm margin-left-xs">{{ item.username }}</text>
 									</view>
-									<image class="v-icon" src="/static/zaiui/img/v.png" lazy-load mode="widthFix" v-if="item.v" />
+									<image class="v-icon" src="/static/zaiui/img/v.png" lazy-load mode="widthFix" v-if="item.avatar.length===0" />
 								</view>
 							</view>
 							<view class="flex-sub text-right text-time">
@@ -42,25 +44,6 @@
 				</view>
 				<!-- end -->
 			</view>
-
-			<!-- 感兴趣模块 -->
-			<view class="bg-white margin-bottom-sm list-radius padding-sm recommend-list-box" v-if="item.type == 'recommend'">
-				<view class="flex flex-wrap">
-					<view class="basis-xs text-right"><image class="img-aat" src="/static/zaiui/img/aat.png" lazy-load mode="widthFix" /></view>
-					<view class="basis-lg text-center"><text class="text-black text-bold">您可能感兴趣</text></view>
-					<view class="basis-xs text-left"><image class="img-aat" src="/static/zaiui/img/aat.png" lazy-load mode="widthFix" /></view>
-				</view>
-				
-				<view class="grid col-2 text-center margin-top-sm">
-					<block v-for="(items, indexs) in item.list" :key="indexs" v-if="item.list.length < 5">
-						<view class="padding-xs" @tap="listTap(items, indexs)">
-							<view class="img-goods" :style="[{ backgroundImage: 'url(' + items.img + ')' }]" />
-							<view class="text-black text-sm margin-top-xs">{{ items.title }}</view>
-						</view>
-					</block>
-				</view>
-			</view>
-			<!-- end -->
 		</block>
 	</view>
 </template>

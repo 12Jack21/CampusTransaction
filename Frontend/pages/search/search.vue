@@ -212,6 +212,7 @@ export default {
 		console.log('search page onLoad, param:', param)
 		this.goodsData = _home_data.goodsList() //虚拟
 		
+		this.pagination = {...iniPagination}
 		let type_index = 0
 		if (param.type !== undefined) {
 			type_index = parseInt(param.type)

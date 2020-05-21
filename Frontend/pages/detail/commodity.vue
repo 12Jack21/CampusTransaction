@@ -24,12 +24,12 @@
 		<view class="zaiui-limited-seckill-box">
 			<text class="text-price text-xxl">{{commodity.expectedPrice}}</text>
 			<view class="text-xs zaiui-cost-price-num price-4">
-				<view class="text-through">原价{{commodity.originalPrice}}</view>
+				<view class="text-through">￥{{commodity.originalPrice}}</view>
 				<view>剩余{{commodity.count}}件</view>
 			</view>
 			<view class="text-right zaiui-time-right">
 				<view class="text-xs">{{expiredTime}}</view>
-				<view class="text-xs">时过期</view>
+				<view class="text-xs">时失效</view>
 			</view>
 		</view>
 		
@@ -105,21 +105,6 @@
 				</view>
 			</view>
 			<view class="zaiui-border-view"/>
-			<view class="zaiui-recommend-list-box">
-				<view class="text-sm">发布者的其他物品</view>
-				<!--滑动列表-->
-				<view class="recommend-scroll-box">
-					<scroll-view class="recommend-scroll" scroll-x>
-						<block v-for="(items,indexs) in otherComs" :key="indexs">
-							<view :id="['scroll' + (indexs + 1 )]" class="recommend-scroll-item">
-								<view class="cu-avatar xl radius" :style="[{backgroundImage:'url('+ items.img +')'}]"/>
-								<view class="text-cut-2 text-sm text-black margin-tb-sm">{{items.title}}</view>
-								<view class="text-red text-price margin-tb-sm text-lg">{{items.price}}</view>
-							</view>
-						</block>
-					</scroll-view>
-				</view>
-			</view>
 			
 		</view>
 		
