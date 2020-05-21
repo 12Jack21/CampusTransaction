@@ -33,31 +33,6 @@ public class NoticeController {
     @Autowired
     AccountVerify accountVerify;
 
-    /**
-     * 创建一个空的通告
-     *
-     * @param notice
-     * @param request
-     * @return 通告
-     */
-//    @RequestMapping("/setupNotice")
-    @ApiOperation("创建通告")
-    @PostMapping
-    public responseFromServer setupNotice(@RequestBody Notice notice, HttpServletRequest request) {
-        Account account = new Account(notice.getAccountId());
-        if (accountVerify.verify(account, request)) {
-            /*此时account已更新*/
-            notice.setAccountId(account.getId());
-            /*必须传入通告类型*/
-            if (notice.getType() == null)
-                return responseFromServer.error();
-            return noticeService.setupNotice(notice);
-        } else {
-            /*非法操作：为他人创建通告*/
-            return responseFromServer.illegal();
-        }
-        /*创建成功返回通告，添加商品根据通告id进行添加*/
-    }
 
     /**
      * 创建通告(包含上传的商品信息)
@@ -75,9 +50,11 @@ public class NoticeController {
             /*此时account已更新*/
             notice.setAccountId(account.getId());
             /*必须传入通告类型*/
-            if (notice.getType() == null)
+            if (notice.getType() == null) {
                 return responseFromServer.error();
-            return noticeService.setupNotice(notice);
+            }
+            notice.setStateEnum(NoticeCode.UNPUBLISHED.getCode());
+            return noticeService.addNotice(notice);
         } else {
             /*非法操作：为他人创建通告*/
             return responseFromServer.illegal();
@@ -229,5 +206,34 @@ public class NoticeController {
 //        return noticeService.getNoticePage(queryWrapper, condition.getPageIndex());
         return noticeService.getRecentNotice(condition);
     }
+
+
+    /**
+     * 创建一个空的通告
+     *
+     * @param notice
+     * @param request
+     * @return 通告
+     */
+//    @RequestMapping("/setupNotice")
+    @ApiOperation("创建通告")
+    @PostMapping("/empty")
+    public responseFromServer setupEmptyNotice(@RequestBody Notice notice, HttpServletRequest request) {
+        Account account = new Account(notice.getAccountId());
+        if (accountVerify.verify(account, request)) {
+            /*此时account已更新*/
+            notice.setAccountId(account.getId());
+            /*必须传入通告类型*/
+            if (notice.getType() == null) {
+                return responseFromServer.error();
+            }
+            return noticeService.setupNotice(notice);
+        } else {
+            /*非法操作：为他人创建通告*/
+            return responseFromServer.illegal();
+        }
+        /*创建成功返回通告，添加商品根据通告id进行添加*/
+    }
+
 
 }

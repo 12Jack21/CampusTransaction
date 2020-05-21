@@ -3,6 +3,7 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.transaction.dto.account.SimpleAccount;
 import lombok.Data;
 
 import java.io.Serializable;

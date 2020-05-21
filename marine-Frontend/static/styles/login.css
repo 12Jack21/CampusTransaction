@@ -1,0 +1,72 @@
+.content {
+	display: flex;
+	flex-direction: column;
+	justify-content:center;
+	/* margin-top: 128upx; */
+}
+
+/* 头部 logo */
+.header {
+	width:161upx;
+	height:161upx;
+	box-shadow:0upx 0upx 60upx 0upx rgba(0,0,0,0.1);
+	border-radius:50%;
+	background-color: #f6b2b2; 
+	margin-top: 128upx;
+	margin-bottom: 72upx;
+	margin-left: auto;
+	margin-right: auto;
+}
+.header image{
+	width:161upx;
+	height:161upx;
+	border-radius:50%;
+}
+
+/* 主体 */
+.main {
+	display: flex;
+	flex-direction: column;
+	padding-left: 70upx;
+	padding-right: 70upx;
+}
+.tips {
+	color: #999999;
+	font-size: 28upx;
+	margin-top: 64upx;
+	margin-left: 48upx;
+}
+
+/* 登录按钮 */
+.wbutton{
+	margin-top: 96upx;
+}
+
+.login_icon{
+	border: none;
+	font-size: 64upx;
+	margin: 0 64upx 0 64upx;
+	color: rgba(0,0,0,0.7)
+}
+
+/* 底部 */
+.footer{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	font-size: 28upx;
+	margin-top: 64upx;
+	color: rgba(220, 89, 89, 0.7);
+	text-align: center;
+	height: 40upx;
+	line-height: 40upx;
+}
+.footer text{
+	font-size: 26rpx;
+	margin-left: 15upx;
+	margin-right: 15upx;
+}
+.input-content-box{
+	box-sizing: content-box;
+}

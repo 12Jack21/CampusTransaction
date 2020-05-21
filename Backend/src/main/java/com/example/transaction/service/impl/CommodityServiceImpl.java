@@ -10,6 +10,7 @@ import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.dto.Condition;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
+import com.example.transaction.util.FileUtil;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.code.Address;
 import com.example.transaction.util.code.Nums;
@@ -58,6 +59,7 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
+    @Transactional
     public responseFromServer search(Condition condition) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
 
@@ -159,8 +161,6 @@ public class CommodityServiceImpl implements CommodityService {
             queryWrapper.le("c.price", condition.getHighPrice());
         }
 
-
-
         /*处理类型*/
         if (condition.getType() != null) {
 //todo            queryWrapper.eq("c.id", "t.commodity_id");
@@ -172,8 +172,12 @@ public class CommodityServiceImpl implements CommodityService {
             if (resultPage == null) {
                 throw new Exception();
             }
-            return responseFromServer.success(new MyPage<Commodity>(resultPage));
+            MyPage myPage = new MyPage<Commodity>(resultPage);
+            /*将查询的截止时间返回*/
+            myPage.setEndTime(timestamp);
+            return responseFromServer.success(myPage);
         } catch (Exception e) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
 
@@ -558,18 +562,14 @@ public class CommodityServiceImpl implements CommodityService {
         String filePath = updateToCommodity ? ResourcePath.imagePath : ResourcePath.imageTempPath;
         List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
-            //获取文件后缀
-            String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
-            if (!"jpg,jpeg,gif,png".toUpperCase().contains(suffix.toUpperCase())) {
-                return responseFromServer.error(0, "请选择jpg,jpeg,gif,png格式的图片");
+            /*获得文件名*/
+            responseFromServer response = FileUtil.checkImageFile(file, updateToCommodity);
+            if (response.isFailure()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
             }
-            File savePathFile = new File(filePath);
-            if (!savePathFile.exists()) {
-                //若不存在该目录，则创建目录
-                savePathFile.mkdir();
-            }
-            //通过UUID生成唯一文件名
-            String filename = UUID.randomUUID().toString().replaceAll("-", "") + "." + suffix;
+            String filename = (String) response.getData();
+
             if (updateToCommodity) {
                 /*上传到已经创建的商品中*/
                 if (commodityImageDAO.insert((new CommodityImage(filePath, commodityId))) != 1) {
@@ -578,13 +578,8 @@ public class CommodityServiceImpl implements CommodityService {
                     return responseFromServer.error();
                 }
             }
-
-            try {
-                //将文件保存指定目录
-                file.transferTo(new File(filePath + filename));
-                fileNames.add(filename);
-            } catch (Exception e) {
-                e.printStackTrace();
+            /*保存文件*/
+            if (FileUtil.saveFile(file, updateToCommodity, filename).isFailure()) {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }

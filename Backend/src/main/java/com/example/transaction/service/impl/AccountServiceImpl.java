@@ -68,7 +68,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
     /**
+     * 重新登录
+     *
+     * @param tokenStr
+     * @return
+     */
+    @Override
+    public responseFromServer reLogin(String tokenStr) {
+        return tokenService.reloginOperationOnToken(tokenStr);
+    }
+
+    /**
      * 退登 调用tokenservice操作
+     *
      * @param account
      * @return
      */
@@ -189,6 +201,7 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     public responseFromServer uploadAvatar(MultipartFile file, Integer accountId) {
+        /*初始化文件: 随机生成文件名*/
         responseFromServer response = FileUtil.checkImageFile(file, true);
         if (response.isFailure()) {
             return response;
@@ -201,6 +214,7 @@ public class AccountServiceImpl implements AccountService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+        /*保存文件到路径下*/
         return FileUtil.saveFile(file, true, filename);
     }
 

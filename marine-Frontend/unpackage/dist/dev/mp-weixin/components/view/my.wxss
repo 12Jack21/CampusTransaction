@@ -1,0 +1,167 @@
+@charset "UTF-8";
+/**
+ * 这里是uni-app内置的常用样式变量
+ *
+ * uni-app 官方扩展插件及插件市场（https://ext.dcloud.net.cn）上很多三方插件均使用了这些样式变量
+ * 如果你是插件开发者，建议你使用scss预处理，并在插件代码中直接使用这些变量（无需 import 这个文件），方便用户通过搭积木的方式开发整体风格一致的App
+ *
+ */
+/**
+ * 如果你是App开发者（插件使用者），你可以通过修改这些变量来定制自己的插件主题，实现自定义主题功能
+ *
+ * 如果你的项目同样使用了scss预处理，你也可以直接在你的 scss 代码中使用如下变量，同时无需 import 这个文件
+ */
+/* 颜色变量 */
+/* 行为相关颜色 */
+/* 文字基本颜色 */
+/* 背景颜色 */
+/* 边框颜色 */
+/* 尺寸变量 */
+/* 文字尺寸 */
+/* 图片尺寸 */
+/* Border Radius */
+/* 水平间距 */
+/* 垂直间距 */
+/* 透明度 */
+/* 文章场景相关 */
+.zaiui-my-box.data-v-2f4ccd88 {
+  width: 100%;
+  display: none;
+}
+.zaiui-my-box .zaiui-head-box.data-v-2f4ccd88 {
+  padding-top: 0;
+  padding-bottom: 72.72rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box.data-v-2f4ccd88 {
+  padding-top: calc(25px + 50rpx);
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .login-user-view.data-v-2f4ccd88 {
+  position: relative;
+  text-align: center;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .login-user-view .login-user-avatar-view.data-v-2f4ccd88 {
+  position: relative;
+  margin-bottom: 18.18rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item.data-v-2f4ccd88 {
+  background-color: inherit;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item .content.data-v-2f4ccd88 {
+  width: calc(100% - 94.54rpx - 59.99rpx - 20rpx);
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item .content .text-white-bg.data-v-2f4ccd88 {
+  color: #e8e8e8;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item .content .text-white-bg .text-border-x.data-v-2f4ccd88 {
+  margin-right: 25.45rpx;
+  position: relative;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item .content .text-white-bg .text-border-x.data-v-2f4ccd88:after {
+  position: absolute;
+  background: #dddddd;
+  top: 5.45rpx;
+  width: 1.81rpx;
+  right: -12.72rpx;
+  height: 16.36rpx;
+  content: " ";
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item.data-v-2f4ccd88:after {
+  width: 0;
+  height: 0;
+  border-bottom: 0;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-box .cu-list.menu-avatar > .cu-item .content > view.data-v-2f4ccd88:first-child {
+  font-size: 34.54rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-num-box .cu-list.grid.no-border.data-v-2f4ccd88 {
+  padding: 0;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-num-box .cu-list.grid.no-border > .cu-item.data-v-2f4ccd88 {
+  padding-top: 27.27rpx;
+  padding-bottom: 9.09rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-num-box .cu-list.grid.data-v-2f4ccd88 {
+  background-color: inherit;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-num-box .cu-list.grid > .cu-item text.data-v-2f4ccd88 {
+  color: #e8e8e8;
+  font-size: 20rpx;
+  line-height: 27.27rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-tip-box.data-v-2f4ccd88 {
+  position: relative;
+  margin: 18.18rpx 27.27rpx;
+  border-radius: 9.09rpx;
+  padding: 18.18rpx 27.27rpx;
+  background: #ea8d8d;
+  background-image: -webkit-linear-gradient(45deg, #f7615f, #f553b3);
+  background-image: linear-gradient(45deg, #f7615f, #f553b3);
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-tip-box .text-cut.data-v-2f4ccd88 {
+  padding-right: 45.45rpx;
+}
+.zaiui-my-box .zaiui-head-box .zaiui-user-info-tip-box .icon.data-v-2f4ccd88 {
+  position: absolute;
+  right: 27.27rpx;
+  top: 23.63rpx;
+}
+.zaiui-my-box .zaiui-view-content.data-v-2f4ccd88 {
+  padding: 0 27.27rpx 54.54rpx;
+  margin-top: -63.63rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-order-box.data-v-2f4ccd88 {
+  border-radius: 18.18rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-order-box .cu-list.grid.no-border.data-v-2f4ccd88 {
+  padding: 0;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-order-box .cu-list.grid.no-border > .cu-item.data-v-2f4ccd88 {
+  padding-bottom: 9.09rpx;
+}
+.zaiui-my-box .zaiui-view-content .cu-list.grid > .cu-item text.data-v-2f4ccd88 {
+  color: inherit;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box.data-v-2f4ccd88 {
+  border-radius: 18.18rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box .money-col.data-v-2f4ccd88 {
+  padding: 0 9.09rpx 9.09rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box .money-col .money-item.data-v-2f4ccd88 {
+  position: relative;
+  padding: 9.09rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box .money-col .money-item .money-item-view.data-v-2f4ccd88 {
+  border: 1.81rpx solid #f3f2f3;
+  border-radius: 18.18rpx;
+  position: relative;
+  padding: 9.09rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box .money-col .money-item .money-item-view .cu-avatar.data-v-2f4ccd88 {
+  position: absolute;
+  left: 9.09rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-money-box .money-col .money-item .money-item-view .money-content.data-v-2f4ccd88 {
+  position: relative;
+  margin-left: 109.09rpx;
+  margin-bottom: 27.27rpx;
+  top: 12.72rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-tools-box.data-v-2f4ccd88 {
+  border-radius: 18.18rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-tools-box .tools-view.data-v-2f4ccd88 {
+  position: relative;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-tools-box .tools-view .tools-title.data-v-2f4ccd88 {
+  padding-right: 81.81rpx;
+}
+.zaiui-my-box .zaiui-view-content .zaiui-user-info-tools-box .tools-view .tools-right.data-v-2f4ccd88 {
+  position: absolute;
+  right: 9.09rpx;
+  bottom: 23.63rpx;
+}
+.zaiui-my-box.show.data-v-2f4ccd88 {
+  display: block;
+}
+

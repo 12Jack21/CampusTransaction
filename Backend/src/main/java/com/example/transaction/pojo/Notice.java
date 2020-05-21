@@ -37,7 +37,7 @@ public class Notice implements Serializable {
     private Integer accountId;
 
     @TableField(exist = false)
-    private List<Commodity> commodityLists;
+    private List<Commodity> comList;
     @TableField(exist = false)
     private Account user;
 

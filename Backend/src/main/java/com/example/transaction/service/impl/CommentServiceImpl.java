@@ -45,6 +45,7 @@ public class CommentServiceImpl implements CommentService {
      * @param commodityId 商品id
      * @return 执行结果
      */
+    @Override
     public responseFromServer getCommentByCommodityId(Integer pageIndex, Integer commodityId){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("commodity_id", commodityId);
@@ -60,26 +61,31 @@ public class CommentServiceImpl implements CommentService {
      * @param comment 评论
      * @return 执行结果
      */
+    @Override
     @Transactional
     public responseFromServer sendComment(Comment comment) {
-        if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null)
+        if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null) {
             return responseFromServer.error();
+        }
         if (commentDAO.insert(comment) != 1) {
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
+
         /*添加到notify*/
-        AccountNotify accountNotify = new AccountNotify();
-        accountNotify.setAccountId(comment.getToId());
-        Notify notify = new Notify();
-        notify.setSender(comment.getFromId());
-        notify.setTarget(comment.getId());
-        notify.setTargetType(NotifyTargetCode.COMMENT.getCode());
-        notify.setAction(NotifyActionCode.COMMENTS.getCode());
+        AccountNotify accountNotify = new AccountNotify(
+                comment.getFromId(),
+                comment.getToId(),
+                NotifyTargetCode.COMMODITY.getCode(),
+                comment.getCommodityId(),
+                comment.getToId() == null ?
+                        NotifyActionCode.COMMENTS.getCode() :
+                        NotifyActionCode.REPLIES.getCode()
+        );
+
         Account account = accountDAO.selectById(comment.getFromId());
-        notify.setContent("用户" + account.getUsername() + "向你发送了一条评论");
-        accountNotify.setNotify(notify);
+        accountNotify.getNotify().setContent("用户" + account.getUsername() + "向你发送了一条评论");
         if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
@@ -88,6 +94,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //删除评论
+    @Override
     @Transactional
     public responseFromServer deleteComment(Comment comment){
         if(commentDAO.deleteById(comment.getId()) != 1){

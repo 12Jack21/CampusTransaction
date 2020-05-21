@@ -61,13 +61,13 @@ public class CommentController {
      * @param request HttpServletRequest
      * @return 执行结果
      */
-//    @RequestMapping("/sendComment")
     @ApiOperation(value = "发布评论")
     @PostMapping
     public responseFromServer sendComment(@RequestBody Comment comment, HttpServletRequest request){
         Account account = new Account(comment.getFromId());
-        if (!accountVerify.verify(account, request))
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.illegal();
+        }
         return commentService.sendComment(comment);
     }
 
@@ -78,13 +78,13 @@ public class CommentController {
      * @param request
      * @return
      */
-//    @RequestMapping("/deleteComment")
     @ApiOperation(value = "删除评论")
     @DeleteMapping("/{commentId}")
     public responseFromServer deleteComment(@PathVariable Integer commentId, HttpServletRequest request) {
         Account account = new Account(commentId);
-        if (!accountVerify.verify(account, request))
+        if (!accountVerify.verify(account, request)) {
             return responseFromServer.illegal();
+        }
         Comment comment = new Comment();
         comment.setId(commentId);
         return commentService.deleteComment(comment);

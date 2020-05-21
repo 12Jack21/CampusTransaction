@@ -14,6 +14,7 @@ import java.util.Date;
 public class NoticeCondition {
     Date endTime;
     Integer pageIndex;
-    Integer type;//0-全部 1-出售的 2-需求
+    //0-全部 1-出售的 2-需求
+    Integer type;
     Integer accountId;
 }

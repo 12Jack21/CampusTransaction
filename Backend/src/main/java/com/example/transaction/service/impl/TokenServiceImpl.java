@@ -39,13 +39,23 @@ public class TokenServiceImpl implements TokenService {
     public responseFromServer loginOperationOnToken(Account account) {
         //根据数据库的用户信息查询Token
         Token token = tokenDAO.getTokenByAccountId(account.getId());
-        //为生成Token准备
-        String tokenStr = "";
-        Date date = new Date();
-        int nowTime = (int) (date.getTime() / 1000);
-        //生成Token
-        tokenStr = JwtUtil.createJWT(System.currentTimeMillis(), account);
-//        tokenStr = creatToken(accountId, date);
+        return login(account, token);
+    }
+
+    @Override
+    @Transactional
+    public responseFromServer reloginOperationOnToken(String tokenStr) {
+        //根据数据库的用户信息查询Token
+        Token token = tokenDAO.getTokenByTokenStr(tokenStr);
+        return login(null, token);
+    }
+
+    @Transactional
+    responseFromServer login(Account account, Token token) {
+
+        String tokenStr = JwtUtil.createJWT(System.currentTimeMillis(), account);
+        //        tokenStr = creatToken(accountId, date);
+
         if (null == token) {
             //第一次登陆
             token = new Token();
@@ -68,7 +78,7 @@ public class TokenServiceImpl implements TokenService {
         /*将token返回给用户*/
         return responseFromServer.success(tokenStr);
 
-//        UserQueryForm queryForm = getUserInfo(user, TokenStr);
+        //        UserQueryForm queryForm = getUserInfo(user, TokenStr);
         /* 将用户信息存入session */
         /*SessionContext sessionContext = SessionContext.getInstance();
         HttpSession session = sessionContext.getSession();

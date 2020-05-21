@@ -39,10 +39,8 @@ public class FileUtil {
             file.transferTo(new File(filePath + fileName));
         } catch (Exception e) {
             e.printStackTrace();
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error(0, "保存文件异常");
         }
         return responseFromServer.success(fileName);
-
     }
 }

@@ -3,7 +3,7 @@ package com.example.transaction.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Estimate;
-import com.example.transaction.pojo.SimpleAccount;
+import com.example.transaction.dto.account.SimpleAccount;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 

@@ -41,4 +41,21 @@ public class AccountNotify implements Serializable {
     private Notify notify;
     @TableField(exist = false)
     private Account owner;
+
+    public AccountNotify() {
+    }
+
+    public AccountNotify(Integer id) {
+        this.id = id;
+    }
+
+    public AccountNotify(Integer senderId, Integer receiverId, Integer targetType, Integer targetId, Integer action) {
+        Notify notify = new Notify();
+        notify.setTargetType(targetType);
+        notify.setTarget(targetId);
+        notify.setAction(action);
+        notify.setSender(senderId);
+        this.notify = notify;
+        this.accountId = receiverId;
+    }
 }

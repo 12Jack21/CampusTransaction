@@ -9,6 +9,7 @@ import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -94,13 +95,13 @@ public class CommodityController {
             if (condition.getKeyword() != null || condition.getKeyword() != "") {
                 Account account = accountVerify.getCurrentAccount(request);
                 if (searchService.addSearchRecord(account.getId(), condition.getKeyword()).isSuccess()) {
-                    return responseFromServer.success();
+                    return response;
                 }
             }
             /*暂时先:插入搜索记录失败时也返回成功*/
-            return responseFromServer.success();
+
         }
-        return responseFromServer.error();
+        return response;
     }
 
     @ApiOperation(value = "商品排序")
@@ -151,7 +152,7 @@ public class CommodityController {
     public responseFromServer getByNameSortedByNewness(@RequestJson Integer pageIndex, @PathVariable String searchStr) {
 //        Integer pageIndex = (Integer) map.get("pageIndex");
 //        String searchStr = (String) map.get("searchStr");
-        if (searchStr == null || searchStr == "") {
+        if (StringUtil.isNullOrEmpty(searchStr)) {
             return responseFromServer.error();
         }
         pageIndex = pageIndex == null || pageIndex <= 0 ? 1 : pageIndex;
