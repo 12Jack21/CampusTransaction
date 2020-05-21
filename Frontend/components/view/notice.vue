@@ -86,7 +86,7 @@
 import trendsList from '@/components/list/trends-list'
 import youScroll from '@/components/you-scroll/you-scroll.vue'
 //======================================================================
-import _find_data from '@/static/zaiui/data/find.js' //虚拟数据
+import _notice_data from '@/static/zaiui/data/notice.js' //虚拟数据
 import handles from '@/utils/handles.js'
 import {mapState} from 'vuex'
 
@@ -152,9 +152,10 @@ export default {
 	created() {
 		this.notices = iniNotice()
 		//加载虚拟数据
-		this.notices.list = _find_data.trendsData()		
-		// 请求
+		this.notices.list = _notice_data.trendsData()		
 		
+		// TODO: Requests, like others
+		this.loadNotices()
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -224,26 +225,26 @@ export default {
 				this.tabCur = current
 		},
 		userTap({data}) {
-			console.log('用户区域被点击：',data)
-			
+			console.log('用户区域被点击：',data)	
 			// uni.navigateTo({
 			// 	animationType:'auto',
-			// 	url:'../../pages/account/'
+			// 	url:'../../pages/detail/account?id=' + data.id
 			// })
 		},
-		contentTap({data}) {
-			console.log('文字内容被点击：',data)
-			
-			// uni.navigateTo({
-			// 	animationType:'auto',
-			// 	url:'../../pages/notices/detail'
-			// })
+		contentTap(id) {
+			console.log('文字内容被点击：',id)
+			uni.navigateTo({
+				url: '../../pages/detail/notice?id='+ id	
+			})
 		},
 		imgTap(e) {
 			console.log('图片被点击：' + JSON.stringify(e))
 		},
 		viewAllTap() {
 			console.log('点击了查看全部')
+			uni.navigateTo({
+				url: '../../pages/detail/notice?id='+data.id		
+			})
 		}
 	}
 }

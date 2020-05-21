@@ -1,4 +1,4 @@
-let _find_data = {
+let _notice_data = {
 	trendsData() {
 		return [{
 			id: 1,
@@ -11,7 +11,8 @@ let _find_data = {
 			address: '工学部',
 			title: '大三出书',
 			browseCount: 10,
-			img: []
+			img: [],
+			goods:[1,2,3],
 		},{
 			id: 2,
 			avatar: '/static/images/avatar/2.jpg',
@@ -23,7 +24,8 @@ let _find_data = {
 			address: '工学部',
 			title: '大三出书',
 			browseCount: 1,
-			img: []
+			img: [],
+			goods:[1,2,3],
 		},{
 			id: 3,
 			avatar: '/static/images/avatar/3.jpg',
@@ -35,7 +37,8 @@ let _find_data = {
 			title: '买多了',
 			browseCount: 0,
 			address: '你在说些啥呢',
-			img: ['/static/images/home/goods/1.png','/static/images/home/goods/2.png']
+			img: ['/static/images/home/goods/1.png','/static/images/home/goods/2.png'],
+			goods:[1,2,3],
 		},{
 			id: 4,
 			avatar: '/static/images/avatar/4.jpg',
@@ -47,7 +50,8 @@ let _find_data = {
 			title: '换手机',
 			browseCount: 120,
 			address: '信息学部',
-			img: ['/static/images/home/goods/1.png']
+			img: ['/static/images/home/goods/1.png'],
+			goods:[1,2,3],
 		},{
 			id: 5,
 			avatar: '/static/images/avatar/5.jpg',
@@ -62,9 +66,10 @@ let _find_data = {
 				'/static/images/home/goods/1.png',
 				'/static/images/home/goods/2.png',
 				'/static/images/home/goods/3.png'
-			]
+			],
+			goods:[1,2,3],
 		}];
 	},
 	};
 
-export default _find_data;
+export default _notice_data;
