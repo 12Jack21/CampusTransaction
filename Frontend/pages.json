@@ -15,17 +15,32 @@
 			"style": {}
 		}, {
 			"path": "pages/login/register",
-			"style": {} 
-		}, 
+			"style": {}
+		},
 		{
-			"path": "pages/search/search",
+			"path": "pages/search/search", // 搜索和筛选页
 			"style": {
 				"enablePullDownRefresh": false
 			}
+		}, {
+			"path": "pages/appraise/appraise",
+			"style": {}
+		}, {
+			"path": "pages/detail/reservation", // 预约详情
+			"style": {}
+		}, {
+			"path": "pages/detail/commodity", // 物品详情
+			"style": {}
+		}, {
+			"path": "pages/detail/notice", //通告详情
+			"style": {}
+		}, {
+			"path": "pages/reservations/reservations", // 预约列表
+			"style": {}
 		}
 	],
 	"globalStyle": {
 		"navigationStyle": "custom"
 	},
-	"sitemapLocation":"sitemap.json"
+	"sitemapLocation": "sitemap.json"
 }

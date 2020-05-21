@@ -224,26 +224,26 @@ export default {
 				this.tabCur = current
 		},
 		userTap({data}) {
-			console.log('用户区域被点击：',data)
-			
+			console.log('用户区域被点击：',data)	
 			// uni.navigateTo({
 			// 	animationType:'auto',
-			// 	url:'../../pages/account/'
+			// 	url:'../../pages/detail/account?id=' + data.id
 			// })
 		},
 		contentTap({data}) {
 			console.log('文字内容被点击：',data)
-			
-			// uni.navigateTo({
-			// 	animationType:'auto',
-			// 	url:'../../pages/notices/detail'
-			// })
+			uni.navigateTo({
+				url: '../../pages/detail/notice?id='+data.id		
+			})
 		},
 		imgTap(e) {
 			console.log('图片被点击：' + JSON.stringify(e))
 		},
 		viewAllTap() {
 			console.log('点击了查看全部')
+			uni.navigateTo({
+				url: '../../pages/detail/notice?id='+data.id		
+			})
 		}
 	}
 }

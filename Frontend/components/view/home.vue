@@ -236,7 +236,7 @@ export default {
 		goodsListTap(e) {
 			console.log('goodListTab', e)
 			uni.navigateTo({
-				url: `/pages/detail/com?id=${e.id}`
+				url: `../../pages/detail/commodity?id=${e.id}`,			
 			})
 			// TODO: 物品详情界面来加载数据
 			// this.$api.getCommodity(e.id)
