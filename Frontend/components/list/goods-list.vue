@@ -1,7 +1,7 @@
 <template>
 	<view class="basis-df padding-sm  ">
 		<block v-for="(item, index) in list_data" :key="index">
-			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" @tap="listTap(item, index)">
+			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" @tap="listTap(item.id)">
 				<view class="goods-img">
 					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />
 					<view class="count-view">
@@ -82,11 +82,8 @@ export default {
 		}
 	},
 	methods: {
-		listTap(data, index) {
-			this.$emit('listTap', {
-				data,
-				index
-			})
+		listTap(id) {
+			this.$emit('listTap', id)
 		}
 	},
 	components: {}

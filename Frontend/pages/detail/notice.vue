@@ -78,20 +78,18 @@
 		},
 		data() {
 			return {
-				headTab: {TabCur: 0, scrollLeft: 0, list: []},
 				goods_img: '/static/images/home/goods/1.png',
 				goods_img_a: '/static/images/home/goods/2.png',
 				checkbox_list: [], checkbox_all: false, goods_checked: false,
-				id:0
+				notice: {} //保持调用时 跟后端传来的属性一致，用于 v-bind
 			}
 		},
-		onLoad(options) {
+		onLoad(params) {
 			this.checkbox_list = [
 				{id: 1,checked: true}, {id: 2,checked: false}, {id: 3,checked: false},
 				{id: 4,checked: false}, {id: 5,checked: false}, {id: 6,checked: false}
 			];
-			this.headTab.list = ['全部', '手机', '图书', '电脑办公', '游戏交易', '办公用品', '家电', '数码', '教育', '测试', '测试1'];
-			this.id=options.id
+			this.getNotice(params.id)
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -101,11 +99,22 @@
 			});
 		},
 		methods: {
+			getNotice(id){
+				this.$api.getNotice(id)
+					.then(({data})=>{
+						this.notice = data
+					})
+					.catch(()=>{
+						console.log('获取通告详情失败');
+						uni.showToast({
+							title: '获取通告详情失败',
+							icon: 'none'
+						});
+					})
+			},
 			//tab菜单被点击
 			tabSelect(e) {
 				let index = e.currentTarget.dataset.id;
-				this.headTab.TabCur = index;
-				this.headTab.scrollLeft = (index - 1) * 60;
 				
 				//滚动到顶部
 				uni.pageScrollTo({
@@ -122,13 +131,8 @@
 				}
 			},
 			listTap() {
-				// this.$emit('listTap', {
-				// 	data,
-				// 	index
-				// })
 				uni.navigateTo({
 					url: '../../pages/detail/commodity?id='+this.id,
-					
 				})
 			},
 			//选择

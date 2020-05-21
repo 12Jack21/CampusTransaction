@@ -233,10 +233,10 @@ export default {
 			})
 			// #endif		
 		},
-		goodsListTap(e) {
-			console.log('goodListTab', e)
+		goodsListTap(id) {
+			console.log('goodListTab', id)
 			uni.navigateTo({
-				url: `../../pages/detail/commodity?id=${e.id}`,			
+				url: `../../pages/detail/commodity?id=${id}`,			
 			})
 			// TODO: 物品详情界面来加载数据
 			// this.$api.getCommodity(e.id)

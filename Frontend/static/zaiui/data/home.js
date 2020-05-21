@@ -132,6 +132,7 @@ let _home_data = {
 	goodsList() {
 		return [
 			{
+				id:1,
 				v: false,
 				count: 1,
 				price: '2280.12',
@@ -144,6 +145,7 @@ let _home_data = {
 				avatar: '/static/images/avatar/1.jpg'
 			},
 			{
+				id:2,
 				v: true,
 				count: 2,
 				price: '5049',
@@ -156,6 +158,7 @@ let _home_data = {
 				avatar: '/static/images/avatar/2.jpg'
 			},
 			{
+				id:3,
 				v: false,
 				count: 3,
 				price: '2980',
@@ -168,6 +171,7 @@ let _home_data = {
 				avatar: '/static/images/avatar/3.jpg'
 			},
 			{
+				id:4,
 				v: false,
 				count: 4,
 				price: '2280',
@@ -180,6 +184,7 @@ let _home_data = {
 				avatar: '/static/images/avatar/4.jpg'
 			},
 			{
+				id:5,
 				v: true,
 				count: 5,
 				price: '5049',
@@ -192,6 +197,7 @@ let _home_data = {
 				avatar: '/static/images/avatar/5.jpg'
 			},
 			{
+				id:6,
 				v: false,
 				count: 6,
 				price: '2980',

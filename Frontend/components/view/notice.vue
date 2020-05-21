@@ -230,10 +230,10 @@ export default {
 			// 	url:'../../pages/detail/account?id=' + data.id
 			// })
 		},
-		contentTap({data}) {
-			console.log('文字内容被点击：',data)
+		contentTap(id) {
+			console.log('文字内容被点击：',id)
 			uni.navigateTo({
-				url: '../../pages/detail/notice?id='+data.id		
+				url: '../../pages/detail/notice?id='+ id	
 			})
 		},
 		imgTap(e) {

@@ -50,74 +50,7 @@
 				<text class="cuIcon-right icon"/>
 			</view>
 		</view>
-		
-		<!--服务-->
-		<view class="margin-top bg-white zaiui-view-box zaiui-service-view-box" @tap="serviceTap">
-			<view class="flex flex-wrap text-sm">
-				<view class="basis-1">
-					<text class="text-gray">服务</text>
-				</view>
-				<view class="basis-7">
-					<view>
-						<text class="tag-view">
-							<text class="cuIcon-title text-red"/>
-							<text>已验机</text>
-						</text>
-						
-						<text class="tag-view">
-							<text class="cuIcon-title text-red"/>
-							<text>7天无理由</text>
-						</text>
-						
-						<text class="tag-view">
-							<text class="cuIcon-title text-red"/>
-							<text>180天质保</text>
-						</text>
-					</view>
-					<view class="margin-top-xs">
-						<text class="tag-view">
-							<text class="cuIcon-title text-red"/>
-							<text>顺丰包邮</text>
-						</text>
-						
-						<text class="tag-view">
-							<text class="cuIcon-title text-red"/>
-							<text>半年电池免费换新</text>
-						</text>
-					</view>
-				</view>
-				<view class="basis-2">
-					<view class="text-gray text-right icon-view">
-						<text class="cuIcon-right icon"/>
-					</view>
-				</view>
-			</view>
-		</view>
-		
-		<!--促销-->
-		<view class="margin-top bg-white zaiui-view-box zaiui-promotion-view-box">
-			<view class="flex flex-wrap text-sm" @tap="promotionTap">
-				<view class="basis-1">
-					<text class="text-gray">促销</text>
-				</view>
-				<view class="basis-7">
-					<view>
-						<text class="cu-tag line-orange sm radius">赠品</text>
-						<text class="text-view">品胜充电器套装</text>
-					</view>
-					<view class="margin-top-xs">
-						<text class="cu-tag line-orange sm radius">分期</text>
-						<text class="text-view">￥318元/月花呗/京东/微信组合支付</text>
-					</view>
-				</view>
-				<view class="basis-2">
-					<view class="text-gray text-right icon-view">
-						<text class="cuIcon-right icon"/>
-					</view>
-				</view>
-			</view>
-		</view>
-		
+
 		<!--选择-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-select-view-box">
 			<view class="flex flex-wrap text-sm">
@@ -188,7 +121,7 @@
 			</view>
 		</view>
 		
-		<!--杂项信息-->
+		<!-- 发布者信息-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-goods-info-view-box">
 			<view class="zaiui-shop-view">
 				<view class="cu-avatar lg round" style="background-image:url(/static/images/avatar/1.jpg)"/>
@@ -199,26 +132,12 @@
 				<button class="cu-btn radius sm line-red">全部商品</button>
 			</view>
 			<view class="zaiui-border-view"/>
-			<view class="live-tag-view">
-				<view class="text-view">
-					<text class="cu-tag bg-red radius sm">
-						<text class="cuIcon-title"/>
-						<text>直播中</text>
-					</text>
-					<text class="margin-left-xs text-cut">官方直播自营商品在线答疑</text>
-				</view>
-				<view class="text-sm text-red text-right-view">
-					<text class="margin-right-xs">看直播</text>
-					<text class="cuIcon-right"/>
-				</view>
-			</view>
-			<view class="zaiui-border-view"/>
 			<view class="zaiui-recommend-list-box">
-				<view class="text-sm">官方推荐</view>
+				<view class="text-sm">发布者的其他物品</view>
 				<!--滑动列表-->
 				<view class="recommend-scroll-box">
 					<scroll-view class="recommend-scroll" scroll-x>
-						<block v-for="(items,indexs) in goodsList" :key="indexs">
+						<block v-for="(items,indexs) in otherComs" :key="indexs">
 							<view :id="['scroll' + (indexs + 1 )]" class="recommend-scroll-item">
 								<view class="cu-avatar xl radius" :style="[{backgroundImage:'url('+ items.img +')'}]"/>
 								<view class="text-cut-2 text-sm text-black margin-tb-sm">{{items.title}}</view>
@@ -236,32 +155,7 @@
 			<image src="/static/images/home/goods/goods-1.png" mode="widthFix"/>
 			<image src="/static/images/home/goods/goods-2.png" mode="widthFix"/>
 		</view>
-		
-		<!--常见问题-->
-		<view class="margin-top bg-white margin-bottom zaiui-view-box zaiui-goods-help-view-box">
-			<view class="text-black text-lg margin-bottom-sm">常见问题</view>
-			<view class="flex flex-wrap margin-bottom">
-				<view class="basis-1">
-					<text class="cu-tag bg-grey radius sm">问</text>
-				</view>
-				<view class="basis-9">
-					<view class="margin-bottom-xs text-black">手机是正品吗?有保障吗?</view>
-					<view class="text-sm">转转自营的每部二手手机皆经过质检工程师51项专业质检并出具了详细的配套验机评估报告，且提供7天试用和180天售后质保服务;成色为[全新]的手机，为官方全新原装手机，与官方门店购买的没有任何差别，享受官方质保与转转提供的180天售后质保服务，可以放心选购哦</view>
-				</view>
-			</view>
-			<view class="flex flex-wrap margin-bottom">
-				<view class="basis-1">
-					<text class="cu-tag bg-grey radius sm">问</text>
-				</view>
-				<view class="basis-9">
-					<view class="margin-bottom-xs text-black">都有哪些渠道版本的手机?</view>
-					<view class="text-sm">版本包括:国行、港澳、国际版(包括美欧日韩等版本)。其中除了零售机还包括:演示机，官换机，官翻机。</view>
-				</view>
-			</view>
-			<view class="zaiui-border-view"/>
-			<view class="text-center text-blue">查看更多问题</view>
-		</view>
-		
+
 		<!--相似推荐-->
 		<view class="margin-top zaiui-view-box zaiui-recommend-list-view-box">
 			<view class="flex flex-wrap">
@@ -303,9 +197,7 @@
 		
 		<!--底部操作-->
 		<view class="zaiui-footer-fixed">
-				
-				<view class= "flex flex-direction">
-					
+				<view class= "flex flex-direction">				
 					<button class="cu-btn bg-red lg"  @tap="selectTap('sell')">立即预约</button>
 				</view>
 		</view>
@@ -321,64 +213,6 @@
 				
 				<!--内容区域-->
 				<view class="zaiui-modal-content">
-					
-					<!--服务区域-->
-					<view class="zaiui-view-box service" v-if="modalType=='service'">
-						<view class="text-view">
-							<text class="cuIcon-title text-red"/>
-							<text class="text-cut text-black">已验机</text>
-						</view>
-						<view class="text-sm text-list-view">
-							<view class="margin-left text-cut text-gray">转转&富士康联合制定验机标准，对设备进行专业质检</view>
-						</view>
-						<view class="text-view">
-							<text class="cuIcon-title text-red"/>
-							<text class="text-cut text-black">7天无理由</text>
-						</view>
-						<view class="text-sm text-list-view">
-							<view class="margin-left text-cut text-gray">自收到商品7天内，不喜欢可以申请退货，并自付邮费寄回</view>
-						</view>
-						<view class="text-view">
-							<text class="cuIcon-title text-red"/>
-							<text class="text-cut text-black">180天质保</text>
-						</view>
-						<view class="text-sm text-list-view">
-							<view class="margin-left text-cut text-gray">自订单确认收货起180天,提供免费质保</view>
-						</view>
-						<view class="text-view">
-							<text class="cuIcon-title text-red"/>
-							<text class="text-cut text-black">顺丰包邮</text>
-						</view>
-						<view class="text-sm text-list-view">
-							<view class="margin-left text-cut text-gray">16:00前下单，今日发货，顺丰包邮(偏远地区邮政包邮)</view>
-						</view>
-						<view class="text-view">
-							<text class="cuIcon-title text-red"/>
-							<text class="text-cut text-black">半年电池免费换新</text>
-						</view>
-						<view class="text-sm text-list-view">
-							<view class="margin-left text-cut text-gray">自订单确认收货起半年，如果电池电量低于60%，可申请免费更换原厂品质电池</view>
-						</view>
-					</view>
-					
-					<!--促销区域-->
-					<view class="zaiui-view-box promotion" v-if="modalType=='promotion'">
-						<view class="text-view">
-							<text class="cu-tag line-orange radius sm">赠品</text>
-							<text class="margin-left-xs text-cut text-black">品胜充电器套装</text>
-						</view>
-						
-						<view class="text-sm text-list-view">
-							<view class="text-cut">充电头+数据线</view>
-							<text class="text-right-view">价值￥99</text>
-						</view>
-						
-						<view class="text-view">
-							<text class="cu-tag line-orange radius sm">分期</text>
-							<text class="margin-left-xs text-cut text-black">￥318元/月花呗/京东/微信组合支付</text>
-						</view>
-					</view>
-					
 					<!--选择规格-->
 					<view class="zaiui-view-box select" v-if="modalType=='select'">
 						<!--商品信息-->
@@ -468,14 +302,17 @@
 		data() {
 			return {
 				bannerCur: 0, bannerList: [], bottomModal: false, modalTitle: '', modalType: 'promotion', selectType: '',
-				goodsList: [],
-				id:0
+				commodity:{},
+				account:{},
+				otherComs:[] // 发布者的其他物品
 			}
 		},
-		onLoad(options) {
+		onLoad(params) {
 			this.bannerList = _goods_data.bannerListData();
-			this.goodsList = _goods_data.goodsList();
-			this.id=options.id
+			this.otherComs = _goods_data.goodsList();
+			
+			console.log('commodity detail params', params);
+			this.getCommodityDetail(params.id)
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -485,22 +322,29 @@
 			});
 		},
 		methods: {
+			getCommodityDetail(id){
+				// 商品详情数据
+				this.$api.getCommodity(id)
+					.then(({data})=>{
+						console.log('commodity detail',data);
+					})
+					.catch(()=>{
+						console.log('请求商品数据失败');
+						uni.showToast({
+							title: '获取商品数据失败',
+							icon: 'none'
+						});
+					})
+				
+				// 发布者的其他商品数据 await 拿到发布者的信息后才能操作
+				
+			},
 			bannerSwiper(e) {
 				this.bannerCur = e.detail.current;
 			},
-			serviceTap() {
-				this.modalTitle = "服务";
-				this.modalType = 'service';
-				this.showModal();
-			},
-			promotionTap() {
-				this.modalTitle = "促销优惠";
-				this.modalType = 'promotion';
-				this.showModal();
-			},
 			selectTap(type) {
 				this.selectType = type;
-				this.modalTitle = "选择规格";
+				this.modalTitle = "选择数量";
 				this.modalType = 'select';
 				this.showModal();
 			},

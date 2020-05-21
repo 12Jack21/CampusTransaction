@@ -27,7 +27,7 @@
 					:checked="checkbox_list[0].checked?true:false" :value="checkbox_list[0].id + ''"/>
 					<view class="text-black">今天</view>
 				</view>
-				<view class="zaiui-goods-list-box" @tap="listTap()">
+				<view class="zaiui-goods-list-box" @tap="listTap(1)">
 					<checkbox class='round red zaiui-checked' :class="checkbox_list[1].checked?'checked':''"
 					:checked="checkbox_list[1].checked?true:false" :value="checkbox_list[1].id + ''"/>
 					<view class="cu-avatar radius" :style="[{backgroundImage:'url('+ goods_img +')'}]"/>
@@ -99,14 +99,18 @@
 				goods_img: '/static/images/home/goods/1.png',
 				goods_img_a: '/static/images/home/goods/2.png',
 				checkbox_list: [], checkbox_all: false, goods_checked: false,
+				
+				reservations: []
 			}
 		},
-		onLoad() {
+		onLoad(params) {
 			this.checkbox_list = [
 				{id: 1,checked: true}, {id: 2,checked: false}, {id: 3,checked: false},
 				{id: 4,checked: false}, {id: 5,checked: false}, {id: 6,checked: false}
 			];
 			this.headTab.list = ['全部预约'];
+			
+			this.getReservations(params.accountId)
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -116,6 +120,20 @@
 			});
 		},
 		methods: {
+			getReservations(accountId){
+				this.$api.getReservations(accountId)
+					.then(({data})=>{
+						this.reservations = data
+					})
+					.catch(()=>{
+						console.log('获取用户的预约列表失败');
+					})
+			},
+			listTap(id){
+				uni.navigateTo({
+					url: '../../pages/detail/reservation?id=' + id
+				});
+			},
 			//tab菜单被点击
 			tabSelect(e) {
 				let index = e.currentTarget.dataset.id;

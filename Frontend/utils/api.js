@@ -100,6 +100,9 @@ export default{
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
 	},
+	getReservations(accountId){
+		return http.get('/reservations/account/' + accountId)
+	},
 	getAccount(id){
 		return http.get('/accounts/' + id)
 	},
