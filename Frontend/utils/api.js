@@ -6,8 +6,8 @@ const http = new Request()
 http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
 		
-    // config.baseUrl = 'http://localhost:9012'; /* 根域名 */
-		config.baseUrl = 'http://39.96.69.108:9999/'
+    config.baseUrl = 'http://localhost:9012'; /* 根域名 */
+		// config.baseUrl = 'http://39.96.69.108:9999/'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
     }
@@ -127,5 +127,8 @@ export default{
 	},
 	readMessages(ids){
 		return http.put('/messsages',{ids})
+	},
+	addComment(data){
+		return http.post('/comments',data)
 	}
 }

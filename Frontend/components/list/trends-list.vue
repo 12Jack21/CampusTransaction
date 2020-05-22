@@ -1,13 +1,13 @@
 <template>
 	<view>
-		<block v-for="(item, index) in list_data" :key="index">
+		<block v-for="(item) in list_data" :key="item.id">
 			<view class="bg-white margin-top padding radius zaiui-trends">
 				<!--用户信息-->
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
 						<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + item.avatar + ')' }]" 
-						@tap="listTap('userTap', item.userId)" />
-						<view class="content" @tap="listTap('userTap', item.userId)">
+						@tap="userTap('userTap', item.userId)" />
+						<view class="content" @tap="userTap('userTap', item.userId)">
 							<view class="text-black">
 								<view class="text-cut">{{ item.username }}</view>
 							</view>
@@ -30,7 +30,7 @@
 
 				<!--内容-->
 				<view class="margin-tb text-black zaiui-text-content" 
-				@tap="listTap('contentTap', item.id)">
+				@tap="listTap(item.id)">
 					<text v-html="item.description">{{ item.description }}</text>
 					<text class="text-blue margin-left-xs" v-if="item.showAll">
 						<text>查看全文</text>
@@ -40,14 +40,14 @@
 
 				<view class="zaiui-img-grid-col" v-if="item.img.length > 0">
 					<!--单图-->
-					<view class="one-img" v-if="item.img.length == 1" @tap="imgTap(item.img[0], item.img, 0)">
-						<view class="img-grid" :style="[{ backgroundImage: 'url(' + item.img[0] + ')' }]" />
+					<view class="one-img" v-if="item.img.length == 1" @tap="imgTap(item.img, item.img)">
+						<view class="img-grid" :style="[{ backgroundImage: 'url(' + item.img + ')' }]" />
 					</view>
 
 					<!--两图-->
 					<view class="grid col-2" v-if="item.img.length == 2">
 						<block v-for="(items, indexs) in item.img" :key="indexs">
-							<view class="img-grid-view" @tap="imgTap(items, items, indexs)">
+							<view class="img-grid-view" @tap="imgTap(items, item.img)">
 								<view class="img-grid" :style="[{ backgroundImage: 'url(' + items + ')' }]" />
 							</view>
 						</block>
@@ -56,7 +56,7 @@
 					<!--多图-->
 					<view class="grid col-3" v-if="item.img.length > 2">
 						<block v-for="(items, indexs) in item.img" :key="indexs" v-if="indexs < 9">
-							<view class="img-grid-view" @tap="imgTap(items, items, indexs)">
+							<view class="img-grid-view" @tap="imgTap(items, item.img)">
 								<view class="img-grid" :style="[{ backgroundImage: 'url(' + items + ')' }]" />
 							</view>
 						</block>
@@ -95,14 +95,16 @@ export default {
 		}
 	},
 	methods: {
-		listTap(tap, id) {
-			this.$emit(tap, id)
+		listTap(id) {
+			this.$emit('contentTap',id)
 		},
-		imgTap(img, arr, index) {
-			this.$emit('imgTap', {
-				img,
-				arr,
-				index
+		imgTap(img, arr) {
+			uni.previewImage({
+				current:img,
+				urls:arr,
+				indicator:'default',
+				loop:true
+			
 			})
 		}
 	},
