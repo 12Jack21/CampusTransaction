@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view >
 		<!--标题栏-->
 		<bar-title bgColor="bg-white">
 			<block slot="content">商品详情</block>
@@ -26,8 +26,8 @@
 				<view>剩余{{ commodity.count }}件</view>
 			</view>
 			<view class="text-right zaiui-time-right font-lg">
-				<view class="text-xs">{{ expiredTime }}</view>
-				<view class="text-xs">时失效</view>
+				<view >{{ expiredTime }}</view>
+				<view >时失效</view>
 			</view>
 		</view>
 
@@ -89,7 +89,7 @@
 						</view>
 						<view style="flex: 0 0 86%;" class="text-lg flex flex-direction">
 							<view class="font-lg">{{ item.fromName }}</view>
-							<view class="margin-top-xs" style="font-size: 13px;" @tap="commentTap(item.fromId,item.fromName)">
+							<view class="margin-top-xs" style="font-size: 16px;" @tap="commentTap(item.fromId,item.fromName)">
 								<text class="text-blue" v-if="item.toName" style="margin-right: 10rpx;">
 									@{{item.toName}}:
 								</text>
@@ -461,13 +461,13 @@ export default {
 	.c-btn{
 		background-color: #a59f9e;
 		color: #eee;
-		font-size: 14px;
+		font-size: 15px;
 		margin-top: 8rpx;
 		width: 40%;
 	}
 }
 .comment-date{
-	font-size: 12px;
+	font-size: 13px;
 	margin-top: 10rpx;
 }
 .c-btn-hover{
@@ -477,7 +477,7 @@ export default {
 	margin: 10rpx;
 }
 .font-lg { 
-	font-size: 16px;
+	font-size: 17px;
 }
 .reserve_box {
 	bottom: 10rpx;

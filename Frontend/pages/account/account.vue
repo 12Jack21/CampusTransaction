@@ -1,5 +1,5 @@
 <template>
-	<view class="zaiui-my-box" :class="show ? 'show' : ''">
+	<view class="zaiui-my-box" style="color: #FFFFFF;">
 		<view class="zaiui-head-box">
 			<!--标题栏-->
 			<bar-title bgColor="bg-white">
@@ -11,7 +11,7 @@
 			<!-- end -->
 
 			<!--用户信息-->
-			<view class="" style="background: linear-gradient(rgb(230, 100, 101), rgb(238, 239, 244));position: relative;z-index: 0;">
+			<view class="" style="background-image: url(../../static/images/accBg.png) ;position: relative;z-index: 0;">
 				<view class="flex" style="justify-content: center;padding-top: 20rpx;">
 					<view class="flex flex-direction user-space" style="align-items: center;">
 						<view class="cu-avatar round" :style="{ backgroundImage: account.avartar.length===0? 'url(/static/images/avatar/1.jpg)':account.avartar }" />
@@ -22,10 +22,24 @@
 						<view class="address">
 							{{account.address}}
 						</view>
-						<view class="height-spacce"></view>
-						<view class="text-lg text-bold" 
-						style="text-align: center;margin-bottom: 15rpx;color: #e54d42;">
-							{{ (account.gender===0?'她':'他') + '发布的物品'}}
+						<view class=" wechat">
+							<view v-if="account.wechat">微信号：<text selectable>{{account.wechat}}</text></view>
+						</view>
+						<view class="cu-list grid col-2 showItem">
+							<view class="cu-item ">
+								<view class="text-xxl text-white">{{account.rate}}%</view>
+								<text class="text-sm">交易率</text>
+							</view>
+							<view class="cu-item ">
+								<view class="text-xxl text-white">{{account.evaluation}}%</view>
+								<text class="text-sm">信誉值</text>
+							</view>
+						</view>
+						<view class="height-spacce flex flex-direction" style="justify-content: center;">
+							<view class="border-view"/>
+						</view>
+						<view class="text-lg denote">
+							{{ who}}发布的物品
 						</view>
 					</view>
 				</view>
@@ -35,8 +49,12 @@
 			<view class="zaiui-goods-info-view-box">			
 				<view class="zaiui-recommend-list-box">				
 					<!-- 水平滑动列表 -->
-					<view class="recommend-scroll-box comList">
-						<scroll-view class="recommend-scroll" scroll-x>
+					<view class="comList recommend-scroll-box">
+						<view class="noCom" v-if="commodities.length===0">
+							<image src="../../static/images/noCom.png" mode="aspectFit"></image>
+							<view>暂无发布中的物品或需求</view>
+						</view>
+						<scroll-view class="recommend-scroll" scroll-x v-else>
 							<block v-for="(item,index) in commodities" :key="index" >
 								<view :id="['scroll' + (index + 1 )]" class="recommend-scroll-item comItem" 
 								@tap="comTap(item.id)" style="">
@@ -49,8 +67,9 @@
 						</scroll-view>
 					</view>
 				</view>
-				<!-- <view class="zaiui-border-view"/> -->
 			</view>
+			
+			
 			
 		</view>
 	</view>
@@ -71,7 +90,9 @@ export default {
 				avartar:'',
 				gender:0,
 				address:'文理学部',
-				wechat:''
+				wechat:'2020202020',
+				rate: 90, // 交易成功率
+				evaluation: 90.2 // 信誉值
 			},
 			aCom:{
 					id:1,
@@ -81,27 +102,20 @@ export default {
 					originalPrice:'300',
 					count:2
 				},
-			commodities:[
-				{
-					id:1,
-					name:'毛巾',
-					img:'',
-					expectedPrice:'200',
-					originalPrice:'300',
-					count:2
-				}
-			]
+			commodities:[]
 		}
 	},
 	computed: {
-		...mapState(['userId'])
+		...mapState(['userId']),
+		who(){
+			return this.account.gender===0?'她':'他'
+		}
 	},
 	onLoad(params) {
 		this.getAccount(params.id)
 		
 		//debug
-		for(let i =0;i<10;i++)
-			this.commodities.push(this.aCom)
+		// for(let i =0;i<10;i++) this.commodities.push(this.aCom)
 	},
 	methods: {
 		comTap(id){
@@ -113,7 +127,8 @@ export default {
 			this.$api.getOtherAccount(toAccId, this.userId)
 				.then(({data})=>{
 					console.log('其他账户的信息',data);
-					this.account = data
+					this.account = data.account
+					this.commodities = data.commodities
 				})
 				.catch(()=>{
 					console.log('获取其他账户的信息失败');
@@ -125,34 +140,74 @@ export default {
 
 <style lang="scss">
 @import '../../static/zaiui/style/goods.scss';
+$offset: -80rpx;
+
+.noCom{
+	display: flex;
+	flex-direction: column;
+	border-radius: 30rpx;
+	width: 370rpx;
+	height: 400rpx;
+	background-color: #fff;
+	color: #b9b9b9;
+	text-align: center;
+	padding: 0 10rpx 20rpx 10rpx;
+}
+.showItem{
+	border: #fff 1px solid;
+	background-color: transparent;
+	border-radius: 10px;
+	width: 100%;
+}
+.border-view{
+	width: 550rpx;
+	height: 2rpx;
+}
+.wechat{
+	padding: 14rpx 0;
+	text-align: center;
+}
 .height-spacce{
-	height: 150rpx;
+	height: 100rpx;
+}
+.denote{
+	position: relative;
+	text-align: center;
+	margin-bottom: 15rpx;
+	color: #ffeeea;
+	top: $offset;
 }
 .user-space{
 	.cu-avatar{
 		margin-top: 40rpx;
-		width: 200rpx;
-		height: 200rpx;
+		width: 180rpx;
+		height: 180rpx;
 	}
 	.username{
 		font-size: 2em;
 		margin: 20rpx 0;
 	}
 	.address{
-		border: #007AFF 1px solid;
-		border-radius: 10rpx;
-		padding: 10rpx;
+		color: #e54d42;
+		background-color: #fadbd9;
+		border-radius: 6px;
+		padding: 6px;
 	}
 }
 .comList{
-	// position: relative;
-	// top: -10px;
-	// z-index: 9;																				
+		position: relative;
+		display: flex;
+		justify-content: center;
+		margin: $offset auto 0 auto !important;
+		z-index: 9;
+		width: 96%;
 }
 .comItem{
 	padding: 10rpx;
-	margin:0 4rpx;
+	margin:0 8rpx;
 	border: #efefef 1px solid;
 	border-radius: 30rpx;
+	box-shadow: 0 2px 4px 0 #ebc0b6;
+	background-color: #FFF;
 }
 </style>
