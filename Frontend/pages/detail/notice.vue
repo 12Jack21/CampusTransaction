@@ -64,10 +64,14 @@
 		<!--底部操作-->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="account.id===userId">
 				<view class= "operation">				
-					<button class="cu-btn bg-red lg"  @tap="add">添加物品</button>
-					<button class="cu-btn bg-orange lg"  @tap="update(id)">更新</button>
+					<button class="cu-btn bg-red lg"  @tap="addShow=true">添加物品</button>
+					<button class="cu-btn bg-orange lg"  @tap="updateShow=true">更新</button>
 				</view>
 		</view>
+		
+		<modal-notice :show="updateShow" @closeModal="updateShow=false"></modal-notice>
+		<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
+		
 	</view>
 </template>
 
@@ -76,15 +80,20 @@
 	import _tool from '@/static/zaiui/util/tools.js';	//工具函数
 	import _goods_data from '@/static/zaiui/data/goods.js';
 	import noticeGoodsList from '@/components/list/notice-goods-list';
+	import modalNotice from '@/components/basics/modal-notice.vue'
+	
 	import {mapState} from 'vuex'
 	
 	export default {
 		components: {
 			barTitle,
-			noticeGoodsList
+			noticeGoodsList,
+			modalNotice
 		},
 		data() {
 			return {
+				updateShow:false,
+				addShow:false,
 				notice: {
 					title:'通告标题',
 					description:'这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述',
@@ -117,12 +126,6 @@
 			});
 		},
 		methods: {
-			add(){ //添加物品
-				
-			},
-			update(id){ //更新通告基本信息
-				
-			},
 			getNotice(id){
 				this.$api.getNotice(id)
 					.then(({data})=>{
