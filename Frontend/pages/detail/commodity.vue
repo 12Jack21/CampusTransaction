@@ -25,7 +25,7 @@
 				<view class="text-through">￥{{ commodity.originalPrice }}</view>
 				<view>剩余{{ commodity.count }}件</view>
 			</view>
-			<view class="text-right zaiui-time-right font-lg">
+			<view class="text-right zaiui-time-right">
 				<view >{{ expiredTime }}</view>
 				<view >时失效</view>
 			</view>
@@ -34,9 +34,9 @@
 		<!--标题-->
 		<view class="bg-white zaiui-view-box zaiui-title-view-box">
 			<view class="title-view">
-				<text class="text-black text-lg text-bold" style="font-size: 40rpx;">{{ commodity.name }}</text>
+				<text class="text-black text-bold" style="font-size: 1.8em;">{{ commodity.name }}</text>
 			</view>
-			<br />
+			<view class="address"><text class=" cuIcon-locationfill"></text>{{address}}</view>
 			<view style="font-size: 15px;">{{ commodity.description }}</view>
 		</view>
 
@@ -88,7 +88,7 @@
 							<view class="cu-avatar round commentAvatar" :style="{ backgroundImage: item.fromImage.length === 0 ? 'url(/static/images/avatar/1.jpg)' : item.fromImage }" />
 						</view>
 						<view style="flex: 0 0 86%;" class="text-lg flex flex-direction">
-							<view class="font-lg">{{ item.fromName }}</view>
+							<view class="font-lg" @tap="fromAccTap(item.fromId)">{{ item.fromName }}</view>
 							<view class="margin-top-xs" style="font-size: 16px;" @tap="commentTap(item.fromId,item.fromName)">
 								<text class="text-blue" v-if="item.toName" style="margin-right: 10rpx;">
 									@{{item.toName}}:
@@ -267,6 +267,7 @@ export default {
 			myComment:'',
 			condition: '只限男生',
 			expiredTime: '2020-05-20 10:07',
+			address:'信息学部二食堂',
 			reservations:[
 				{
 					account:{
@@ -311,6 +312,11 @@ export default {
 		}
 	},
 	methods: {
+		fromAccTap(id){
+			uni.navigateTo({
+				url: '../../pages/account/account?id=' + id
+			});
+		},
 		clearComment(){
 			this.toCommentId = -1
 			this.comment_ph = '输入你的评论'
@@ -407,7 +413,12 @@ export default {
 				.getCommodity(id)
 				.then(({ data }) => {
 					console.log('commodity detail', data)
-					// this.commodity = data.commodity
+					this.commodity = data.commodity
+					this.expiredTime = data.expiredTime
+					this.condition = data.condition
+					this.account = data.account
+					this.address = data.address
+					this.comments = data.comments
 				})
 				.catch(() => {
 					console.log('请求商品数据失败')
@@ -416,8 +427,6 @@ export default {
 						icon: 'none'
 					})
 				})
-
-			// 发布者的其他商品数据 await 拿到发布者的信息后才能操作
 		},
 		bannerSwiper(e) {
 			this.bannerCur = e.detail.current
@@ -449,6 +458,16 @@ export default {
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
 
+.address {
+	color: #e54d42;
+	background-color: #fadbd9;
+	border-radius: 6px;
+	padding: 6px;
+	width: fit-content;
+	margin: 8px 0;
+	border: #DD514C 1px solid;
+	font-size: 0.8em;
+}
 .add-comment{
 	padding: 30rpx;
 	border: #efebeb 1px solid;
