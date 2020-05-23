@@ -23,6 +23,10 @@
 								微信号：
 								<text selectable>{{ account.wechat }}</text>
 							</view>
+							<view v-if="account.qq">
+								QQ号：
+								<text selectable>{{ account.qq }}</text>
+							</view>
 						</view>
 						<view class="cu-list grid col-2 showItem">
 							<view class="cu-item ">
@@ -82,7 +86,8 @@ export default {
 				avartar: '',
 				gender: 0,
 				address: '文理学部',
-				wechat: '2020202020',
+				wechat: '2020wechat2020',
+				qq: '99221101',
 				rate: 90, // 交易成功率
 				evaluation: 90.2 // 信誉值
 			},

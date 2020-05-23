@@ -161,6 +161,7 @@
 	justify-content: space-around;
 	.cu-btn{
 		width: 48%;
+		border-radius: 26rpx;
 	}
 }
 .rate {
