@@ -170,9 +170,9 @@ public class CommodityServiceImpl implements CommodityService {
                         break;
                     /*最新*/
                     case 0:
-                    /*附近,地址在参数中*/
+                        /*附近,地址在参数中*/
                     case 1:
-                    /*最新*/
+                        /*最新*/
                     case 4:
                     default:
                         resultPage = commodityDAO.search(page, queryWrapper);
@@ -245,21 +245,24 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * 用于返回商品详情界面需要的商品信息
+     *
      * @param id
      * @return
      */
     @Override
-    public responseFromServer getDetailedCommodityInfo(Integer id){
+    public responseFromServer getDetailedCommodityInfo(Integer id) {
         responseFromServer response = getDetailedCommodity(id);
-        if(response.isFailure()){
+        if (response.isFailure()) {
             return response;
         }
-        DetailedCommodityInfo commodityInfo = new DetailedCommodityInfo((Commodity)response.getData());
-        response = commentService.getCommentByCommodityId(1,1);
-        if(response.isFailure()){
+        DetailedCommodityInfo commodityInfo = new DetailedCommodityInfo((Commodity) response.getData());
+        response = commentService.getCommentByCommodityId(1, 1);
+        if (response.isFailure()) {
             return response;
         }
-        commodityInfo.setComments(((MyPage)response.getData()).getPageList());
+        commodityInfo.setCommentsFromCommentList(
+                ((MyPage<Comment>) response.getData()).getPageList()
+        );
         return responseFromServer.success(commodityInfo);
     }
 
@@ -267,10 +270,10 @@ public class CommodityServiceImpl implements CommodityService {
     public responseFromServer getDetailedCommodity(Integer id) {
         responseFromServer response = getById(id);
         Commodity commodity;
-        if(response.isFailure()){
+        if (response.isFailure()) {
             return responseFromServer.error();
-        }else{
-            commodity = (Commodity)response.getData();
+        } else {
+            commodity = (Commodity) response.getData();
             commodity.setImagesList();
         }
         List<CommodityImage> commodityImages = commodity.getCommodityImages();

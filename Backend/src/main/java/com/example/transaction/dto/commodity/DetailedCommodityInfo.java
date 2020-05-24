@@ -9,6 +9,7 @@ import com.example.transaction.pojo.base.BaseCommodity;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,6 +53,19 @@ public class DetailedCommodityInfo {
                 this.account = new SimpleAccount(notice.getUser());
             }
         }
+    }
+
+    public void setCommentsFromCommentList(List<Comment> comments) {
+        if (comments != null) {
+            this.comments = new ArrayList<>();
+            for (Comment comment : comments) {
+                this.comments.add(new SimpleComment(comment));
+            }
+        }
+    }
+
+    public void setComments(List<SimpleComment> comments){
+        this.comments = comments;
     }
 
 }

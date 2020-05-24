@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -20,7 +21,8 @@ public class Token implements Serializable {
     @TableId(value = "account_id")
     private int accountId;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "token_str")

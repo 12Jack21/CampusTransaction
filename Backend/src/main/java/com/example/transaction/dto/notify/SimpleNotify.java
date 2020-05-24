@@ -6,6 +6,7 @@ import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Timestamp;
 
@@ -34,7 +35,8 @@ public class SimpleNotify<T> {
      */
     Integer id = -1;
     Boolean isRead = false;
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     Timestamp createTime;
 
     Integer action = -1;

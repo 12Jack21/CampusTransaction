@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.commodity.CommodityInfo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -20,7 +21,8 @@ public class Notice implements Serializable {
     @TableField(value = "detailed_address")
     private String detailedAddress;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "end_time")
     private Timestamp endTime;
     private String title;
@@ -29,11 +31,13 @@ public class Notice implements Serializable {
     @TableField(value = "state_enum")
     private Integer stateEnum;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "update_time")
     private Timestamp updateTime;
 
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "account_id")

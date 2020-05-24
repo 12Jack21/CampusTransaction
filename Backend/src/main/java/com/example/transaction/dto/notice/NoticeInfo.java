@@ -58,10 +58,10 @@ public class NoticeInfo {
             if (images == null || images.size() == 0) {
                 continue;
             } else {
-                this.image = images.get(0).getImageUrl();
+                this.image = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
-        this.avatar = notice.getUser().getAvatar();
+        this.avatar = Nums.avatarPath + notice.getUser().getAvatarUrl();
         this.userName = notice.getUser().getUsername();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
