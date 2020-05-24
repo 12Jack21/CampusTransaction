@@ -9,10 +9,10 @@
 		</bar-title>
 		
 		<!--提示栏-->
-		<view class="bg-red light text-sm padding-sm">
+		<view class="bg-orange light text-sm padding-sm">
 			<text class="cuIcon-warnfill"/>
 			<text class="margin-left-xs">
-				重要交易信息建议在平台内进行沟通，并务必在平台内下单及付款，切勿私下转账交易！走平台担保更安全~
+				重要的联系方式请避免公开
 			</text>
 		</view>
 		
@@ -32,8 +32,8 @@
 			<input placeholder="请填写您的QQ号" value=""/>
 		</view>
 		<view class="bg-white padding form-view">
-			<view class="text-black title">手机号</view>
-			<input placeholder="请填写您的手机号" value=""/>
+			<view class="text-black title">电子邮箱</view>
+			<input placeholder="请填写您的电子邮箱" value=""/>
 		</view>
 		
 		
@@ -53,6 +53,7 @@
 	import barTitle from '@/components/basics/bar-title';
 	import _tool from '@/static/zaiui/util/tools.js';	//工具函数
 	export default {
+		name:'contact-cards',
 		components: {
 			barTitle
 		},

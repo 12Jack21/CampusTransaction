@@ -48,6 +48,10 @@
 				"backgroundColor": "#CCCCCC",
 				"enablePullDownRefresh":true
 			}
+		},{
+			"path":"pages/my/contact-cards"
+		},{
+			"path":"pages/my/edit-synopsis"
 		}
 	],
 	"globalStyle": {

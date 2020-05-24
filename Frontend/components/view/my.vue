@@ -3,23 +3,19 @@
 		<view class="bg-gradual-red zaiui-head-box">
 			<!--标题栏-->
 			<!--小程序端不显示-->
-			<!-- #ifndef MP -->
 			<bar-title :isBack="false" :fixed="false">
 				<block slot="right">
-					<text class="cuIcon-camera" />
-					<!-- <text class="cuIcon-settings" @tap="setupTap"/> -->
+					<text class="cuIcon-settings"/>
 				</block>
 			</bar-title>
-			<!-- #endif -->
 
 			<!--用户信息-->
 			<view class="zaiui-user-info-box">
-				<!--已登陆-->
 				<view class="cu-list menu-avatar">
-					<view class="cu-item">
-						<view class="cu-avatar round lg" :style="{ backgroundImage: 'url(/static/images/avatar/1.jpg)' }" />
-						<view class="content text-xl">
-							<view class="text-white"><text class="margin-right">仔仔</text></view>
+					<view class="flex" style="justify-content: flex-start;">
+						<view class="cu-avatar round userAvatar" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+						<view class=" text-xl text-white flex" style="align-items: center;">
+							<text class="margin-right">{{account.username}}</text>
 						</view>
 					</view>
 				</view>
@@ -27,7 +23,7 @@
 		</view>
 
 		<view class="zaiui-view-content">
-			<!--用户数据-->
+			<!--用户的交易数据-->
 			<view class="padding-xs bg-white zaiui-user-info-order-box">
 				<view class="text-black text-lg text-bold padding-sm">我的交易</view>
 				<view class="cu-list grid col-3 no-border">
@@ -50,39 +46,51 @@
 			<view class="cu-list menu sm-border margin-top">
 				<view class="cu-item arrow">
 					<view class="content">头像</view>
-					<view class="action"><view class="cu-avatar round sm" :style="[{ backgroundImage: 'url(' + avatar_img + ')' }]" /></view>
+					<view class="action" @tap="update('avatar')">
+						<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+					</view>
 				</view>
-				<view class="cu-item arrow" @tap="editNameTap">
+				<view class="cu-item arrow" @tap="update('username')">
 					<view class="content">昵称</view>
-					<view class="action"><text class="text-gray">仔仔</text></view>
+					<view class="action"><text class="text-gray">{{account.username}}</text></view>
 				</view>
 				<view class="cu-item arrow">
 					<view class="content">性别</view>
 					<view class="action">
 						<picker @change="sexPickerChange" :value="sexIndex" :range="sexPicker">
-							<view class="picker text-gray">{{ sexIndex > -1 ? sexPicker[sexIndex] : '男' }}</view>
+							<view class="picker text-gray">{{ account.gender===0 ? '女' : '男' }}</view>
 						</picker>
 					</view>
 				</view>
-				<view class="cu-item arrow" @tap="synopsisTap">
+				<view class="cu-item arrow" @tap="update('introduction')">
 					<view class="content">个人简介</view>
-					<view class="action"><text class="text-gray">交个朋友</text></view>
+					<view class="action"><text class="text-gray">{{account.introduction}}</text></view>
 				</view>
-			</view>
-
-			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow" @tap="regionTap">
+				<view class="cu-item arrow" @tap="update('address')">
 					<view class="content">地区</view>
-					<view class="action"><text class="text-gray">信息学部</text></view>
+					<view class="action"><text class="text-gray">{{account.address}}</text></view>
 				</view>
-				<!-- 			<view class="cu-item arrow" @tap="addressTap">
-				<view class="content">收货地址</view>
-			</view> -->
-				<view class="cu-item arrow" @tap="editContactCardsTap"><view class="content">微信号</view></view>
 			</view>
 
 			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow"><view class="content">注销账户</view></view>
+				<view class="cu-item arrow" @tap="update('email')">
+					<view class="content">电子邮件</view>
+					<view class="action"><text class="text-gray">{{account.email}}</text></view>
+				</view>
+				<view class="cu-item arrow" @tap="update('wechat')">
+					<view class="content">微信号</view>
+					<view class="action"><text class="text-gray">{{account.wechat}}</text></view>
+				</view>
+				<view class="cu-item arrow" @tap="update('qq')">
+					<view class="content">QQ号</view>
+					<view class="action"><text class="text-gray">{{account.qq}}</text></view>
+				</view>
+			</view>
+
+			<view class="cu-list menu sm-border margin-top">
+				<view class="cu-item arrow logOutItem">
+					<view class="content text-red">注销账户</view>
+				</view>
 			</view>
 		</view>
 
@@ -104,8 +112,17 @@ export default {
 	},
 	data() {
 		return {
-			toolsList: [],
-			id: 0
+			account:{
+				avatar:'',
+				username:'FAIR',
+				password:'',
+				gender: 1,
+				address:'文理学部',
+				email:'221qqw121@qq.com',
+				wechat:'wechatID_12121223',
+				qq:'99881231',
+				introduction:"我就是我，是不一样的烟火"
+			}
 		}
 	},
 	computed:{
@@ -117,11 +134,7 @@ export default {
 			default: true
 		}
 	},
-	watch: {},
-	created() {
-		//加载虚拟数据
-		this.toolsList = _my_data.toolsListData()
-		
+	created() {	
 		// Request my account information
 		this.getMyAccount()
 	},
@@ -210,6 +223,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$img_size:150rpx;
+.userAvatar{
+	width: $img_size;
+	height: $img_size;
+	margin: 0 30rpx 10rpx 30rpx;
+}
+.logOutItem:before{
+	color: red !important;
+}
 .zaiui-my-box {
 	width: 100%;
 	display: none;

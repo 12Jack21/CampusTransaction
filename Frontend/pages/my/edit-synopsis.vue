@@ -30,6 +30,7 @@
 	import barTitle from '@/components/basics/bar-title';
 	import _tool from '@/static/zaiui/util/tools.js';	//工具函数
 	export default {
+		name:'edit-synopsis',
 		components: {
 			barTitle
 		},
