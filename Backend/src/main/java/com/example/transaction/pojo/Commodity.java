@@ -3,6 +3,7 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.transaction.pojo.base.BaseCommodity;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -15,42 +16,117 @@ import java.util.List;
  */
 
 @Data
-public class Commodity implements Serializable {
-    @TableId(value = "id", type = IdType.AUTO)
-    private Integer id;
-    @TableField(value = "original_price")
-    private Double originalPrice;
-    @TableField(value = "expected_price")
-    private Double expectedPrice;
-    private String name;
-    private String newness;
-    private String description;
-    @TableField(value = "notice_id")
-    private Integer noticeId;
-    @TableField(value = "initial_count")
-    private Integer initialCount;
-    private Integer count;
-    private String type;
+public class Commodity extends BaseCommodity implements Serializable {
 
-    @TableField(exist = false)
-    private List<Type> types;
-
-    @TableField(exist = false)
-    private List<CommodityImage> commodityImages;
     @TableField(exist = false)
     private Notice notice;
     @TableField(exist = false)
     private List<Reservation> reservation;
 
-    @TableField(exist = false)
-    private List<String> images;
-
-    
-    
     public Commodity() {
     }
 
     public Commodity(Integer id) {
         this.id = id;
+    }
+
+
+
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Double getOriginalPrice() {
+        return originalPrice;
+    }
+
+    public void setOriginalPrice(Double originalPrice) {
+        this.originalPrice = originalPrice;
+    }
+
+    public Double getExpectedPrice() {
+        return expectedPrice;
+    }
+
+    public void setExpectedPrice(Double expectedPrice) {
+        this.expectedPrice = expectedPrice;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNewness() {
+        return newness;
+    }
+
+    public void setNewness(String newness) {
+        this.newness = newness;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Integer getNoticeId() {
+        return noticeId;
+    }
+
+    public void setNoticeId(Integer noticeId) {
+        this.noticeId = noticeId;
+    }
+
+    public Integer getInitialCount() {
+        return initialCount;
+    }
+
+    public void setInitialCount(Integer initialCount) {
+        this.initialCount = initialCount;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<CommodityImage> getCommodityImages() {
+        return commodityImages;
+    }
+
+    public void setCommodityImages(List<CommodityImage> commodityImages) {
+        this.commodityImages = commodityImages;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

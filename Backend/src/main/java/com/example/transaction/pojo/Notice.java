@@ -3,6 +3,7 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.transaction.dto.commodity.CommodityInfo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -23,7 +24,7 @@ public class Notice implements Serializable {
     @TableField(value = "end_time")
     private Timestamp endTime;
     private String title;
-    private String conditions;
+    private String condition;
     private String description;
     @TableField(value = "state_enum")
     private Integer stateEnum;

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class Account extends SimpleAccount implements Serializable {
+public class Account  implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;

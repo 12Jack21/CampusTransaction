@@ -142,7 +142,7 @@ public class CommodityController {
     @ApiOperation(value = "获取商品信息")
     @GetMapping("/{commodityId}")
     public responseFromServer getById(@PathVariable Integer commodityId) {
-        return commodityService.getById(commodityId);
+        return commodityService.getDetailedCommodity(commodityId);
     }
 
     /**

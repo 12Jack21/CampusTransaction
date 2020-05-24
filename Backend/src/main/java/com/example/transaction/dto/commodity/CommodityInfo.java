@@ -1,6 +1,7 @@
-package com.example.transaction.pojo;
+package com.example.transaction.dto.commodity;
 
 import com.example.transaction.dto.notice.NoticeInfo;
+import com.example.transaction.pojo.Commodity;
 import com.example.transaction.util.code.Nums;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
@@ -23,6 +24,8 @@ public class CommodityInfo {
     String img = "";
     String accountName;
     String avatar = "";
+    String description = "";
+
 
     public CommodityInfo(Commodity commodity, NoticeInfo noticeInfo) {
         if (commodity != null) {
@@ -54,6 +57,7 @@ public class CommodityInfo {
             if (!StringUtil.isNullOrEmpty( noticeInfo.getAvatar())) {
                 this.avatar = Nums.avatarPath +  noticeInfo.getAvatar();
             }
+            this.description = commodity.getDescription();
         }
 
     }

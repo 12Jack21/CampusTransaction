@@ -5,11 +5,9 @@ import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
-import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.service.TokenService;
 import com.example.transaction.util.FileUtil;
-import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,10 +16,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @ClassName: AccountServiceImpl

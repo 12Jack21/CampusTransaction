@@ -22,6 +22,8 @@ public interface CommodityService {
     //根据id获取商品
     public responseFromServer getById(Integer id);
 
+    responseFromServer getDetailedCommodityInfo(Integer id);
+
     public responseFromServer getDetailedCommodity(Integer id);
 
     public responseFromServer getSimpleCommodity(Integer id);

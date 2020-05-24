@@ -8,8 +8,11 @@ import com.example.transaction.dao.CommodityImageDAO;
 import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.dto.Condition;
+import com.example.transaction.dto.commodity.CommodityInfo;
+import com.example.transaction.dto.commodity.DetailedCommodityInfo;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.*;
+import com.example.transaction.service.CommentService;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
 import com.example.transaction.util.FileUtil;
@@ -19,7 +22,6 @@ import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.apache.ibatis.annotations.Options;
-import org.jetbrains.annotations.TestOnly;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +39,6 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Author: 高战立
@@ -55,6 +56,8 @@ public class CommodityServiceImpl implements CommodityService {
 
     @Autowired
     NoticeService noticeService;
+    @Autowired
+    CommentService commentService;
 
     @Autowired
     CommodityServiceImpl(CommodityDAO commodityDAO, TypeDAO typeDAO, CommodityImageDAO commodityImageDAO, NoticeDAO noticeDAO) {
@@ -237,12 +240,42 @@ public class CommodityServiceImpl implements CommodityService {
         if (commodity == null) {
             return responseFromServer.error();
         }
-        return responseFromServer.success();
+        return responseFromServer.success(commodity);
+    }
+
+    /**
+     * 用于返回商品详情界面需要的商品信息
+     * @param id
+     * @return
+     */
+    @Override
+    public responseFromServer getDetailedCommodityInfo(Integer id){
+        responseFromServer response = getDetailedCommodity(id);
+        if(response.isFailure()){
+            return response;
+        }
+        DetailedCommodityInfo commodityInfo = new DetailedCommodityInfo((Commodity)response.getData());
+        response = commentService.getCommentByCommodityId(1,1);
+        if(response.isFailure()){
+            return response;
+        }
+        commodityInfo.setComments(((MyPage)response.getData()).getPageList());
+        return responseFromServer.success(commodityInfo);
     }
 
     @Override
     public responseFromServer getDetailedCommodity(Integer id) {
-        return getById(id);
+        responseFromServer response = getById(id);
+        Commodity commodity;
+        if(response.isFailure()){
+            return responseFromServer.error();
+        }else{
+            commodity = (Commodity)response.getData();
+            commodity.setImagesList();
+        }
+        List<CommodityImage> commodityImages = commodity.getCommodityImages();
+
+        return responseFromServer.success(commodity);
     }
 
     /**
@@ -387,18 +420,18 @@ public class CommodityServiceImpl implements CommodityService {
         }
 
         /*已经取消了多类型标签的功能*/
-        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
-            return true;
-        }
-
-        List<Type> typeList = commodity.getTypes();
-        for (Type type : typeList) {
-            type.setCommodityId(commodity.getId());
-            if (typeDAO.insert(type) != 1) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
-            }
-        }
+//        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
+//            return true;
+//        }
+//
+//        List<Type> typeList = commodity.getTypes();
+//        for (Type type : typeList) {
+//            type.setCommodityId(commodity.getId());
+//            if (typeDAO.insert(type) != 1) {
+//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//                return false;
+//            }
+//        }
         return true;
     }
 
@@ -417,18 +450,18 @@ public class CommodityServiceImpl implements CommodityService {
             }
         }
         /*已经取消了多类型标签的功能*/
-        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
-            return true;
-        }
-
-        List<Type> typeList = commodity.getTypes();
-        for (Type type : typeList) {
-            type.setCommodityId(commodity.getId());
-            if (typeDAO.updateById(type) != 1) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
-            }
-        }
+//        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
+//            return true;
+//        }
+//
+//        List<Type> typeList = commodity.getTypes();
+//        for (Type type : typeList) {
+//            type.setCommodityId(commodity.getId());
+//            if (typeDAO.updateById(type) != 1) {
+//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+//                return false;
+//            }
+//        }
         return true;
     }
 

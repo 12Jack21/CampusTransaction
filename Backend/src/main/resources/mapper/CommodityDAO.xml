@@ -5,9 +5,15 @@
     <resultMap id="commodityInfo" type="commodity">
         <id property="id" column="id"/>
         <id property="noticeId" column="notice_id"/>
-        <association property="notice" javaType="com.example.transaction.pojo.Notice" column="notice_id" select="com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"/>
-        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.getAllTypeByCommodityId"/>
-        <collection property="commodityImages" ofType="com.example.transaction.pojo.CommodityImage" column="id" select="com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"/>
+        <association property="notice"
+                     javaType="com.example.transaction.pojo.Notice"
+                     column="notice_id"
+                     select="com.example.transaction.dao.NoticeDAO.getCreditByNoticeId"/>
+<!--        <collection property="types" ofType="com.example.transaction.pojo.Type" column="id" select="com.example.transaction.dao.TypeDAO.getAllTypeByCommodityId"/>-->
+        <collection property="commodityImages"
+                    ofType="com.example.transaction.pojo.CommodityImage"
+                    column="id"
+                    select="com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"/>
 <!--        <collection property="reservation" ofType="com.example.transaction.pojo.Reservation" column="id" select="com.example.transaction.dao.ReservationDAO.getAllReservationByCommodityId"/>-->
     </resultMap>
 

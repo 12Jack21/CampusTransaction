@@ -1,11 +1,9 @@
 package com.example.transaction.dto.notify;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
-import com.example.transaction.util.code.NotifyTargetCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -28,7 +26,7 @@ public class SimpleNotify<T> {
      * 发送者
      */
     Integer sender = -1;
-    String avatarURL = "";
+    String avatar = "";
     String accountName = "";
     Boolean accountGender = false;
     /**
@@ -61,7 +59,7 @@ public class SimpleNotify<T> {
         this.targetId = notify.getTarget();
         this.targetType = notify.getTargetType();
 
-        this.avatarURL = simpleAccount.getAvatarUrl();
+        this.avatar = simpleAccount.getAvatar();
         this.accountName = simpleAccount.getUsername();
         this.accountGender = simpleAccount.getGender();
         this.receiverId = accountNotify.getAccountId();
