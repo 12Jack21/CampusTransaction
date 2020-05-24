@@ -1,15 +1,24 @@
 <template>
 	<view class="zaiui-modal-box" :class="show ? 'show' : ''">
 		<view class="dialog">
+			
 			<form @submit="submit">
+				
+				<!-- 条件 -->
+				<view class="cu-form-group br-top">
+					<view class="title">新的条件</view>
+					<input type="text"  :value="condition" name="condition" placeholder="输入条件" />
+				</view>
 				<!-- 描述 -->
-				<view class="cu-form-group margin-top"><textarea name="description" maxlength="1000" 
-				placeholder="新的通告描述" key="description"></textarea></view>
+				<view class="cu-form-group">
+					<textarea name="description" maxlength="1000" 
+						placeholder="新的通告描述" key="description"></textarea>
+				</view>
 				<!-- end -->
 				
 				<!-- 失效时间选择 -->
-				<view class="cu-form-group">
-					<view class="title">新失效日期</view>
+				<view class="cu-form-group br-bottom">
+					<view class="title">新的失效日期</view>
 					<input type="text" @focus="isShowPicker = true" :value="outdatedTime" name="outdatedTime" 
 					placeholder="日期选择" />
 				</view>
@@ -25,18 +34,6 @@
 					@cancel="isShowPicker = false"
 				/>
 				
-				<!-- 物品列表 -->
-<!-- 				<view class="comList" >
-					<view class="commodity" v-for="(com, index) in comList" :key="index">
-						<text style="margin-right: 20rpx;">{{ com.name }}</text>
-					</view>
-				</view>
-				<view >
-					<view class="add-com-btn" @tap="addComTap">
-						<text>添加新物品</text>
-						<text class="cuIcon-add"></text>
-					</view>
-				</view> -->
 				
 				<!-- 更新 -->
 				<view class="flex flex-direction"><button class="cu-btn bg-orange margin-tb-sm lg" 
@@ -120,6 +117,13 @@ export default {
 <style lang="scss" scoped>
 $item_lh: 66rpx;
 $border_color: #e54d42;
+
+.br-top{
+	border-radius: 20rpx 20rpx 0 0;
+}
+.br-bottom{
+	border-radius: 0 0 10rpx 10rpx;
+}
 .zaiui-modal-box {
 	position: fixed;
 	opacity: 0;

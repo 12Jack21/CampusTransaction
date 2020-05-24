@@ -57,8 +57,10 @@
 			<view class="zaiui-tab-list">
 				<view class="zaiui-goods-list-box">
 					<view class="flex flex-wrap ">
-						<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs" />
-						<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs" />
+						<goods-list :list_data="leftGoods" @listTap="goodsListTap"
+						 class=" " style="width: 49%;padding-right: 1%;" />
+						<goods-list :list_data="rightGoods" @listTap="goodsListTap" 
+						class=" " style="width: 49%;padding-left: 1%;"/>
 					</view>
 				</view>
 			</view>

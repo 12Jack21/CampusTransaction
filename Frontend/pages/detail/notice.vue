@@ -19,8 +19,8 @@
 						</view>
 					</view>
 					<view class="action">
-							<text class="cuIcon-goods" />
-							<text class="margin-left-xs">{{notice.expiredTime}}时失效</text>
+							<text class="cuIcon-calendar" />
+							<text class="margin-left-xs">{{notice.expiredTime}} 时失效</text>
 					</view>
 				</view>
 			</view>
@@ -64,13 +64,12 @@
 		<!--底部操作-->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="account.id===userId">
 				<view class= "operation">				
-					<button class="cu-btn bg-red lg"  @tap="addShow=true">添加物品</button>
+					<button class="cu-btn bg-red lg"  @tap="addShow=true">关闭通告</button>
 					<button class="cu-btn bg-orange lg"  @tap="updateShow=true">更新</button>
 				</view>
 		</view>
 		
 		<modal-notice :show="updateShow" @closeModal="updateShow=false"></modal-notice>
-		<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
 		
 	</view>
 </template>
@@ -155,6 +154,7 @@
 	@import "../../static/zaiui/style/app.scss";
 /* #endif */
 @import "../../static/zaiui/style/footmark.scss";
+
 
 .height-space{
 	height: 80rpx;

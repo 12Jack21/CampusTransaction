@@ -1,5 +1,5 @@
 <template>
-	<view class="basis-df padding-sm  ">
+	<view class="">
 		<block v-for="(item, index) in list_data" :key="index">
 			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" @tap="listTap(item.id)">
 				<view class="goods-img">
