@@ -26,7 +26,9 @@
 			"style": {}
 		}, {
 			"path": "pages/detail/reservation", // 预约详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh":true
+			}
 		}, {
 			"path": "pages/detail/commodity", // 物品详情
 			"style": {

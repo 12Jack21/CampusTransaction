@@ -83,6 +83,7 @@ export default {
 	},
 	data() {
 		return {
+			onRequest:false, // 防止重复分页请求
 			accId:-1,
 			pageIndex:1,
 			endTime:'',
@@ -114,14 +115,30 @@ export default {
 			return this.account.gender === 0 ? '她' : '他'
 		}
 	},
+	onPullDownRefresh() {
+		console.log('accId',this.accId);
+		this.getAccount(this.accId)
+		this.commodities = []
+		this.initPagination()
+		this.getCommodities()
+	},
 	onLoad(params) {
 		this.accId = params.id
 		this.getAccount(params.id)
-
+		
 		//debug
 		for (let i = 0; i < 10; i++) this.commodities.push(this.aCom)
+
+		// request
+		this.initPagination()
+		this.getCommodities()
 	},
 	methods: {
+		initPagination(){
+			this.pageIndex = 1
+			this.finish = false
+			this.endTime = new Date().format('yyyy-MM-dd hh:mm')
+		},
 		loadMore(e){
 			this.getCommodities()
 		},
@@ -131,9 +148,8 @@ export default {
 			})
 		},
 		getAccount(toAccId) {
-			// this.tip(1,'用户信息获取成功')
 			this.$api
-				.getOtherAccount(toAccId, this.userId)
+				.getOtherAccount(this.accId, this.userId)
 				.then(({ data }) => {
 					console.log('其他账户的信息', data)
 					this.account = data
@@ -142,7 +158,9 @@ export default {
 				.catch(() => this.tip(1,"网络异常"))
 		},
 		getCommodities(){
-			if(this.finish) return
+			if(this.finish || this.onRequest) return
+			this.onRequest = true
+			console.log('请求中');
 			this.$api
 				.getCommoditiesByAcc(this.accId)
 				.then(({ data }) => {
@@ -152,8 +170,12 @@ export default {
 						this.tip(3,'已获取全部发布中的物品')
 					}
 					this.commodities.push(...data.pageList)
+					this.onRequest = false
 				})
-				.catch(() => this.tip(1,"网络异常"))
+				.catch(() =>{
+					 this.tip(1,"网络异常")
+					 this.onRequest = false
+				})
 		},
 		tip(index, content, isClick=false,timeout = 2000) {
 			let types = ['success', 'err', 'warn', 'info', 'loading']

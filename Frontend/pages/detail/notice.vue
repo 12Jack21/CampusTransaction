@@ -140,7 +140,10 @@
 			this.commodities = _home_data.goodsList()
 			// request
 			this.getNotice(params.id)
-		},		
+		},	
+		onPullDownRefresh() {
+			this.getNotice(this.notice.id)
+		},
 		onReady() {
 			_tool.setBarColor(true);
 			uni.pageScrollTo({

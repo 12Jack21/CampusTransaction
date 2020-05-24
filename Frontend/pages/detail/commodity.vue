@@ -282,7 +282,6 @@ export default {
 				username: 'CV',
 				avatar: ''
 			},
-			otherComs: [], // 发布者的其他物品,放到其他用户页面中
 			comments: [
 				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了', date: '2020-10-09' },
 				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗', date: '2020-08-01' }
@@ -322,9 +321,11 @@ export default {
 	},
 	onLoad(params) {
 		this.bannerList = _goods_data.bannerListData()
-		this.otherComs = _goods_data.goodsList()
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
+	},
+	onPullDownRefresh(){
+		this.getCommodityDetail(this.commodity.id)
 	},
 	onReady() {
 		_tool.setBarColor(true)
