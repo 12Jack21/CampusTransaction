@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view >
 		<!--标题栏-->
 		<bar-title bgColor="bg-white">
 			<block slot="content">商品详情</block>
@@ -25,27 +25,27 @@
 				<view class="text-through">￥{{ commodity.originalPrice }}</view>
 				<view>剩余{{ commodity.count }}件</view>
 			</view>
-			<view class="text-right zaiui-time-right font-lg">
-				<view class="text-xs">{{ expiredTime }}</view>
-				<view class="text-xs">时失效</view>
+			<view class="text-right zaiui-time-right">
+				<view >{{ expiredTime }}</view>
+				<view >时失效</view>
 			</view>
 		</view>
 
 		<!--标题-->
 		<view class="bg-white zaiui-view-box zaiui-title-view-box">
 			<view class="title-view">
-				<text class="text-black text-lg text-bold" style="font-size: 40rpx;">{{ commodity.name }}</text>
+				<text class="text-black text-bold" style="font-size: 1.8em;">{{ commodity.name }}</text>
 			</view>
-			<br />
-			<view>{{ commodity.description }}</view>
+			<view class="address"><text class=" cuIcon-locationfill"></text>{{address}}</view>
+			<view style="font-size: 15px;">{{ commodity.description }}</view>
 		</view>
 
 		<!--选择-->
-		<view class="margin-top bg-white zaiui-view-box zaiui-select-view-box">
+		<view class="margin-top bg-white zaiui-view-box zaiui-select-view-box ">
 			<view class="flex flex-wrap text-sm">
 				<view class="basis-1"><text class="text-gray">条件</text></view>
 				<view class="basis-9">
-					<text class="text-sm">只限女生{{ condition }}</text>
+					<text class="text-sm">{{ condition }}</text>
 				</view>
 			</view>
 
@@ -55,6 +55,17 @@
 				<view class="basis-1"><text class="text-gray">已选</text></view>
 				<view class="basis-8">
 					<text class="text-sm">{{ selectedCount }} 件</text>
+				</view>
+				<view class="basis-1">
+					<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
+				</view>
+			</view>
+			<view class="zaiui-border-view" />
+			
+			<view class="flex flex-wrap text-sm" @tap="selectTap">
+				<view class="basis-1"><text class="text-gray">备注</text></view>
+				<view class="basis-8">
+					<text class="text-sm">{{ selectedNote | noteFilter }}</text>
 				</view>
 				<view class="basis-1">
 					<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
@@ -72,19 +83,33 @@
 			<view v-for="(item, index) in comments" :key="index">
 				<view class="zaiui-border-view" />
 				<view class="zaiui-view-box">
-					<view class="flex flex-wrap">
-						<view class="basis-2" @tap="fromAccTap(item.fromId)">
+					<view class="flex ">
+						<view style="flex: 0 0 12%;" @tap="fromAccTap(item.fromId)">
 							<view class="cu-avatar round commentAvatar" :style="{ backgroundImage: item.fromImage.length === 0 ? 'url(/static/images/avatar/1.jpg)' : item.fromImage }" />
 						</view>
-						<view class="basis-8 text-lg">
-							<view class="font-lg">{{ item.fromName }}</view>
-							<view class="margin-top-xs">{{ item.content }}</view>
+						<view style="flex: 0 0 86%;" class="text-lg flex flex-direction">
+							<view class="font-lg" @tap="fromAccTap(item.fromId)">{{ item.fromName }}</view>
+							<view class="margin-top-xs" style="font-size: 16px;" @tap="commentTap(item.fromId,item.fromName)">
+								<text class="text-blue" v-if="item.toName" style="margin-right: 10rpx;">
+									@{{item.toName}}:
+								</text>
+								{{ item.content }}
+							</view>
+							<view class="text-gray comment-date" >
+								{{item.date}}
+							</view>	
 						</view>
 					</view>
 				</view>
 			</view>
 			<!-- 添加评论 -->
-
+			<view class="add-comment">
+				<textarea style="height: 140rpx;" v-model="myComment" :placeholder="comment_ph" />
+			</view>
+			<view class="flex comment-handle">
+				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="clearComment">清空</button>
+				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="addComment">发布</button>
+			</view>
 			<!-- end -->
 		</view>
 
@@ -150,6 +175,17 @@
 								<view class="inputCount"><input type="number" v-model="inputCount" placeholder="输入想要预约的数量" /></view>
 							</view>
 						</view>
+						
+						<!-- 备注 -->
+						<view class="zaiui-select-btn-list-boox">
+							<view class="select-item" style="margin-left: 20rpx;">
+								<view class="text-black text-lg text-bold">备注</view>
+								<view class="add-comment">
+									<textarea type="text" v-model="inputNote" placeholder="输入备注" />
+								</view>
+							</view>
+						</view>
+						<!-- end -->
 					</view>
 
 					<!--选择排队的预约 -->
@@ -162,13 +198,7 @@
 								<view class="cu-avatar radius" 
 								:style="[{ backgroundImage: item.account.avatar.length===0? 'url(/static/images/comDefault.png)' : item.acocunt.avatar}]" />
 								<view class="goods-info-view">
-									<view class="text-cut-2 text-black">{{item.account.username}}</view>
-									<view class="goods-info-tools">
-										<text class="text-price text-red text-lg">
-											{{item.price}}
-										</text>
-									</view>
-									
+									<view class="text-cut-2 text-black">{{item.account.username}}</view>							
 									<view class="flex " style="justify-content: space-between;align-items: center;">
 										<view style="vertical-align: middle;">{{item.note}}</view>
 										<view class="reserve-btn-right">
@@ -195,6 +225,8 @@ import barTitle from '@/components/basics/bar-title'
 
 import _goods_data from '@/static/data/goods.js' //虚拟数据
 import _tool from '@/static/util/tools.js' //工具函数
+import {mapState} from 'vuex'
+import handles from '../../utils/handles.js'
 
 export default {
 	components: {
@@ -209,7 +241,11 @@ export default {
 			modalType: 'reservations',
 			selectType: '',
 			selectedCount: 0,
+			selectedNote:'',
 			inputCount: 0,
+			inputNote: '',
+			comment_ph:'输入你的评论',
+			toCommentId:-1, //发送给的用户的 id
 			commodity: {
 				id: 10,
 				name: 'iPhone XR',
@@ -225,11 +261,13 @@ export default {
 			},
 			otherComs: [], // 发布者的其他物品,放到其他用户页面中
 			comments: [
-				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了' },
-				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '', content: '想问一下这个能便宜一点吗' }
+				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了' ,date:'2020-10-09'},
+				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗',date:'2020-08-01'}
 			],
+			myComment:'',
 			condition: '只限男生',
 			expiredTime: '2020-05-20 10:07',
+			address:'信息学部二食堂',
 			reservations:[
 				{
 					account:{
@@ -250,13 +288,14 @@ export default {
 			]
 		}
 	},
+	computed:{
+		...mapState(['userId'])
+	},
 	onLoad(params) {
 		this.bannerList = _goods_data.bannerListData()
 		this.otherComs = _goods_data.goodsList()
-
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
-		this.showModal() // DEBUG
 	},
 	onReady() {
 		_tool.setBarColor(true)
@@ -265,7 +304,57 @@ export default {
 			duration: 0
 		})
 	},
+	filters:{
+		noteFilter(val){
+			if(val.length >= 20)
+				return val.slice(0,10) + '...'
+			return val	
+		}
+	},
 	methods: {
+		fromAccTap(id){
+			uni.navigateTo({
+				url: '../../pages/account/account?id=' + id
+			});
+		},
+		clearComment(){
+			this.toCommentId = -1
+			this.comment_ph = '输入你的评论'
+			this.myComment = ''
+		},
+		addComment(){
+			let data = {
+				fromId: parseInt(this.userId),
+				toId: this.toCommentId,
+				commodityId: this.commodity.id,
+				content: this.myComment,
+				date:new Date().format('yyyy-MM-dd hh:mm')
+			}
+			//发布评论
+			this.$api.addComment(data)
+				.then(({data})=>{
+					if(data.success){
+						uni.showToast({
+							title: '评论发布成功'
+						});
+						this.comments.push(data.comment)
+						this.clearComment()
+					}
+				})
+				.catch(()=>{
+					uni.showToast({
+						title: '评论发布失败',
+						icon: 'none'
+					});
+				})
+		},
+		commentTap(id,name){ 
+			//回复
+			if(parseInt(this.userId) === this.toCommentId) //回复自己
+				return 
+			this.toCommentId = id
+			this.comment_ph = '@' + name + ': '
+		},
 		openReservations() {
 			this.modalTitle = '预约列表'
 			this.modalType = 'reservations'
@@ -282,11 +371,16 @@ export default {
 				})
 		},
 		reserve() {
-			if (this.selectedCount === 0) {
+			if (this.selectedCount === 0 || this.selectedNote.length === 0) {
 				this.selectTap('sell')
 				return
 			}
-			let data = 1
+			let data = {
+				accountId: this.userId,
+				count:this.selectedCount,
+				note:this.selectedNote,
+				commodityId:this.commodity.id
+			}
 			uni.showLoading({
 				title: '预约处理中'
 			})
@@ -309,6 +403,7 @@ export default {
 		},
 		confirmCount() {
 			this.selectedCount = this.inputCount
+			this.selectedNote = this.inputNote
 			this.inputCount = 0
 			this.hideModal()
 		},
@@ -318,7 +413,12 @@ export default {
 				.getCommodity(id)
 				.then(({ data }) => {
 					console.log('commodity detail', data)
-					// this.commodity = data.commodity
+					this.commodity = data.commodity
+					this.expiredTime = data.expiredTime
+					this.condition = data.condition
+					this.account = data.account
+					this.address = data.address
+					this.comments = data.comments
 				})
 				.catch(() => {
 					console.log('请求商品数据失败')
@@ -327,8 +427,6 @@ export default {
 						icon: 'none'
 					})
 				})
-
-			// 发布者的其他商品数据 await 拿到发布者的信息后才能操作
 		},
 		bannerSwiper(e) {
 			this.bannerCur = e.detail.current
@@ -360,11 +458,45 @@ export default {
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
 
+.address {
+	color: #e54d42;
+	background-color: #fadbd9;
+	border-radius: 6px;
+	padding: 6px;
+	width: fit-content;
+	margin: 8px 0;
+	border: #DD514C 1px solid;
+	font-size: 0.8em;
+}
+.add-comment{
+	padding: 30rpx;
+	border: #efebeb 1px solid;
+	border-radius: 20rpx;
+	margin: 0 10rpx;
+}
+.comment-handle{
+	display: flex;
+	justify-content: space-around;
+	.c-btn{
+		background-color: #a59f9e;
+		color: #eee;
+		font-size: 15px;
+		margin-top: 8rpx;
+		width: 40%;
+	}
+}
+.comment-date{
+	font-size: 13px;
+	margin-top: 10rpx;
+}
+.c-btn-hover{
+	background-color: #e54d42 !important;
+}
 .inputCount {
 	margin: 10rpx;
 }
-.font-lg {
-	font-size: 16px;
+.font-lg { 
+	font-size: 17px;
 }
 .reserve_box {
 	bottom: 10rpx;

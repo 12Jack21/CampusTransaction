@@ -39,7 +39,7 @@
 				</view> -->
 				
 				<!-- 更新 -->
-				<view class="flex flex-direction"><button class="cu-btn bg-red margin-tb-sm lg" 
+				<view class="flex flex-direction"><button class="cu-btn bg-orange margin-tb-sm lg" 
 				form-type="submit">更新通告</button></view>
 			</form>
 			<text class="cuIcon-roundclose close" @tap="closeEvent"></text>

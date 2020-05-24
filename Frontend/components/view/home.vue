@@ -70,10 +70,6 @@
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height margin-bottom" />
 			
-			<!-- debug update modal used in update notice and commodity -->
-			<!-- <modal-notice :show="!modalShow" @closeModal="modalShow=false"></modal-notice> -->
-			<!-- <modal-com :show="modalShow" @closeModal="modalShow=false"></modal-com> -->
-			<!-- end -->
 		</view>
 	</view>
 </template>
@@ -85,8 +81,7 @@ import gridMenuList from '@/components/list/grid-menu-list'
 import goodsList from '@/components/list/goods-list'
 import footerTabbar from '@/components/footer/footer-tabbar'
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
-import modalNotice from '@/components/basics/modal-notice.vue'
-import modalCom from '@/components/basics/modal-commodity.vue'
+
 //======================================================================
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 
@@ -101,9 +96,7 @@ export default {
 		gridMenuList,
 		goodsList,
 		footerTabbar,
-		uniLoadMore,
-		modalNotice,
-		modalCom
+		uniLoadMore
 	},
 	data() {
 		return {

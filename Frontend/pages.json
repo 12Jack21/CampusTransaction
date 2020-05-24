@@ -40,7 +40,9 @@
 		}
 	    ,{
             "path" : "pages/account/account",
-            "style" : {}
+            "style" : {
+							"backgroundColor":"#CCCCCC"
+						}
         }
     ],
 	"globalStyle": {

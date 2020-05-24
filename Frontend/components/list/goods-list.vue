@@ -5,7 +5,9 @@
 				<view class="goods-img">
 					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />
 					<view class="count-view">
-						<text class="cu-tag radius sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">剩余{{ item.count }}件</text>
+						<text class="cu-tag radius sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">
+							剩余{{ item.count }}件
+						</text>
 					</view>
 				</view>
 				<!-- Price -->
