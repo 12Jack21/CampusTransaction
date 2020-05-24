@@ -101,6 +101,12 @@ export default{
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
 	},
+	getCommoditiesByAcc(id){ // get PUBLISHED commodity of that account
+		return http.get('/commodities/account/' + id)
+	},
+	confirmReservation(id){
+		return http.get('/reservations/confirm/' + id)
+	},
 	addReservation(data){
 		return http.post('/reservations', data)
 	},
@@ -116,8 +122,11 @@ export default{
 	getMyAccount(id){
 		return http.get('/accounts/' + id)
 	},
-	updateNotice(id, update){
-		return http.put('/notice/' + id, update)
+	updateNotice(id, body){
+		return http.put('/notice/' + id, body)
+	},
+	cancelNotice(id){
+		return http.get('/notice/cancel/' + id)
 	},
 	updateCommodity(id, update){
 		return http.put('/commodities/' + id, update)

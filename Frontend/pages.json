@@ -1,6 +1,5 @@
 { //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "Campus Transaction"
@@ -30,21 +29,25 @@
 			"style": {}
 		}, {
 			"path": "pages/detail/commodity", // 物品详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		}, {
 			"path": "pages/detail/notice", //通告详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh":true
+			}
 		}, {
 			"path": "pages/reservations/reservations", // 预约列表
 			"style": {}
+		}, {
+			"path": "pages/account/account",
+			"style": {
+				"backgroundColor": "#CCCCCC",
+				"enablePullDownRefresh":true
+			}
 		}
-	    ,{
-            "path" : "pages/account/account",
-            "style" : {
-							"backgroundColor":"#CCCCCC"
-						}
-        }
-    ],
+	],
 	"globalStyle": {
 		"navigationStyle": "custom"
 	},

@@ -33,8 +33,8 @@
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
 					v-bind:style="[{'background-image':'url('+ (msg.sender==-1? 
-					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatarURL.length === 0? '/static/images/avatar/default.png':msg.avatarURL) ) + ')' }]" 
-					@tap="accTap(msg.sender, msg.avatarURL.length!==0)">
+					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatar.length === 0? '/static/images/avatar/default.png':msg.avatar) ) + ')' }]" 
+					@tap="accTap(msg.sender, msg.avatar.length!==0)">
 						<!-- 已读/未读 -->
 						<view class="cu-tag badge" v-if="!msg.isRead"></view>
 					</view>

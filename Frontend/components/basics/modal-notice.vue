@@ -2,16 +2,15 @@
 	<view class="zaiui-modal-box" :class="show ? 'show' : ''">
 		<view class="dialog">
 			
-			<form @submit="submit">
-				
+			<form @submit="submit">			
 				<!-- 条件 -->
 				<view class="cu-form-group br-top">
 					<view class="title">新的条件</view>
-					<input type="text"  :value="condition" name="condition" placeholder="输入条件" />
+					<input type="text"  :value="notice.condition" name="condition" placeholder="输入条件" />
 				</view>
 				<!-- 描述 -->
 				<view class="cu-form-group">
-					<textarea name="description" maxlength="1000" 
+					<textarea name="description" :value="notice.description" maxlength="1000" 
 						placeholder="新的通告描述" key="description"></textarea>
 				</view>
 				<!-- end -->
@@ -19,27 +18,28 @@
 				<!-- 失效时间选择 -->
 				<view class="cu-form-group br-bottom">
 					<view class="title">新的失效日期</view>
-					<input type="text" @focus="isShowPicker = true" :value="outdatedTime" name="outdatedTime" 
+					<input type="text" @focus="isShowPicker = true" :value="notice.expiredTime" name="outdatedTime" 
 					placeholder="日期选择" />
 				</view>
 				<mx-date-picker
 					style="z-index: 10;"
 					:show="isShowPicker"
 					type="datetime"
-					:value="outdatedTime"
+					:value="notice.expiredTime"
 					:show-tips="true"
 					:begin-text="'选择'"
 					:show-seconds="false"
 					@confirm="comfirmDatetime"
 					@cancel="isShowPicker = false"
 				/>
-				
-				
+							
 				<!-- 更新 -->
-				<view class="flex flex-direction"><button class="cu-btn bg-orange margin-tb-sm lg" 
-				form-type="submit">更新通告</button></view>
+				<view class="flex flex-direction">
+					<button class="cu-btn bg-orange margin-tb-sm lg" 
+				form-type="submit">更新通告</button>
+				</view>
 			</form>
-			<text class="cuIcon-roundclose close" @tap="closeEvent"></text>
+			<text class="cuIcon-roundclose close" @tap="$emit('closeModal')"></text>
 		</view>
 	</view>
 </template>
@@ -53,21 +53,11 @@ export default {
 	},
 	data(){
 		return {
-			isShowPicker: false,
-			comList:[{name:'a'},{name:'kk'}]
+			isShowPicker: false
 		}
 	},
 	props: {
-		description: '',
-		outdatedTime: '',
-		id:{ // notice id
-			type:Number,
-			default:-1
-		},
-		src: {
-			type: String,
-			default: ''
-		},
+		notice:{},
 		show: {
 			type: Boolean,
 			default: false
@@ -76,17 +66,19 @@ export default {
 	methods: {
 		comfirmDatetime(e) {
 			this.isShowPicker = false
-			if (e) this.outdatedTime = e.value
-		},
-		closeEvent() {
-			this.$emit('closeModal')
+			if (e) this.notice.expiredTime = e.value
 		},
 		submit(e){
 			uni.showLoading({
 				title:'更新中'
 			})
-			
-			this.$api.updateNotice(this.id,e.detail.value)
+			let body = {
+				description:this.notice.description,
+				expiredTime:this.notice.expiredTime,
+				condition:this.notice.condition
+			}
+			console.log('a',body);
+			this.$api.updateNotice(this.notice.id, body)
 				.then(({data})=>{
 					uni.hideLoading()
 					if(data.success){
@@ -115,15 +107,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$item_lh: 66rpx;
-$border_color: #e54d42;
 
-.br-top{
-	border-radius: 20rpx 20rpx 0 0;
-}
-.br-bottom{
-	border-radius: 0 0 10rpx 10rpx;
-}
 .zaiui-modal-box {
 	position: fixed;
 	opacity: 0;
@@ -162,27 +146,5 @@ $border_color: #e54d42;
 	bottom: 0;
 	opacity: 1;
 	pointer-events: auto;
-}
-.comList {
-	padding: 10rpx 10rpx;
-	border-top: 1px solid #eee;
-	background-color: white;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-}
-.commodity {
-	line-height: $item_lh;
-	border: 1rpx solid $border_color;
-	border-radius: 30rpx;
-	padding: 0 20rpx;
-	margin: 2rpx;
-}
-.add-com-btn {
-	text-align: center;
-	margin: 0.3em 30rpx;
-	border: 3rpx solid $border_color;
-	border-radius: 20rpx;
-	line-height: $item_lh;
 }
 </style>

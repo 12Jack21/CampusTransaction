@@ -1,11 +1,10 @@
 <template>
-	<view >
+	<view>
 		<!--标题栏-->
 		<bar-title bgColor="bg-white">
 			<block slot="content">商品详情</block>
-			<block slot="right">
-				<text class="cuIcon-forward" @tap="openReservations" />
-				<text class="cuIcon-more" />
+			<block slot="right" v-if="userId===account.id">
+				<text class="cuIcon-notice" @tap="openReservations" />
 			</block>
 		</bar-title>
 
@@ -26,8 +25,8 @@
 				<view>剩余{{ commodity.count }}件</view>
 			</view>
 			<view class="text-right zaiui-time-right">
-				<view >{{ expiredTime }}</view>
-				<view >时失效</view>
+				<view>{{ expiredTime }}</view>
+				<view>时失效</view>
 			</view>
 		</view>
 
@@ -36,7 +35,10 @@
 			<view class="title-view">
 				<text class="text-black text-bold" style="font-size: 1.8em;">{{ commodity.name }}</text>
 			</view>
-			<view class="address"><text class=" cuIcon-locationfill"></text>{{address}}</view>
+			<view class="address">
+				<text class=" cuIcon-locationfill"></text>
+				{{ address }}
+			</view>
 			<view style="font-size: 15px;">{{ commodity.description }}</view>
 		</view>
 
@@ -61,7 +63,7 @@
 				</view>
 			</view>
 			<view class="zaiui-border-view" />
-			
+
 			<view class="flex flex-wrap text-sm" @tap="selectTap">
 				<view class="basis-1"><text class="text-gray">备注</text></view>
 				<view class="basis-8">
@@ -89,23 +91,17 @@
 						</view>
 						<view style="flex: 0 0 86%;" class="text-lg flex flex-direction">
 							<view class="font-lg" @tap="fromAccTap(item.fromId)">{{ item.fromName }}</view>
-							<view class="margin-top-xs" style="font-size: 16px;" @tap="commentTap(item.fromId,item.fromName)">
-								<text class="text-blue" v-if="item.toName" style="margin-right: 10rpx;">
-									@{{item.toName}}:
-								</text>
+							<view class="margin-top-xs" style="font-size: 16px;" @tap="commentTap(item.fromId, item.fromName)">
+								<text class="text-blue" v-if="item.toName" style="margin-right: 10rpx;">@{{ item.toName }}:</text>
 								{{ item.content }}
 							</view>
-							<view class="text-gray comment-date" >
-								{{item.date}}
-							</view>	
+							<view class="text-gray comment-date">{{ item.date }}</view>
 						</view>
 					</view>
 				</view>
 			</view>
 			<!-- 添加评论 -->
-			<view class="add-comment">
-				<textarea style="height: 140rpx;" v-model="myComment" :placeholder="comment_ph" />
-			</view>
+			<view class="add-comment"><textarea style="height: 140rpx;" v-model="myComment" :placeholder="comment_ph" /></view>
 			<view class="flex comment-handle">
 				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="clearComment">清空</button>
 				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="addComment">发布</button>
@@ -116,7 +112,7 @@
 		<!-- 发布者信息-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-goods-info-view-box">
 			<view class="zaiui-shop-view">
-				<view class="cu-avatar lg round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avatar }" />
+				<view class="cu-avatar lg round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avatar }" @tap="accTap" />
 				<view class="text-view">
 					<view class="margin-bottom-xs">{{ account.username }}</view>
 					<view class="text-sm text-cut">正品保障，售后无忧</view>
@@ -135,8 +131,13 @@
 		<view class="cu-tabbar-height" />
 
 		<!--底部操作-->
-		<view class="zaiui-footer-fixed reserve_box">
-			<view class="flex flex-direction"><button class="cu-btn bg-red reserve_btn" @tap="reserve">立即预约</button></view>
+		<view class="zaiui-footer-fixed reserve_box" style="z-index: 8;">
+			<view class="flex flex-direction">
+				<button class="cu-btn bg-orange reserve_btn" @tap="updateModal=true" v-if="userId===account.id">
+					更新信息
+				</button>
+				<button class="cu-btn bg-red reserve_btn" @tap="reserve" v-else>立即预约</button>
+			</view>
 		</view>
 
 		<!--弹出框-->
@@ -175,14 +176,12 @@
 								<view class="inputCount"><input type="number" v-model="inputCount" placeholder="输入想要预约的数量" /></view>
 							</view>
 						</view>
-						
+
 						<!-- 备注 -->
 						<view class="zaiui-select-btn-list-boox">
 							<view class="select-item" style="margin-left: 20rpx;">
 								<view class="text-black text-lg text-bold">备注</view>
-								<view class="add-comment">
-									<textarea type="text" v-model="inputNote" placeholder="输入备注" />
-								</view>
+								<view class="add-comment"><textarea type="text" v-model="inputNote" placeholder="输入备注" /></view>
 							</view>
 						</view>
 						<!-- end -->
@@ -191,21 +190,36 @@
 					<!--选择排队的预约 -->
 					<view class="zaiui-view-box select" v-if="modalType == 'reservations'">
 						<!--预约列表-->
-						<view class="bg-white zaiui-goods-list-view">
-							<view class="zaiui-checkbox-view"><view class="text-black">所有预约</view></view>
-							<view class="zaiui-goods-list-box" v-for="(item,index) in reservations" 
-								@tap="listTap(item.id)" :key="index">
-								<view class="cu-avatar radius" 
-								:style="[{ backgroundImage: item.account.avatar.length===0? 'url(/static/images/comDefault.png)' : item.acocunt.avatar}]" />
-								<view class="goods-info-view">
-									<view class="text-cut-2 text-black">{{item.account.username}}</view>							
-									<view class="flex " style="justify-content: space-between;align-items: center;">
-										<view style="vertical-align: middle;">{{item.note}}</view>
-										<view class="reserve-btn-right">
-											<button class="cu-btn bg-red round sm">确认预约</button>
+						<view class="bg-white zaiui-goods-list-view" style="padding: 8rpx;">
+							<view class="flex flex-direction" v-for="(item, index) in reservations" :key="index">
+								<view class="zaiui-goods-list-box" >
+									<view
+										class="cu-avatar radius"
+										@tap="fromAccTap(item.account.id)"
+										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' : item.acocunt.avatar, 'z-index': 10 }"
+									/>
+									<view class="goods-info-view">
+										<view class="flex" style="justify-content: space-between;">
+											<text class="text-black" @tap="fromAccTap(item.account.id)">{{ item.account.username }}</text>
+											<text class="text-grey">{{ item.createTime }}</text>
+										</view>
+										<view class="flex " style="justify-content: space-between;align-items: center;">
+											<view>
+												<view style="vertical-align: middle;" 
+												@tap="noteTap(item)">
+													{{ item.note | noteFilter}}
+												</view>
+												<view class="text-orange">X {{ item.count }}</view>
+											</view>
+											<view class="reserve-btn-right" style="min-width: 120rpx;" @tap="confirmReserve(item)">
+												<button class="cu-btn bg-red round sm" :disabled="item.disabled">确认预约</button>
+											</view>
 										</view>
 									</view>
 								</view>
+								<uni-transition :mode-class="['zoom-in']" :show="item.showNote">
+									备注: {{item.note}}
+								</uni-transition>
 							</view>
 						</view>
 					</view>
@@ -217,23 +231,31 @@
 				</view>
 			</view>
 		</view>
+
+		<mpopup @uuidCallback="uuidCallback" @closeCallback="closeCallback" ref="mpopup" :isdistance="true"></mpopup>	
+		<modal-commodity :commodity="commodity" :show="updateModal" 
+		@closeUpdate="updateModal=false" @updateCom="updateCom"></modal-commodity>
 	</view>
 </template>
 
 <script>
 import barTitle from '@/components/basics/bar-title'
+import uniTransition from '@/components/uni-transition/uni-transition.vue'
+import modalCommodity from '@/components/basics/modal-commodity.vue'
 
 import _goods_data from '@/static/data/goods.js' //虚拟数据
 import _tool from '@/static/util/tools.js' //工具函数
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import handles from '../../utils/handles.js'
 
 export default {
 	components: {
-		barTitle
+		barTitle, uniTransition,modalCommodity
 	},
 	data() {
 		return {
+			updateModal:false,
+			popup_uuid:[], // for popup control
 			bannerCur: 0,
 			bannerList: [],
 			bottomModal: false,
@@ -241,11 +263,11 @@ export default {
 			modalType: 'reservations',
 			selectType: '',
 			selectedCount: 0,
-			selectedNote:'',
-			inputCount: 0,
+			selectedNote: '',
+			inputCount: null,
 			inputNote: '',
-			comment_ph:'输入你的评论',
-			toCommentId:-1, //发送给的用户的 id
+			comment_ph: '输入你的评论',
+			toCommentId: -1, //发送给的用户的 id
 			commodity: {
 				id: 10,
 				name: 'iPhone XR',
@@ -256,39 +278,46 @@ export default {
 				images: []
 			},
 			account: {
+				id: 1,
 				username: 'CV',
 				avatar: ''
 			},
 			otherComs: [], // 发布者的其他物品,放到其他用户页面中
 			comments: [
-				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了' ,date:'2020-10-09'},
-				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗',date:'2020-08-01'}
+				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了', date: '2020-10-09' },
+				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗', date: '2020-08-01' }
 			],
-			myComment:'',
+			myComment: '',
 			condition: '只限男生',
 			expiredTime: '2020-05-20 10:07',
-			address:'信息学部二食堂',
-			reservations:[
+			address: '信息学部二食堂',
+			reservations: [
 				{
-					account:{
+					id: 1,
+					account: {
 						username: 'damao',
-						avatar:''
+						avatar: ''
 					},
-					price:2012,
-					note: '最好可以有个包装'
+					price: 2012,
+					note: '最好可以有个包装最好可以有个包装最好可以有个包装', //最多24个字符
+					createTime: '2020-10-09 10:09',
+					count: 10
 				},
 				{
-					account:{
+					id: 20,
+					account: {
 						username: 'Johnson',
-						avatar:''
+						avatar: ''
 					},
 					price: 12,
-					note: '可以附赠一个本子吗'
-				},
+					note: '可以附赠一个本子吗',
+					createTime: '2020-01-09 10:09',
+					count: 1
+				}
 			]
 		}
 	},
-	computed:{
+	computed: {
 		...mapState(['userId'])
 	},
 	onLoad(params) {
@@ -304,54 +333,101 @@ export default {
 			duration: 0
 		})
 	},
-	filters:{
-		noteFilter(val){
-			if(val.length >= 20)
-				return val.slice(0,10) + '...'
-			return val	
+	filters: {
+		noteFilter(val) {
+			if (val.length >= 20) return val.slice(0, 20) + '...'
+			return val
 		}
 	},
 	methods: {
-		fromAccTap(id){
+		updateCom(body){
+			this.tip(4,'更新中',true)
+
+			this.$api.updateCommodity(this.commodity.id,body)
+				.then(({data})=>{
+					if(data.success){
+						this.commodity = Object.assign(this.commodity,body)
+						this.update(0)
+					}else
+						this.update(1,'更新失败')
+					
+				})
+				.catch(()=>this.update(1))
+		},
+		noteTap(re){
+			console.log('noteTap',re);
+			if(typeof(re.showNote)=='undefined')
+				this.$set(re,'showNote',true) // 添加响应式属性
+			else
+				re.showNote=!re.showNote
+		},
+		confirmReserve(reservation) {
+			// 确认预约
+			this.$api
+				.confirmReservation(reservation.id)
+				.then(({ data }) => {
+					if (data.success) {
+							thi.$set(reservation,'disabled',true)
+							uni.showToast({
+								title: '预约确认成功'
+							})
+					} else
+						uni.showToast({
+							title: '预约确认失败',
+							icon: 'none'
+						})
+				})
+				.catch(() =>
+					uni.showToast({
+						title: '网络异常',
+						icon: 'none',
+						position: 'bottom'
+					})
+				)
+		},
+		accTap() {
+			uni.navigateTo({
+				url: '../../pages/account/account?id=' + this.account.id
+			})
+		},
+		fromAccTap(id) {
 			uni.navigateTo({
 				url: '../../pages/account/account?id=' + id
-			});
+			})
 		},
-		clearComment(){
+		reserveTap(id) {
+			this.fromAccTap(id)
+		},
+		clearComment() {
 			this.toCommentId = -1
 			this.comment_ph = '输入你的评论'
 			this.myComment = ''
 		},
-		addComment(){
-			let data = {
+		addComment() {
+			let body = {
 				fromId: parseInt(this.userId),
 				toId: this.toCommentId,
 				commodityId: this.commodity.id,
 				content: this.myComment,
-				date:new Date().format('yyyy-MM-dd hh:mm')
+				date: new Date().format('yyyy-MM-dd hh:mm')
 			}
 			//发布评论
-			this.$api.addComment(data)
-				.then(({data})=>{
-					if(data.success){
-						uni.showToast({
-							title: '评论发布成功'
-						});
+			this.$api
+				.addComment(body)
+				.then(({ data }) => {
+					if (data.success) {
+						this.tip(0, '评论发布成功')
 						this.comments.push(data.comment)
 						this.clearComment()
 					}
 				})
-				.catch(()=>{
-					uni.showToast({
-						title: '评论发布失败',
-						icon: 'none'
-					});
-				})
+				.catch(() => this.err())
 		},
-		commentTap(id,name){ 
+		commentTap(id, name) {
 			//回复
-			if(parseInt(this.userId) === this.toCommentId) //回复自己
-				return 
+			if (parseInt(this.userId) === this.toCommentId)
+				//回复自己
+				return
 			this.toCommentId = id
 			this.comment_ph = '@' + name + ': '
 		},
@@ -359,15 +435,17 @@ export default {
 			this.modalTitle = '预约列表'
 			this.modalType = 'reservations'
 			this.showModal()
-			
+
 			// send reservations request
-			this.$api.getReservationsByCommodity(this.commodity.id)
-				.then(({data})=>{
-					console.log('预约列表数据',data);
+			this.$api
+				.getReservationsByCommodity(this.commodity.id)
+				.then(({ data }) => {
+					console.log('预约列表数据', data)
 					this.reservations = data
 				})
-				.catch(()=>{
-					console.log('获取预约列表失败');
+				.catch(() => {
+					console.log('获取预约列表失败')
+					this.err()
 				})
 		},
 		reserve() {
@@ -377,34 +455,25 @@ export default {
 			}
 			let data = {
 				accountId: this.userId,
-				count:this.selectedCount,
-				note:this.selectedNote,
-				commodityId:this.commodity.id
+				count: this.selectedCount,
+				note: this.selectedNote,
+				commodityId: this.commodity.id
 			}
-			uni.showLoading({
-				title: '预约处理中'
-			})
+			// can update
+			this.tip(4,'预约处理中',true)
+			
 			this.$api
 				.addReservation(data)
 				.then(({ data }) => {
 					console.log('add reservation', data)
-					uni.hideLoading()
-					uni.showToast({
-						title: '预约成功'
-					})
+					this.update(0)
 				})
-				.catch(() => {
-					uni.hideLoading()
-					uni.showToast({
-						title: '预约失败',
-						icon: 'none'
-					})
-				})
+				.catch(() => this.update(1))
 		},
 		confirmCount() {
 			this.selectedCount = this.inputCount
 			this.selectedNote = this.inputNote
-			this.inputCount = 0
+			this.inputCount = null
 			this.hideModal()
 		},
 		getCommodityDetail(id) {
@@ -422,10 +491,7 @@ export default {
 				})
 				.catch(() => {
 					console.log('请求商品数据失败')
-					uni.showToast({
-						title: '获取商品数据失败',
-						icon: 'none'
-					})
+					this.err()
 				})
 		},
 		bannerSwiper(e) {
@@ -444,6 +510,50 @@ export default {
 			this.bottomModal = false
 			this.modalTitle = ''
 			this.modalType = ''
+		},
+		tip(index, content, isClick=false,timeout = 2000) {
+			const types = ['success', 'err', 'warn', 'info', 'loading']
+			this.$refs.mpopup.open({
+				type: types[index],
+				content,
+				timeout,
+				isClick
+			})
+		},
+		err() {
+			this.tip(1, '网络异常')
+		},
+		uuidCallback(uuid){		//uuid回传
+			// console.log('uuidCallback');
+			//存起来
+			this.popup_uuid.push({uuid})
+		},
+		closeCallback(uuid){  // popup关闭回传		
+			// console.log('closeCallBack');
+			for (var i = 0; i < this.popup_uuid.length; i++) {
+				if(this.popup_uuid[i].uuid==uuid){
+					//移除uuid
+					this.popup_uuid.splice(i,1);
+					break;
+				}
+			}
+		},
+		update:function(index,content){		//修改
+			// console.log('update');
+			if(this.popup_uuid.length==0) return; 
+			this.$refs.mpopup.update({
+				uuid:this.popup_uuid[0].uuid,
+				type: index===0?'success':'err',
+				content: content?content: (index===0?'加载成功':'网络异常')
+			})	
+			setTimeout(()=>this.close(),2000) // 2s 后自动消失
+		},
+		close:function(){ 		//控制关闭
+			// console.log('close');
+			if(this.popup_uuid[0]){
+				this.$refs.mpopup.close(this.popup_uuid[0].uuid)	
+				this.popup_uuid.splice(0,1);
+			}	
 		}
 	}
 }
@@ -458,6 +568,7 @@ export default {
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
 
+
 .address {
 	color: #e54d42;
 	background-color: #fadbd9;
@@ -465,19 +576,18 @@ export default {
 	padding: 6px;
 	width: fit-content;
 	margin: 8px 0;
-	border: #DD514C 1px solid;
 	font-size: 0.8em;
 }
-.add-comment{
+.add-comment {
 	padding: 30rpx;
 	border: #efebeb 1px solid;
 	border-radius: 20rpx;
 	margin: 0 10rpx;
 }
-.comment-handle{
+.comment-handle {
 	display: flex;
 	justify-content: space-around;
-	.c-btn{
+	.c-btn {
 		background-color: #a59f9e;
 		color: #eee;
 		font-size: 15px;
@@ -485,17 +595,17 @@ export default {
 		width: 40%;
 	}
 }
-.comment-date{
+.comment-date {
 	font-size: 13px;
 	margin-top: 10rpx;
 }
-.c-btn-hover{
+.c-btn-hover {
 	background-color: #e54d42 !important;
 }
 .inputCount {
 	margin: 10rpx;
 }
-.font-lg { 
+.font-lg {
 	font-size: 17px;
 }
 .reserve_box {

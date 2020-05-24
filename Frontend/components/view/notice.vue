@@ -93,7 +93,7 @@ import {mapState} from 'vuex'
 const iniNotice = ()=> ({
 	pageIndex:1,
 	pageSize:20,
-	startTime:new Date().format('yyyy-MM-dd hh:mm'),
+	endTime:new Date().format('yyyy-MM-dd hh:mm'),
 	finish: false,
 	list:[]
 })
@@ -170,12 +170,12 @@ export default {
 			let pagination = {
 				pageIndex:curNotices.pageIndex,
 				pageSize: curNotices.pageSize,
-				startTime:curNotices.startTime
+				endTime:curNotices.endTime
 			}
 			if(this.tabCur > 2){
 				await this.$api.getMyNotices(this.userId,pagination)
 					.then(({data})=>{
-						curNotices.list.push(...data.list)
+						curNotices.list.push(...data.pageList)
 						// 取完了数据
 						if(data.pageIndex === data.pageCount)
 							curNotices.finish = true
