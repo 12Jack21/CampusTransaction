@@ -66,8 +66,12 @@
 		<!--底部操作-->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="account.id===userId">
 				<view class= "operation">				
-					<button class="cu-btn bg-red lg"  @tap="cancelNotice">关闭通告</button>
-					<button class="cu-btn bg-orange lg"  @tap="updateShow=true">更新</button>
+					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.state_enum=='CANCELLED'">
+						关闭通告
+					</button>
+					<button class="cu-btn bg-orange lg"  @tap="updateShow=true" :disabled="notice.state_enum=='CANCELLED'">
+						更新
+					</button>
 				</view>
 		</view>
 		
@@ -103,7 +107,7 @@
 					condition: 'tonggao条件',
 					address:'信息学部大食堂',
 					browseCount: 30,
-					state_enum:'PUBLISHED' // CANCELLED
+					state_enum:'CANCELLED' // CANCELLED PUBLISHED
 				},
 				account:{
 					id: 1,

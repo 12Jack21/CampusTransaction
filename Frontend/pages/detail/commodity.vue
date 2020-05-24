@@ -3,9 +3,7 @@
 		<!--标题栏-->
 		<bar-title bgColor="bg-white">
 			<block slot="content">商品详情</block>
-			<block slot="right" v-if="userId===account.id">
-				<text class="cuIcon-notice" @tap="openReservations" />
-			</block>
+			<block slot="right" v-if="userId === account.id && !disabled"><text class="cuIcon-notice" @tap="openReservations" /></block>
 		</bar-title>
 
 		<!--轮播图-->
@@ -51,26 +49,28 @@
 				</view>
 			</view>
 
-			<view class="zaiui-border-view" />
+			<view v-if="userId !== account.id">
+				<view class="zaiui-border-view" />
 
-			<view class="flex flex-wrap text-sm" @tap="selectTap">
-				<view class="basis-1"><text class="text-gray">已选</text></view>
-				<view class="basis-8">
-					<text class="text-sm">{{ selectedCount }} 件</text>
+				<view class="flex flex-wrap text-sm" @tap="selectTap">
+					<view class="basis-1"><text class="text-gray">已选</text></view>
+					<view class="basis-8">
+						<text class="text-sm">{{ selectedCount }} 件</text>
+					</view>
+					<view class="basis-1">
+						<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
+					</view>
 				</view>
-				<view class="basis-1">
-					<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
-				</view>
-			</view>
-			<view class="zaiui-border-view" />
+				<view class="zaiui-border-view" />
 
-			<view class="flex flex-wrap text-sm" @tap="selectTap">
-				<view class="basis-1"><text class="text-gray">备注</text></view>
-				<view class="basis-8">
-					<text class="text-sm">{{ selectedNote | noteFilter }}</text>
-				</view>
-				<view class="basis-1">
-					<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
+				<view class="flex flex-wrap text-sm" @tap="selectTap">
+					<view class="basis-1"><text class="text-gray">备注</text></view>
+					<view class="basis-8">
+						<text class="text-sm">{{ selectedNote | noteFilter }}</text>
+					</view>
+					<view class="basis-1">
+						<view class="text-gray text-right"><text class="cuIcon-right icon" /></view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -103,8 +103,8 @@
 			<!-- 添加评论 -->
 			<view class="add-comment"><textarea style="height: 140rpx;" v-model="myComment" :placeholder="comment_ph" /></view>
 			<view class="flex comment-handle">
-				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="clearComment">清空</button>
-				<button class="cu-btn c-btn" hover-class="c-btn-hover" @tap="addComment">发布</button>
+				<button class="cu-btn c-btn" hover-class="c-btn-hover" :disabled="disabled" @tap="clearComment">清空</button>
+				<button class="cu-btn c-btn" hover-class="c-btn-hover" :disabled="disabled" @tap="addComment">发布</button>
 			</view>
 			<!-- end -->
 		</view>
@@ -133,10 +133,8 @@
 		<!--底部操作-->
 		<view class="zaiui-footer-fixed reserve_box" style="z-index: 8;">
 			<view class="flex flex-direction">
-				<button class="cu-btn bg-orange reserve_btn" @tap="updateModal=true" v-if="userId===account.id">
-					更新信息
-				</button>
-				<button class="cu-btn bg-red reserve_btn" @tap="reserve" v-else>立即预约</button>
+				<button class="cu-btn bg-orange reserve_btn" @tap="updateModal = true" v-if="userId === account.id" :disabled="disabled">更新信息</button>
+				<button class="cu-btn bg-red reserve_btn" @tap="reserve" :disabled="disabled" v-else>立即预约</button>
 			</view>
 		</view>
 
@@ -192,7 +190,7 @@
 						<!--预约列表-->
 						<view class="bg-white zaiui-goods-list-view" style="padding: 8rpx;">
 							<view class="flex flex-direction" v-for="(item, index) in reservations" :key="index">
-								<view class="zaiui-goods-list-box" >
+								<view class="zaiui-goods-list-box">
 									<view
 										class="cu-avatar radius"
 										@tap="fromAccTap(item.account.id)"
@@ -205,10 +203,7 @@
 										</view>
 										<view class="flex " style="justify-content: space-between;align-items: center;">
 											<view>
-												<view style="vertical-align: middle;" 
-												@tap="noteTap(item)">
-													{{ item.note | noteFilter}}
-												</view>
+												<view style="vertical-align: middle;" @tap="noteTap(item)">{{ item.note | noteFilter }}</view>
 												<view class="text-orange">X {{ item.count }}</view>
 											</view>
 											<view class="reserve-btn-right" style="min-width: 120rpx;" @tap="confirmReserve(item)">
@@ -217,24 +212,21 @@
 										</view>
 									</view>
 								</view>
-								<uni-transition :mode-class="['zoom-in']" :show="item.showNote">
-									备注: {{item.note}}
-								</uni-transition>
+								<uni-transition :mode-class="['zoom-in']" :show="item.showNote">备注: {{ item.note }}</uni-transition>
 							</view>
 						</view>
 					</view>
 
 					<!--公共按钮-->
 					<view class="zaiui-footer-fixed">
-						<view class="flex flex-direction"><button class="cu-btn bg-red reserve_btn" @tap="confirmCount">确定</button></view>
+						<view class="flex flex-direction"><button class="cu-btn bg-red reserve_btn" @tap="confirmCount" :disabled="disabled">确定</button></view>
 					</view>
 				</view>
 			</view>
 		</view>
 
-		<mpopup @uuidCallback="uuidCallback" @closeCallback="closeCallback" ref="mpopup" :isdistance="true"></mpopup>	
-		<modal-commodity :commodity="commodity" :show="updateModal" 
-		@closeUpdate="updateModal=false" @updateCom="updateCom"></modal-commodity>
+		<mpopup @uuidCallback="uuidCallback" @closeCallback="closeCallback" ref="mpopup" :isdistance="true"></mpopup>
+		<modal-commodity :commodity="commodity" :show="updateModal" @closeUpdate="updateModal = false" @updateCom="updateCom"></modal-commodity>
 	</view>
 </template>
 
@@ -250,12 +242,14 @@ import handles from '../../utils/handles.js'
 
 export default {
 	components: {
-		barTitle, uniTransition,modalCommodity
+		barTitle,
+		uniTransition,
+		modalCommodity
 	},
 	data() {
 		return {
-			updateModal:false,
-			popup_uuid:[], // for popup control
+			updateModal: false,
+			popup_uuid: [], // for popup control
 			bannerCur: 0,
 			bannerList: [],
 			bottomModal: false,
@@ -290,6 +284,7 @@ export default {
 			condition: '只限男生',
 			expiredTime: '2020-05-20 10:07',
 			address: '信息学部二食堂',
+			state_enum: 'CANCELLED', // CANCELLED PUBLISHED
 			reservations: [
 				{
 					id: 1,
@@ -317,14 +312,20 @@ export default {
 		}
 	},
 	computed: {
-		...mapState(['userId'])
+		...mapState(['userId']),
+		disabled() {
+			let now = new Date().getTime()
+			let expire = new Date(this.expiredTime).getTime()
+			if (now >= expire || this.state_enum == 'CANCELLED') return true
+			return false
+		}
 	},
 	onLoad(params) {
 		this.bannerList = _goods_data.bannerListData()
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
 	},
-	onPullDownRefresh(){
+	onPullDownRefresh() {
 		this.getCommodityDetail(this.commodity.id)
 	},
 	onReady() {
@@ -341,26 +342,24 @@ export default {
 		}
 	},
 	methods: {
-		updateCom(body){
-			this.tip(4,'更新中',true)
+		updateCom(body) {
+			this.tip(4, '更新中', true)
 
-			this.$api.updateCommodity(this.commodity.id,body)
-				.then(({data})=>{
-					if(data.success){
-						this.commodity = Object.assign(this.commodity,body)
+			this.$api
+				.updateCommodity(this.commodity.id, body)
+				.then(({ data }) => {
+					if (data.success) {
+						this.commodity = Object.assign(this.commodity, body)
 						this.update(0)
-					}else
-						this.update(1,'更新失败')
-					
+					} else this.update(1, '更新失败')
 				})
-				.catch(()=>this.update(1))
+				.catch(() => this.update(1))
 		},
-		noteTap(re){
-			console.log('noteTap',re);
-			if(typeof(re.showNote)=='undefined')
-				this.$set(re,'showNote',true) // 添加响应式属性
-			else
-				re.showNote=!re.showNote
+		noteTap(re) {
+			console.log('noteTap', re)
+			if (typeof re.showNote == 'undefined') this.$set(re, 'showNote', true)
+			// 添加响应式属性
+			else re.showNote = !re.showNote
 		},
 		confirmReserve(reservation) {
 			// 确认预约
@@ -368,10 +367,10 @@ export default {
 				.confirmReservation(reservation.id)
 				.then(({ data }) => {
 					if (data.success) {
-							thi.$set(reservation,'disabled',true)
-							uni.showToast({
-								title: '预约确认成功'
-							})
+						thi.$set(reservation, 'disabled', true)
+						uni.showToast({
+							title: '预约确认成功'
+						})
 					} else
 						uni.showToast({
 							title: '预约确认失败',
@@ -461,8 +460,8 @@ export default {
 				commodityId: this.commodity.id
 			}
 			// can update
-			this.tip(4,'预约处理中',true)
-			
+			this.tip(4, '预约处理中', true)
+
 			this.$api
 				.addReservation(data)
 				.then(({ data }) => {
@@ -486,8 +485,9 @@ export default {
 					this.commodity = data.commodity
 					this.expiredTime = data.expiredTime
 					this.condition = data.condition
-					this.account = data.account
 					this.address = data.address
+					this.state_enum = data.state_enum
+					this.account = data.account
 					this.comments = data.comments
 				})
 				.catch(() => {
@@ -512,7 +512,7 @@ export default {
 			this.modalTitle = ''
 			this.modalType = ''
 		},
-		tip(index, content, isClick=false,timeout = 2000) {
+		tip(index, content, isClick = false, timeout = 2000) {
 			const types = ['success', 'err', 'warn', 'info', 'loading']
 			this.$refs.mpopup.open({
 				type: types[index],
@@ -524,37 +524,41 @@ export default {
 		err() {
 			this.tip(1, '网络异常')
 		},
-		uuidCallback(uuid){		//uuid回传
+		uuidCallback(uuid) {
+			//uuid回传
 			// console.log('uuidCallback');
 			//存起来
-			this.popup_uuid.push({uuid})
+			this.popup_uuid.push({ uuid })
 		},
-		closeCallback(uuid){  // popup关闭回传		
+		closeCallback(uuid) {
+			// popup关闭回传
 			// console.log('closeCallBack');
 			for (var i = 0; i < this.popup_uuid.length; i++) {
-				if(this.popup_uuid[i].uuid==uuid){
+				if (this.popup_uuid[i].uuid == uuid) {
 					//移除uuid
-					this.popup_uuid.splice(i,1);
-					break;
+					this.popup_uuid.splice(i, 1)
+					break
 				}
 			}
 		},
-		update:function(index,content){		//修改
+		update: function(index, content) {
+			//修改
 			// console.log('update');
-			if(this.popup_uuid.length==0) return; 
+			if (this.popup_uuid.length == 0) return
 			this.$refs.mpopup.update({
-				uuid:this.popup_uuid[0].uuid,
-				type: index===0?'success':'err',
-				content: content?content: (index===0?'加载成功':'网络异常')
-			})	
-			setTimeout(()=>this.close(),2000) // 2s 后自动消失
+				uuid: this.popup_uuid[0].uuid,
+				type: index === 0 ? 'success' : 'err',
+				content: content ? content : index === 0 ? '加载成功' : '网络异常'
+			})
+			setTimeout(() => this.close(), 2000) // 2s 后自动消失
 		},
-		close:function(){ 		//控制关闭
+		close: function() {
+			//控制关闭
 			// console.log('close');
-			if(this.popup_uuid[0]){
-				this.$refs.mpopup.close(this.popup_uuid[0].uuid)	
-				this.popup_uuid.splice(0,1);
-			}	
+			if (this.popup_uuid[0]) {
+				this.$refs.mpopup.close(this.popup_uuid[0].uuid)
+				this.popup_uuid.splice(0, 1)
+			}
 		}
 	}
 }
@@ -568,7 +572,6 @@ export default {
 /* #endif */
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
-
 
 .address {
 	color: #e54d42;
