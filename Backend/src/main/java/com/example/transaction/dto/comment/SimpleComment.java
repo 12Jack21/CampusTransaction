@@ -38,7 +38,7 @@ public class SimpleComment implements Serializable {
             this.toName = receiver.getUsername();
         }
         this.content = comment.getContent();
-        this.date = comment.getTime();
+        this.date = comment.getDate();
     }
 
 }

@@ -34,33 +34,27 @@ public class CommodityInfo {
             this.originalPrice = commodity.getOriginalPrice();
             this.expectedPrice = commodity.getExpectedPrice();
             this.name = commodity.getName();
-            if(commodity.getCommodityImages()!=null&&!commodity.getCommodityImages().isEmpty()){
+            this.description = commodity.getDescription();
+            if (commodity.getCommodityImages() != null && !commodity.getCommodityImages().isEmpty()) {
                 this.img = Nums.commodityImagePath + commodity.getCommodityImages().get(0).getImageUrl();
             }
 //            if (!StringUtil.isNullOrEmpty(noticeInfo.getImage())) {
 //                this.img = Nums.commodityImagePath + noticeInfo.getImage();
 //            }
 
-            if (noticeInfo == null) {
+            if (noticeInfo != null) {
                 /**
                  * ZZH
-                 * TODO : ????????
+                 * TODO : 发布中 已预约
                  */
+                this.state = "";
+                this.time = noticeInfo.getTime();
+                this.accountName = noticeInfo.getUserName();
+                if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
+                    this.avatar = Nums.avatarPath + noticeInfo.getAvatar();
+                }
             }
-            /**
-             * ZZH
-             * TODO : 发布中 已预约
-             */
-            this.state = "";
-            this.time = noticeInfo.getTime();
-            this.accountName = noticeInfo.getUserName();
-            if (!StringUtil.isNullOrEmpty( noticeInfo.getAvatar())) {
-                this.avatar = Nums.avatarPath +  noticeInfo.getAvatar();
-            }
-            this.description = commodity.getDescription();
+
         }
-
     }
-
-
 }

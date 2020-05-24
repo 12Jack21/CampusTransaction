@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.*;
+import com.example.transaction.dto.account.SimpleAccount;
+import com.example.transaction.dto.reservation.SimpleReservation;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NotifyService;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: ReservationServiceImpl
@@ -163,6 +167,35 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     /**
+     * 查询简单的预约信息
+     * @param queryWrapper
+     * @param pageIndex
+     * @return
+     */
+    public responseFromServer getSimpleReservationPage(QueryWrapper queryWrapper, Integer pageIndex) {
+        responseFromServer response = getReservationsPage(queryWrapper, pageIndex);
+        if (response.isFailure()) {
+            return response;
+        }
+
+        //将查询的分页结果中的reservation转化成simplereservation类型
+        MyPage myPage = (MyPage) response.getData();
+        List<Reservation> reservations = (List<Reservation>) myPage.getPageList();
+        List<SimpleReservation> simpleReservations = new ArrayList<>();
+        for (Reservation reservation : reservations) {
+            SimpleReservation simpleReservation = new SimpleReservation(reservation);
+            SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
+            Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
+            simpleReservation.setAccount(simpleAccount);
+            simpleReservation.setPrice(commodity.getExpectedPrice()*reservation.getCount());
+            simpleReservations.add(simpleReservation);
+        }
+        myPage.setPageList(simpleReservations);
+        return responseFromServer.success(myPage);
+    }
+
+
+    /**
      * 查询预约信息分页
      *
      * @param queryWrapper
@@ -300,8 +333,8 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation failedWaitingReservation = new Reservation();
         failedWaitingReservation.setStateEnum(ReservationCode.FAILWAITING.getCode());
         QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("commodity_id",reservation.getCommodityId());
-        reservationDAO.update(failedWaitingReservation,queryWrapper);
+        queryWrapper.eq("commodity_id", reservation.getCommodityId());
+        reservationDAO.update(failedWaitingReservation, queryWrapper);
 
         return responseFromServer.success();
     }

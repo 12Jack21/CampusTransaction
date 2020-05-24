@@ -3,6 +3,8 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
+import com.example.transaction.dao.CommodityDAO;
+import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
@@ -28,6 +30,8 @@ public class AccountServiceImpl implements AccountService {
     private AccountDAO accountDAO;
     private A2aDAO a2aDAO;
     private TokenService tokenService;
+    @Autowired
+    CommodityDAO commodityDAO;
 
     @Autowired
     public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO, TokenService tokenService) {
@@ -170,6 +174,31 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    public responseFromServer getOthersInfo(Integer accountId1,Integer accountId2){
+        responseFromServer response = getA2a(accountId1,accountId2);
+        if(response.isFailure()||response.getData() == null){
+            return responseFromServer.error();
+        }
+        Account account = ((A2a)response.getData()).getAccount2();
+        if(account == null){
+            /*此时没有权限查看其它用户的详细联系信息*/
+            account = accountDAO.getAccountCreditById(accountId2);
+        }
+        if(account==null){
+            return responseFromServer.error();
+        }else{
+            account.setWechat("");
+            account.setQq("");
+        }
+        /*将account转换为accountinfo*/
+        AccountInfo accountInfo = new AccountInfo(account);
+        /**
+         * ZZH
+         * TODO : 添加commodity信息
+         */
+        return responseFromServer.success(accountInfo);
+    }
+
 
     /**
      * 获取a2a
@@ -202,7 +231,7 @@ public class AccountServiceImpl implements AccountService {
         }
         String filename = (String) response.getData();
         Account account = new Account(accountId);
-        account.setAvatarUrl(filename);
+        account.setAvatar(filename);
         if (accountDAO.updateById(account) != 1) {
             /*插入数据库错误*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

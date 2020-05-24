@@ -10,6 +10,7 @@ import com.example.transaction.dao.TypeDAO;
 import com.example.transaction.dto.Condition;
 import com.example.transaction.dto.commodity.CommodityInfo;
 import com.example.transaction.dto.commodity.DetailedCommodityInfo;
+import com.example.transaction.dto.commodity.Pagination;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommentService;
@@ -71,10 +72,6 @@ public class CommodityServiceImpl implements CommodityService {
     @Transactional
     public responseFromServer search(Condition condition) {
         QueryWrapper<Commodity> queryWrapper = new QueryWrapper<>();
-        /*处理排序规则*/
-
-
-
         /*处理分页条件*/
         Page<Commodity> page;
         if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
@@ -82,7 +79,6 @@ public class CommodityServiceImpl implements CommodityService {
         } else {
             page = new Page<>(condition.getPageIndex(), Nums.pageSize);
         }
-
         /*处理时间条件*/
         Timestamp timestamp;
         if (condition.getEndTime() == null) {
@@ -140,6 +136,7 @@ public class CommodityServiceImpl implements CommodityService {
             queryWrapper.eq("c.type", condition.getType());
         }
 
+
         try {
             IPage<Commodity> resultPage;
             if (condition.getSortType() != null && condition.sortType >= 0) {
@@ -168,6 +165,7 @@ public class CommodityServiceImpl implements CommodityService {
                     case 7:
                         resultPage = commodityDAO.searchEstimateASC(page, queryWrapper);
                         break;
+
                     /*最新*/
                     case 0:
                         /*附近,地址在参数中*/
@@ -213,6 +211,31 @@ public class CommodityServiceImpl implements CommodityService {
         }
 
 
+    }
+
+    /**
+     * @Description: 获取别人的商品信息
+     * @Date:   2020/5/24 21:46
+     */
+    @Override
+    public responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        Page<Commodity> page;
+        if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
+            page = new Page<>(1, Nums.pageSize);
+        } else {
+            page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
+        }
+        queryWrapper.le("n.end_time",pagination.getEndTime());
+        queryWrapper.eq("n.account_id",accoutnId);
+        IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+        MyPage myPage = new MyPage<Commodity>(resultPage);
+        List<CommodityInfo> commodityInfoList = new ArrayList<>();
+        for (Commodity commodity : resultPage.getRecords()) {
+            commodityInfoList.add(new CommodityInfo(commodity,null));
+        }
+        myPage.setPageList(commodityInfoList);
+        return responseFromServer.success(myPage);
     }
 
 

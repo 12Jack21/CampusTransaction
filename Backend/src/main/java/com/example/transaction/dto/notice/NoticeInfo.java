@@ -61,7 +61,7 @@ public class NoticeInfo {
                 this.image = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
-        this.avatar = Nums.avatarPath + notice.getUser().getAvatarUrl();
+        this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();

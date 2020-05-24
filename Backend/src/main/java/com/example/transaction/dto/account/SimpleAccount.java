@@ -36,7 +36,7 @@ public class SimpleAccount implements Serializable {
     public SimpleAccount(){}
     public SimpleAccount(Account account){
         this.id = account.getId();
-        this.avatar = account.getAvatarUrl();
+        this.avatar = account.getAvatar();
         this.username = account.getUsername();
         this.gender = account.getGender();
     }

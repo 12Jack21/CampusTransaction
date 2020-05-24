@@ -23,7 +23,7 @@ public class Account  implements Serializable {
     private String mail;
     private String qq;
     private String wechat;
-    private String avatarUrl;
+    private String avatar;
     private Timestamp createTime;
     private Timestamp updateTime;
 

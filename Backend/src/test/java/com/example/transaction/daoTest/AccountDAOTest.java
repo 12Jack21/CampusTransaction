@@ -20,12 +20,6 @@ class AccountDAOTest {
     }
 
     @Test
-    void testGetAccountWithPublicInfoById(){
-        Account account = accountDAO.getAccountWithPublicInfoById(1);
-        System.out.println(account);
-    }
-
-    @Test
     void testGetSimpleAccountById(){
         SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(1);
         System.out.println(simpleAccount);
