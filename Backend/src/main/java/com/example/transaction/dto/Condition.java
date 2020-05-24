@@ -50,4 +50,9 @@ public class Condition {
      * 还剩几天过期
      */
     public Integer outdated;
+
+    /**
+     * 查看某人的商品
+     */
+    public Integer accountId;
 }

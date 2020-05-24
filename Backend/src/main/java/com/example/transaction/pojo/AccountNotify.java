@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -25,10 +26,12 @@ public class AccountNotify implements Serializable {
     private Integer id;
     @TableField(value = "is_read")
     private Boolean isRead;
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "creat_time")
     private Timestamp createTime;
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+//    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "read_time")
     private Timestamp readTime;
     @TableField(value = "notify_id")

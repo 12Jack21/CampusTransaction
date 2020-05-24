@@ -18,11 +18,16 @@ public interface AccountDAO extends BaseMapper<Account> {
                     select = "com.example.transaction.dao.EstimateDAO.getByAccountId"
             ))
     })
-    @Select("select id,username,gender,avatar_url from account where id = #{id}")
+    @Select("select * from account where id = #{id}")
     //该函数附带信用等信息，和上面的getAccountCreditById返回结果相同
-    Account getAccountWithPublicInfoById(Integer id);
+    Account getAccountWithEstimate(Integer id);
 
-    @ResultMap({"accountEstimateInfo"})
+    @Results(id = "accountEstimateInfo", value = {
+            @Result(id = true, property = "id", column = "id"),
+            @Result(property = "estimate", column = "id", javaType = Estimate.class, one = @One(
+                    select = "com.example.transaction.dao.EstimateDAO.getByAccountId"
+            ))
+    })
     @Select("select * from account where id = #{id}")
     SimpleAccount getSimpleAccountById(Integer id);
 }

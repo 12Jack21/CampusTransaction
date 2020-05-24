@@ -223,4 +223,29 @@ public class AccountController {
             return responseFromServer.success(account1);
         }
     }
+
+
+
+    @ApiOperation(value = "获取账号信息，在a2a中验证")
+    @GetMapping("/other/{otherId}")
+    public responseFromServer getOthersAccountInfo(@PathVariable Integer otherId, HttpServletRequest request) {
+        Account account = new Account(otherId);
+        Account account1 = accountVerify.verifyWithReturn(account, request);
+        if (account1 == null) {
+            return responseFromServer.error();
+        }
+        if (account1.getId().intValue() != account.getId().intValue()) {
+            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
+            if (response.isSuccess()) {
+                account = (Account) response.getData();
+                return responseFromServer.success(account);
+            } else {
+                return responseFromServer.error();
+            }
+        }else{
+            /*此时验证返回的是自己的账户信息*/
+            return responseFromServer.success(account1);
+        }
+    }
+
 }

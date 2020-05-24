@@ -19,11 +19,11 @@ import java.util.List;
 @Repository
 public interface A2aDAO extends BaseMapper<A2a> {
     @Results(id = "a2a_map", value = {
-//            @Result(property = "notice", column = "account_id_1", javaType = Account.class, one = @One(
+//            @Result(property = "account1", column = "account_id_1", javaType = Account.class, one = @One(
 //                    select = "com.example.transaction.dao.AccountDAO.selectById"
 //            )),
-            @Result(property = "notice", column = "account_id_2", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+            @Result(property = "account2", column = "account_id_2", javaType = Account.class, one = @One(
+                    select = "com.example.transaction.dao.AccountDAO.getAccountWithEstimate"
             ))
     })
     @Select("select * from a2a where account_id_1 = #{accountId1} and account_id_2 = #{accountId2}")

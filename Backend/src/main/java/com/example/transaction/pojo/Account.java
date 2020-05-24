@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 @Data
-public class Account extends SimpleAccount implements Serializable {
+public class Account  implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
@@ -23,7 +23,7 @@ public class Account extends SimpleAccount implements Serializable {
     private String mail;
     private String qq;
     private String wechat;
-    private String avatarUrl;
+    private String avatar;
     private Timestamp createTime;
     private Timestamp updateTime;
 

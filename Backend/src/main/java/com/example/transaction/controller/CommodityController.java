@@ -133,6 +133,13 @@ public class CommodityController {
     }
 
 
+    @GetMapping("/account/{otherId}")
+    public responseFromServer getOthersCommodity(@PathVariable Integer otherId,
+                                                 Pagination pagination,
+                                                 HttpServletRequest request){
+        return commodityService.getOthersCommodity(pagination,otherId);
+    }
+
     /**
      * 根据id获取商品信息
      *
@@ -142,7 +149,7 @@ public class CommodityController {
     @ApiOperation(value = "获取商品信息")
     @GetMapping("/{commodityId}")
     public responseFromServer getById(@PathVariable Integer commodityId) {
-        return commodityService.getById(commodityId);
+        return commodityService.getDetailedCommodity(commodityId);
     }
 
     /**

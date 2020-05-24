@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -22,7 +23,8 @@ public class Subscription implements Serializable {
     private Integer target;
     @TableField(value = "target_type")
     private Integer targetType;
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "account_id")

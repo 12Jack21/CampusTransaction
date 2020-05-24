@@ -8,7 +8,7 @@ import com.example.transaction.dao.NoticeDAO;
 import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.Commodity;
-import com.example.transaction.pojo.CommodityInfo;
+import com.example.transaction.dto.commodity.CommodityInfo;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;

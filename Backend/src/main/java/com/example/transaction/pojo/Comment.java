@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.account.SimpleAccount;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Author: 高战立
@@ -21,7 +23,8 @@ public class Comment implements Serializable {
     private Integer id;
     private Boolean type;
     private String content;
-    private Timestamp time;
+    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    private Date date;
 
     @TableField(value = "from_id")
     private Integer fromId;
