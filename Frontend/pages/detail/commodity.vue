@@ -3,7 +3,9 @@
 		<!--标题栏-->
 		<bar-title bgColor="bg-white">
 			<block slot="content">商品详情</block>
-			<block slot="right" v-if="userId === account.id && !disabled"><text class="cuIcon-notice" @tap="openReservations" /></block>
+			#<!-- #ifndef MP -->
+				<block slot="right" v-if="userId === account.id && !disabled"><text class="cuIcon-notice" @tap="openReservations" /></block>
+			<!-- #endif -->
 		</bar-title>
 
 		<!--轮播图-->
@@ -28,7 +30,7 @@
 			</view>
 		</view>
 
-		<!--标题-->
+		<!-- Content -->
 		<view class="bg-white zaiui-view-box zaiui-title-view-box">
 			<view class="title-view">
 				<text class="text-black text-bold" style="font-size: 1.8em;">{{ commodity.name }}</text>
@@ -38,6 +40,19 @@
 				{{ address }}
 			</view>
 			<view style="font-size: 15px;">{{ commodity.description }}</view>
+			<view class="content-bottom">
+				<view class="reserve" @tap="openReservations">
+					<view>						
+						<text class="cuIcon-noticefill"  ></text>
+						预约队列			
+					</view>
+					<text class="text-gray">({{reservations.length}}个正在排队...)</text>
+				</view>		
+				<view @tap="toNotice">			
+					<text class="cuIcon-activity text-black"></text>
+					看看通告<text class="cuIcon-right"></text>
+				</view>
+			</view>
 		</view>
 
 		<!--选择-->
@@ -89,7 +104,7 @@
 			</view>
 		</view>
 
-		<!--评论-->
+		<!--评论 section -->
 		<view class="margin-top bg-white zaiui-comment-view-box">
 			<view class="cu-bar bg-white">
 				<view class="action">
@@ -119,8 +134,8 @@
 			<!-- 添加评论 -->
 			<view class="add-comment"><textarea style="height: 140rpx;" v-model="myComment" :placeholder="comment_ph" /></view>
 			<view class="flex comment-handle">
-				<button class="cu-btn c-btn" hover-class="c-btn-hover" :disabled="disabled" @tap="clearComment">清空</button>
-				<button class="cu-btn c-btn" hover-class="c-btn-hover" :disabled="disabled" @tap="addComment">发布</button>
+				<button class="cu-btn c-btn" type="warn"  hover-class="cbtn-warn-hover" :disabled="disabled" @tap="clearComment">清空</button>
+				<button class="cu-btn c-btn" type="primary" hover-stay-time="3000" :loading="onCommentRequest" hover-class="cbtn-primary-hover" :disabled="disabled" @tap="addComment">发布</button>
 			</view>
 			<!-- end -->
 		</view>
@@ -131,7 +146,7 @@
 				<view class="cu-avatar lg round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avatar }" @tap="accTap" />
 				<view class="text-view">
 					<view class="margin-bottom-xs">{{ account.username }}</view>
-					<view class="text-sm text-cut">正品保障，售后无忧</view>
+					<view class="text-sm text-cut">{{account.introduction.length===0?'我什么都没留下':account.introduction}}</view>
 				</view>
 			</view>
 			<view class="zaiui-border-view" />
@@ -265,6 +280,7 @@ export default {
 		return {
 			updateModal: false,
 			popup_uuid: [], // for popup control
+			onCommentRequest:false,
 			bannerCur: 0,
 			bannerList: [],
 			bottomModal: false,
@@ -291,13 +307,15 @@ export default {
 			account: {
 				id: 1,
 				username: 'CV',
-				avatar: ''
+				avatar: '',
+				introduction:''
 			},
 			comments: [
 				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了', date: '2020-10-09' },
 				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗', date: '2020-08-01' }
 			],
 			myComment: '',
+			noticeId:2,
 			condition: '只限男生',
 			expiredTime: '2020-05-29 10:07',
 			address: '信息学部二食堂',
@@ -345,6 +363,7 @@ export default {
 		this.bannerList = _goods_data.bannerListData()
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
+		this.getReservations(params.id)
 	},
 	onPullDownRefresh() {
 		this.getCommodityDetail(this.commodity.id)
@@ -406,6 +425,11 @@ export default {
 					})
 				)
 		},
+		toNotice(){
+			uni.navigateTo({
+				url:'./notice?id' + this.noticeId
+			})
+		},
 		accTap() {
 			uni.navigateTo({
 				url: '../../pages/account/account?id=' + this.account.id
@@ -425,6 +449,7 @@ export default {
 			this.myComment = ''
 		},
 		addComment() {
+			if(this.onCommentRequest) return
 			let body = {
 				fromId: parseInt(this.userId),
 				toId: this.toCommentId,
@@ -432,6 +457,7 @@ export default {
 				content: this.myComment,
 				date: new Date().format('yyyy-MM-dd hh:mm')
 			}
+			this.onCommentRequest = true
 			//发布评论
 			this.$api
 				.addComment(body)
@@ -441,8 +467,12 @@ export default {
 						this.comments.push(data.comment)
 						this.clearComment()
 					}
+					this.onCommentRequest = false
 				})
-				.catch(() => this.err())
+				.catch(() => {
+					this.err()
+					this.onCommentRequest = false
+				})
 		},
 		commentTap(id, name) {
 			//回复
@@ -456,10 +486,11 @@ export default {
 			this.modalTitle = '预约列表'
 			this.modalType = 'reservations'
 			this.showModal()
-
+		},
+		getReservations(com_id){
 			// send reservations request
 			this.$api
-				.getReservationsByCommodity(this.commodity.id)
+				.getReservationsByCommodity(com_id)
 				.then(({ data }) => {
 					console.log('预约列表数据', data)
 					this.reservations = data
@@ -586,14 +617,45 @@ export default {
 </script>
 
 <style lang="scss">
-/* #ifdef APP-PLUS */
-@import '../../static/colorui/main.css';
-@import '../../static/colorui/icon.css';
-@import '../../static/zaiui/style/app.scss';
-/* #endif */
+// TODO: 需要测试在 APP上是否有 玄学导入问题
+
+// #ifdef APP-PLUS */
+// @import '../../static/colorui/main.css';
+// @import '../../static/colorui/icon.css';
+// @import '../../static/zaiui/style/app.scss';
+// /* #endif
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
-
+$resColor:#f37b1d;
+.content-bottom{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 40rpx;
+	font-size: 1em;
+	color: #C8C7CC;
+	.reserve{
+		view{
+			border: $resColor 1px solid;
+			display: inline;
+			padding: 8rpx 10rpx;
+			border-radius: 10rpx;
+			color: $resColor;
+			.cuIcon-noticefill{
+				font-size: 1.3em;
+			}		
+			&:hover{
+				transition: all 0.6s;
+				color: #fff;
+				background-color: $resColor;
+			}
+		}
+		text{
+			margin-left: 10rpx;
+			font-size: 0.8em;
+		}
+	}
+}
 .detail-img{
 	display: flex;
 	flex-direction: column;
@@ -622,20 +684,32 @@ export default {
 	display: flex;
 	justify-content: space-around;
 	.c-btn {
-		background-color: #a59f9e;
-		color: #eee;
-		font-size: 15px;
+		font-size: 1.2em;
 		margin-top: 8rpx;
 		width: 40%;
+		transition: background-color 0.2s;
+		&[type='warn']{
+			background-color: #ee7472;
+			
+		}
+		&[type='primary']{
+			background-color: #5aa9ff;
+		}
 	}
+}
+.cbtn-primary-hover{
+	background-color: #007aff !important;
+	transition: background-color 0.5s;
+}
+.cbtn-warn-hover{
+	background-color: #e60b07 !important;
+	transition: background-color 0.2s;
 }
 .comment-date {
 	font-size: 13px;
 	margin-top: 10rpx;
 }
-.c-btn-hover {
-	background-color: #e54d42 !important;
-}
+
 .inputCount {
 	margin: 10rpx;
 }

@@ -59,9 +59,6 @@ export default {
 			default: false
 		}
 	},
-	mounted(){
-		console.log('types',TYPES);
-	},
 	methods: {
 		typePickerChange(e){
 			this.commodity.type = TYPES[e.detail.value]

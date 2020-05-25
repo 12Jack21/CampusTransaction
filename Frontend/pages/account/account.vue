@@ -13,9 +13,9 @@
 				<view class="flex" style="justify-content: center;padding-top: 20rpx;">
 					<view class="flex flex-direction user-space" style="align-items: center;">
 						<view class="cu-avatar round" :style="{ backgroundImage: account.avartar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avartar }" />
-						<view class="">
+						<view class="flex" style="align-items: flex-start;">
 							<text class="username">{{ account.username }}</text>
-							<text style="border-radius: 16rpx;vertical-align: top;" :class="[account.gender === 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue']"></text>
+								<text style="border-radius: 16rpx;" :class="[account.gender === 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue']"></text>
 						</view>
 						<view class="address"><text class="cuIcon-locationfill"></text>{{ account.address }}</view>
 						<view class="introduction">
@@ -217,7 +217,7 @@ $offset: -80rpx;
 }
 .showItem {
 	border: #fff 1px solid;
-	background-color: transparent;
+	background-color: transparent!important;
 	border-radius: 10px;
 	width: 100%;
 }

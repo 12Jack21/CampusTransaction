@@ -1,8 +1,8 @@
 <template>
 	<view class="">
 		<block v-for="(item, index) in list_data" :key="index">
-			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" @tap="listTap(item.id)">
-				<view class="goods-img">
+			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" >
+				<view class="goods-img" @tap="listTap(item.id)">
 					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />
 					<view class="count-view">
 						<text class="cu-tag radius sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">
@@ -30,11 +30,11 @@
 						<view class="flex">
 							<view class="flex-sub">
 								<view class="flex flex-wrap user-info">
-									<view class="basis-xs">
+									<view class="basis-xs" @tap="accTap(item.accId)">
 										<image class="cu-avatar sm round img"
 									 :src="item.avatar.length===0?'/static/images/avatar/default.png':item.avatar" 
 									 lazy-load mode="widthFix" /></view>
-									<view class="basis-xl text-cut line-height">
+									<view class="basis-xl text-cut line-height" @tap="accTap(item.accId)">
 										<text class="text-sm margin-left-xs">{{ item.accountName }}</text>
 									</view>
 									<image class="v-icon" src="/static/zaiui/img/v.png" lazy-load mode="widthFix" v-if="item.avatar.length===0" />
@@ -72,9 +72,11 @@ export default {
 	methods: {
 		listTap(id) {
 			this.$emit('listTap', id)
+		},
+		accTap(id){
+			this.$emit('accTap',id)
 		}
-	},
-	components: {}
+	}
 }
 </script>
 

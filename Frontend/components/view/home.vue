@@ -14,7 +14,7 @@
 			<view class="cu-bar search zaiui-search-box">
 				<view class="search-form round" @tap="searchTap">
 					<text class="cuIcon-search" />
-					<text>高等數學</text>
+					<text>高等数学</text>
 				</view>
 				<view class="filter">
 					<view class="sort-icon" @tap="moreTypeTap"><text class="cuIcon-sort" /></view>
@@ -57,9 +57,9 @@
 			<view class="zaiui-tab-list">
 				<view class="zaiui-goods-list-box">
 					<view class="flex flex-wrap ">
-						<goods-list :list_data="leftGoods" @listTap="goodsListTap"
+						<goods-list :list_data="leftGoods" @listTap="goodsListTap" @accTap="accTap"
 						 class=" " style="width: 49%;padding-right: 1%;" />
-						<goods-list :list_data="rightGoods" @listTap="goodsListTap" 
+						<goods-list :list_data="rightGoods" @listTap="goodsListTap" @accTap="accTap"
 						class=" " style="width: 49%;padding-left: 1%;"/>
 					</view>
 				</view>
@@ -176,9 +176,11 @@ export default {
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
 		this.getCommodityList()
 		
-		// 小程序的胶囊信息
-		let capsuleInfo = uni.getMenuButtonBoundingClientRect()
-		console.log('胶囊信息',capsuleInfo);
+		// #ifdef MP	
+			// 小程序的胶囊信息
+			let capsuleInfo = uni.getMenuButtonBoundingClientRect()
+			console.log('胶囊信息',capsuleInfo);
+		// #endif
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -237,9 +239,13 @@ export default {
 			// #endif		
 		},
 		goodsListTap(id) {
-			console.log('goodListTab', id)
 			uni.navigateTo({
 				url: `../../pages/detail/commodity?id=${id}`,			
+			})
+		},
+		accTap(id){
+			uni.navigateTo({
+				url:'../../pages/account/account?id=' + id
 			})
 		},
 		getCommodityList(){

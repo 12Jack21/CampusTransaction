@@ -142,7 +142,8 @@ let _home_data = {
 				name: '商品标题，商品标题',
 				img: '/static/images/home/goods/1.png',
 				accountName: '仔仔',
-				avatar: '/static/images/avatar/1.jpg'
+				avatar: '/static/images/avatar/1.jpg',
+				accId:10
 			},
 			{
 				id:2,
@@ -155,7 +156,8 @@ let _home_data = {
 				time: '1分钟前发布',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '/static/images/home/goods/2.png',
-				avatar: '/static/images/avatar/2.jpg'
+				avatar: '/static/images/avatar/2.jpg',
+				accId:2
 			},
 			{
 				id:3,
@@ -168,7 +170,8 @@ let _home_data = {
 				time: '40分钟前发布',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '/static/images/home/goods/3.png',
-				avatar: '/static/images/avatar/3.jpg'
+				avatar: '/static/images/avatar/3.jpg',
+				accId:1
 			},
 			{
 				id:4,
@@ -181,7 +184,8 @@ let _home_data = {
 				time: '1个小时前来过',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '',
-				avatar: '/static/images/avatar/4.jpg'
+				avatar: '/static/images/avatar/4.jpg',
+				accId:11
 			},
 			{
 				id:5,
@@ -194,7 +198,8 @@ let _home_data = {
 				time: '7天无理由',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '/static/images/home/goods/5.png',
-				avatar: '/static/images/avatar/5.jpg'
+				avatar: '/static/images/avatar/5.jpg',
+				accId:12
 			},
 			{
 				id:6,
@@ -207,7 +212,8 @@ let _home_data = {
 				time: '当前在线',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '/static/images/home/goods/6.png',
-				avatar: '/static/images/avatar/6.jpg'
+				avatar: '/static/images/avatar/6.jpg',
+				accId:1
 			},
 			{
 				v: false,
@@ -219,7 +225,8 @@ let _home_data = {
 				time: '1个小时前来过',
 				name: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '',
-				avatar: '/static/images/avatar/7.jpg'
+				avatar: '/static/images/avatar/7.jpg',
+				accId:29
 			}
 		];
 	},
