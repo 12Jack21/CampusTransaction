@@ -4,7 +4,7 @@
 		<bar-title bgColor="bg-white" isBack>
 			<block slot="content">修改密码</block>
 			<block slot="right">
-				<text class="text-red">保存</text>
+				<text class="text-red" @click="checkPsd()">保存</text>
 			</block>
 		</bar-title>
 		
@@ -55,7 +55,7 @@
 			}
 		},
 		onLoad() {
-			
+
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -65,7 +65,9 @@
 			});
 		},
 		methods: {
-			
+			checkPsd(){
+
+			}
 		}
 	}
 </script>
