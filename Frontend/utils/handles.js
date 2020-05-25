@@ -19,7 +19,6 @@ Date.prototype.format = function(fmt) {
      }
     return fmt; 
 }
-console.log('handles file run');
 export default{
 	
 }

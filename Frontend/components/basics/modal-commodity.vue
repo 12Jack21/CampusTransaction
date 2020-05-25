@@ -3,88 +3,75 @@
 		<view class="dialog">
 			<form @submit="submit">
 				<!-- 描述 -->
-				<view class="cu-form-group margin-top"><textarea name="description" maxlength="1000" 
-				placeholder="新的物品描述" key="description" :value="description"></textarea></view>
+				<view class="cu-form-group br-top" style="text-align: left;">
+					<textarea name="description" maxlength="1000" 
+				placeholder="新的物品描述" key="description" :value="commodity.description"></textarea>
+				</view>
 				<!-- end -->
 				
 				<!-- 价钱 -->
-				<view class="cu-form-group">
+				<view class="cu-form-group" >
 					<view class="title">出售价:</view>
-					<input type="digit" :value="expectedPrice" key="expectedPrice" placeholder="请输入价钱" maxlength="7" name="expectedPrice" />
+					<input type="digit" :value="commodity.expectedPrice" key="expectedPrice" placeholder="请输入价钱" maxlength="7" name="expectedPrice" />
+				</view>
+				<!-- end -->
+				
+				<!-- 分类 -->
+				<view class="cu-form-group" >
+					<view class="title">分类:</view>
+					<picker @change="typePickerChange":range="types" :value="types.indexOf(commodity.tpe)">
+						<view>{{commodity.type}}</view>
+					</picker>
 				</view>
 				<!-- end -->
 				
 				<!-- 物品数量 -->
-				<view class="cu-form-group">
+				<view class="cu-form-group br-bottom">
 					<view class="title">数量</view>
-					<input type="number" name="count" key="count" :value="count"/>
+					<input type="number" name="count" key="count" :value="commodity.count"/>
 				</view>
 				
 				<!-- 添加 -->
-				<view class="flex flex-direction"><button class="cu-btn bg-red margin-tb-sm lg" 
+				<view class="flex flex-direction"><button class="cu-btn bg-orange margin-tb-sm lg" 
 				form-type="submit">更新物品</button></view>
 			</form>
-			<text class="cuIcon-roundclose close" @tap="closeEvent"></text>
+			<text class="cuIcon-roundclose close" @tap="$emit('closeUpdate')"></text>
 		</view>
 	</view>
 </template>
 
 <script>
+import filters from '../../static/data/filters.js'
+const TYPES = filters[0].submenu[0].submenu.map(o=>o.name).slice(1) // ignore 'all'  type
 export default {
 	name: 'modal-commodity',
 	components:{
 	},
 	data(){
 		return {
-			
+			types: TYPES
 		}
 	},
 	props: {
-		description:'',
-		expectedPrice:null,
-		count:1,
-		id:{
-			type:Number,
-			default:-1
-		},
-		src: {
-			type: String,
-			default: ''
-		},
+		commodity:{},
 		show: {
 			type: Boolean,
 			default: false
 		}
 	},
 	methods: {
+		typePickerChange(e){
+			this.commodity.type = TYPES[e.detail.value]
+		},
 		submit(e) {
-			this.$api.updateCommodity(this.id,e.detail.value)
-				.then(({data})=>{
-					uni.hideLoading()
-					if(data.success){
-						uni.showToast({
-							title: '更新成功'
-						});
-						// TODO: update data binding
-						
-					}else
-						uni.showToast({
-							title:'更新失败',
-							icon:'none'
-						})
-				})
-				.catch(()=>{
-					uni.hideLoading()
-					uni.showToast({
-						title:'更新失败',
-						icon:'none'
-					})
-				})
-				
-			this.$emit('updateCom',e.detail.value)
-		}, 
-		closeEvent() {
-			this.$emit('closeModal')
+			let v = e.detail.value
+			let body = {
+				description: v.description,
+				expectedPrice: parseFloat(v.expectedPrice),
+				type: v.type,
+				count: parseInt(v.count)
+			}
+			this.$emit('updateCom', body)	
 		}
 	}
 }

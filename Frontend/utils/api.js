@@ -62,6 +62,7 @@ export default{
 	accountReLogin(){
 		return http.get('accounts/relogin')
 	},
+	
 	getMyNotices(id,pagination){
 		return http.get('/notices/account/' + id, {params:pagination})
 	},
@@ -83,6 +84,7 @@ export default{
 			data
 		})
 	},
+	
 	getSearchHistory(id){
 		return http.get('/histories/account/' + id)
 	},
@@ -95,11 +97,19 @@ export default{
 	getSearchResult(keyword, condition, pagination){ 
 		return http.post('/commodities/search',{keyword, condition, pagination})
 	},
+	
 	getCommodity(id){
 		return http.get('/commodities/' + id)
 	},
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
+	},
+	getCommoditiesByAcc(id){ // get PUBLISHED commodity of that account
+		return http.get('/commodities/account/' + id)
+	},
+	
+	confirmReservation(id){
+		return http.get('/reservations/confirm/' + id)
 	},
 	addReservation(data){
 		return http.post('/reservations', data)
@@ -110,18 +120,33 @@ export default{
 	getReservations(accountId){
 		return http.get('/reservations/account/' + accountId)
 	},
+	
 	getOtherAccount(otherId, id){
 		return http.get('/accounts/other/' + otherId, {params:{id}})
 	},
 	getMyAccount(id){
 		return http.get('/accounts/' + id)
 	},
-	updateNotice(id, update){
-		return http.put('/notice/' + id, update)
+	updateAccount(id,data){
+		return http.put('/account/s'+ id,data)
+	},
+	uploadAvatar(id, filePath){
+		return http.upload('/accounts/' + id,{
+			filePath,
+			name:'avatar'
+		})
+	},
+	
+	updateNotice(id, body){
+		return http.put('/notice/' + id, body)
+	},
+	cancelNotice(id){
+		return http.get('/notice/cancel/' + id)
 	},
 	updateCommodity(id, update){
 		return http.put('/commodities/' + id, update)
 	},
+	
 	getMessages(id,params){
 		return http.get('/messages/account/' + id, {params})
 	},

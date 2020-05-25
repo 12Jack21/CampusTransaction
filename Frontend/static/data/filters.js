@@ -40,7 +40,8 @@
 export default [{
 		// name:'分类',
 		"type": 'hierarchy',
-		"submenu": [{
+		"submenu": [
+			{
 			"name": '分类',
 			"value": "分类",
 			"submenu": [{

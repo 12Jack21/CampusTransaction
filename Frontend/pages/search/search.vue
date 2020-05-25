@@ -85,11 +85,14 @@
 			<view class="zaiui-goods-list-box" >
 				<view class="flex flex-wrap ">
 					<!--商品列表-->
-					<goods-list :list_data="leftGoods" @listTap="goodsListTap" class="padding-right-xs" />
-					<goods-list :list_data="rightGoods" @listTap="goodsListTap" class="padding-left-xs" />
+					<goods-list :list_data="leftGoods" @listTap="goodsListTap" 
+						style="width: 49%;padding-right: 1%;"/>
+					<goods-list :list_data="rightGoods" @listTap="goodsListTap" 
+					style="width: 49%;padding-right: 1%;" />
 				</view>
 			</view>
 			<!-- end -->
+			
 			<!-- Loading Text -->
 			<uni-load-more v-show="!searchView" :status="loadStatus" class="margin-bottom"></uni-load-more>
 		</you-scroll>
@@ -177,6 +180,7 @@ export default {
 	},
 	data() {
 		return {
+			onRequest:false,
 			search_close: false,
 			search_ph: '高数',
 			searchKey: '',
@@ -230,7 +234,7 @@ export default {
 			this.doSearch(searchBody,true)
 			this.search_ph = ''
 		}
-		// Im: 必须用 setTimeout才能初始化
+		// Im: 必须用 setTimeout才能初始化  TODO: MP-MINIPROGRAM 无法显示
 		setTimeout(() => {
 			this.filterDropdownValue = [
 				[0, type_index || 0], //type
@@ -254,10 +258,9 @@ export default {
 		this.doSearch(this.searchBody)
 	},
 	methods: {
-		goodsListTap(e){
-			// TODO: 某个物品的详情
+		goodsListTap(id){
 			uni.navigateTo({
-				url:'/pages/id=' + e.id
+				url:'/pages/detail/commodity?id=' + id
 			})
 		},
 		finishDel(){
@@ -359,6 +362,8 @@ export default {
 			this.search_close = false
 		},
 		async doSearch(condition,keyNull=false) {
+			if(this.onRequest) return
+			this.onRequest = true
 			this.loadStatus = 'loading'
 			// 虚拟数据加载
 			this.searchView = false
@@ -383,6 +388,7 @@ export default {
 						this.pagination.finish = true
 					}
 					this.loadStatus = 'more'
+					this.onRequest = false
 				})
 				.catch(err => {
 					this.loadStatus = 'more'
@@ -391,6 +397,7 @@ export default {
 						icon: 'none',
 						duration: 2000
 					})
+					this.onRequest = false
 				})
 		}
 	}

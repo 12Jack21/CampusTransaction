@@ -5,7 +5,8 @@
 				<!--用户信息-->
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
-						<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + item.avatar + ')' }]" 
+						<view class="cu-avatar round"
+						 :style="[{ backgroundImage:item.avatar.length===0? 'url(/static/images/avatar/default.png)' : item.avatar}]" 
 						@tap="userTap('userTap', item.userId)" />
 						<view class="content" @tap="userTap('userTap', item.userId)">
 							<view class="text-black">
@@ -16,9 +17,9 @@
 							</view>
 						</view>
 						<view class="action">
-							<text class="rate" v-if="viewBtn">
-								<text class="cuIcon-goods" />
-								<text class="margin-left-xs">成功率：{{ item.rate }}%</text>
+							<text class="rate">
+								<text class=" cuIcon-rank" />
+								<text class="margin-left-xs">成功率: {{ item.rate }}%</text>
 							</text>
 						</view>
 					</view>
@@ -31,8 +32,8 @@
 				<!--内容-->
 				<view class="margin-tb text-black zaiui-text-content" 
 				@tap="listTap(item.id)">
-					<text v-html="item.description">{{ item.description }}</text>
-					<text class="text-blue margin-left-xs" v-if="item.showAll">
+					<text>{{ item.description | descFilter}}</text>
+					<text class="text-blue margin-left-xs" v-if="item.description.length > MAXLEN">
 						<text>查看全文</text>
 						<text class="cuIcon-right" />
 					</text>
@@ -66,32 +67,35 @@
 				<view style="display: flex; justify-content: space-between;">
 					<!--下方部分-->
 					<view class="cu-tag light bg-red round margin-top">
-						<text class="cuIcon-creativefill"></text>
+						<text class="cuIcon-locationfill"></text>
 						<text class="margin-left-xs">{{ item.address | addressFilter}}</text>
 					</view>
 					<text class="margin-top cu-tag" style="background-color: transparent;">
-						浏览量:{{ item.browseCount }}次
+						浏览量:{{ item.browseCount }} 次
 					</text>
 				</view>
+			
 			</view>
 		</block>
 	</view>
 </template>
 
 <script>
+const MAXLEN = 60
 export default {
 	name: 'trends-list',
 	components: {},
+	data(){
+		return {
+			MAXLEN: MAXLEN
+		}
+	},
 	props: {
 		list_data: {
 			type: Array,
 			default: () => {
 				return []
 			}
-		},
-		viewBtn: {
-			type: Boolean,
-			default: true
 		}
 	},
 	methods: {
@@ -111,6 +115,11 @@ export default {
 	filters:{
 		addressFilter(addr){
 			return addr
+		},
+		descFilter(desc){
+			if(desc.length > MAXLEN)
+				return desc.slice(0,MAXLEN) + '...'
+			return desc
 		}
 	}
 }

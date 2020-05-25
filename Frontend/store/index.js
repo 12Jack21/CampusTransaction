@@ -23,8 +23,13 @@ const store = new Vuex.Store({
 			state.hasLogin = true
 		},
 		logout(state){
-			state.userId = state.token = ''
+			state.userId = state.token = state.userAddress = ''
 			state.hasLogin = false
+		}
+	},
+	actions:{
+		logout({commit}){
+			commit('logout')
 		}
 	}
 })

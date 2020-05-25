@@ -123,7 +123,7 @@
 </script>
 
 <style lang="scss" scoped>
-	@import '@/uni.scss';
+	@import '@/static/styles/uni.scss';
 
 	.uni-load-more {
 		/* #ifndef APP-NVUE */

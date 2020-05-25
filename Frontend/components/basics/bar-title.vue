@@ -66,10 +66,11 @@
 </script>
 
 <style lang="scss" scoped>
+	// $height:100rpx;
 	.zaiui-bar-title-box {
 		.cu-bar {
 			padding-top: var(--status-bar-height);
-			min-height: calc(var(--status-bar-height) + 101rpx);
+			min-height: calc(var(--status-bar-height) + 100rpx);
 			.content {
 				top: var(--status-bar-height);
 				.cu-tag {
@@ -91,7 +92,7 @@
 		}
 		.zaiui-seat-height {
 			width: 100%;
-			height: calc(var(--status-bar-height) + 101rpx);
+			height: calc(var(--status-bar-height) + 100rpx);
 		}
 	}
 </style>

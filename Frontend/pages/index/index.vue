@@ -32,8 +32,8 @@ export default {
 			isTabShow: true,
 			scrollBottom: false,
 			prevTabID: 0,
-			tabID: 0,
-			loaded: [true,false,false, false, false]
+			tabID: 4,
+			loaded: [true,false,false, false, true]
 		}
 	},
 	onLoad() {},

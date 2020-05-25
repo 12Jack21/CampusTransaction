@@ -3,7 +3,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "Campus Transaction"
+				"navigationBarTitleText": "Campus Transaction",
+				"backgroundColor":"#FAFAFA"
 			}
 		},
 		{
@@ -27,26 +28,58 @@
 			"style": {}
 		}, {
 			"path": "pages/detail/reservation", // 预约详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh":true
+			}
 		}, {
 			"path": "pages/detail/commodity", // 物品详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh": true
+			}
 		}, {
 			"path": "pages/detail/notice", //通告详情
-			"style": {}
+			"style": {
+				"enablePullDownRefresh":true
+			}
 		}, {
 			"path": "pages/reservations/reservations", // 预约列表
 			"style": {}
+		}, {
+			"path": "pages/account/account",
+			"style": {
+				"backgroundColor": "#CCCCCC",
+				"enablePullDownRefresh":true
+			}
 		}
-	    ,{
-            "path" : "pages/account/account",
-            "style" : {
-							"backgroundColor":"#CCCCCC"
-						}
-        }
-    ],
+	],
 	"globalStyle": {
-		"navigationStyle": "custom"
+		"navigationStyle": "custom",
+		"animationType":"zoom-out",
+		"app-plus":{
+			"pullToRefresh":{
+				"offset":"15%"
+			}
+		},
+		"h5":{
+			"pullToRefresh":{
+				"offset":"15%"
+			}
+		},
+		"mp-weixin":{
+			"pullToRefresh":{
+				"offset":"15%"
+			}
+		}
+	},
+	"condition" : { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [
+			{
+				"name": "dev", //模式名称
+				"path": "pages/account/account", //启动页面，必选
+				"query": "" //启动参数，在页面的onLoad函数里面得到
+			}
+		]
 	},
 	"sitemapLocation": "sitemap.json"
 }
