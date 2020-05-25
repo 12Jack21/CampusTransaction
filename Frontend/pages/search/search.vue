@@ -92,6 +92,7 @@
 				</view>
 			</view>
 			<!-- end -->
+			
 			<!-- Loading Text -->
 			<uni-load-more v-show="!searchView" :status="loadStatus" class="margin-bottom"></uni-load-more>
 		</you-scroll>
@@ -256,10 +257,9 @@ export default {
 		this.doSearch(this.searchBody)
 	},
 	methods: {
-		goodsListTap(e){
-			// TODO: 某个物品的详情
+		goodsListTap(id){
 			uni.navigateTo({
-				url:'/pages/id=' + e.id
+				url:'/pages/detail/commodity?id=' + id
 			})
 		},
 		finishDel(){

@@ -1,16 +1,19 @@
 <template>
 	<view>
 		<!--标题栏-->
-		<bar-title bgColor="bg-white" isBack>
+		<bar-title bgColor="bg-white" :isBack="false">
 			<block slot="content">个人简介</block>
+			<block slot="left">
+				<text class="cuIcon-back" @tap="$emit('close')"></text>
+			</block>
 			<block slot="right">
 				<text class="text-orange">保存</text>
-			</block>
+			</block> 
 		</bar-title>
 		
 		<view class="cu-form-group solid-top">
-			<textarea placeholder="优秀的用户会这么写。例如:我是XX熊，最爱收集各种闲置物品，交朋友。在架的宝贝都可以交易，快来联系我吧!"/>
-			<text class="text-gray font-num-view">0 / 300</text>
+			<textarea placeholder="优秀的用户会这么写。例如:我是XX熊，最爱收集各种闲置物品，交朋友。在架的宝贝都可以交易，快来联系我吧!" v-model="introduction" maxlength="15"/>
+			<text class="text-gray font-num-view">{{introduction.length}} / 15</text>
 		</view>
 		
 		
@@ -36,7 +39,7 @@
 		},
 		data() {
 			return {
-				
+				introduction:''
 			}
 		},
 		onLoad() {
@@ -55,12 +58,7 @@
 	}
 </script>
 
-<style lang="scss">
-	/* #ifdef APP-PLUS */
-		@import "../../static/colorui/main.css";
-		@import "../../static/colorui/icon.css";
-		@import "../../static/zaiui/style/app.scss";
-	/* #endif */
+<style lang="scss" scoped>
 	.cu-form-group {
 		textarea {
 			height: 8.6em;

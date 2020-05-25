@@ -62,6 +62,7 @@ export default{
 	accountReLogin(){
 		return http.get('accounts/relogin')
 	},
+	
 	getMyNotices(id,pagination){
 		return http.get('/notices/account/' + id, {params:pagination})
 	},
@@ -83,6 +84,7 @@ export default{
 			data
 		})
 	},
+	
 	getSearchHistory(id){
 		return http.get('/histories/account/' + id)
 	},
@@ -95,6 +97,7 @@ export default{
 	getSearchResult(keyword, condition, pagination){ 
 		return http.post('/commodities/search',{keyword, condition, pagination})
 	},
+	
 	getCommodity(id){
 		return http.get('/commodities/' + id)
 	},
@@ -104,6 +107,7 @@ export default{
 	getCommoditiesByAcc(id){ // get PUBLISHED commodity of that account
 		return http.get('/commodities/account/' + id)
 	},
+	
 	confirmReservation(id){
 		return http.get('/reservations/confirm/' + id)
 	},
@@ -116,12 +120,17 @@ export default{
 	getReservations(accountId){
 		return http.get('/reservations/account/' + accountId)
 	},
+	
 	getOtherAccount(otherId, id){
 		return http.get('/accounts/other/' + otherId, {params:{id}})
 	},
 	getMyAccount(id){
 		return http.get('/accounts/' + id)
 	},
+	updateAccount(id,data){
+		return http.put('/account/'+ id,data)
+	},
+	
 	updateNotice(id, body){
 		return http.put('/notice/' + id, body)
 	},
@@ -131,6 +140,7 @@ export default{
 	updateCommodity(id, update){
 		return http.put('/commodities/' + id, update)
 	},
+	
 	getMessages(id,params){
 		return http.get('/messages/account/' + id, {params})
 	},

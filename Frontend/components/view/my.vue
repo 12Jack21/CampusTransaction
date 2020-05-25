@@ -1,117 +1,182 @@
 <template>
-	<view class="zaiui-my-box" :class="show ? 'show' : ''">
-		<view class="bg-gradual-red zaiui-head-box">
-			<!--标题栏-->
-			<!--小程序端不显示-->
-			<bar-title :isBack="false" :fixed="false">
-				<block slot="right">
-					<text class="cuIcon-settings"/>
-				</block>
-			</bar-title>
+	<view class="zaiui-my-box" :class="show ? 'show' : ''" >
+		<view   v-show="scene=='my'">		
+			<view class="bg-gradual-red zaiui-head-box">
+				<!--标题栏-->
+				<!--小程序端不显示-->
+				<bar-title :isBack="false" :fixed="false">
+					<block slot="right">
+						<text class="cuIcon-settings"/>
+					</block>
+				</bar-title>
 
-			<!--用户信息-->
-			<view class="zaiui-user-info-box">
-				<view class="cu-list menu-avatar">
-					<view class="flex" style="justify-content: flex-start;">
-						<view class="cu-avatar round userAvatar" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
-						<view class=" text-xl text-white flex" style="align-items: center;">
-							<text class="margin-right">{{account.username}}</text>
+				<!--用户信息-->
+				<view class="zaiui-user-info-box">
+					<view class="cu-list menu-avatar">
+						<view class="flex" style="justify-content: flex-start;">
+							<view class="cu-avatar round userAvatar" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+							<view class=" text-xl text-white flex" style="align-items: center;">
+								<text class="margin-right">{{account.username}}</text>
+							</view>
 						</view>
 					</view>
 				</view>
 			</view>
+
+			<view class="zaiui-view-content">
+				<!--用户的交易数据-->
+				<view class="padding-xs bg-white zaiui-user-info-order-box">
+					<view class="text-black text-lg text-bold padding-sm">我的交易</view>
+					<view class="cu-list grid col-3 no-border">
+						<view class="cu-item" @tap="order_list_tap">
+							<view class="text-xxl text-black">0</view>
+							<text class="text-sm">我发布的</text>
+						</view>
+						<view class="cu-item">
+							<view class="text-xxl text-black">1</view>
+							<text class="text-sm">我卖出的</text>
+						</view>
+						<view class="cu-item">
+							<view class="text-xxl text-black">2</view>
+							<text class="text-sm">我买到的</text>
+						</view>
+					</view>
+				</view>
+
+				<!--设置列表-->
+				<view class="cu-list menu margin-top">
+					<view class="cu-item arrow">
+						<view class="content">头像</view>
+						<view class="action" @tap="updateInfo('avatar')">
+							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+						</view>
+					</view>
+					<view class="cu-item arrow" @tap="updateInfo('username')">
+						<view class="content">昵称</view>
+						<view class="action"><text class="text-gray">{{account.username}}</text></view>
+					</view>
+					<view class="cu-item arrow">
+						<view class="content">性别</view>
+						<view class="action">
+							<picker @change="genderPickerChange" :range="['女','男']" :value="account.gender">
+								<view class="picker text-gray">{{ account.gender===0 ? '女' : '男' }}</view>
+							</picker>
+						</view>
+					</view>
+					<view class="cu-item arrow" @tap="updateInfo('address')">
+						<view class="content">地址</view>
+						<view class="action">
+							<picker @change="addrPickerChange" :range="addrs" :value="addrs.indexOf(account.address)">
+								<view class="picker text-gray">{{ account.address}}</view>
+							</picker>
+						</view>
+					</view>
+				</view>
+
+				<view class="cu-list menu margin-top">			
+					<view class="cu-item arrow" @tap="scene='intro'">
+						<view class="content">个人简介</view>
+						<view class="action"><text class="text-gray">{{account.introduction}}</text></view>
+					</view>
+					<view class="cu-item arrow" @tap="scene='contact'">
+						<view class="content">联系卡</view>
+						<view class="action"></view>
+					</view>
+				</view>
+
+				<view class="cu-list menu margin-top">
+					<view class="cu-item arrow logOutItem">
+						<view class="content text-red">注销账户</view>
+					</view>
+				</view>
+			</view>
+
+		
+			<!--占位底部距离-->
+			<view class="cu-tabbar-height"></view>
+			
+			<!--弹出框-->
+			<view class="cu-modal bottom-modal zaiui-bottom-modal-box" :class="modal.show ? 'show' : ''">
+				<view class="cu-dialog bg-white updateDialog">
+					<view class="text-black text-center margin-tb text-lg title-bar">
+						<text>{{ modal.title }}</text>
+						<text class="cuIcon-close close-icon" @tap="modal.show=false"></text>		
+					</view>
+			
+					<!-- 模态框内容区域 -->
+					<view class="zaiui-modal-content">
+						<!-- 修改头像 -->
+						<view class="zaiui-view-box select" v-if="modal.type == 'avatar'">
+							<!-- 上传 -->
+							<view class="cu-item">
+									
+							</view>
+							<!-- end -->
+						</view>
+			
+						<!-- 修改昵称 -->
+						<view class="zaiui-view-box select" v-if="modal.type == 'username'">										
+							<!-- 新昵称 -->
+							<view class="usernameItem">
+								<view class="flex new">
+									<view class="text-black text-lg text-bold">新昵称:</view>
+									<input type="text" v-model="username" placeholder="输入新昵称"  maxlength="12"/>
+								</view>
+								<view class="flex old text-lg">
+									<view class="text-black ">原昵称:</view>
+									<text class="text-grey ">{{account.username}}</text>
+								</view>
+							</view>
+							<!-- end -->
+						</view>						
+						<!-- 保存更新 -->
+						<view class="zaiui-footer-fixed">
+							<view class="flex flex-direction">
+								<button class="cu-btn bg-red reserve_btn" @tap="confirmCount" >保存</button>
+							</view>
+						</view>
+						
+					</view>
+				</view>
+			</view>
+			
 		</view>
-
-		<view class="zaiui-view-content">
-			<!--用户的交易数据-->
-			<view class="padding-xs bg-white zaiui-user-info-order-box">
-				<view class="text-black text-lg text-bold padding-sm">我的交易</view>
-				<view class="cu-list grid col-3 no-border">
-					<view class="cu-item" @tap="order_list_tap">
-						<view class="text-xxl text-black">0</view>
-						<text class="text-sm">我发布的</text>
-					</view>
-					<view class="cu-item">
-						<view class="text-xxl text-black">1</view>
-						<text class="text-sm">我卖出的</text>
-					</view>
-					<view class="cu-item">
-						<view class="text-xxl text-black">2</view>
-						<text class="text-sm">我买到的</text>
-					</view>
-				</view>
-			</view>
-
-			<!--设置列表-->
-			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow">
-					<view class="content">头像</view>
-					<view class="action" @tap="update('avatar')">
-						<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
-					</view>
-				</view>
-				<view class="cu-item arrow" @tap="update('username')">
-					<view class="content">昵称</view>
-					<view class="action"><text class="text-gray">{{account.username}}</text></view>
-				</view>
-				<view class="cu-item arrow">
-					<view class="content">性别</view>
-					<view class="action">
-						<picker @change="sexPickerChange" :value="sexIndex" :range="sexPicker">
-							<view class="picker text-gray">{{ account.gender===0 ? '女' : '男' }}</view>
-						</picker>
-					</view>
-				</view>
-				<view class="cu-item arrow" @tap="update('introduction')">
-					<view class="content">个人简介</view>
-					<view class="action"><text class="text-gray">{{account.introduction}}</text></view>
-				</view>
-				<view class="cu-item arrow" @tap="update('address')">
-					<view class="content">地区</view>
-					<view class="action"><text class="text-gray">{{account.address}}</text></view>
-				</view>
-			</view>
-
-			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow" @tap="update('email')">
-					<view class="content">电子邮件</view>
-					<view class="action"><text class="text-gray">{{account.email}}</text></view>
-				</view>
-				<view class="cu-item arrow" @tap="update('wechat')">
-					<view class="content">微信号</view>
-					<view class="action"><text class="text-gray">{{account.wechat}}</text></view>
-				</view>
-				<view class="cu-item arrow" @tap="update('qq')">
-					<view class="content">QQ号</view>
-					<view class="action"><text class="text-gray">{{account.qq}}</text></view>
-				</view>
-			</view>
-
-			<view class="cu-list menu sm-border margin-top">
-				<view class="cu-item arrow logOutItem">
-					<view class="content text-red">注销账户</view>
-				</view>
-			</view>
-		</view>
-
-		<!--占位底部距离-->
-		<view class="cu-tabbar-height"></view>
+		<contact-cards :contact="contact" v-if="scene=='contact'" @close="close"></contact-cards>
+		<edit-synopsis v-if="scene=='intro'" @close="close"></edit-synopsis>
+		<!-- 修改密码 -->
+		
+		
+		<mpopup ref="mpopup" :isdistance="true"></mpopup>
 	</view>
 </template>
 
 <script>
 import barTitle from '@/components/basics/bar-title'
+import contactCards from '@/components/my/contact-cards.vue'
+import editSynopsis from '@/components/my/edit-synopsis.vue'
 
 import _my_data from '@/static/zaiui/data/my.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import {mapState} from 'vuex'
+
+const types = ['success', 'err', 'warn', 'info', 'loading'] // tip message types
 export default {
 	name: 'my',
 	components: {
-		barTitle
+		barTitle,
+		contactCards,
+		editSynopsis
 	},
 	data() {
 		return {
+			scene:'my',
+			addrs:['信息学部', '文理学部', '工学部', '医学部'],
+			modal:{
+				title:'修改昵称',
+				type:'username',
+				show: true
+			},
+			store:{}, // 备份的 account
 			account:{
 				avatar:'',
 				username:'FAIR',
@@ -126,7 +191,14 @@ export default {
 		}
 	},
 	computed:{
-		...mapState(['userId'])
+		...mapState(['userId']),
+		contact(){
+			return {
+				wechat:this.account.wechat,
+				qq:this.account.qq,
+				email:this.account.email
+			}
+		}
 	},
 	props: {
 		show: {
@@ -135,7 +207,6 @@ export default {
 		}
 	},
 	created() {	
-		// Request my account information
 		this.getMyAccount()
 	},
 	mounted() {
@@ -146,6 +217,53 @@ export default {
 		})
 	},
 	methods: {
+		updateAccRequest(){
+			this.$api.updateAccount(this.userId, this.account)
+				.then(({data})=>{
+					if(data.success){
+						this.tip(1,'更新成功')
+						this.store = {}
+					}
+					else{
+						this.tip(0,'更新失败')
+						this.account = this.store
+					}
+				})
+				.catch(()=>{
+					this.err()
+					this.account = this.store
+				})
+		},
+		addrPickerChange(e){
+			let a = e.detail.value
+			if(this.addrs[a] == this.account.address) return
+			this.store = Object.assign({},this.account) // set store to backup
+			this.account.address = this.addrs[a]
+			this.updateAccRequest()
+		},
+		genderPickerChange(e){
+			let g = e.detail.value
+			if(g === this.account.gender) return
+			this.store = Object.assign({},this.account)
+			this.account.gender = g
+			this.updateAccRequest()
+		},
+		updateInfo(info){
+			switch(info){
+				case 'avatar':
+					this.modal.type='avatar'
+					this.modal.title='修改头像'
+					this.modal.show = true
+					break
+				case 'username':
+					this.modal.type='username'
+					this.modal.title='修改昵称'
+					this.modal.show = true
+					break
+				default:
+					console.log('switch case default !!!');
+			}
+		},
 		getMyAccount(){
 			this.$api.getMyAccount(this.userId)
 				.then(({data})=>{
@@ -154,6 +272,10 @@ export default {
 				})
 				.catch(()=>{
 					console.log('获取我的账户信息失败');
+					uni.showToast({
+						title: '网络异常',
+						icon: 'none'
+					});
 				})
 		},
 		//我买到的
@@ -162,36 +284,13 @@ export default {
 				url: '/pages/reservations/reservations'
 			})
 		},
-		loginUrlTap() {
-			uni.navigateTo({
-				url: '/pages/my/login'
-			})
-		},
-		realNameTap() {
-			uni.navigateTo({
-				url: '/pages/real_name/index'
-			})
-		},
 		gridTap(item) {
 			if (item.name == '设置') {
 				this.setupTap()
 			}
 		},
-		sponsoredTap() {
-			uni.navigateTo({
-				url: '/pages/my/sponsored'
-			})
-		},
-		editNameTap() {
-			uni.navigateTo({
-				url: '/pages/my/edit-name'
-			})
-		},
 		sexPickerChange(e) {
 			this.sexIndex = e.detail.value
-		},
-		datePickerChange(e) {
-			this.dateValue = e.detail.value
 		},
 		synopsisTap() {
 			uni.navigateTo({
@@ -203,20 +302,19 @@ export default {
 				url: '/pages/my/address'
 			})
 		},
-		editPhoneTap() {
-			uni.navigateTo({
-				url: '/pages/my/edit-phone'
+		err() {
+			this.tip(1, '网络异常')
+		},
+		tip(index, content) {
+			this.$refs.mpopup.open({
+				type: types[index],
+				content,
+				timeout:2500,
+				isClick:false
 			})
 		},
-		editContactCardsTap() {
-			uni.navigateTo({
-				url: '/pages/my/contact-cards'
-			})
-		},
-		regionTap() {
-			uni.navigateTo({
-				url: '/pages/my/region'
-			})
+		close(){
+			this.scene = 'my'
 		}
 	}
 }
@@ -224,6 +322,48 @@ export default {
 
 <style lang="scss" scoped>
 $img_size:150rpx;
+$bottom_height: 60rpx;
+$space: 20rpx;
+
+.usernameItem{
+	padding: 20rpx 0 60rpx 0;
+	margin-bottom: $bottom_height;
+	display: flex;
+	flex-direction: column;
+	// justify-content: center;
+	align-items: center;
+	.new{
+		align-items: center;
+		justify-content: center;
+	}
+	input{
+		border: #FAFAFA 1px solid;
+		box-shadow: #e6e6e6 2px 1px 1px;
+		border-radius: 10rpx;
+		padding: 10rpx;
+		margin-left: $space;
+		height: 2em;
+	}
+	.old{
+		margin-top: $space;
+		justify-self: flex-start;
+		align-items: flex-end;
+		text{
+			margin-left: $space;
+		}
+	}
+}
+.updateDialog{
+	border-radius: 40rpx 40rpx 0 0 !important;
+	.title-bar{
+		position: relative;
+		.cuIcon-close{
+			position: absolute;
+			right: 20rpx;
+		}
+	}
+	
+}
 .userAvatar{
 	width: $img_size;
 	height: $img_size;
@@ -315,6 +455,7 @@ $img_size:150rpx;
 			}
 		}
 	}
+	
 	.zaiui-view-content {
 		padding: 0 27.27rpx 54.54rpx;
 		margin-top: -63.63rpx;
@@ -329,6 +470,9 @@ $img_size:150rpx;
 		}
 		.cu-list.grid > .cu-item text {
 			color: inherit;
+		}
+		.cu-list{
+			border-radius: 9rpx;
 		}
 		.zaiui-user-info-money-box {
 			border-radius: 18.18rpx;

@@ -1,7 +1,10 @@
 <template>
 	<view>
 		<!--标题栏-->
-		<bar-title bgColor="bg-white" isBack>
+		<bar-title bgColor="bg-white" :isBack="false">
+			<block slot="left">
+				<text class="cuIcon-back" @tap="$emit('close')"></text>
+			</block>
 			<block slot="content">联系卡</block>
 			<block slot="right">
 				<text class="text-red">保存</text>
@@ -25,15 +28,15 @@
 		
 		<view class="bg-white padding form-view">
 			<view class="text-black title">微信</view>
-			<input placeholder="请填写您的微信号" value=""/>
+			<input placeholder="请填写您的微信号" v-model="contact.wechat"/>
 		</view>
 		<view class="bg-white padding form-view">
 			<view class="text-black title">QQ号</view>
-			<input placeholder="请填写您的QQ号" value=""/>
+			<input placeholder="请填写您的QQ号" v-model="contact.qq"/>
 		</view>
 		<view class="bg-white padding form-view">
 			<view class="text-black title">电子邮箱</view>
-			<input placeholder="请填写您的电子邮箱" value=""/>
+			<input placeholder="请填写您的电子邮箱" v-model="contact.email"/>
 		</view>
 		
 		
@@ -62,15 +65,8 @@
 				
 			}
 		},
-		onLoad() {
-			
-		},
-		onReady() {
-			_tool.setBarColor(true);
-			uni.pageScrollTo({
-			    scrollTop: 0,
-			    duration: 0
-			});
+		props:{
+			contact:{}
 		},
 		methods: {
 			
@@ -78,22 +74,14 @@
 	}
 </script>
 
-<style lang="scss">
-	/* #ifdef APP-PLUS */
-		@import "../../static/colorui/main.css";
-		@import "../../static/colorui/icon.css";
-		@import "../../static/zaiui/style/app.scss";
-	/* #endif */
-	page {
-		background: #FFFFFF;
+<style lang="scss" scoped>
+.form-view {
+	border-bottom: 2rpx solid #f5f5f5;
+	.title {
+		margin-bottom: 27.27rpx;
 	}
-	.form-view {
-		border-bottom: 2rpx solid #f5f5f5;
-		.title {
-			margin-bottom: 27.27rpx;
-		}
-		input {
-			color: #333333;
-		}
+	input {
+		color: #333333;
 	}
+}
 </style>

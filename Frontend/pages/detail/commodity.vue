@@ -147,7 +147,7 @@
 					<text class="cuIcon-close close-icon" @tap="hideModal"></text>
 				</view>
 
-				<!--内容区域-->
+				<!-- 模态框内容区域 -->
 				<view class="zaiui-modal-content">
 					<!--选择规格-->
 					<view class="zaiui-view-box select" v-if="modalType == 'select'">
@@ -282,9 +282,9 @@ export default {
 			],
 			myComment: '',
 			condition: '只限男生',
-			expiredTime: '2020-05-20 10:07',
+			expiredTime: '2020-05-29 10:07',
 			address: '信息学部二食堂',
-			state_enum: 'CANCELLED', // CANCELLED PUBLISHED
+			state_enum: 'PUBLISHED', // CANCELLED PUBLISHED
 			reservations: [
 				{
 					id: 1,
