@@ -30,7 +30,20 @@ public class Commodity extends BaseCommodity implements Serializable {
         this.id = id;
     }
 
-
+    public void clear(){
+        if(description == "") {
+            description = null;
+        }
+        if (expectedPrice <= 0) {
+            expectedPrice = null;
+        }
+        if(type == ""){
+            type = null;
+        }
+        if(count<0){
+            count = null;
+        }
+    }
 
 
 

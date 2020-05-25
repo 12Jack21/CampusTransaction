@@ -268,8 +268,10 @@ public class CommodityController {
     @ApiOperation(value = "更新商品信息")
     @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer")
     @PutMapping("/{commodityId}")
-    public responseFromServer updateCommodity(@PathVariable Integer commodityId, HttpServletRequest request) {
-        Commodity commodity = new Commodity(commodityId);
+    public responseFromServer updateCommodity(@PathVariable Integer commodityId,
+                                              @RequestBody Commodity commodity,
+                                              HttpServletRequest request) {
+        commodity.setId(commodityId);
         responseFromServer response = getById(commodity.getId());
         if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.updateCommodity(commodity);

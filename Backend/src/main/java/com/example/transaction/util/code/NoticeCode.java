@@ -2,7 +2,7 @@ package com.example.transaction.util.code;
 
 public enum NoticeCode {
     UNSAVED(-2,"UNSAVED"),
-    UNPUBLISHED(-1,"UNPUBLISHED"),
+    UNPUBLISHED(-1,"EXPIRED"),
     PUBLISHED(0,"PUBLISHED"),
     CANCELLED(1,"CANCELLED");
 

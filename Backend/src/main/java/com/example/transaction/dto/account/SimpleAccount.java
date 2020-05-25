@@ -9,8 +9,6 @@ import com.example.transaction.pojo.Estimate;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.List;
 
 /**
  * @ClassName: SimpleAccount
@@ -26,6 +24,7 @@ public class SimpleAccount implements Serializable {
     private String username;
     private Boolean gender;
     private String avatar;
+    private String introduction;
 
     @TableField(exist = false)
     private Estimate estimate;
@@ -39,5 +38,6 @@ public class SimpleAccount implements Serializable {
         this.avatar = account.getAvatar();
         this.username = account.getUsername();
         this.gender = account.getGender();
+        this.introduction = account.getIntroduction();
     }
 }

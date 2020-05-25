@@ -299,7 +299,6 @@ public class CommodityServiceImpl implements CommodityService {
             commodity = (Commodity) response.getData();
             commodity.setImagesList();
         }
-        List<CommodityImage> commodityImages = commodity.getCommodityImages();
 
         return responseFromServer.success(commodity);
     }
@@ -396,6 +395,13 @@ public class CommodityServiceImpl implements CommodityService {
     public responseFromServer updateCommodity(Commodity commodity) {
 /*        if(isIdentityError(commodity, session))  //身份检查
             return responseFromServer.illegal();*/
+        if(commodity.getId() == null){
+            return responseFromServer.error();
+        }
+        /**
+         * 将空串和-1的非法值设置为null
+         */
+        commodity.clear();
         if (commodityDAO.updateById(commodity) != 1 || !updateCommodityInfo(commodity)) {
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();

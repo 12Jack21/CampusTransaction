@@ -26,7 +26,7 @@ public class BaseCommodity implements Serializable {
     protected Double originalPrice;
     @TableField(value = "expected_price")
     protected Double expectedPrice;
-    protected String name = "";
+    protected String name;
     protected String newness;
     protected String description;
     @TableField(value = "notice_id")

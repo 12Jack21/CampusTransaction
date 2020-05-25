@@ -26,6 +26,7 @@ public class Account  implements Serializable {
     private String avatar;
     private Timestamp createTime;
     private Timestamp updateTime;
+    private String introduction;
 
     @TableField(exist = false)
     private Estimate estimate;

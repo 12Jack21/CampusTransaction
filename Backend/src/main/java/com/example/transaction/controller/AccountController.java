@@ -183,8 +183,10 @@ public class AccountController {
 //    @RequestMapping("/updateUser")
     @ApiOperation(value = "更新用户信息")
     @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
-    @PutMapping()
-    public responseFromServer updateUser(@RequestBody Account account, HttpServletRequest request) {
+    @PutMapping("/{accountId}")
+    public responseFromServer updateUser(@RequestBody Account account,
+                                         @PathVariable Integer accountId,
+                                         HttpServletRequest request) {
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
         if (accountVerify.verify(account, request)) {

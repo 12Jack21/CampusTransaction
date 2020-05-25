@@ -25,5 +25,5 @@ public class Estimate implements Serializable {
     private Double credit;
     @TableField(value = "account_id")
     private Integer accountId;
-    ;
+
 }
