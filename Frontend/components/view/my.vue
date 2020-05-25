@@ -5,16 +5,23 @@
 				<!--标题栏-->
 				<!--小程序端不显示-->
 				<bar-title :isBack="false" :fixed="false">
-					<block slot="right">
-						<text class="cuIcon-settings"/>
+					#<!-- #ifdef MP -->
+					<block slot="left">
+						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
 					</block>
-				</bar-title>
-
+					<!-- #endif -->
+					#<!-- #ifndef MP -->
+					<block slot="right">
+						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
+					</block>
+					<!-- #endif -->					
+				</bar-title> 
+ 
 				<!--用户信息-->
 				<view class="zaiui-user-info-box">
 					<view class="cu-list menu-avatar">
 						<view class="flex" style="justify-content: flex-start;">
-							<view class="cu-avatar round userAvatar" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+							<view class="cu-avatar round userAvatar" :style="{ backgroundImage:avatar}" />
 							<view class=" text-xl text-white flex" style="align-items: center;">
 								<text class="margin-right">{{account.username}}</text>
 							</view>
@@ -85,7 +92,7 @@
 				</view>
 
 				<view class="cu-list menu margin-top">
-					<view class="cu-item arrow logOutItem">
+					<view class="cu-item arrow logOutItem" @tap="logOut">
 						<view class="content text-red">注销账户</view>
 					</view>
 				</view>
@@ -108,8 +115,12 @@
 						<!-- 修改头像 -->
 						<view class="zaiui-view-box select" v-if="modal.type == 'avatar'">
 							<!-- 上传 -->
-							<view class="cu-item">
-									
+							<view class="avatar">
+								<avatar selWidth="200upx" selHeight="200upx" @upload="upload" :avatarSrc="url"
+								        avatarStyle="width: 200upx; height: 200upx; border-radius: 100%;">
+								    </avatar>
+								<loading v-if="uploading">上传中</loading>
+								<text class="text-gray" v-else>点击头像选择</text>
 							</view>
 							<!-- end -->
 						</view>
@@ -123,17 +134,17 @@
 									<input type="text" v-model="username" placeholder="输入新昵称"  maxlength="12"/>
 								</view>
 								<view class="flex old text-lg">
-									<view class="text-black ">原昵称:</view>
-									<text class="text-grey ">{{account.username}}</text>
+									<view class="text-gray ">原昵称:</view>
+									<text class="text-gray ">{{account.username}}</text>
 								</view>
 							</view>
 							<!-- end -->
 						</view>						
 						<!-- 保存更新 -->
-						<view class="zaiui-footer-fixed">
+						<view class="zaiui-footer-fixed" style="z-index: 10;">
 							<view class="flex flex-direction">
-								<button class="cu-btn bg-red reserve_btn" @tap="confirmCount" >保存</button>
-							</view>
+								<button class="cu-btn bg-red" style="font-size: 1.4em;padding: 10rpx 0;" @tap="confirm" >{{modal.type=='username'? '保存':'上传'}}</button>
+							</view> 
 						</view>
 						
 					</view>
@@ -141,9 +152,9 @@
 			</view>
 			
 		</view>
-		<contact-cards :contact="contact" v-if="scene=='contact'" @close="close"></contact-cards>
-		<edit-synopsis v-if="scene=='intro'" @close="close"></edit-synopsis>
-		<!-- 修改密码 -->
+		<contact-cards :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
+		<edit-synopsis v-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
+		<!-- TODO: 修改密码 -->
 		
 		
 		<mpopup ref="mpopup" :isdistance="true"></mpopup>
@@ -152,6 +163,7 @@
 
 <script>
 import barTitle from '@/components/basics/bar-title'
+import avatar from "../../components/yq-avatar/yq-avatar.vue";
 import contactCards from '@/components/my/contact-cards.vue'
 import editSynopsis from '@/components/my/edit-synopsis.vue'
 
@@ -160,21 +172,24 @@ import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import {mapState} from 'vuex'
 
 const types = ['success', 'err', 'warn', 'info', 'loading'] // tip message types
+const defaultAvatar = 'url(/static/images/avatar/default.png)' 
 export default {
 	name: 'my',
 	components: {
 		barTitle,
 		contactCards,
-		editSynopsis
+		editSynopsis,
+		avatar
 	},
 	data() {
 		return {
+			uploading: false,
 			scene:'my',
 			addrs:['信息学部', '文理学部', '工学部', '医学部'],
 			modal:{
-				title:'修改昵称',
-				type:'username',
-				show: true
+				title:'修改头像',
+				type:'avatar',
+				show: false
 			},
 			store:{}, // 备份的 account
 			account:{
@@ -187,7 +202,9 @@ export default {
 				wechat:'wechatID_12121223',
 				qq:'99881231',
 				introduction:"我就是我，是不一样的烟火"
-			}
+			},
+			username:'', // 新昵称
+			url:''
 		}
 	},
 	computed:{
@@ -198,6 +215,10 @@ export default {
 				qq:this.account.qq,
 				email:this.account.email
 			}
+		},
+		avatar(){
+			if(this.account.avatar.length ===0) return defaultAvatar;
+			return this.account.avatar
 		}
 	},
 	props: {
@@ -215,9 +236,10 @@ export default {
 			scrollTop: 0,
 			duration: 0
 		})
+		this.url = this.avatar.startsWith('url(') ? this.avatar.slice(4,-1):this.avatar
 	},
 	methods: {
-		updateAccRequest(){
+		updateAccRequest(close){
 			this.$api.updateAccount(this.userId, this.account)
 				.then(({data})=>{
 					if(data.success){
@@ -228,11 +250,45 @@ export default {
 						this.tip(0,'更新失败')
 						this.account = this.store
 					}
+					if(close) this.scene = 'my'
 				})
 				.catch(()=>{
 					this.err()
 					this.account = this.store
+					if(close) this.scene = 'my'
 				})
+		},
+		upload(rsp){ //切换新头像
+			this.url = rsp.path
+		},
+		confirm(){
+			if(this.modal.type == 'username'){
+				if(this.username == this.account.username) return
+				this.store = Object.assign({},this.account)
+				this.account.username = this.username
+				this.updateAccRequest()
+				this.modal.show = false
+			}else if(this.modal.type == 'avatar'){
+				// 上传头像
+				if(this.url == this.account.avatar) return
+				this.uploading = true
+				this.$api.uploadAvatar(this.account.id, this.url)
+					.then(({data})=>{
+						if(data.success){
+							this.tip(1,'上传头像成功')
+							this.account.avatar = data.avartar
+						}else{
+							this.tip(0,'更新头像失败')
+						}
+						this.modal.show = false
+						this.uploading = false
+					})
+					.catch(()=>{
+						this.modal.show = false
+						this.uploading = false
+						this.err()
+					})
+			}
 		},
 		addrPickerChange(e){
 			let a = e.detail.value
@@ -247,6 +303,18 @@ export default {
 			this.store = Object.assign({},this.account)
 			this.account.gender = g
 			this.updateAccRequest()
+		},
+		updateContact({wechat,qq,email}){
+			if(this.account.wechat==wechat &&this.account.qq==qq&&this.account.email==email) return
+			this.store = {...this.account}
+			this.account = Object.assign(this.account,{wechat,qq,email})
+			this.updateAccRequest(true)
+		},
+		updateIntro({introduction}){
+			if(this.account.introduction==introduction) return
+			this.store = {...this.account}
+			this.account = Object.assign(this.account,{introduction})
+			this.updateAccRequest(true)
 		},
 		updateInfo(info){
 			switch(info){
@@ -278,6 +346,13 @@ export default {
 					});
 				})
 		},
+		logOut(){
+			// 清空 vuex中数据
+			this.$store.dispatch('logout')
+			uni.reLaunch({
+				url:'../../pages/login/login?type=logout'
+			})
+		},
 		//我买到的
 		order_list_tap() {
 			uni.navigateTo({
@@ -288,19 +363,6 @@ export default {
 			if (item.name == '设置') {
 				this.setupTap()
 			}
-		},
-		sexPickerChange(e) {
-			this.sexIndex = e.detail.value
-		},
-		synopsisTap() {
-			uni.navigateTo({
-				url: '/pages/my/edit-synopsis'
-			})
-		},
-		addressTap() {
-			uni.navigateTo({
-				url: '/pages/my/address'
-			})
 		},
 		err() {
 			this.tip(1, '网络异常')
@@ -325,6 +387,18 @@ $img_size:150rpx;
 $bottom_height: 60rpx;
 $space: 20rpx;
 
+.status-bar-height{
+	height: var(--status-bar-height);
+}
+.avatar{
+	margin-bottom: $bottom_height * 2;
+	display: flex;
+	flex-direction: column;
+	> text{
+		text-align: center;
+		margin-top: $bottom_height;
+	}
+}
 .usernameItem{
 	padding: 20rpx 0 60rpx 0;
 	margin-bottom: $bottom_height;
@@ -379,9 +453,9 @@ $space: 20rpx;
 		padding-top: 0;
 		padding-bottom: 72.72rpx;
 		.zaiui-user-info-box {
-			/* #ifdef MP */
-			padding-top: calc(var(--status-bar-height) + 50rpx);
-			/* #endif */
+			// #ifdef MP */
+			// padding-top: calc(var(--status-bar-height) + 50rpx);
+			// /* #endif
 			.login-user-view {
 				position: relative;
 				text-align: center;

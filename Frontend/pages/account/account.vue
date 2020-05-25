@@ -18,12 +18,15 @@
 							<text style="border-radius: 16rpx;vertical-align: top;" :class="[account.gender === 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue']"></text>
 						</view>
 						<view class="address"><text class="cuIcon-locationfill"></text>{{ account.address }}</view>
+						<view class="introduction">
+							简介： {{account.introduction.length===0?'该用户还未填写':account.introduction}}
+						</view>
 						<view class=" wechat">
-							<view v-if="account.wechat">
+							<view v-if="account.wechat" class="we">
 								微信号：
 								<text selectable>{{ account.wechat }}</text>
 							</view>
-							<view v-if="account.qq">
+							<view v-if="account.qq" class="qq">
 								QQ号：
 								<text selectable>{{ account.qq }}</text>
 							</view>
@@ -53,7 +56,7 @@
 							<image src="../../static/images/noCom.png" mode="aspectFit"></image>
 							<view>暂无发布中的物品或需求</view>
 						</view>
-						<scroll-view refresher-enabled class="recommend-scroll" scroll-x @scrolltolower="loadMore" v-else>
+						<scroll-view class="recommend-scroll" scroll-x @scrolltolower="loadMore" v-else>
 							<block v-for="(item, index) in commodities" :key="index">
 								<view :id="['scroll' + (index + 1)]" class="recommend-scroll-item comItem" @tap="comTap(item.id)" style="">
 									<view class="cu-avatar xl radius" :style="{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : item.img, position: 'relative' }">
@@ -92,6 +95,7 @@ export default {
 				username: '急可',
 				avartar: '',
 				gender: 0,
+				introduction:'我就是我，是不一样的高哥',
 				address: '文理学部',
 				wechat: '2020wechat2020',
 				qq: '99221101',
@@ -221,9 +225,23 @@ $offset: -80rpx;
 	width: 550rpx;
 	height: 2rpx;
 }
+.introduction{
+	text-align: center;
+	padding: 6px 0;
+	font-size: 1.2em;
+	font-weight: 500;
+	color: #ffd9cd;
+	text-shadow: #cd725b 1px 1px 1px;
+}
 .wechat {
 	padding: 14rpx 0;
 	text-align: center;
+	.we{
+		color: #abdca2;
+	}
+	.qq{
+		color: #BEDAF3;
+	}
 }
 .height-spacce {
 	height: 100rpx;

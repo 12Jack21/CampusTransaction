@@ -7,7 +7,7 @@
 			</block>
 			<block slot="content">联系卡</block>
 			<block slot="right">
-				<text class="text-red">保存</text>
+				<text class="text-red" @tap="save">保存</text>
 			</block>
 		</bar-title>
 		
@@ -22,7 +22,7 @@
 		<view class="bg-white padding">
 			<view class="text-lg text-black margin-bottom">我的联系卡</view>
 			<view class="text-sm text-gray">
-				您可以选择添加以下一种或多种联系方式，根据具体沟通需求选择对应号码发送
+				您可以选择添加以下一种或多种联系方式，根据具体沟通需求选择对应联系方式发送
 			</view>
 		</view>
 		
@@ -38,16 +38,6 @@
 			<view class="text-black title">电子邮箱</view>
 			<input placeholder="请填写您的电子邮箱" v-model="contact.email"/>
 		</view>
-		
-		
-		<!--小程序端显示-->
-		<!-- #ifdef MP -->
-		<view class="bg-white wecanui-footer-fixed foot-pb">
-			<view class="flex flex-direction padding-sm">
-				<button class="cu-btn bg-red">保存</button>
-			</view>
-		</view>
-		<!-- #endif -->
 		
 	</view>
 </template>
@@ -69,7 +59,13 @@
 			contact:{}
 		},
 		methods: {
-			
+			save(){
+				this.$emit('updateContact',{
+					wechat:this.contact.wechat,
+					qq:this.contact.qq,
+					email:this.contact.email
+				})
+			}
 		}
 	}
 </script>

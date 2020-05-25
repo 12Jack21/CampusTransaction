@@ -16,6 +16,15 @@
 				</view>
 				<!-- end -->
 				
+				<!-- 分类 -->
+				<view class="cu-form-group" >
+					<view class="title">分类:</view>
+					<picker @change="typePickerChange":range="types" :value="types.indexOf(commodity.tpe)">
+						<view>{{commodity.type}}</view>
+					</picker>
+				</view>
+				<!-- end -->
+				
 				<!-- 物品数量 -->
 				<view class="cu-form-group br-bottom">
 					<view class="title">数量</view>
@@ -32,36 +41,37 @@
 </template>
 
 <script>
+import filters from '../../static/data/filters.js'
+const TYPES = filters[0].submenu[0].submenu.map(o=>o.name).slice(1) // ignore 'all'  type
 export default {
 	name: 'modal-commodity',
 	components:{
 	},
 	data(){
 		return {
-			
+			types: TYPES
 		}
 	},
 	props: {
 		commodity:{},
-		id:{
-			type:Number,
-			default:-1
-		},
-		src: {
-			type: String,
-			default: ''
-		},
 		show: {
 			type: Boolean,
 			default: false
 		}
 	},
+	mounted(){
+		console.log('types',TYPES);
+	},
 	methods: {
+		typePickerChange(e){
+			this.commodity.type = TYPES[e.detail.value]
+		},
 		submit(e) {
 			let v = e.detail.value
 			let body = {
 				description: v.description,
 				expectedPrice: parseFloat(v.expectedPrice),
+				type: v.type,
 				count: parseInt(v.count)
 			}
 			this.$emit('updateCom', body)	

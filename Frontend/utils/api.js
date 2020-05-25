@@ -128,7 +128,13 @@ export default{
 		return http.get('/accounts/' + id)
 	},
 	updateAccount(id,data){
-		return http.put('/account/'+ id,data)
+		return http.put('/account/s'+ id,data)
+	},
+	uploadAvatar(id, filePath){
+		return http.upload('/accounts/' + id,{
+			filePath,
+			name:'avatar'
+		})
 	},
 	
 	updateNotice(id, body){

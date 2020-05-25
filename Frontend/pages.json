@@ -53,7 +53,8 @@
 		}
 	],
 	"globalStyle": {
-		"navigationStyle": "custom"
+		"navigationStyle": "custom",
+		"animationType":"zoom-out"
 	},
 	"sitemapLocation": "sitemap.json"
 }

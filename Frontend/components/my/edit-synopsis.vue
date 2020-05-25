@@ -7,12 +7,12 @@
 				<text class="cuIcon-back" @tap="$emit('close')"></text>
 			</block>
 			<block slot="right">
-				<text class="text-orange">保存</text>
+				<text class="text-orange"@tap="save">保存</text>
 			</block> 
 		</bar-title>
 		
 		<view class="cu-form-group solid-top">
-			<textarea placeholder="优秀的用户会这么写。例如:我是XX熊，最爱收集各种闲置物品，交朋友。在架的宝贝都可以交易，快来联系我吧!" v-model="introduction" maxlength="15"/>
+			<textarea placeholder="优秀的用户会这么写:例如:我是XX熊，喜欢收集各种闲置物品。在架的宝贝都可以交易，快来联系我吧!" v-model="introduction" maxlength="15"/>
 			<text class="text-gray font-num-view">{{introduction.length}} / 15</text>
 		</view>
 		
@@ -37,13 +37,10 @@
 		components: {
 			barTitle
 		},
-		data() {
+		data(){
 			return {
 				introduction:''
 			}
-		},
-		onLoad() {
-			
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -53,7 +50,9 @@
 			});
 		},
 		methods: {
-			
+			save(){
+				this.$emit('updateIntro',{introduction:this.introduction})
+			}
 		}
 	}
 </script>

@@ -129,6 +129,7 @@ export default {
 	},
 	data() {
 		return {
+			onRequest:false,
 			newsMenuItems:[
 				{id:0,url:'1.png',text:'未读消息'},
 				{id:1,url:'2.png',text:'全部消息'},
@@ -239,6 +240,8 @@ export default {
 			}
 		},
 		getMessages(){
+			if(this.onRequest) return
+			this.onRequest = true
 			this.loadStatus = 'loading'
 			let params = {
 				pageIndex: this.newsData.pageIndex,
@@ -255,6 +258,7 @@ export default {
 					}			
 					this.newsData.data.push(...data.data)
 					this.loadStatus = 'more'
+					this.onRequest = false
 				})
 				.catch(()=>{
 					uni.showToast({
@@ -262,6 +266,7 @@ export default {
 						icon: 'none'
 					});
 					this.loadStatus = 'more'
+					this.onRequest = false
 				})
 		},
 		barTitleRightTap() {

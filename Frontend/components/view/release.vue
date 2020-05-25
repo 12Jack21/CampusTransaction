@@ -124,10 +124,10 @@
 					<!-- 价钱 -->
 					<view class="cu-form-group">
 						<view class="title">出售价:</view>
-						<input type="digit" key="newPrice" placeholder="请输入价钱" maxlength="7" name="newPrice" />
+						<input type="digit" key="expectedPrice" placeholder="请输入价钱" maxlength="7" name="expectedPrice" />
 
 						<view class="title">原价:</view>
-						<input type="digit" key="originalPrice" :value="originalPrice" placeholder="请输入原价" maxlength="7" name="originalPrice" />
+						<input type="digit" key="originalPrice" placeholder="请输入原价" maxlength="7" name="originalPrice" />
 					</view>
 					<!-- end -->
 
@@ -473,7 +473,7 @@ export default {
 					console.log('通告上传成功');
 					uni.hideLoading()
 					uni.showToast({
-						title: '发布成功',
+						title: '通告发布成功',
 						duration: 2000
 					});
 					this.scene = -1
@@ -482,7 +482,7 @@ export default {
 					console.log('通告上传失败');
 					uni.hideLoading()
 					uni.showToast({
-						title: '发布失败',
+						title: '网络异常,发布失败',
 						duration: 2000,
 						icon:'none'
 					});
@@ -494,16 +494,16 @@ export default {
 			let commodity = {
 				name: comFormData.comName,
 				description: comFormData.comDescription,
-				count:  parseFloat(comFormData.count),
+				count:  parseInt(comFormData.count),
 				originalPrice: parseFloat(comFormData.originalPrice) || -1,
 				expectedPrice: parseFloat(comFormData.expectedPrice),
 				type: comFormData.comType,
 				newness: comFormData.newness || '',
 				imgList: this.imgList
 			}
+			console.log('Commodity before validate',commodity)
 			if(!this.validateCommodity(commodity)) return
 			this.comList.push(commodity)
-			console.log('Commodity',commodity)
 			this.focus = 0
 			this.imgList = []
 		},

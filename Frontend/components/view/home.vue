@@ -102,7 +102,7 @@ export default {
 	},
 	data() {
 		return {
-			...mapState['userAddress'],
+			onRequest:false, //其他同步方法
 			loadStatus: 'more', //'loading'、 'noMore'
 			swiperInfo: {
 				index: 0,
@@ -175,6 +175,10 @@ export default {
 			this.storeGoods.push({pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]})
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
 		this.getCommodityList()
+		
+		// 小程序的胶囊信息
+		let capsuleInfo = uni.getMenuButtonBoundingClientRect()
+		console.log('胶囊信息',capsuleInfo);
 	},
 	mounted() {
 		uni.pageScrollTo({
@@ -237,11 +241,10 @@ export default {
 			uni.navigateTo({
 				url: `../../pages/detail/commodity?id=${id}`,			
 			})
-			// TODO: 物品详情界面来加载数据
-			// this.$api.getCommodity(e.id)
-			// 	.then(res=>)
 		},
 		getCommodityList(){
+			if(this.onRequest) return 
+			this.onRequest = true
 			this.loadStatus = 'loading'
 			let self = this
 			let tab = this.goodsTabData.tabCur
@@ -268,6 +271,7 @@ export default {
 					}
 					else
 						this.loadStatus = 'more'
+					this.onRequest = false
 				})
 				.catch(()=>{
 					uni.showToast({
@@ -275,6 +279,7 @@ export default {
 					icon:'none'
 				})
 					this.loadStatus = 'more'
+					this.onRequest = false
 				})
 		},
 		swiperChange(e) {

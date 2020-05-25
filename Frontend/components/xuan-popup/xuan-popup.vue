@@ -8,8 +8,9 @@
  -->
 <template>
 	<view class="popup_list">
+		<!-- <view class="status-bar"></view> -->
 		<view v-for="(items,index) of popup_list" :id="items.uuid" :key="items.uuid" >
-			<view class="mpopup" :style="{ background: items.color ,top:index*distance+40+'px'}" :class="[items.animator,items.typeClass]" @click="close(items.uuid,index)">
+			<view class="mpopup" :style="{ background: items.color ,top:index*distance + 'px'}" :class="[items.animator,items.typeClass]" @click="close(items.uuid,index)">
 				<view class="pic"><image class="icon" mode="aspectFit" :src="items.icon"></image></view>
 				<text class="text" :style="{ color: items.colortext }">{{ items.content }}</text>
 			</view>
@@ -174,6 +175,9 @@
 <style lang="scss">
 	$heigth: 40px;
 	$width: 600rpx;
+	.popup_list{
+		
+	}
 	.mpopup{
 		display: flex;
 		flex-direction: row;
@@ -188,7 +192,7 @@
 		right: 0;
 		margin: 0 auto;
 		border-radius: 5px;	
-		z-index:998;
+		z-index:99999;
 		.pic{
 			display: flex;
 			text-align: center;

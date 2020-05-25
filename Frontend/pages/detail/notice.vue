@@ -215,7 +215,6 @@
 	margin-left: 30rpx;
 	position: relative;
 	top: -30rpx;
-	height: fit-content;
 	border-radius: 20rpx;
 	padding: 10rpx 20rpx;
 }

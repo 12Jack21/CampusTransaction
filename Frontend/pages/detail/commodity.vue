@@ -9,10 +9,10 @@
 		<!--轮播图-->
 		<view class="zaiui-banner-swiper-box">
 			<swiper class="screen-swiper" circular autoplay @change="bannerSwiper">
-				<swiper-item v-for="(item, index) in commodity.images" :key="index"><image :src="item" mode="aspectFill" /></swiper-item>
+				<swiper-item v-for="(item, index) in comImgs" :key="index"><image :src="item" mode="aspectFill" /></swiper-item>
 			</swiper>
 			<!--页码-->
-			<text class="cu-tag bg-grey round sm zaiui-page">{{ bannerCur + 1 }} / {{ commodity.images.length }}</text>
+			<text class="cu-tag bg-grey round sm zaiui-page">{{ bannerCur + 1 }} / {{ comImgs.length }}</text>
 		</view>
 
 		<!-- 顶层价格 -->
@@ -48,6 +48,20 @@
 					<text class="text-sm">{{ condition }}</text>
 				</view>
 			</view>
+			<view class="zaiui-border-view" />
+			<view class="flex flex-wrap text-sm">
+				<view class="basis-1"><text class="text-gray">分类</text></view>
+				<view class="basis-9">
+					<text class="text-sm">{{ commodity.type }}</text>
+				</view>
+			</view>
+			<view class="zaiui-border-view" />
+			<view class="flex flex-wrap text-sm">
+				<view class="basis-2"><text class="text-gray">新旧程度</text></view>
+				<view class="basis-8">
+					<text class="text-sm">{{ commodity.newness }}</text>
+				</view>
+			</view>
 
 			<view v-if="userId !== account.id">
 				<view class="zaiui-border-view" />
@@ -78,7 +92,9 @@
 		<!--评论-->
 		<view class="margin-top bg-white zaiui-comment-view-box">
 			<view class="cu-bar bg-white">
-				<view class="action"><text class="text-black text-lg text-bold">评论</text></view>
+				<view class="action">
+					<text class="text-black text-bold" style="font-size: 1.2em;">评论</text>
+				</view>
 			</view>
 
 			<!-- 评论列表 -->
@@ -122,9 +138,8 @@
 		</view>
 
 		<!--图片详情-->
-		<view class="margin-top zaiui-goods-details-box">
-			<image src="/static/images/comDefault.png" mode="widthFix" v-if="commodity.images.length === 0" />
-			<image :src="item" v-for="(item, index) in commodity.images" :key="index"></image>
+		<view class="margin-top detail-img">
+			<image :src="item" v-for="(item, index) in comImgs" :key="index" mode="widthFix"></image>
 		</view>
 
 		<!--占位底部距离-->
@@ -269,6 +284,8 @@ export default {
 				originalPrice: 2000,
 				description: '物品描述u五奥尔加去哦为oh',
 				count: 79,
+				type:'电子产品',
+				newness:'九成新',
 				images: []
 			},
 			account: {
@@ -318,6 +335,10 @@ export default {
 			let expire = new Date(this.expiredTime).getTime()
 			if (now >= expire || this.state_enum == 'CANCELLED') return true
 			return false
+		},
+		comImgs(){
+			if(this.commodity.images.length===0) return ['/static/images/comDefault.png']
+			else return this.commodity.images
 		}
 	},
 	onLoad(params) {
@@ -573,6 +594,15 @@ export default {
 @import '../../static/zaiui/style/goods.scss';
 @import '../../static/zaiui/style/footmark.scss';
 
+.detail-img{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	image{
+		border-radius: 10rpx;
+		width: 96%;
+	}
+}
 .address {
 	color: #e54d42;
 	background-color: #fadbd9;
