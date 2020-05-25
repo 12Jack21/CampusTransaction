@@ -19,19 +19,19 @@
 
 			<!--提示-->
 			<view class="text-sm text-center margin-top" v-if="basics == 0">
-				<view class="text-black">拍下成功，待买家支付。</view>
+				<view class="text-black">预约成功，待卖家确认。</view>
 				<view class="text-black">
-					<text class="text-red">14分</text>
-					<text>后未支付，订单将自动关闭。</text>
+					<text class="text-red">{{reservation.remainTime1}}</text>
+					<text>分后未支付，订单将自动关闭。</text>
 				</view>
 			</view>
-			<view class="text-sm text-center margin-top" v-if="basics == 1"><view class="text-black">支付成功，待卖家发货.</view></view>
-			<view class="text-sm text-center margin-top" v-if="basics == 2"><view class="text-black">已发货，正在等待验机中.</view></view>
+			<view class="text-sm text-center margin-top" v-if="basics == 1"><view class="text-black">沟通成功，待卖家发货.</view></view>
+			<view class="text-sm text-center margin-top" v-if="basics == 2"><view class="text-black">已发货，正在等待收货中.</view></view>
 			<view class="text-sm text-center margin-top" v-if="basics == 3">
-				<view class="text-black">已验机，快递正在路上，务必在收到商品后再确认收货。</view>
+				<view class="text-black">双方已交易，请双方确认无误后点击交易完成。</view>
 				<view class="text-black">
-					<text class="text-red">9天23小时57分</text>
-					<text>后将自动确认收货</text>
+					<text class="text-red">{{reservation.remainTime2}}</text>
+					<text>分后将自动确认交易</text>
 				</view>
 			</view>
 		</view>
@@ -51,7 +51,7 @@
 		<!--物流信息-->
 		<view class="bg-white zaiui-card-box" v-if="basics != 0">
 			<view class="zaiui-card-view zaiui-address-view">
-				<view class="text-lg text-bold text-black">物流信息</view>
+				<view class="text-lg text-bold text-black">交易信息</view>
 				<view class="solid-line"></view>
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
@@ -59,10 +59,9 @@
 						<view class="content">
 							<view class="text-black">
 								<text>收货人：</text>
-								<text>仔仔</text>
-								<text class="margin-left">13800138000</text>
+								<text>{{reservation.buyer}}</text>	
 							</view>
-							<view class="text-gray text-sm flex"><view class="text-cut">重庆市渝北区XXXXXXXX</view></view>
+							<view class="text-gray text-sm flex"><view class="text-cut">{{reservation.buyerRegion}}</view></view>
 						</view>
 					</view>
 				</view>
@@ -74,22 +73,15 @@
 			<view class="zaiui-card-view zaiui-shop-view">
 				<view class="shop-info-view">
 					<view class="cu-avatar round sm" :style="[{ backgroundImage: 'url(' + avatar + ')' }]" />
-					<view class="text-black text-bold text-lg title-view">仔仔科技运营部</view>
+					<view class="text-black text-bold text-lg title-view">{{reservation.seller}}</view>
 				</view>
 				<view class="goods-list-view">
 					<view class="cu-avatar radius" :style="[{ backgroundImage: 'url(' + bg_img + ')' }]" />
-					<view class="goods-info-view">
-						<view class="text-black text-cut name">苹果X 苹果X256G无锁99新 有现货</view>
-						<view class="text-gray text-sm text-cut introduce">测试介绍内容的</view>
-						<view class="text-price text-red text-lg">2199.00</view>
+					<view class="reservation-goods-info-view">
+						<view class="text-black text-cut name">{{reservation.title}}</view>
+						<view class="text-gray text-sm text-cut introduce">{{reservation.description}}</view>
+						<view class="text-price text-red text-lg">{{reservation.price}}</view>
 					</view>
-				</view>
-				<view class="zaiui-foot-view">
-					<view class="left-view">
-						<image class="af5-img" src="/static/zaiui/img/af5.png" mode="widthFix" />
-						<text class="text-black">支持验机</text>
-					</view>
-					<text class="text-black text-right">￥ 39.00</text>
 				</view>
 			</view>
 		</view>
@@ -99,25 +91,12 @@
 			<view class="zaiui-card-view zaiui-price-view">
 				<view class="text-black title-view">
 					<view class="title">商品总额</view>
-					<view class="text-right"><text class="text-price">2199.00</text></view>
+					<view class="text-right"><text class="text-price">{{reservation.price}}</text></view>
 				</view>
-				<view class="text-black title-view">
-					<view class="title">运费</view>
-					<view class="text-right">
-						<text class="margin-right-xs">+</text>
-						<text class="text-price">0.00</text>
-					</view>
-				</view>
-				<view class="text-black title-view">
-					<view class="title">特色服务费</view>
-					<view class="text-right">
-						<text class="margin-right-xs">+</text>
-						<text class="text-price">39.00</text>
-					</view>
-				</view>
+
 				<view class="text-black text-bold title-right-view">
-					<text class="margin-right-xs">应付款：</text>
-					<text class="text-price">39.00</text>
+					<text class="margin-right-xs">应付款：{{reservation.totalPrice}}</text>
+					<text class="text-price"></text>
 				</view>
 
 				<view class="solid-line"></view>
@@ -134,35 +113,37 @@
 				<view class="text-black title-view">
 					<view class="title">订单编号</view>
 					<view class="text-right">
-						<text class="margin-right-xs">1245604894725075385</text>
+						<text class="margin-right-xs">{{reservation.reservationId}}</text>
 						<button class="cu-btn sm line-black">复制</button>
 					</view>
 				</view>
+
 				<view class="text-black title-view">
-					<view class="title">支付方式</view>
-					<view class="text-right"><text>收银台(未支付)</text></view>
-				</view>
-				<view class="text-black title-view">
-					<view class="title">下单时间</view>
-					<view class="text-right"><text>2020-04-02 14:52:03</text></view>
+					<view class="title">预约时间</view>
+					<view class="text-right"><text>{{reservation.transactionTime1}}</text></view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 0">
-					<view class="title">支付时间</view>
-					<view class="text-right"><text>2020-04-02 14:52:03</text></view>
+					<view class="title">沟通时间</view>
+					<view class="text-right"><text>{{reservation.transactionTime2}}</text></view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 1">
 					<view class="title">发货时间</view>
-					<view class="text-right"><text>2020-04-02 14:52:03</text></view>
+					<view class="text-right"><text>{{reservation.transactionTime3}}</text></view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 2">
-					<view class="title">验机时间</view>
-					<view class="text-right"><text>2020-04-02 14:52:03</text></view>
+					<view class="title">收货时间</view>
+					<view class="text-right"><text>{{reservation.transactionTime4}}</text></view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 3">
 					<view class="title">完成时间</view>
-					<view class="text-right"><text>2020-04-02 14:52:03</text></view>
+					<view class="text-right"><text>{{reservation.transactionTime5}}</text></view>
 				</view>
 			</view>
+		</view>
+		
+		<view class="bg-white zaiui-card-box">
+		</view>
+		<view class="bg-white zaiui-card-box">
 		</view>
 
 		<view class="bg-white zaiui-card-hight-box" />
@@ -172,31 +153,31 @@
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 0">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius">取消订单</button>
-			<button class="cu-btn bg-red">确认交易</button>
+			<button class="cu-btn line-black radius" @click="cancelReservation()">取消预约</button>
+			<button class="cu-btn bg-red" @click="confirmReservation()">确认预约</button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 1">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius">申请退款</button>
-			<button class="cu-btn bg-red">提醒发货</button>
+			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
+			<button class="cu-btn bg-red" @click="remindTransaction()">提醒交易 </button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 2">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius">申请退款</button>
+			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 3">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius">申请退款</button>
-			<button class="cu-btn bg-red" @tap="confirmReceipt">确认收货</button>
+			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
+			<button class="cu-btn bg-red" @tap="confirmReceipt" @click="confirmTransaction()">确认交易</button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 4">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试第一步</button>
 			<button class="cu-btn line-black radius" @tap="appraiseTap">发表评价</button>
-			<button class="cu-btn bg-red">查看钱款去向</button>
+			<button class="cu-btn bg-red" @click="completeTransaction()">交易完成</button>
 		</view>
 
 		<!--弹出框-->
@@ -267,16 +248,35 @@ export default {
 			avatar: '/static/images/avatar/1.jpg',
 			cancel: false,
 			basicsList: [
-				{ cuIcon: 'cartfill', name: '未拍下', name_s: '已拍下' },
-				{ cuIcon: 'card', name: '待付款', name_s: '已拍下' },
+				{ cuIcon: 'cartfill', name: '未预约', name_s: '已预约' },
+				{ cuIcon: 'card', name: '待沟通', name_s: '已沟通' },
 				{ cuIcon: 'deliver_fill', name: '待发货', name_s: '已发货' },
-				{ cuIcon: 'formfill', name: '待验机', name_s: '已验机' },
-				{ cuIcon: 'presentfill', name: '待收货', name_s: '已收货' }
+				{ cuIcon: 'formfill', name: '待收货', name_s: '已收货' },
+				{ cuIcon: 'presentfill', name: '待完成', name_s: '已完成' }
 			],
 			bottomModal: false,
 			codeKey: [],
 			btnKey: true,
-			reservation: {}
+			reservation:{
+				seller:'仔仔科技运营部',
+				buyer:'小明',
+				mold: true,
+				price: '2280',
+				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
+				img: '/static/images/home/goods/1.png',
+				expiredTime:'2020-10-09',
+				description:'测试介绍内容',
+				remainTime1:'14',
+				reservationId:'231231231',
+				transactionTime1:'2020-04-02 14:55:23',
+				transactionTime2:'2020-04-03 14:55:23',
+				transactionTime3:'2020-04-04 14:55:23',
+				transactionTime4:'2020-04-05 14:55:23',
+				transactionTime5:'2020-04-06 14:55:23',
+				remainTime2:'30',
+				totalPrice:'2280',
+				buyerRegion:'信息学部'
+			}
 		}
 	},
 	onLoad(params) {
@@ -333,6 +333,24 @@ export default {
 			uni.navigateTo({
 				url: '../../pages/appraise/appraise'
 			})
+		},
+		cancelReservation(){
+			
+		},
+		confirmReservation(){
+			
+		},
+		remindTransaction(){
+			
+		},
+		cancelTransaction(){
+			
+		},
+		confirmTransaction(){
+			
+		},
+		completeTransaction(){
+			
 		}
 	}
 }
@@ -345,4 +363,26 @@ export default {
 @import '../../static/zaiui/style/app.scss';
 /* #endif */
 @import '../../static/zaiui/style/order-details.scss';
+
+.reservation-goods-info-view {
+			position: relative;
+			padding-left: 172.72rpx;
+			height: 154.54rpx;
+			.name {
+				position: relative;
+				height: 62rpx;
+			    width: 100%;
+			}
+			.introduce {
+				position: relative;
+				height: 58rpx;
+				width: 100%;
+			}
+			.text-price {
+				position: relative;
+				bottom: 0rpx;
+				height: 0rpx;
+				width: 500%;
+			}
+		}
 </style>
