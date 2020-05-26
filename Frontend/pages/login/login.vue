@@ -131,6 +131,7 @@ export default {
 					this.login({
 						userId: data.userId,
 						userAddress: data.userAddress,
+						userName: this.usernameData,
 						token: data.token
 					})
 					setTimeout(()=>uni.navigateTo({

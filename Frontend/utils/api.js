@@ -111,7 +111,10 @@ export default{
 	},
 	
 	confirmReservation(id){
-		return http.get('/reservations/confirm/' + id)
+		return http.get('/reservations/' + id + '/confirm')
+	},
+	cancelReservation(id){
+		return http.get('/reservations/' + id + '/cancel')
 	},
 	addReservation(data){
 		return http.post('/reservations', data)

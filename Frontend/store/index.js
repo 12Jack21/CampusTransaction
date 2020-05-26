@@ -8,22 +8,26 @@ const store = new Vuex.Store({
 		hasLogin: false,
 		userId: 1,
 		userAddress:'信息学部',
+		userName:'高哥',
 		token: ''
 	},
 	mutations:{
-		login(state, {userId,userAddress,token}){
+		login(state, {userId,userName,userAddress,token}){
 			state.userId = userId
+			state.userName = userName
 			state.userAddress = userAddress
 			state.token = token
 			state.hasLogin = true
 		},
-		relogin(state,{userId,userAddress}){
+		relogin(state,{userId,userName,userAddress}){
 			state.userId = userId,
+			state.userName = userName
 			state.userAddress = userAddress
 			state.hasLogin = true
 		},
 		logout(state){
-			state.userId = state.token = state.userAddress = ''
+			state.userId = -1
+			state.userName = state.token = state.userAddress = ''
 			state.hasLogin = false
 		}
 	},

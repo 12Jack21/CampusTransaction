@@ -35,17 +35,17 @@
 				<view class="padding-xs bg-white zaiui-user-info-order-box">
 					<view class="text-black text-lg text-bold padding-sm">我的交易</view>
 					<view class="cu-list grid col-3 no-border">
-						<view class="cu-item" @tap="order_list_tap">
-							<view class="text-xxl text-black">0</view>
-							<text class="text-sm">我发布的</text>
+						<view class="cu-item" @tap="dataTap('reservation')">
+							<view class="text-xxl text-black cuIcon-cart"></view>
+							<text class="text-sm">我的预约</text>
 						</view>
-						<view class="cu-item">
-							<view class="text-xxl text-black">1</view>
-							<text class="text-sm">我卖出的</text>
+						<view class="cu-item" @tap="dataTap('commodity')">
+							<view class="text-xxl text-black cuIcon-home"></view>
+							<text class="text-sm">我的物品</text>
 						</view>
-						<view class="cu-item">
-							<view class="text-xxl text-black">2</view>
-							<text class="text-sm">我买到的</text>
+						<view class="cu-item" @tap="dataTap('notice')">
+							<view class="text-xxl text-black cuIcon-attention"></view>
+							<text class="text-sm">我的通告</text>
 						</view>
 					</view>
 				</view>
@@ -202,7 +202,7 @@ export default {
 			account:{
 				avatar:'',
 				username:'FAIR',
-				password:'',
+				password:'q',
 				gender: 1,
 				address:'文理学部',
 				email:'221qqw121@qq.com',
@@ -384,16 +384,25 @@ export default {
 				url:'../../pages/login/login?type=logout'
 			})
 		},
-		//我买到的
-		order_list_tap() {
-			uni.navigateTo({
-				url: '/pages/reservations/reservations'
-			})
-		},
-		gridTap(item) {
-			if (item.name == '设置') {
-				this.setupTap()
-			}
+		dataTap(tag){
+			switch(tag){
+				case 'reservation':
+					uni.navigateTo({
+						url: '/pages/reservations/reservations'
+					})
+					break
+				case 'commodity':
+					uni.navigateTo({
+						url: ''
+					});
+					break
+				case 'notice':
+					// TODO: 暂不考虑
+					uni.navigateTo({
+						url: ''
+					});
+					break
+			}		
 		},
 		err() {
 			this.tip(1, '网络异常')
@@ -467,7 +476,6 @@ $space: 20rpx;
 			right: 20rpx;
 		}
 	}
-	
 }
 .userAvatar{
 	width: $img_size;
