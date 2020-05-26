@@ -25,7 +25,7 @@ page, .bg-page {
 }
 .zaiui-footer-fixed {
 	position: fixed;
-	z-index: 999999;
+	z-index: 99998;
 	width: 100%;
 	bottom: 0;
 	left: 0;
@@ -209,9 +209,9 @@ page, .bg-page {
 /*底部*/
 .wecanui-footer-fixed {
 	position: fixed;
-	z-index: 99999;
+	z-index: 9998;
 	width: 100%;
-	bottom: 0;
+	bottom: 50px;
 	left: 0;
 }
 .wecanui-footer-fixed.foot-pb {

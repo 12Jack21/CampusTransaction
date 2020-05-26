@@ -2,11 +2,10 @@
 	<view>
 		<!--标题栏-->
 		<bar-title bgColor="bg-white" isBack @rightTap="rightTap">
-			<block slot="content">我的商品</block>
+			<block slot="content">我的物品</block>
 		</bar-title>
 		
-		<!--足迹的tab-->
-
+		<!-- 预约的分类tab -->
 		<view class="bg-white zaiui-title-tab-box">
 
 			<view class="flex flex-wrap">
@@ -70,14 +69,9 @@
 			</checkbox-group>
 		
 		</you-scroll>
-		
-		
-		
-		
-		
+			
 		<!--占位底部距离-->
 		<view class="cu-tabbar-height" v-if="goods_checked"/>
-		
 		
 		<!--小程序端显示-->
 		<!-- #ifdef MP -->
@@ -93,7 +87,7 @@
 <script>
 	import barTitle from '@/components/basics/bar-title';
 	import _tool from '@/static/zaiui/util/tools.js';	//工具函数
-	import _reservations_data from '@/static/zaiui/data/reservations.js';
+	// import _reservations_data from '@/static/zaiui/data/reservations.js';
 	import reservationList from '@/components/list/reservations-list.vue';
 	import youScroll from '@/components/you-scroll/you-scroll.vue'
 	

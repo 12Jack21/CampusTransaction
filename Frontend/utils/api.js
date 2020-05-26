@@ -128,7 +128,10 @@ export default{
 		return http.get('/accounts/' + id)
 	},
 	updateAccount(id,data){
-		return http.put('/account/s'+ id,data)
+		return http.put('/accounts/'+ id,data)
+	},
+	updatePassword(id,password){
+		return http.post('/accounts/' + id + '/password', password)
 	},
 	uploadAvatar(id, filePath){
 		return http.upload('/accounts/' + id,{

@@ -7,12 +7,12 @@
 				<bar-title :isBack="false" :fixed="false">
 					#<!-- #ifdef MP -->
 					<block slot="left">
-						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
+						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'" />
 					</block>
 					<!-- #endif -->
 					#<!-- #ifndef MP -->
 					<block slot="right">
-						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
+						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'"  />
 					</block>
 					<!-- #endif -->					
 				</bar-title> 
@@ -92,6 +92,10 @@
 				</view>
 
 				<view class="cu-list menu margin-top">
+					<view class="cu-item arrow" @tap="scene='about'">
+						<view class="content">关于</view>
+						<view class="action"></view>
+					</view>
 					<view class="cu-item arrow logOutItem" @tap="logOut">
 						<view class="content text-red">注销账户</view>
 					</view>
@@ -152,9 +156,9 @@
 			</view>
 			
 		</view>
-		<contact-cards :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
-		<edit-synopsis v-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
-		<!-- TODO: 修改密码 -->
+		<contact-cards :onUpdate="onUpdate" :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
+		<edit-password :onUpdate="onUpdate" :srcPassword="account.password" v-else-if="scene=='password'" @close="close" @updatePassword="updatePassword" ></edit-password>
+		<edit-synopsis :onUpdate="onUpdate"  v-else-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
 		
 		
 		<mpopup ref="mpopup" :isdistance="true"></mpopup>
@@ -166,6 +170,7 @@ import barTitle from '@/components/basics/bar-title'
 import avatar from "../../components/yq-avatar/yq-avatar.vue";
 import contactCards from '@/components/my/contact-cards.vue'
 import editSynopsis from '@/components/my/edit-synopsis.vue'
+import editPassword from '@/components/my/edit-password.vue'
 
 import _my_data from '@/static/zaiui/data/my.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
@@ -179,11 +184,13 @@ export default {
 		barTitle,
 		contactCards,
 		editSynopsis,
+		editPassword,
 		avatar
 	},
 	data() {
 		return {
 			uploading: false,
+			onUpdate:false,
 			scene:'my',
 			addrs:['信息学部', '文理学部', '工学部', '医学部'],
 			modal:{
@@ -240,6 +247,7 @@ export default {
 	},
 	methods: {
 		updateAccRequest(close){
+			if(close) this.onUpdate = true
 			this.$api.updateAccount(this.userId, this.account)
 				.then(({data})=>{
 					if(data.success){
@@ -250,12 +258,18 @@ export default {
 						this.tip(0,'更新失败')
 						this.account = this.store
 					}
-					if(close) this.scene = 'my'
+					if(close) {
+						this.scene = 'my'
+						this.onUpdate = false
+					}
 				})
 				.catch(()=>{
 					this.err()
 					this.account = this.store
-					if(close) this.scene = 'my'
+					if(close) {
+						this.scene = 'my'
+						this.onUpdate = false
+					}
 				})
 		},
 		upload(rsp){ //切换新头像
@@ -331,6 +345,23 @@ export default {
 				default:
 					console.log('switch case default !!!');
 			}
+		},
+		updatePassword(pass){
+			this.onUpdate = true
+			this.$api.updatePassword(this.userId,pass)
+				.then(({data})=>{
+					if(data.success){
+						this.tip(0,'密码修改成功')
+					}else
+						this.tip(1,'密码修改失败')
+					this.onUpdate = false
+					this.scene='my'
+				})
+				.catch(()=>{
+					this.err()
+					this.onUpdate = false
+					this.scene='my'
+				})
 		},
 		getMyAccount(){
 			this.$api.getMyAccount(this.userId)
