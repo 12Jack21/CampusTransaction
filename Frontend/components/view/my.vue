@@ -7,12 +7,12 @@
 				<bar-title :isBack="false" :fixed="false">
 					#<!-- #ifdef MP -->
 					<block slot="left">
-						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
+						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'" />
 					</block>
 					<!-- #endif -->
 					#<!-- #ifndef MP -->
 					<block slot="right">
-						<text style="font-size: 1.5em;" class="cuIcon-settings"/>
+						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'"  />
 					</block>
 					<!-- #endif -->					
 				</bar-title> 
@@ -35,17 +35,17 @@
 				<view class="padding-xs bg-white zaiui-user-info-order-box">
 					<view class="text-black text-lg text-bold padding-sm">我的交易</view>
 					<view class="cu-list grid col-3 no-border">
-						<view class="cu-item" @tap="order_list_tap">
-							<view class="text-xxl text-black">0</view>
-							<text class="text-sm">我发布的</text>
+						<view class="cu-item" @tap="dataTap('reservation')">
+							<view class="text-xxl text-black cuIcon-cart"></view>
+							<text class="text-sm">我的预约</text>
 						</view>
-						<view class="cu-item">
-							<view class="text-xxl text-black">1</view>
-							<text class="text-sm">我卖出的</text>
+						<view class="cu-item" @tap="dataTap('commodity')">
+							<view class="text-xxl text-black cuIcon-home"></view>
+							<text class="text-sm">我的物品</text>
 						</view>
-						<view class="cu-item">
-							<view class="text-xxl text-black">2</view>
-							<text class="text-sm">我买到的</text>
+						<view class="cu-item" @tap="dataTap('notice')">
+							<view class="text-xxl text-black cuIcon-attention"></view>
+							<text class="text-sm">我的通告</text>
 						</view>
 					</view>
 				</view>
@@ -55,7 +55,7 @@
 					<view class="cu-item arrow">
 						<view class="content">头像</view>
 						<view class="action" @tap="updateInfo('avatar')">
-							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : ('url('+ account.avatar+')') }" />
 						</view>
 					</view>
 					<view class="cu-item arrow" @tap="updateInfo('username')">
@@ -70,7 +70,7 @@
 							</picker>
 						</view>
 					</view>
-					<view class="cu-item arrow" @tap="updateInfo('address')">
+					<view class="cu-item arrow">
 						<view class="content">地址</view>
 						<view class="action">
 							<picker @change="addrPickerChange" :range="addrs" :value="addrs.indexOf(account.address)">
@@ -92,6 +92,10 @@
 				</view>
 
 				<view class="cu-list menu margin-top">
+					<view class="cu-item arrow" @tap="scene='about'">
+						<view class="content">关于</view>
+						<view class="action"></view>
+					</view>
 					<view class="cu-item arrow logOutItem" @tap="logOut">
 						<view class="content text-red">注销账户</view>
 					</view>
@@ -152,9 +156,9 @@
 			</view>
 			
 		</view>
-		<contact-cards :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
-		<edit-synopsis v-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
-		<!-- TODO: 修改密码 -->
+		<contact-cards :onUpdate="onUpdate" :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
+		<edit-password :onUpdate="onUpdate" :srcPassword="account.password" v-else-if="scene=='password'" @close="close" @updatePassword="updatePassword" ></edit-password>
+		<edit-synopsis :onUpdate="onUpdate"  v-else-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
 		
 		
 		<mpopup ref="mpopup" :isdistance="true"></mpopup>
@@ -166,6 +170,7 @@ import barTitle from '@/components/basics/bar-title'
 import avatar from "../../components/yq-avatar/yq-avatar.vue";
 import contactCards from '@/components/my/contact-cards.vue'
 import editSynopsis from '@/components/my/edit-synopsis.vue'
+import editPassword from '@/components/my/edit-password.vue'
 
 import _my_data from '@/static/zaiui/data/my.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
@@ -179,11 +184,13 @@ export default {
 		barTitle,
 		contactCards,
 		editSynopsis,
+		editPassword,
 		avatar
 	},
 	data() {
 		return {
 			uploading: false,
+			onUpdate:false,
 			scene:'my',
 			addrs:['信息学部', '文理学部', '工学部', '医学部'],
 			modal:{
@@ -195,7 +202,7 @@ export default {
 			account:{
 				avatar:'',
 				username:'FAIR',
-				password:'',
+				password:'q',
 				gender: 1,
 				address:'文理学部',
 				email:'221qqw121@qq.com',
@@ -218,7 +225,7 @@ export default {
 		},
 		avatar(){
 			if(this.account.avatar.length ===0) return defaultAvatar;
-			return this.account.avatar
+			return 'url(' + this.account.avatar + ')'
 		}
 	},
 	props: {
@@ -240,6 +247,7 @@ export default {
 	},
 	methods: {
 		updateAccRequest(close){
+			if(close) this.onUpdate = true
 			this.$api.updateAccount(this.userId, this.account)
 				.then(({data})=>{
 					if(data.success){
@@ -250,12 +258,18 @@ export default {
 						this.tip(0,'更新失败')
 						this.account = this.store
 					}
-					if(close) this.scene = 'my'
+					if(close) {
+						this.scene = 'my'
+						this.onUpdate = false
+					}
 				})
 				.catch(()=>{
 					this.err()
 					this.account = this.store
-					if(close) this.scene = 'my'
+					if(close) {
+						this.scene = 'my'
+						this.onUpdate = false
+					}
 				})
 		},
 		upload(rsp){ //切换新头像
@@ -329,8 +343,25 @@ export default {
 					this.modal.show = true
 					break
 				default:
-					console.log('switch case default !!!');
+					console.log('update switch case default:',info);
 			}
+		},
+		updatePassword(pass){
+			this.onUpdate = true
+			this.$api.updatePassword(this.userId,pass)
+				.then(({data})=>{
+					if(data.success){
+						this.tip(0,'密码修改成功')
+					}else
+						this.tip(1,'密码修改失败')
+					this.onUpdate = false
+					this.scene='my'
+				})
+				.catch(()=>{
+					this.err()
+					this.onUpdate = false
+					this.scene='my'
+				})
 		},
 		getMyAccount(){
 			this.$api.getMyAccount(this.userId)
@@ -353,16 +384,25 @@ export default {
 				url:'../../pages/login/login?type=logout'
 			})
 		},
-		//我买到的
-		order_list_tap() {
-			uni.navigateTo({
-				url: '/pages/reservations/reservations'
-			})
-		},
-		gridTap(item) {
-			if (item.name == '设置') {
-				this.setupTap()
-			}
+		dataTap(tag){
+			switch(tag){
+				case 'reservation':
+					uni.navigateTo({
+						url: '/pages/reservations/reservations'
+					})
+					break
+				case 'commodity':
+					uni.navigateTo({
+						url: ''
+					});
+					break
+				case 'notice':
+					// TODO: 暂不考虑
+					uni.navigateTo({
+						url: ''
+					});
+					break
+			}		
 		},
 		err() {
 			this.tip(1, '网络异常')
@@ -436,7 +476,6 @@ $space: 20rpx;
 			right: 20rpx;
 		}
 	}
-	
 }
 .userAvatar{
 	width: $img_size;

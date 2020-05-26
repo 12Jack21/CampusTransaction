@@ -32,9 +32,9 @@
 					
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
-					v-bind:style="[{'background-image':'url('+ (msg.sender==-1? 
+					v-bind:style="[{'background-image':'url('+ (msg.sender===-1? 
 					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatar.length === 0? '/static/images/avatar/default.png':msg.avatar) ) + ')' }]" 
-					@tap="accTap(msg.sender, msg.avatar.length!==0)">
+					@tap="accTap(msg.sender, msg.sender!==-1)">
 						<!-- 已读/未读 -->
 						<view class="cu-tag badge" v-if="!msg.isRead"></view>
 					</view>
@@ -185,22 +185,22 @@ export default {
 			switch(targetType){
 				case 0:
 					uni.navigateTo({
-						url: `/pages/commodity?id=${targetId}`
+						url: `/pages/detail/commodity?id=${targetId}`
 					});
 					break
 				case 1:
 					uni.navigateTo({
-						url: `/pages/reservation?id=${targetId}`
+						url: `/pages/detail/reservation?id=${targetId}`
 					});
 					break
 				case 2:
 					uni.navigateTo({
-						url: `/pages/commodity?id=${targetId}&comment=1` //评论区
+						url: `/pages/detail/commodity?id=${targetId}&comment=1` //评论区
 					});
 					break
 				case 3:
 					uni.navigateTo({
-						url: `/pages/notice?id=${targetId}`
+						url: `/pages/detail/notice?id=${targetId}`
 					});
 					break
 			}
@@ -209,7 +209,7 @@ export default {
 			console.log('account tap');
 			if(bool){
 				uni.navigateTo({
-					url: `/pages/account?id=${sender}`
+					url: `/pages/account/account?id=${sender}`
 				});
 			}
 		},
@@ -248,11 +248,10 @@ export default {
 				type: this.type,
 				endTime: this.newsData.endTime
 			}
-			console.log('userId', this.userId);
 			this.$api.getMessages(this.userId, params)
 				.then(({data})=>{
 					console.log('messages',data);
-					if(data.pageIndex === data.pageCount){
+					if(data.pageIndex - 1 >= data.pageCount){
 						this.newsData.finish = true
 						this.loadStatus = 'noMore'
 					}			

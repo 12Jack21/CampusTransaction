@@ -258,7 +258,7 @@ export default {
 				pageIndex: this.storeGoods[tab].pageIndex,
 				pageSize: this.storeGoods[tab].pageSize,
 				endTime: this.storeGoods[tab].endTime,
-				userAddress: this.userAddress
+				userAddress: this.goodsTabData.tabCur===1? this.userAddress:''
 			}
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)
@@ -271,7 +271,7 @@ export default {
 					self.goodsData = self.storeGoods[tab].data
 					
 					// 取完了数据
-					if(resp.pageIndex - 1 === resp.pageCount) {
+					if(resp.pageIndex - 1 >= resp.pageCount) {
 						self.storeGoods[tab].finish = true
 						this.loadStatus = 'noMore'
 					}

@@ -111,12 +111,14 @@ import handles from '@/utils/handles.js'
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import filter_data from '../../static/data/filters.js'
 
-const iniPagination = {
-				pageIndex:1,
-				pageSize:20,
-				endtime:new Date().format('yyyy-MM-dd hh:mm'),
-				finish: false
+const iniPagination = ()=>{
+	return {			
+					pageIndex:1,
+					pageSize:15,
+					endtime:new Date().format('yyyy-MM-dd hh:mm'),
+					finish: false
 			}
+}
 const searchHistories = () => ['耳机', '大英课本', '四六级试卷', '电动车'] // virtual
 const conditionMap = (sort,outdated,price) =>{
 	let sortVal, oVal = -1, highPrice = -1, lowPrice = -1
@@ -148,6 +150,10 @@ const conditionMap = (sort,outdated,price) =>{
 			oVal = 30
 			break
 	}
+	
+	price = price[0]
+	console.log('my price',price);
+	// price为价格数组
 	switch(price){
 		case '50以下':
 			highPrice = 50
@@ -163,6 +169,9 @@ const conditionMap = (sort,outdated,price) =>{
 			break
 		case '300以上':
 			lowPrice = 300
+			break
+		default:
+			console.log('default price',price);
 	}
 	return {
 		outdated: oVal,
@@ -216,7 +225,7 @@ export default {
 		console.log('search page onLoad, param:', param)
 		this.goodsData = _home_data.goodsList() //虚拟
 		
-		this.pagination = {...iniPagination}
+		this.pagination = iniPagination()
 		let type_index = 0
 		if (param.type !== undefined) {
 			type_index = parseInt(param.type)
@@ -316,7 +325,7 @@ export default {
 			this.$appi.getSearchHistory(this.userId).then(res => (this.histories = res.data.data))
 		},
 		async onPullDown(done){
-			this.pagination = {...iniPagination} //对象展开
+			this.pagination = iniPagination() //对象展开不适用
 			await this.doSearch(this.searchBody)
 			done() // 结束下拉刷新
 		},
@@ -325,23 +334,31 @@ export default {
 				this.searchKey = key
 			}
 			// reset
-			this.pagination = {...iniPagination}
-			this.doSearch(null) // pass condition
+			this.pagination = iniPagination()
+			this.doSearch({
+				type:'全部',
+				sort:4,
+				outdated:-1,
+				highPrice:-1,
+				lowPrice:-1
+			}) // click '搜索', pass default condition
 		},
 		confirmFilter(e) {
 			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
 				return
 
 			this.filterValues = e.value
-			this.pagination = {...iniPagination}
+			this.pagination = iniPagination()
 			this.goodsData = []
 			
+			
 			// do search with filter condition
+			// TODO 价格多区间
 			let searchBody = Object.assign({
 				type: e.value[0][1],
 				userAddress: e.value[1][0],
 			},conditionMap(e.value[2][0], e.value[3][0][e.value[3][0].length - 1] || '',e.value[3][1]))
-			
+			console.log('searchBody',searchBody);
 			this.searchBody = searchBody
 			this.doSearch(searchBody,true)
 		},
@@ -382,7 +399,7 @@ export default {
 					this.goodsData.push(...resp.pageList)
 					this.pagination.pageIndex = resp.pageIndex
 					
-					if(resp.pageIndex === resp.pageCount){
+					if(resp.pageIndex - 1 >= resp.pageCount){
 						// 没有更多数据了
 						this.loadStatus = 'noMore'
 						this.pagination.finish = true

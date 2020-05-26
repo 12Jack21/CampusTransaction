@@ -175,9 +175,10 @@ export default {
 			if(this.tabCur > 2){
 				await this.$api.getMyNotices(this.userId,pagination)
 					.then(({data})=>{
+						data = data.data
 						curNotices.list.push(...data.pageList)
 						// 取完了数据
-						if(data.pageIndex === data.pageCount)
+						if(data.pageIndex - 1>= data.pageCount)
 							curNotices.finish = true
 					})
 					.catch(()=>uni.showToast({
@@ -189,9 +190,11 @@ export default {
 				await this.$api.getNotices(this.tabCur, pagination)
 					.then(({data})=> {
 						// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-						curNotices.list.push(...data.list)
+						console.log('data qweqwe',data.data);
+						data = data.data
+						curNotices.list.push(...data.pageList)
 						// 取完了数据
-						if(data.pageIndex === data.pageCount)
+						if(data.pageIndex - 1 >= data.pageCount)
 							curNotices.finish = true
 					})
 					.catch(() => uni.showToast({
@@ -226,10 +229,10 @@ export default {
 		},
 		userTap({data}) {
 			console.log('用户区域被点击：',data)	
-			// uni.navigateTo({
-			// 	animationType:'auto',
-			// 	url:'../../pages/detail/account?id=' + data.id
-			// })
+			uni.navigateTo({
+				animationType:'auto',
+				url:'../../pages/account/account?id=' + data.id
+			})
 		},
 		contentTap(id) {
 			console.log('文字内容被点击：',id)
@@ -239,6 +242,7 @@ export default {
 		},
 		imgTap(e) {
 			console.log('图片被点击：' + JSON.stringify(e))
+			// TODO: 查看图片
 		},
 		viewAllTap() {
 			console.log('点击了查看全部')

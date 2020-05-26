@@ -8,7 +8,7 @@
 		<view class="bg-white margin-top padding radius zaiui-trends">
 			<view class="cu-list menu-avatar">
 				<view class="cu-item">
-						<view class="cu-avatar round" :style="[{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)':account.avatar }]" 
+						<view class="cu-avatar round" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)':('url('+ account.avatar+')') }" 
 						/>
 					<view class="content" @tap="userTap('userTap', account.id)">
 						<view class="text-black">
@@ -37,7 +37,7 @@
 				<!--下方部分-->
 				<view class="cu-tag light round margin-top bg-red" style="padding: 0;background-color: transparent;">
 					<text class="cuIcon-locationfill" style="font-size: 1.6em;"></text>
-					<text class="margin-left-xs">{{notice.address}}</text>
+					<text class="margin-left-xs">{{notice.detailedAddress}}</text>
 				</view>
 				<text class="margin-top cu-tag" style="background-color: transparent;">
 					浏览量:{{notice.browseCount}} 次
@@ -105,7 +105,8 @@
 					createTime:'3小时前',
 					expiredTime:' 2020-10-08 10:19',
 					condition: 'tonggao条件',
-					address:'信息学部大食堂',
+					address:'信息学部',
+					detailedAddress:'信息学部大食堂',
 					browseCount: 30,
 					state_enum:'CANCELLED' // CANCELLED PUBLISHED
 				},
@@ -186,7 +187,7 @@
 			getNotice(id){
 				this.$api.getNotice(id)
 					.then(({data})=>{
-						this.notice = data
+						this.notice = data.data
 					})
 					.catch(()=>{
 						console.log('获取通告详情失败');

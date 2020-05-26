@@ -6,9 +6,12 @@
 				<text class="cuIcon-back" @tap="$emit('close')"></text>
 			</block>
 			<block slot="content">联系卡</block>
+			<!-- #ifndef MP -->
+			
 			<block slot="right">
 				<text class="text-red" @tap="save">保存</text>
 			</block>
+			<!-- #endif -->
 		</bar-title>
 		
 		<!--提示栏-->
@@ -39,6 +42,18 @@
 			<input placeholder="请填写您的电子邮箱" v-model="contact.email"/>
 		</view>
 		
+		<view style="margin-top: 20rpx;" v-if="onUpdate">
+			<loading>更新中</loading>
+		</view>
+		
+		<!--小程序端显示-->
+		<!-- #ifdef MP -->
+		<view class="bg-white wecanui-footer-fixed foot-pb">
+			<view class="flex flex-direction padding-sm">
+				<button class="cu-btn bg-red" @tap="save">保存</button>
+			</view>
+		</view>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -50,13 +65,9 @@
 		components: {
 			barTitle
 		},
-		data() {
-			return {
-				
-			}
-		},
 		props:{
-			contact:{}
+			contact:{},
+			onUpdate:false
 		},
 		methods: {
 			save(){

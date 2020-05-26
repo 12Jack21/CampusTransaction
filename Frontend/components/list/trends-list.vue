@@ -6,11 +6,10 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
 						<view class="cu-avatar round"
-						 :style="[{ backgroundImage:item.avatar.length===0? 'url(/static/images/avatar/default.png)' : item.avatar}]" 
-						@tap="userTap('userTap', item.userId)" />
+						 :style="{ backgroundImage:item.avatar.length===0? 'url(/static/images/avatar/default.png)' :('url('+ item.avatar + ')')}"  @tap="userTap('userTap', item.userId)" />
 						<view class="content" @tap="userTap('userTap', item.userId)">
 							<view class="text-black">
-								<view class="text-cut">{{ item.username }}</view>
+								<view class="text-cut">{{ item.userName }}</view>
 							</view>
 							<view class="text-sm flex">
 								<text>{{ item.time }}</text>
@@ -41,7 +40,7 @@
 
 				<view class="zaiui-img-grid-col" v-if="item.img.length > 0">
 					<!--单图-->
-					<view class="one-img" v-if="item.img.length == 1" @tap="imgTap(item.img, item.img)">
+					<view class="one-img" v-if="item.img.length == 1" @tap="imgTap(item.img[0], item.img)">
 						<view class="img-grid" :style="[{ backgroundImage: 'url(' + item.img + ')' }]" />
 					</view>
 
