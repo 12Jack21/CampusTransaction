@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!--标题栏-->
-		<bar-title bgColor="bg-white" isBack><block slot="content">订单详情</block></bar-title>
+		<bar-title bgColor="bg-white" isBack><block slot="content">详情</block></bar-title>
 
 		<!--步骤条区域-->
 		<view class="bg-white padding solid-top" v-if="basics != 4">
@@ -21,8 +21,7 @@
 			<view class="text-sm text-center margin-top" v-if="basics == 0">
 				<view class="text-black">预约成功，待卖家确认。</view>
 				<view class="text-black">
-					<text class="text-red">{{ reservation.remainTime1 }}</text>
-					<text>分后未支付，订单将自动关闭。</text>
+					<text>若预约未被确认，其将自动取消。</text>
 				</view>
 			</view>
 			<view class="text-sm text-center margin-top" v-if="basics == 1"><view class="text-black">沟通成功，待卖家发货.</view></view>
@@ -30,7 +29,6 @@
 			<view class="text-sm text-center margin-top" v-if="basics == 3">
 				<view class="text-black">双方已交易，请双方确认无误后点击交易完成。</view>
 				<view class="text-black">
-					<text class="text-red">{{ reservation.remainTime2 }}</text>
 					<text>分后将自动确认交易</text>
 				</view>
 			</view>
@@ -58,7 +56,8 @@
 						<view class="bg-grey icon-view"><text class="cuIcon-locationfill" /></view>
 						<view class="content">
 							<view class="text-black">
-								<text>收货人：</text>
+								<text>交易双方：</text>
+								<text>{{ reservation.buyer }}</text>
 								<text>{{ reservation.buyer }}</text>
 							</view>
 							<view class="text-gray text-sm flex">
@@ -102,10 +101,6 @@
 					<text class="margin-right-xs">应付款：{{ reservation.totalPrice }}</text>
 					<text class="text-price"></text>
 				</view>
-
-				<view class="solid-line"></view>
-
-				<view class="text-center text-black">联系客服</view>
 			</view>
 		</view>
 
@@ -117,7 +112,7 @@
 				<view class="text-black title-view">
 					<view class="title">订单编号</view>
 					<view class="text-right">
-						<text class="margin-right-xs">{{ reservation.reservationId }}</text>
+						<text class="margin-right-xs">{{ reservation.id }}</text>
 						<button class="cu-btn sm line-black">复制</button>
 					</view>
 				</view>
@@ -125,38 +120,23 @@
 				<view class="text-black title-view">
 					<view class="title">预约时间</view>
 					<view class="text-right">
-						<text>{{ reservation.transactionTime1 }}</text>
+						<text>{{ reservation.createTime }}</text>
 					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 0">
-					<view class="title">沟通时间</view>
+					<view class="title">确认时间</view>
 					<view class="text-right">
 						<text>{{ reservation.transactionTime2 }}</text>
 					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 1">
-					<view class="title">发货时间</view>
+					<view class="title">交易时间</view>
 					<view class="text-right">
 						<text>{{ reservation.transactionTime3 }}</text>
 					</view>
 				</view>
-				<view class="text-black title-view" v-if="basics > 2">
-					<view class="title">收货时间</view>
-					<view class="text-right">
-						<text>{{ reservation.transactionTime4 }}</text>
-					</view>
-				</view>
-				<view class="text-black title-view" v-if="basics > 3">
-					<view class="title">完成时间</view>
-					<view class="text-right">
-						<text>{{ reservation.transactionTime5 }}</text>
-					</view>
-				</view>
 			</view>
 		</view>
-
-		<view class="bg-white zaiui-card-box"></view>
-		<view class="bg-white zaiui-card-box"></view>
 
 		<view class="bg-white zaiui-card-hight-box" />
 
@@ -191,59 +171,46 @@
 			<button class="cu-btn line-black radius" @tap="appraiseTap">发表评价</button>
 			<button class="cu-btn bg-red" @click="completeTransaction()">交易完成</button>
 		</view>
-
+		
 		<!--弹出框-->
-		<view class="cu-modal bottom-modal" :class="bottomModal ? 'show' : ''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white solid-bottom">
-					<view class="text-black text-center title">手机安全验证</view>
-					<text class="text-gray cuIcon-close close" @tap="closeModalTap"></text>
+		<view class="cu-modal bottom-modal zaiui-bottom-modal-box" :class="modalShow ? 'show' : ''">
+			<view class="cu-dialog bg-white updateDialog">
+				<view class="text-black text-center margin-tb text-lg title-bar">
+					<text>评价</text>
+					<text class="cuIcon-close close-icon" @tap="modalShow=false"></text>		
 				</view>
-				<view class="bg-white modal-view">
-					<view class="content">
-						<view class="tel-btn-view">
-							<view class="text-black tel-view">验证码已发至：138****8000</view>
-							<button class="cu-btn sm" @tap="getCodeKey" v-if="btnKey">获取</button>
-							<button class="cu-btn sm" v-else>56s</button>
+		
+				<!-- 模态框内容区域 -->
+				<view class="zaiui-modal-content">
+					<!-- 修改评价 -->
+					<view class="zaiui-view-box select">										
+						<!-- 新评价 -->
+						<view class="usernameItem">
+							<view class="flex new">
+								<view class="text-black text-lg text-bold">新评级:</view>
+								<input type="text" v-model="newEvaluation" placeholder="输入新昵称"  maxlength="12"/>
+							</view>
+							<view class="flex old text-lg">
+								<view class="text-gray ">原评价:</view>
+								<text class="text-gray ">{{evaluation}}</text>
+							</view>
 						</view>
-						<view class="text-sm text-black margin-tb">
-							<text>确认收货后，交易将结束。您之前付款到平台的</text>
-							<text class="text-red">￥1.00</text>
-							<text>，将会打给卖家。</text>
-						</view>
-						<view class="text-sm text-gray margin-bottom">提醒:确认收货后钱款将脱离平台,届时平台无法保障您的钱款安全,请务必谨慎点击确认收货，谨防诈骗。</view>
-						<view class="code-view">
-							<text class="code" v-if="!codeKey[0]">—</text>
-							<text class="code" v-else>{{ codeKey[0] }}</text>
-
-							<text class="code" v-if="!codeKey[1]">—</text>
-							<text class="code" v-else>{{ codeKey[1] }}</text>
-
-							<text class="code" v-if="!codeKey[2]">—</text>
-							<text class="code" v-else>{{ codeKey[2] }}</text>
-
-							<text class="code" v-if="!codeKey[3]">—</text>
-							<text class="code" v-else>{{ codeKey[3] }}</text>
-						</view>
+						<!-- end -->
+					</view>						
+					<!-- 保存更新 -->
+					<view class="zaiui-footer-fixed" style="z-index: 10;">
+						<view class="flex flex-direction">
+							<button class="cu-btn bg-red" style="font-size: 1.4em;padding: 10rpx 0;" @tap="confirm" >
+								保存
+							</button>
+						</view> 
 					</view>
-
-					<!--数字键盘-->
-					<view class="num-lock-view">
-						<view class="cu-list grid col-3 solid-top">
-							<block v-for="(item, index) in 9" :key="index">
-								<view class="cu-item" @tap="codeKeyTap(item)">
-									<text class="text-black num">{{ item }}</text>
-								</view>
-							</block>
-							<view class="cu-item"><text class="text-black num"></text></view>
-							<view class="cu-item" @tap="codeKeyTap(0)"><text class="text-black num">0</text></view>
-							<view class="cu-item" @tap="codeKeyDelTap"><text class="cuIcon-close close"></text></view>
-						</view>
-					</view>
+					
 				</view>
 			</view>
 		</view>
-	</view>
+		
+</view>
 </template>
 
 <script>
@@ -256,16 +223,18 @@ export default {
 	},
 	data() {
 		return {
+			modalShow:false,//评价
+			evaluation:'',
+			newEvaluation:'',
 			basics: 0,
 			bg_img: '/static/images/home/goods/1.png',
 			avatar: '/static/images/avatar/1.jpg',
 			cancel: false,
 			basicsList: [
 				{ cuIcon: 'cartfill', name: '未预约', name_s: '已预约' },
-				{ cuIcon: 'card', name: '待沟通', name_s: '已沟通' },
-				{ cuIcon: 'deliver_fill', name: '待发货', name_s: '已发货' },
-				{ cuIcon: 'formfill', name: '待收货', name_s: '已收货' },
-				{ cuIcon: 'presentfill', name: '待完成', name_s: '已完成' }
+				{ cuIcon: 'card', name: '待确认', name_s: '已确认' },
+				{ cuIcon: 'formfill', name: '待交易', name_s: '已交易' },
+				{ cuIcon: 'presentfill', name: '待评价', name_s: '已评价' }
 			],
 			bottomModal: false,
 			codeKey: [],
@@ -280,8 +249,8 @@ export default {
 				expiredTime: '2020-10-09',
 				description: '测试介绍内容',
 				remainTime1: '14',
-				reservationId: '231231231',
-				transactionTime1: '2020-04-02 14:55:23',
+				id: '231231231',
+				createTime: '2020-04-02 14:55:23',
 				transactionTime2: '2020-04-03 14:55:23',
 				transactionTime3: '2020-04-04 14:55:23',
 				transactionTime4: '2020-04-05 14:55:23',
@@ -325,13 +294,10 @@ export default {
 				class: 'zaiui-modal',
 				success: res => {
 					if (res.confirm) {
-						this.bottomModal = true
+						
 					}
 				}
 			})
-		},
-		closeModalTap() {
-			this.bottomModal = false
 		},
 		codeKeyTap(index) {
 			if (this.codeKey.length < 4) {
