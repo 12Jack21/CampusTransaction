@@ -14,6 +14,9 @@ import java.util.List;
 @Repository
 public interface NoticeDAO extends BaseMapper<Notice> {
 
+    @Update("update notice set browse_count = browse_count + 1 where id = #{id}")
+    Integer addBrowseCount(Integer id);
+
     @Select("select * from notice where account_id = #{id}")
     List<Notice> getNoticeByOwnerId(Integer id);
 
@@ -24,6 +27,9 @@ public interface NoticeDAO extends BaseMapper<Notice> {
             @Result(id = true, property = "id", column = "id"),
             @Result(property = "comList", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
+            )),
+            @Result(property = "user",column = "account_id", javaType = Account.class, one = @One(
+                    select = "com.example.transaction.dao.AccountDAO.getAccountWithEstimate"
             ))
     })
     @Select("select * from notice where id=#{id}")
@@ -49,7 +55,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
                     select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
             )),
             @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.getAccountWithPublicInfoById"
+                    select = "com.example.transaction.dao.AccountDAO.selectById"
             ))
     })
     @Select("select * from notice ${ew.customSqlSegment}")

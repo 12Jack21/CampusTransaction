@@ -165,7 +165,7 @@ public class NoticeController {
 //    @RequestMapping("/getRecentNoticePage")
     @ApiOperation("获取首页通告")
     @GetMapping
-    public responseFromServer getRecentNoticePage(@RequestBody NoticeCondition condition) {
+    public responseFromServer getRecentNoticePage(NoticeCondition condition) {
         if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
             condition.setPageIndex(1);
         }
@@ -184,7 +184,14 @@ public class NoticeController {
     @ApiOperation("根据id查询通告")
     @GetMapping("/{noticeId}")
     public responseFromServer getNoticeById(@PathVariable Integer noticeId, HttpServletRequest request) {
-        return noticeService.getDetailedNotice(noticeId);
+        responseFromServer response = noticeService.getDetailedNotice(noticeId);
+        if(response.isFailure()){
+            return responseFromServer.error();
+        }
+        if(noticeService.addBrowseCount(noticeId).isFailure()){
+            return responseFromServer.error();
+        }
+        return response;
     }
 
     /**

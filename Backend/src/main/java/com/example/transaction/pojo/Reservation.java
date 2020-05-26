@@ -22,11 +22,11 @@ public class Reservation implements Serializable {
     private Integer id;
     private String note;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "start_time")
     private Timestamp startTime;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
     private Timestamp updateTime;
     @TableField(value = "state_enum")

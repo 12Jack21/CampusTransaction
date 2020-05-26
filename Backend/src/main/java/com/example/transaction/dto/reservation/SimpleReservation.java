@@ -17,13 +17,13 @@ public class SimpleReservation {
     Double price = -1.0D;
     String note = "";
 
-    public SimpleReservation(){}
+    public SimpleReservation() {
+    }
 
-    public SimpleReservation(Reservation reservation){
+    public SimpleReservation(Reservation reservation) {
         this.id = reservation.getId();
 //        this.price = reservation.
         this.note = reservation.getNote();
 //        this.account = re
-
     }
 }

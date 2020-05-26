@@ -51,6 +51,7 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Select("select * from reservation where id = #{id}")
     Reservation selectWithDetailedCommodityById(Integer id);
 
+    /*todo 获取我收到的预约*/
     @Select("select * from reservation r,commodity c,notice n where " +
             "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id}")
     IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id);

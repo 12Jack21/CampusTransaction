@@ -206,7 +206,9 @@ public class ReservationController {
                     @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    public responseFromServer getReservationPageForCommodity(@PathVariable Integer commodityId, @RequestJson Integer pageIndex, HttpServletRequest request) {
+    public responseFromServer getReservationPageForCommodity(@PathVariable Integer commodityId,
+                                                             @RequestJson Integer pageIndex,
+                                                             HttpServletRequest request) {
 //        Commodity commodity = (Commodity) map.get("commodity");
 //        Integer pageIndex = (Integer) map.get("pageIndex");
         if (commodityId == null) {
@@ -247,7 +249,10 @@ public class ReservationController {
             }
     )
     @GetMapping("/account/{accountId}/send")
-    public responseFromServer getMyReservation(@PathVariable Integer accountId, @RequestJson Integer pageIndex, @RequestJson Boolean isCommodity, HttpServletRequest request) {
+    public responseFromServer getMyReservation(@PathVariable Integer accountId,
+                                               @RequestJson Integer pageIndex,
+                                               @RequestJson Boolean isCommodity,
+                                               HttpServletRequest request) {
         /**
          * ZZH
          * TODO : token后直接根据token获取用户

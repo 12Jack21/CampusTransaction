@@ -23,7 +23,7 @@ public class Comment implements Serializable {
     private Integer id;
     private Boolean type;
     private String content;
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date date;
 
     @TableField(value = "from_id")

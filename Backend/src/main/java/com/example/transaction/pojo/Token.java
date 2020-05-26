@@ -22,7 +22,7 @@ public class Token implements Serializable {
     private int accountId;
 
     //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "token_str")

@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.*;
 import com.example.transaction.dto.account.SimpleAccount;
+import com.example.transaction.dto.commodity.SimpleCommodity;
+import com.example.transaction.dto.reservation.DetailedReservation;
 import com.example.transaction.dto.reservation.SimpleReservation;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
@@ -172,12 +174,12 @@ public class ReservationServiceImpl implements ReservationService {
      * @param pageIndex
      * @return
      */
+    @Override
     public responseFromServer getSimpleReservationPage(QueryWrapper queryWrapper, Integer pageIndex) {
         responseFromServer response = getReservationsPage(queryWrapper, pageIndex);
         if (response.isFailure()) {
             return response;
         }
-
         //将查询的分页结果中的reservation转化成simplereservation类型
         MyPage myPage = (MyPage) response.getData();
         List<Reservation> reservations = (List<Reservation>) myPage.getPageList();
@@ -191,6 +193,45 @@ public class ReservationServiceImpl implements ReservationService {
             simpleReservations.add(simpleReservation);
         }
         myPage.setPageList(simpleReservations);
+        return responseFromServer.success(myPage);
+    }
+
+
+    public responseFromServer getDetailedReservationPage(QueryWrapper queryWrapper, Integer pageIndex, Integer type){
+        responseFromServer response = getReservationsPage(queryWrapper, pageIndex);
+        if (response.isFailure()) {
+            return response;
+        }
+//        switch (type){
+//            case
+//        }
+        //将查询的分页结果中的reservation转化成simplereservation类型
+        MyPage myPage = (MyPage) response.getData();
+        List<Reservation> reservations = (List<Reservation>) myPage.getPageList();
+        List<DetailedReservation> detailedReservations = new ArrayList<>();
+
+        for (Reservation reservation : reservations) {
+            try{
+                DetailedReservation detailedReservation = new DetailedReservation(reservation);
+                SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
+                Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
+                detailedReservation.setAccountId(simpleAccount.getId());
+                detailedReservation.setAccountName(simpleAccount.getUsername());
+                detailedReservation.setAvatar(simpleAccount.getAvatar());
+                detailedReservation.setPrice(commodity.getExpectedPrice()*reservation.getCount());
+                detailedReservation.setCommodity(new SimpleCommodity(commodity));
+                detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(simpleAccount.getId()).getCredit());
+                detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(
+                        noticeDAO.selectById(commodity.getNoticeId()).getAccountId()
+                ).getCredit());
+                detailedReservations.add(detailedReservation);
+            }catch(Exception e){
+                e.printStackTrace();
+                return responseFromServer.error();
+            }
+
+        }
+        myPage.setPageList(detailedReservations);
         return responseFromServer.success(myPage);
     }
 
@@ -410,6 +451,10 @@ public class ReservationServiceImpl implements ReservationService {
     AccountDAO accountDAO;
     CommodityDAO commodityDAO;
     CommodityService commodityService;
+    @Autowired
+    NoticeDAO noticeDAO;
+    @Autowired
+    EstimateDAO estimateDAO;
 
     @Autowired
     public ReservationServiceImpl(NotifyService notifyService, AccountDAO accountDAO, ReservationDAO reservationDAO, CommodityDAO commodityDAO, A2aDAO a2aDAO, CommodityService commodityService) {

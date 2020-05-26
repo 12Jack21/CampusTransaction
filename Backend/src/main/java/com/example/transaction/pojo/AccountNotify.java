@@ -27,11 +27,11 @@ public class AccountNotify implements Serializable {
     @TableField(value = "is_read")
     private Boolean isRead;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "creat_time")
     private Timestamp createTime;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "read_time")
     private Timestamp readTime;
     @TableField(value = "notify_id")

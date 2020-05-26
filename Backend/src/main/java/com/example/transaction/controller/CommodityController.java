@@ -91,18 +91,19 @@ public class CommodityController {
     @ApiOperation(value = "搜索商品")
     @ApiImplicitParam(name = "condition", value = "condition", paramType = "Condition", dataType = "Condition")
     @PostMapping("/search")
-    public responseFromServer search(@RequestBody CommoditySearch commoditySearch, HttpServletRequest request) {
-        Condition condition = commoditySearch.getCondition();
+    public responseFromServer search(@RequestBody CommoditySearch commoditySearch,
+                                     HttpServletRequest request) {
+        Condition condition = commoditySearch.getCondition()==null?new Condition():commoditySearch.getCondition();
         condition.setPageIndex(commoditySearch.getPagination()==null?-1:commoditySearch.getPagination().getPageIndex());
         condition.setEndTime(commoditySearch.getPagination()==null?(new Date()):commoditySearch.getPagination().getEndTime());
         condition.setKeyword(commoditySearch.getKeyword()==null?null:commoditySearch.getKeyword());
-        if(condition.getLowPrice().equals(-1)){
+        if(condition.getLowPrice()!=null&&condition.getLowPrice().equals(-1)){
             condition.setLowPrice(null);
         }
-        if(condition.getHighPrice().equals(-1)){
+        if(condition.getHighPrice()!=null&&condition.getHighPrice().equals(-1)){
             condition.setHighPrice(null);
         }
-        responseFromServer response = commodityService.search(commoditySearch.getCondition());
+        responseFromServer response = commodityService.search(condition);
         if (response.isSuccess()) {
             if (condition.getKeyword() != null || condition.getKeyword() != "") {
                 Account account = accountVerify.getCurrentAccount(request);
@@ -128,7 +129,7 @@ public class CommodityController {
     public responseFromServer getSortedCommodity(@PathVariable Integer sortType,
                                                  Condition condition,
                                                  HttpServletRequest request) {
-        condition.setSortType(sortType);
+        condition.setSort(sortType);
         return commodityService.search(condition);
     }
 

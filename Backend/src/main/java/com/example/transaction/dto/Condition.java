@@ -23,7 +23,7 @@ public class Condition {
     /**
      * 要使用的排序规则
      */
-    public Integer sortType;
+    public Integer sort;
 
     /**
      * 地址

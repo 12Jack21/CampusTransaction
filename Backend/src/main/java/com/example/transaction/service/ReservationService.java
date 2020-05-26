@@ -16,6 +16,9 @@ public interface ReservationService {
     public responseFromServer setUpReservation(Reservation reservation);
 
     public responseFromServer getReservationRequest(Integer accountId,Integer pageIndex);
+
+    responseFromServer getSimpleReservationPage(QueryWrapper queryWrapper, Integer pageIndex);
+
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex);
     public responseFromServer getSimpleReservation(Integer reservationId);
     public responseFromServer getDetailedReservation(Integer reservationId);

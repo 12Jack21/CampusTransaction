@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 public class NoticeCondition {
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     Date endTime;
     Integer pageIndex;
     //0-全部 1-出售的 2-需求

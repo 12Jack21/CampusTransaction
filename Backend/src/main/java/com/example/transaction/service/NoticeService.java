@@ -12,8 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
  * @Date: 2020/4/26 16:45
  */
 public interface NoticeService {
+    responseFromServer getNoticeInfoPage(QueryWrapper queryWrapper, int pageIndex);
+
     /*获得通告*/
     responseFromServer getSimpleNotice(Integer noticeId);
+
+    responseFromServer addBrowseCount(Integer noticeId);
 
     /*获得详细通告内容*/
     responseFromServer getDetailedNotice(Integer noticeId);

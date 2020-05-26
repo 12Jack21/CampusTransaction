@@ -22,6 +22,7 @@ import com.example.transaction.util.code.Address;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
+import io.netty.util.internal.StringUtil;
 import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,33 +90,6 @@ public class CommodityServiceImpl implements CommodityService {
 //todo        queryWrapper.eq("n.id", "c.notice_id");
         queryWrapper.le("n.create_time", timestamp);
 
-        if (condition.recent) {
-            /**
-             * ZZH
-             * TODO : 时间计算
-             */
-            timestamp = new Timestamp((new Date()).getTime() - 1000 * 60 * 60 * 24 * Nums.recentDays);
-            queryWrapper.ge("n.end_time", timestamp);
-        } else if (condition.getOutdated() != null && condition.getOutdated() > 0) {
-            timestamp = new Timestamp(timestamp.getTime() - 1000 * 60 * 60 * 24 * condition.getOutdated());
-            queryWrapper.ge("n.end_time", timestamp);
-        }
-
-        /*处理地址*/
-
-        if (condition.getUserAddress() != null && !condition.getUserAddress().equals("全校")) {
-            int addressCode;
-            String address = condition.getUserAddress();
-            try {
-                addressCode = Address.valueOf(address).getCode();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return responseFromServer.error();
-            }
-            /*这里没有用到地址码,枚举只是用了检测该地址是否有效*/
-            queryWrapper.eq("n.address", address);
-        }
-
         /*处理搜索串*/
         String searchStr = condition.getKeyword();
         if (searchStr != null) {
@@ -124,28 +98,51 @@ public class CommodityServiceImpl implements CommodityService {
 
         /*价格区间*/
         if (condition.getLowPrice() != null) {
-            queryWrapper.ge("c.price", condition.getLowPrice());
+            queryWrapper.ge("c.expected_price", condition.getLowPrice());
         }
         if (condition.getHighPrice() != null) {
-            queryWrapper.le("c.price", condition.getHighPrice());
+            queryWrapper.le("c.expected_price", condition.getHighPrice());
         }
 
         /*处理类型*/
         if (condition.getType() != null) {
 //todo            queryWrapper.eq("c.id", "t.commodity_id");
-            queryWrapper.eq("c.type", condition.getType());
+            if (!StringUtil.isNullOrEmpty(condition.getType()) && !condition.getType().equals("全部")) {
+                queryWrapper.eq("c.type", condition.getType());
+            }
         }
 
 
+        /*处理地址*/
+        if (condition.getUserAddress() != null && !condition.getUserAddress().equals("全校")) {
+            int addressCode;
+            String address = condition.getUserAddress();
+            try {
+                if (address != "") {
+                    addressCode = Address.valueOf(address).getCode();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return responseFromServer.error();
+            }
+            /*这里没有用到地址码,枚举只是用了检测该地址是否有效*/
+            queryWrapper.eq("n.address", address);
+        }
+
+        if (condition.getOutdated() != null && condition.getOutdated() > 0) {
+            timestamp = new Timestamp(timestamp.getTime() + 1000 * 60 * 60 * 24 * condition.getOutdated());
+            queryWrapper.le("n.end_time", timestamp);
+        }
         try {
             IPage<Commodity> resultPage;
-            if (condition.getSortType() != null && condition.sortType >= 0) {
-                switch (condition.getSortType()) {
-
+            queryWrapper.ge("n.end_time", new Timestamp(System.currentTimeMillis()));
+            if (condition.getSort() != null && condition.sort >= 0) {
+                switch (condition.getSort()) {
                     /*失效时间*/
                     case 2:
-                        condition.recent = true;
-                        condition.setOutdated(2);
+                        timestamp = new Timestamp((new Date()).getTime() + 1000 * 60 * 60 * 24 * Nums.recentDays);
+                        queryWrapper.le("n.end_time", timestamp);
+                        queryWrapper.ge("n.end_time", System.currentTimeMillis());
                         resultPage = commodityDAO.searchEndTimeDESC(page, queryWrapper);
                         break;
                     /*便宜好物*/
@@ -153,13 +150,14 @@ public class CommodityServiceImpl implements CommodityService {
                         queryWrapper.le("c.expected_price", 10.0);
                         resultPage = commodityDAO.search(page, queryWrapper);
                         break;
-                    /*失效时间*/
-                    case 5:
-                        resultPage = commodityDAO.searchEndTimeDESC(page, queryWrapper);
-                        break;
                     /*价格从低到高*/
-                    case 6:
+                    case 5:
                         resultPage = commodityDAO.searchPriceASC(page, queryWrapper);
+                        break;
+                    /*失效时间*/
+                    case 6:
+
+                        resultPage = commodityDAO.searchEndTimeDESC(page, queryWrapper);
                         break;
                     /*发布者信誉值(成功率)*/
                     case 7:
@@ -178,6 +176,8 @@ public class CommodityServiceImpl implements CommodityService {
             } else {
                 resultPage = commodityDAO.search(page, queryWrapper);
             }
+
+
             if (resultPage == null) {
                 throw new Exception();
             }
@@ -188,7 +188,7 @@ public class CommodityServiceImpl implements CommodityService {
                 /**查询对应的notice信息*/
                 QueryWrapper queryWrapper1 = new QueryWrapper();
                 queryWrapper1.eq("id", commodity.getNoticeId());
-                responseFromServer noticeResposne = noticeService.getNoticePage(queryWrapper1, 1);
+                responseFromServer noticeResposne = noticeService.getNoticeInfoPage(queryWrapper1, 1);
                 if (noticeResposne.isFailure()) {
                     throw new Exception();
                 }
@@ -215,10 +215,10 @@ public class CommodityServiceImpl implements CommodityService {
 
     /**
      * @Description: 获取别人的商品信息
-     * @Date:   2020/5/24 21:46
+     * @Date: 2020/5/24 21:46
      */
     @Override
-    public responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId){
+    public responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         Page<Commodity> page;
         if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
@@ -226,13 +226,13 @@ public class CommodityServiceImpl implements CommodityService {
         } else {
             page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
         }
-        queryWrapper.le("n.end_time",pagination.getEndTime());
-        queryWrapper.eq("n.account_id",accoutnId);
+        queryWrapper.le("n.end_time", pagination.getEndTime());
+        queryWrapper.eq("n.account_id", accoutnId);
         IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
         MyPage myPage = new MyPage<Commodity>(resultPage);
         List<CommodityInfo> commodityInfoList = new ArrayList<>();
         for (Commodity commodity : resultPage.getRecords()) {
-            commodityInfoList.add(new CommodityInfo(commodity,null));
+            commodityInfoList.add(new CommodityInfo(commodity, null));
         }
         myPage.setPageList(commodityInfoList);
         return responseFromServer.success(myPage);
@@ -395,7 +395,7 @@ public class CommodityServiceImpl implements CommodityService {
     public responseFromServer updateCommodity(Commodity commodity) {
 /*        if(isIdentityError(commodity, session))  //身份检查
             return responseFromServer.illegal();*/
-        if(commodity.getId() == null){
+        if (commodity.getId() == null) {
             return responseFromServer.error();
         }
         /**

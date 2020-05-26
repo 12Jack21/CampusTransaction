@@ -22,22 +22,25 @@ public class Notice implements Serializable {
     private String detailedAddress;
 
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "end_time")
     private Timestamp endTime;
     private String title;
     private String condition;
     private String description;
+    @TableField(value = "browse_count")
+    private Integer browseCount;
+
     @TableField(value = "state_enum")
     private Integer stateEnum;
 
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
     private Timestamp updateTime;
 
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "account_id")

@@ -51,7 +51,7 @@ public class CommodityInfo {
                 this.time = noticeInfo.getTime();
                 this.accountName = noticeInfo.getUserName();
                 if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
-                    this.avatar = Nums.avatarPath + noticeInfo.getAvatar();
+                    this.avatar = noticeInfo.getAvatar();
                 }
             }
 

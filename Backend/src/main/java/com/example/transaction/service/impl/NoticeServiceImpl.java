@@ -62,7 +62,14 @@ public class NoticeServiceImpl implements NoticeService {
         if (condition.getEndTime() != null) {
             queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
         }
-        return getNoticePage(queryWrapper, condition.getPageIndex());
+        queryWrapper.ge("end_time",new Timestamp(System.currentTimeMillis()));
+        responseFromServer response = getNoticePage(queryWrapper, condition.getPageIndex());
+        if(response.isFailure()){
+            return responseFromServer.error();
+        }
+        MyPage myPage = (MyPage)response.getData();
+        myPage.setPageList(transform(myPage.getPageList()));
+        return responseFromServer.success(myPage);
     }
 
     /**
@@ -196,12 +203,24 @@ public class NoticeServiceImpl implements NoticeService {
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
         Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
-        MyPage<Notice> myPage = new MyPage(noticeIPage);
-        List<NoticeInfo> noticeList = new ArrayList<>();
-        for (Notice notice : myPage.getPageList()) {
-            noticeList.add(new NoticeInfo(notice));
+        return responseFromServer.success(new MyPage(noticeIPage));
+    }
+
+    @Override
+    public responseFromServer getNoticeInfoPage(QueryWrapper queryWrapper, int pageIndex) {
+        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
+        IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
+        MyPage myPage = new MyPage(noticeIPage);
+        myPage.setPageList(transform(myPage.getPageList()));
+        return responseFromServer.success(myPage);
+    }
+
+    private List<NoticeInfo> transform(List<Notice> pageList){
+        List<NoticeInfo> resultList = new ArrayList<>();
+        for (Notice notice : pageList) {
+            resultList.add(new NoticeInfo(notice));
         }
-        return responseFromServer.success(new MyPage<>(myPage, noticeList));
+        return resultList;
     }
 
     /**
@@ -217,6 +236,22 @@ public class NoticeServiceImpl implements NoticeService {
             return responseFromServer.error();
         }
         return responseFromServer.success(notice);
+    }
+
+
+    /**
+     * 添加访问量
+     * @param noticeId
+     * @return
+     */
+    @Override
+    @Transactional
+    public responseFromServer addBrowseCount(Integer noticeId){
+        if(noticeId == null || noticeId < 0 ||noticeDAO.addBrowseCount(noticeId)!=1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
     }
 
     /**

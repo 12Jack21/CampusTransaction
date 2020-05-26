@@ -5,6 +5,7 @@ import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.code.Nums;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,15 +19,14 @@ import java.util.List;
 public class NoticeInfo {
     /*notice id*/
     private Integer id;
-    /*长度是否超过50*/
-    private Boolean showAll;
     /*标题*/
     private String title;
     /*地址*/
     private String address;
     /*第一张商品图片*/
-    private String image;
+    private List<String> img;
 
+    private String description;
 
     /*用户头像*/
     private String avatar;
@@ -34,6 +34,9 @@ public class NoticeInfo {
     private String userName;
     /*用户成交率*/
     private Double rate;
+
+    Integer browseCount;
+
 
 
     /*发布的时间到今天的距离：一年前 一周前*/
@@ -45,27 +48,31 @@ public class NoticeInfo {
 
     public NoticeInfo(Notice notice) {
         this.id = notice.getId();
-        if (notice.getTitle().length() > 50) {
-            this.title = notice.getTitle().substring(0, 49) + "...";
-            this.showAll = true;
-        } else {
-            this.title = notice.getTitle();
-            this.showAll = false;
-        }
         this.address = notice.getAddress();
+        this.img = new ArrayList<>();
+        this.title = notice.getTitle();
         for (int i = 0; i < notice.getComList().size(); i++) {
             List<CommodityImage> images = notice.getComList().get(i).getCommodityImages();
             if (images == null || images.size() == 0) {
                 continue;
             } else {
-                this.image = Nums.commodityImagePath + images.get(0).getImageUrl();
+                for(CommodityImage image:images){
+                    this.img.add(Nums.commodityImagePath + image.getImageUrl());
+                }
+                /**
+                 * ZZH
+                 * TODO :
+                 */
+//                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
+        this.browseCount = notice.getBrowseCount();
         this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }
+        this.description = notice.getDescription();
         Date now = new Date();
         Long millis = notice.getCreateTime().getTime();
         Long deviance = (new Date()).getTime() - notice.getCreateTime().getTime();

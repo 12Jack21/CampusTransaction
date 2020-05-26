@@ -24,7 +24,7 @@ public class Subscription implements Serializable {
     @TableField(value = "target_type")
     private Integer targetType;
     //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
-    @DateTimeFormat(pattern = "yyyy-mm-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
     private Timestamp createTime;
     @TableField(value = "account_id")

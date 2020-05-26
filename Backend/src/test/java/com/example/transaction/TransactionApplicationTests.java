@@ -27,35 +27,6 @@ class TransactionApplicationTests {
         System.out.println((Type)object);
     }
 
-    @Test
-    // 存储数组
-    void testList(){
-        Type type = new Type();
-        type.setId(1);
-        type.setValue("电子");
-        Type type2 = new Type();
-        type2.setId(2);
-        type2.setValue("生活");
-        List<Type> types = new ArrayList<>();
-        types.add(type);
-        types.add(type2);
-
-        Commodity commodity = new Commodity();
-        commodity.setId(1);
-        commodity.setName("电脑");
-        commodity.setTypes(types);
-
-        Commodity commodity2 = new Commodity();
-        commodity2.setId(2);
-        commodity2.setName("手机");
-        commodity2.setTypes(types);
-
-        List<Commodity> comddities = new ArrayList<>();
-        comddities.add(commodity);
-        comddities.add(commodity2);
-        for(Commodity c:comddities)
-            redisTemplate.opsForList().rightPush("commodites", c);
-    }
 
     @Test
     //取出数组
