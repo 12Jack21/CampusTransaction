@@ -70,7 +70,7 @@
 							</picker>
 						</view>
 					</view>
-					<view class="cu-item arrow" @tap="updateInfo('address')">
+					<view class="cu-item arrow">
 						<view class="content">地址</view>
 						<view class="action">
 							<picker @change="addrPickerChange" :range="addrs" :value="addrs.indexOf(account.address)">
@@ -343,7 +343,7 @@ export default {
 					this.modal.show = true
 					break
 				default:
-					console.log('switch case default !!!');
+					console.log('update switch case default:',info);
 			}
 		},
 		updatePassword(pass){

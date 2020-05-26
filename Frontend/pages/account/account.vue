@@ -98,7 +98,7 @@ export default {
 				introduction:'我就是我，是不一样的高哥',
 				address: '文理学部',
 				wechat: '2020wechat2020',
-				qq: '99221101',
+				qq: '',
 				rate: 90, // 交易成功率
 				evaluation: 90.2 // 信誉值
 			},
@@ -169,7 +169,7 @@ export default {
 				.getCommoditiesByAcc(this.accId)
 				.then(({ data }) => {
 					this.pageIndex = data.pageIndex
-					if(data.pageIndex + 1 >= data.pageCount){
+					if(data.pageIndex - 1 >= data.pageCount){
 						this.finish = true
 						this.tip(3,'已获取全部发布中的物品')
 					}

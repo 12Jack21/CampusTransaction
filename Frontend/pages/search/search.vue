@@ -382,7 +382,7 @@ export default {
 					this.goodsData.push(...resp.pageList)
 					this.pagination.pageIndex = resp.pageIndex
 					
-					if(resp.pageIndex === resp.pageCount){
+					if(resp.pageIndex - 1 >= resp.pageCount){
 						// 没有更多数据了
 						this.loadStatus = 'noMore'
 						this.pagination.finish = true

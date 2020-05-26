@@ -271,7 +271,7 @@ export default {
 					self.goodsData = self.storeGoods[tab].data
 					
 					// 取完了数据
-					if(resp.pageIndex - 1 === resp.pageCount) {
+					if(resp.pageIndex - 1 >= resp.pageCount) {
 						self.storeGoods[tab].finish = true
 						this.loadStatus = 'noMore'
 					}

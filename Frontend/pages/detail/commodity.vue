@@ -363,7 +363,7 @@ export default {
 		this.bannerList = _goods_data.bannerListData()
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
-		this.getReservations(params.id)
+		this.getReservationsByCom(params.id)
 	},
 	onPullDownRefresh() {
 		this.getCommodityDetail(this.commodity.id)
@@ -487,7 +487,7 @@ export default {
 			this.modalType = 'reservations'
 			this.showModal()
 		},
-		getReservations(com_id){
+		getReservationsByCom(com_id){
 			// send reservations request
 			this.$api
 				.getReservationsByCommodity(com_id)

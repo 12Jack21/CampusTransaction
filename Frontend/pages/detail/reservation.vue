@@ -21,7 +21,7 @@
 			<view class="text-sm text-center margin-top" v-if="basics == 0">
 				<view class="text-black">预约成功，待卖家确认。</view>
 				<view class="text-black">
-					<text class="text-red">{{reservation.remainTime1}}</text>
+					<text class="text-red">{{ reservation.remainTime1 }}</text>
 					<text>分后未支付，订单将自动关闭。</text>
 				</view>
 			</view>
@@ -30,7 +30,7 @@
 			<view class="text-sm text-center margin-top" v-if="basics == 3">
 				<view class="text-black">双方已交易，请双方确认无误后点击交易完成。</view>
 				<view class="text-black">
-					<text class="text-red">{{reservation.remainTime2}}</text>
+					<text class="text-red">{{ reservation.remainTime2 }}</text>
 					<text>分后将自动确认交易</text>
 				</view>
 			</view>
@@ -59,9 +59,11 @@
 						<view class="content">
 							<view class="text-black">
 								<text>收货人：</text>
-								<text>{{reservation.buyer}}</text>	
+								<text>{{ reservation.buyer }}</text>
 							</view>
-							<view class="text-gray text-sm flex"><view class="text-cut">{{reservation.buyerRegion}}</view></view>
+							<view class="text-gray text-sm flex">
+								<view class="text-cut">{{ reservation.buyerRegion }}</view>
+							</view>
 						</view>
 					</view>
 				</view>
@@ -73,14 +75,14 @@
 			<view class="zaiui-card-view zaiui-shop-view">
 				<view class="shop-info-view">
 					<view class="cu-avatar round sm" :style="[{ backgroundImage: 'url(' + avatar + ')' }]" />
-					<view class="text-black text-bold text-lg title-view">{{reservation.seller}}</view>
+					<view class="text-black text-bold text-lg title-view">{{ reservation.seller }}</view>
 				</view>
 				<view class="goods-list-view">
 					<view class="cu-avatar radius" :style="[{ backgroundImage: 'url(' + bg_img + ')' }]" />
 					<view class="reservation-goods-info-view">
-						<view class="text-black text-cut name">{{reservation.title}}</view>
-						<view class="text-gray text-sm text-cut introduce">{{reservation.description}}</view>
-						<view class="text-price text-red text-lg">{{reservation.price}}</view>
+						<view class="text-black text-cut name">{{ reservation.title }}</view>
+						<view class="text-gray text-sm text-cut introduce">{{ reservation.description }}</view>
+						<view class="text-price text-red text-lg">{{ reservation.price }}</view>
 					</view>
 				</view>
 			</view>
@@ -91,11 +93,13 @@
 			<view class="zaiui-card-view zaiui-price-view">
 				<view class="text-black title-view">
 					<view class="title">商品总额</view>
-					<view class="text-right"><text class="text-price">{{reservation.price}}</text></view>
+					<view class="text-right">
+						<text class="text-price">{{ reservation.price }}</text>
+					</view>
 				</view>
 
 				<view class="text-black text-bold title-right-view">
-					<text class="margin-right-xs">应付款：{{reservation.totalPrice}}</text>
+					<text class="margin-right-xs">应付款：{{ reservation.totalPrice }}</text>
 					<text class="text-price"></text>
 				</view>
 
@@ -113,38 +117,46 @@
 				<view class="text-black title-view">
 					<view class="title">订单编号</view>
 					<view class="text-right">
-						<text class="margin-right-xs">{{reservation.reservationId}}</text>
+						<text class="margin-right-xs">{{ reservation.reservationId }}</text>
 						<button class="cu-btn sm line-black">复制</button>
 					</view>
 				</view>
 
 				<view class="text-black title-view">
 					<view class="title">预约时间</view>
-					<view class="text-right"><text>{{reservation.transactionTime1}}</text></view>
+					<view class="text-right">
+						<text>{{ reservation.transactionTime1 }}</text>
+					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 0">
 					<view class="title">沟通时间</view>
-					<view class="text-right"><text>{{reservation.transactionTime2}}</text></view>
+					<view class="text-right">
+						<text>{{ reservation.transactionTime2 }}</text>
+					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 1">
 					<view class="title">发货时间</view>
-					<view class="text-right"><text>{{reservation.transactionTime3}}</text></view>
+					<view class="text-right">
+						<text>{{ reservation.transactionTime3 }}</text>
+					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 2">
 					<view class="title">收货时间</view>
-					<view class="text-right"><text>{{reservation.transactionTime4}}</text></view>
+					<view class="text-right">
+						<text>{{ reservation.transactionTime4 }}</text>
+					</view>
 				</view>
 				<view class="text-black title-view" v-if="basics > 3">
 					<view class="title">完成时间</view>
-					<view class="text-right"><text>{{reservation.transactionTime5}}</text></view>
+					<view class="text-right">
+						<text>{{ reservation.transactionTime5 }}</text>
+					</view>
 				</view>
 			</view>
 		</view>
-		
-		<view class="bg-white zaiui-card-box">
-		</view>
-		<view class="bg-white zaiui-card-box">
-		</view>
+
+		<view class="bg-white zaiui-card-box"></view>
+		<view class="bg-white zaiui-card-box"></view>
 
 		<view class="bg-white zaiui-card-hight-box" />
 
@@ -160,7 +172,7 @@
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 1">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
 			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
-			<button class="cu-btn bg-red" @click="remindTransaction()">提醒交易 </button>
+			<button class="cu-btn bg-red" @click="remindTransaction()">提醒交易</button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 2">
@@ -237,6 +249,7 @@
 <script>
 import barTitle from '@/components/basics/bar-title'
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
+
 export default {
 	components: {
 		barTitle
@@ -257,25 +270,25 @@ export default {
 			bottomModal: false,
 			codeKey: [],
 			btnKey: true,
-			reservation:{
-				seller:'仔仔科技运营部',
-				buyer:'小明',
+			reservation: {
+				seller: '仔仔科技运营部',
+				buyer: '小明',
 				mold: true,
 				price: '2280',
 				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
 				img: '/static/images/home/goods/1.png',
-				expiredTime:'2020-10-09',
-				description:'测试介绍内容',
-				remainTime1:'14',
-				reservationId:'231231231',
-				transactionTime1:'2020-04-02 14:55:23',
-				transactionTime2:'2020-04-03 14:55:23',
-				transactionTime3:'2020-04-04 14:55:23',
-				transactionTime4:'2020-04-05 14:55:23',
-				transactionTime5:'2020-04-06 14:55:23',
-				remainTime2:'30',
-				totalPrice:'2280',
-				buyerRegion:'信息学部'
+				expiredTime: '2020-10-09',
+				description: '测试介绍内容',
+				remainTime1: '14',
+				reservationId: '231231231',
+				transactionTime1: '2020-04-02 14:55:23',
+				transactionTime2: '2020-04-03 14:55:23',
+				transactionTime3: '2020-04-04 14:55:23',
+				transactionTime4: '2020-04-05 14:55:23',
+				transactionTime5: '2020-04-06 14:55:23',
+				remainTime2: '30',
+				totalPrice: '2280',
+				buyerRegion: '信息学部'
 			}
 		}
 	},
@@ -291,12 +304,14 @@ export default {
 	},
 	methods: {
 		getReservation(id) {
-			this.$api.getReservation(id).then(({ data }) => {
-				this.reservation = data
-			})
-			.catch(()=>{
-				console.log('获取预约详情失败');
-			})
+			this.$api
+				.getReservation(id)
+				.then(({ data }) => {
+					this.reservation = data
+				})
+				.catch(() => {
+					console.log('获取预约详情失败')
+				})
 		},
 		nextTap() {
 			this.basics = this.basics == this.basicsList.length - 1 ? 0 : this.basics + 1
@@ -334,24 +349,12 @@ export default {
 				url: '../../pages/appraise/appraise'
 			})
 		},
-		cancelReservation(){
-			
-		},
-		confirmReservation(){
-			
-		},
-		remindTransaction(){
-			
-		},
-		cancelTransaction(){
-			
-		},
-		confirmTransaction(){
-			
-		},
-		completeTransaction(){
-			
-		}
+		cancelReservation() {},
+		confirmReservation() {},
+		remindTransaction() {},
+		cancelTransaction() {},
+		confirmTransaction() {},
+		completeTransaction() {}
 	}
 }
 </script>
@@ -365,24 +368,24 @@ export default {
 @import '../../static/zaiui/style/order-details.scss';
 
 .reservation-goods-info-view {
-			position: relative;
-			padding-left: 172.72rpx;
-			height: 154.54rpx;
-			.name {
-				position: relative;
-				height: 62rpx;
-			    width: 100%;
-			}
-			.introduce {
-				position: relative;
-				height: 58rpx;
-				width: 100%;
-			}
-			.text-price {
-				position: relative;
-				bottom: 0rpx;
-				height: 0rpx;
-				width: 500%;
-			}
-		}
+	position: relative;
+	padding-left: 172.72rpx;
+	height: 154.54rpx;
+	.name {
+		position: relative;
+		height: 62rpx;
+		width: 100%;
+	}
+	.introduce {
+		position: relative;
+		height: 58rpx;
+		width: 100%;
+	}
+	.text-price {
+		position: relative;
+		bottom: 0rpx;
+		height: 0rpx;
+		width: 500%;
+	}
+}
 </style>

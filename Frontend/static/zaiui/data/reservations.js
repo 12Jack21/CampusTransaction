@@ -1,130 +1,247 @@
 let _reservations_data = {
 	stage1List() {
-		return [
-			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/1.png',
-				expiredTime:'2020-10-09'
-				
+		return [{
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: false,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/2.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			}
 		];
 	},
 	stage2List() {
 		return [
+
 			{
-				mold: true,
-				price: '2980',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/3.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/4.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/5.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			}
 		];
 	},
 	stage3List() {
 		return [
+
 			{
-				mold: true,
-				price: '2980',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/6.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/7.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/8.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
+			},
+			{
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			}
 		];
 	},
 	totalList() {
 		return [
+
 			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/1.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: false,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/2.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2980',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/3.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/4.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/5.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2980',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/6.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '2280',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/7.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			},
 			{
-				mold: true,
-				price: '5049',
-				title: '商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题，商品标题',
-				img: '/static/images/home/goods/8.png',
-				expiredTime:'2020-10-09'
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
+			},
+			{
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
+			},
+			{
+				id: 10, //预约的 id
+				price: 2012,
+				count: 10, // 预约的数量
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				commodity: {
+					img: '',
+					name: '物品名称',
+					expectedPrice: 10.2
+				}
 			}
 		];
 	},

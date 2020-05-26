@@ -177,7 +177,7 @@ export default {
 					.then(({data})=>{
 						curNotices.list.push(...data.pageList)
 						// 取完了数据
-						if(data.pageIndex === data.pageCount)
+						if(data.pageIndex - 1>= data.pageCount)
 							curNotices.finish = true
 					})
 					.catch(()=>uni.showToast({
@@ -191,7 +191,7 @@ export default {
 						// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
 						curNotices.list.push(...data.list)
 						// 取完了数据
-						if(data.pageIndex === data.pageCount)
+						if(data.pageIndex - 1 >= data.pageCount)
 							curNotices.finish = true
 					})
 					.catch(() => uni.showToast({

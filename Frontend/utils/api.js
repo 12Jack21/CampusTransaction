@@ -120,6 +120,9 @@ export default{
 	getReservations(accountId){
 		return http.get('/reservations/account/' + accountId)
 	},
+	getReservation(id){
+		return http.get('/reservations/' + id)
+	},
 	
 	getOtherAccount(otherId, id){
 		return http.get('/accounts/other/' + otherId, {params:{id}})
