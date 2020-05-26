@@ -59,7 +59,7 @@
 						<scroll-view class="recommend-scroll" scroll-x @scrolltolower="loadMore" v-else>
 							<block v-for="(item, index) in commodities" :key="index">
 								<view :id="['scroll' + (index + 1)]" class="recommend-scroll-item comItem" @tap="comTap(item.id)" style="">
-									<view class="cu-avatar xl radius" :style="{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : item.img, position: 'relative' }">
+									<view class="cu-avatar xl radius" :style="{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : ('url(' +item.img+')'), position: 'relative' }">
 										<text class=" count-view cu-tag sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">剩余{{ item.count }}件</text>
 									</view>
 									<view class="text-cut-2 text-sm text-black margin-tb-sm">{{ item.name }}</view>

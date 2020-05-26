@@ -32,6 +32,7 @@
 					<text>分后将自动确认交易</text>
 				</view>
 			</view>
+			
 		</view>
 
 		<!--状态图标-->
@@ -73,11 +74,11 @@
 		<view class="bg-white zaiui-card-box">
 			<view class="zaiui-card-view zaiui-shop-view">
 				<view class="shop-info-view">
-					<view class="cu-avatar round sm" :style="[{ backgroundImage: 'url(' + avatar + ')' }]" />
+					<view class="cu-avatar round sm" :style="[{ backgroundImage: avatarURL }]" />
 					<view class="text-black text-bold text-lg title-view">{{ reservation.seller }}</view>
 				</view>
 				<view class="goods-list-view">
-					<view class="cu-avatar radius" :style="[{ backgroundImage: 'url(' + bg_img + ')' }]" />
+					<view class="cu-avatar radius" :style="[{ backgroundImage: comImg }]" />
 					<view class="reservation-goods-info-view">
 						<view class="text-black text-cut name">{{ reservation.title }}</view>
 						<view class="text-gray text-sm text-cut introduce">{{ reservation.description }}</view>
@@ -151,25 +152,18 @@
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 1">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
-			<button class="cu-btn bg-red" @click="remindTransaction()">提醒交易</button>
+			<button class="cu-btn line-black radius" @click="cancelTransaction()">取消交易</button>
+			<button class="cu-btn bg-red" @click="remindTransaction()">确认交易</button>
 		</view>
 
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 2">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
-		</view>
-
-		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 3">
-			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
-			<button class="cu-btn line-black radius" @click="cancelTransaction()">申请取消</button>
+			<button class="cu-btn line-black radius" @tap="appraiseTap">发表评价</button>
 			<button class="cu-btn bg-red" @tap="confirmReceipt" @click="confirmTransaction()">确认交易</button>
 		</view>
 
-		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 4">
+		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="basics == 3">
 			<button class="cu-btn bg-orange sm" @tap="nextTap">测试第一步</button>
-			<button class="cu-btn line-black radius" @tap="appraiseTap">发表评价</button>
-			<button class="cu-btn bg-red" @click="completeTransaction()">交易完成</button>
 		</view>
 		
 		<!--弹出框-->
@@ -191,7 +185,7 @@
 								<input type="text" v-model="newEvaluation" placeholder="输入新昵称"  maxlength="12"/>
 							</view>
 							<view class="flex old text-lg">
-								<view class="text-gray ">原评价:</view>
+								<view class="text-gray ">原评级:</view>
 								<text class="text-gray ">{{evaluation}}</text>
 							</view>
 						</view>
@@ -207,6 +201,7 @@
 					</view>
 					
 				</view>
+			
 			</view>
 		</view>
 		
@@ -224,21 +219,34 @@ export default {
 	data() {
 		return {
 			modalShow:false,//评价
-			evaluation:'',
-			newEvaluation:'',
 			basics: 0,
-			bg_img: '/static/images/home/goods/1.png',
-			avatar: '/static/images/avatar/1.jpg',
-			cancel: false,
 			basicsList: [
 				{ cuIcon: 'cartfill', name: '未预约', name_s: '已预约' },
 				{ cuIcon: 'card', name: '待确认', name_s: '已确认' },
 				{ cuIcon: 'formfill', name: '待交易', name_s: '已交易' },
 				{ cuIcon: 'presentfill', name: '待评价', name_s: '已评价' }
 			],
-			bottomModal: false,
-			codeKey: [],
-			btnKey: true,
+			evaluation:'', //原评价
+			newEvaluation:'', //新评价
+			avatar: '',
+			accountName:'高哥',
+			reservation:{
+				id: 10, //预约的 id
+				price:20.2,// 出价
+				count:10,
+				note: '最好可以有个包装',
+				createTime: '预约时间',
+				state_enum: '预约的状态',
+				evaluation_sell: 5, // 卖家的评价等级, 1-5
+				evaluation_buy: 1, //买家的评价等级
+			},
+			commodity:{
+				id:20,
+				name:'',
+				img:'',
+				description:'描述',
+				expectedPrice:10.2
+			},
 			reservation: {
 				seller: '仔仔科技运营部',
 				buyer: '小明',
@@ -259,6 +267,14 @@ export default {
 				totalPrice: '2280',
 				buyerRegion: '信息学部'
 			}
+		}
+	},
+	computed:{
+		avatarURL(){
+			return this.avatar.length===0?'url(/static/avatar/default.png)':('url('+ this.avatar+')')
+		},
+		comImg(){
+			return this.commodity.img.length===0?'url(/static/images/comDefault.png)':( 'url(' + this.commodity.img + ')' )
 		}
 	},
 	onLoad(params) {
@@ -299,25 +315,11 @@ export default {
 				}
 			})
 		},
-		codeKeyTap(index) {
-			if (this.codeKey.length < 4) {
-				this.codeKey.push(index)
-			}
-		},
-		codeKeyDelTap() {
-			this.codeKey.pop()
-		},
-		getCodeKey() {
-			this.btnKey = false
-		},
 		appraiseTap() {
-			uni.navigateTo({
-				url: '../../pages/appraise/appraise'
-			})
+			this.modalShow = true
 		},
 		cancelReservation() {},
 		confirmReservation() {},
-		remindTransaction() {},
 		cancelTransaction() {},
 		confirmTransaction() {},
 		completeTransaction() {}

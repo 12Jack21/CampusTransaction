@@ -37,7 +37,7 @@
 			</view>
 			<view class="address">
 				<text class=" cuIcon-locationfill"></text>
-				{{ address }}
+				{{ detailedAddress }}
 			</view>
 			<view style="font-size: 15px;">{{ commodity.description }}</view>
 			<view class="content-bottom">
@@ -224,7 +224,7 @@
 									<view
 										class="cu-avatar radius"
 										@tap="fromAccTap(item.account.id)"
-										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' : item.acocunt.avatar, 'z-index': 10 }"
+										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' :('url('+ item.acocunt.avatar+')'), 'z-index': 10 }"
 									/>
 									<view class="goods-info-view">
 										<view class="flex" style="justify-content: space-between;">
@@ -318,7 +318,8 @@ export default {
 			noticeId:2,
 			condition: '只限男生',
 			expiredTime: '2020-05-29 10:07',
-			address: '信息学部二食堂',
+			address: '信息学部',
+			detailedAddress: '信息学部二食堂',
 			state_enum: 'PUBLISHED', // CANCELLED PUBLISHED
 			reservations: [
 				{
@@ -537,7 +538,7 @@ export default {
 					this.commodity = data.commodity
 					this.expiredTime = data.expiredTime
 					this.condition = data.condition
-					this.address = data.address
+					this.detailedAddress = data.detailedAddress
 					this.state_enum = data.state_enum
 					this.account = data.account
 					this.comments = data.comments

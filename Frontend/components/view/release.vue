@@ -57,7 +57,7 @@
 					<!-- 地址选择 -->
 					<view class="cu-form-group margin-top">
 						<view class="title">地址</view>
-						<input type="text" name="address" :value="userAddress"/>
+						<input type="text" name="detailedAddress" :value="userAddress"/>
 					</view>
 					<!-- end -->
 
@@ -195,6 +195,7 @@ import _release_data from '@/static/zaiui/data/release.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
 import {mapState} from 'vuex'
 
+const prefixs = ['信息学部','文理学部','工学部','医学部']
 export default {
 	name: 'release',
 	components: {
@@ -348,9 +349,8 @@ export default {
 				return false
 			}
 			
-			// validate address
-			let prefixs = ['信息学部','文理学部','工学部','医学部']
-			if(data.address.length === 0){
+			// validate detailedAddress
+			if(data.detailedAddress.length === 0){
 				uni.showToast({
 					title: '地址不能为空',
 					icon: 'none'
@@ -426,6 +426,13 @@ export default {
 			console.log('notice data',notice);
 			if(!this.validateNotice(notice)) return
 
+			// add prefix address
+			for(let i=0;i<prefixs.length;i++)
+				if(notice.detailedAddress.startsWith(prefixs[i])){
+					notice.address = prefixs[i]
+					break
+				}
+			
 			// upload all commodity first and get image url to set property
 			uni.showLoading({
 				title: '发布中',

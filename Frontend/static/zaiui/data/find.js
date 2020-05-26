@@ -3,7 +3,7 @@ let _find_data = {
 		return [{
 			id: 1,
 			avatar: '',
-			username: '仔仔',
+			userName: '仔仔',
 			time: '1个月前',
 			description: '测试的测试测试测试的test,demo,1231321ce测试的',
 			rate: 20,
@@ -14,7 +14,7 @@ let _find_data = {
 		},{
 			id: 2,
 			avatar: '/static/images/avatar/2.jpg',
-			username: '仔仔ZaiZ',
+			userName: '仔仔ZaiZ',
 			time: '2小时前',
 			description: '测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的',
 			rate: 20,
@@ -25,7 +25,7 @@ let _find_data = {
 		},{
 			id: 3,
 			avatar: '',
-			username: '仔仔ZaiZ',
+			userName: '仔仔ZaiZ',
 			time: '1年前',
 			description: '测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的',
 			rate: 90,
@@ -36,7 +36,7 @@ let _find_data = {
 		},{
 			id: 4,
 			avatar: '/static/images/avatar/4.jpg',
-			username: '仔仔ZaiZ',
+			userName: '仔仔ZaiZ',
 			time: '1年前',
 			description: '测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的',
 			rate: 60,
@@ -47,7 +47,7 @@ let _find_data = {
 		},{
 			id: 5,
 			avatar: '', 
-			username: '仔仔ZaiZ',
+			userName: '仔仔ZaiZ',
 			time: '1年前',
 			description: '测试的测试测试的测试测试的测试测试测试的test,demo,1231321ce测试的',
 			rate: 60,

@@ -37,7 +37,7 @@ export default {
 		},
 		comImg(img){
 			if(img.length===0) return 'url(/static/images/comDefault.png)'
-			else return img
+			else return 'url('+ img + ')'
 		}
 	}
 }

@@ -258,7 +258,7 @@ export default {
 				pageIndex: this.storeGoods[tab].pageIndex,
 				pageSize: this.storeGoods[tab].pageSize,
 				endTime: this.storeGoods[tab].endTime,
-				userAddress: this.userAddress
+				userAddress: this.goodsTabData.tabCur===1? this.userAddress:''
 			}
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)

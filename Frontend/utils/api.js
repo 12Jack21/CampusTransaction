@@ -7,7 +7,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
 		
     config.baseUrl = 'http://localhost:9012'; /* 根域名 */
-		// config.baseUrl = 'http://39.96.69.108:9999/'
+		config.baseUrl = 'http://39.96.69.108:9999/'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
     }
@@ -42,6 +42,8 @@ http.interceptor.response((response) => { /* 对响应成功做点什么 （stat
  // if (response.config.custom.verification) { // 演示自定义参数的作用
   //   return response.data
   // }
+	if(response.data.msg=='ERROR') // 服务器错误处理的代码
+		return Promise.reject(response)
   console.log('http intercept response',response)
   return response
 }, (response) => { /*  对响应错误做点什么 （statusCode !== 200），必须return response*/

@@ -2,7 +2,7 @@
 	<view>
 		<block v-for="item in list_data" :key="item.id">
 			<view class="zaiui-goods-list-box" @tap="listTap(item.id)">
-				<view class="cu-avatar radius" :style="[{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : item.img }]" />
+				<view class="cu-avatar radius" :style="{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : ('url('+ item.img+')') }" />
 				<view class="goods-info-view">
 					<view class="text-cut-2 text-black">{{ item.name }}</view>
 					<view class="goods-info-tools">

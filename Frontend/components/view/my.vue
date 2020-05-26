@@ -55,7 +55,7 @@
 					<view class="cu-item arrow">
 						<view class="content">头像</view>
 						<view class="action" @tap="updateInfo('avatar')">
-							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : account.avatar }" />
+							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : ('url('+ account.avatar+')') }" />
 						</view>
 					</view>
 					<view class="cu-item arrow" @tap="updateInfo('username')">
@@ -225,7 +225,7 @@ export default {
 		},
 		avatar(){
 			if(this.account.avatar.length ===0) return defaultAvatar;
-			return this.account.avatar
+			return 'url(' + this.account.avatar + ')'
 		}
 	},
 	props: {
