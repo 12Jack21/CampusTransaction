@@ -56,4 +56,8 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Select("select * from reservation r,commodity c,notice n where " +
             "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id}")
     IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id);
+
+    @Select("select count(*) from reservation where commodity_id = #{commodity_id}")
+    Integer getCountByCommodityId(Integer commodityId);
+
 }

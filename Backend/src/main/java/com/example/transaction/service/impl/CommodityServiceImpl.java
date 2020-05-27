@@ -3,10 +3,7 @@ package com.example.transaction.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.transaction.dao.CommodityDAO;
-import com.example.transaction.dao.CommodityImageDAO;
-import com.example.transaction.dao.NoticeDAO;
-import com.example.transaction.dao.TypeDAO;
+import com.example.transaction.dao.*;
 import com.example.transaction.dto.Condition;
 import com.example.transaction.dto.commodity.CommodityInfo;
 import com.example.transaction.dto.commodity.DetailedCommodityInfo;
@@ -60,6 +57,8 @@ public class CommodityServiceImpl implements CommodityService {
     NoticeService noticeService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    ReservationDAO reservationDAO;
 
     @Autowired
     CommodityServiceImpl(CommodityDAO commodityDAO, TypeDAO typeDAO, CommodityImageDAO commodityImageDAO, NoticeDAO noticeDAO) {
@@ -197,7 +196,15 @@ public class CommodityServiceImpl implements CommodityService {
                     throw new Exception();
                 }
                 NoticeInfo noticeInfo = (NoticeInfo) noticePage.getPageList().get(0);
-                commodityInfoList.add(new CommodityInfo(commodity, noticeInfo));
+                CommodityInfo commodityInfo = new CommodityInfo(commodity, noticeInfo);
+                /*查询是否已有人预约*/
+                Integer count = reservationDAO.getCountByCommodityId(commodity.getId());
+                if(count!=null && count >=0){
+                    commodityInfo.setState(count.intValue()+"人预约");
+                }else{
+                    commodityInfo.setState("发布中");
+                }
+                commodityInfoList.add(commodityInfo);
             }
             myPage.setPageList(commodityInfoList);
 

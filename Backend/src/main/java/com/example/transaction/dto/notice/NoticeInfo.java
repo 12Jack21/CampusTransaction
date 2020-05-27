@@ -37,6 +37,8 @@ public class NoticeInfo {
     /*浏览量*/
     private Integer browseCount;
 
+    private Integer accountId;
+
 
 
     /*发布的时间到今天的距离：一年前 一周前*/
@@ -65,6 +67,7 @@ public class NoticeInfo {
         this.browseCount = notice.getBrowseCount();
         this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
+        this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }
