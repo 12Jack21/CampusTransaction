@@ -36,6 +36,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -129,7 +130,10 @@ public class CommodityServiceImpl implements CommodityService {
         }
 
         if (condition.getOutdated() != null && condition.getOutdated() > 0) {
-            timestamp = new Timestamp(timestamp.getTime() + 1000 * 60 * 60 * 24 * condition.getOutdated());
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE,condition.getOutdated());
+            timestamp = new Timestamp(calendar.getTimeInMillis());
             queryWrapper.le("n.end_time", timestamp);
         }
         try {
