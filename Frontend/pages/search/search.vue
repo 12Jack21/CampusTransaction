@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<!-- 搜索框 -->
-		<view class="zaiui-bar-search-title-box">
+		<view class="zaiui-bar-search-title-box"> 
 			<view class="flex flex-direction top-module" >
 				<!-- 小程序端的标题,占据胶囊的高度，但要调整 fixed 的top -->
 				<!-- #ifdef MP -->
-				<view class="text-center text-black bar-title">搜索页</view>
+				<view class="text-center text-black capsule-height" ></view>
 				<!-- #endif -->
 				<view class="cu-bar search bg-white  no-shadow">
 					<view class="action" @tap="BackPage"><text class="cuIcon-back" /></view>
@@ -29,7 +29,12 @@
 			<!-- end -->
 			
 			<!-- 顶部占位的 -->
+			<!-- #ifdef MP -->
+			<view class="mp-seat-height"></view>
+			<!-- #endif -->
+			<!-- #ifndef MP -->
 			<view class="zaiui-seat-height" />
+			<!-- #endif -->
 			<view v-if="!searchView" class="zaiui-seat-height" />
 		</view>
 		<!-- end -->
@@ -451,5 +456,11 @@ export default {
 	position: fixed;
 	z-index: 1000;
 	width: 100%;
+}
+.capsule-height{
+	height: var(--status-bar-height);
+}
+.mp-seat-height{
+	height: calc(var(--status-bar-height) * 2 + 101rpx);
 }
 </style>
