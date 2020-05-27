@@ -24,9 +24,6 @@
 				"enablePullDownRefresh": false
 			}
 		}, {
-			"path": "pages/appraise/appraise",
-			"style": {}
-		}, {
 			"path": "pages/detail/reservation", // 预约详情
 			"style": {
 				"enablePullDownRefresh":true

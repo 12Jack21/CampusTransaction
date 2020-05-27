@@ -110,11 +110,20 @@ export default{
 		return http.get('/commodities/account/' + id)
 	},
 	
-	confirmReservation(id){
-		return http.get('/reservations/' + id + '/confirm')
+	updateEvaluation(id,data){
+		return http.put('/reservations/' + id,data)
 	},
-	cancelReservation(id){
-		return http.get('/reservations/' + id + '/cancel')
+	confirmReservation(id){
+		return http.put('/reservations/' + id + '/confirm')
+	},
+	cancelReservation(id){ //买家
+		return http.put('/reservations/' + id + '/cancel')
+	},
+	successReservation(id){ //卖家
+		return http.put('/reservations/' + id + '/success')
+	},
+	failReservation(id){
+		return http.put('/reservations/' + id + '/fail')
 	},
 	addReservation(data){
 		return http.post('/reservations', data)

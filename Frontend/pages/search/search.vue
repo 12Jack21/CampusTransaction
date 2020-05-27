@@ -255,7 +255,6 @@ export default {
 		}, 0)
 	},
 	onReady() {
-		console.log('ready', this.filterDropdownValue)
 		_tool.setBarColor(true)
 		uni.pageScrollTo({
 			scrollTop: 0,
@@ -344,7 +343,8 @@ export default {
 			}) // click '搜索', pass default condition
 		},
 		confirmFilter(e) {
-			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) || JSON.stringify(this.filterValues) === JSON.stringify(e.value))
+			if ((this.filterValues.length === 0 && JSON.stringify(this.filterDropdownValue) === JSON.stringify(e.index)) 
+					|| JSON.stringify(this.filterValues) === JSON.stringify(e.value))
 				return
 
 			this.filterValues = e.value
@@ -353,7 +353,7 @@ export default {
 			
 			
 			// do search with filter condition
-			// TODO 价格多区间
+			// TODO 价格单区间
 			let searchBody = Object.assign({
 				type: e.value[0][1],
 				userAddress: e.value[1][0],

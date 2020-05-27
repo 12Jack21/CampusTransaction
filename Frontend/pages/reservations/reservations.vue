@@ -127,8 +127,9 @@ export default {
 	},
 	methods: {
 		listTap(id) {
+			let isSell = false // 是买家
 			uni.navigateTo({
-				url: '../../pages/detail/reservation?id=' + id
+				url: `../../pages/detail/reservation?id=${id}&isSell=${isSell}`
 			})
 		},
 		async loadReservations() {

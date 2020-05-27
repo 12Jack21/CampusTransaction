@@ -223,7 +223,7 @@
 								<view class="zaiui-goods-list-box">
 									<view
 										class="cu-avatar radius"
-										@tap="fromAccTap(item.account.id)"
+										@tap="reserveTap(item.id)"
 										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' :('url('+ item.acocunt.avatar+')'), 'z-index': 10 }"
 									/>
 									<view class="goods-info-view">
@@ -442,7 +442,10 @@ export default {
 			})
 		},
 		reserveTap(id) {
-			this.fromAccTap(id)
+			let isSell = true // 卖方
+			uni.navigateTo({
+				url: `../../pages/detail/reservation?id=${id}&isSell=${isSell}`,
+			})
 		},
 		clearComment() {
 			this.toCommentId = -1
