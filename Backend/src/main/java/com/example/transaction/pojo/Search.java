@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
@@ -25,7 +26,7 @@ public class Search implements Serializable {
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
-    private Timestamp updateTime;
+    private Date updateTime;
     //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "account_id")

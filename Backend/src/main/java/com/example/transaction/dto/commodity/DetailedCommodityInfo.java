@@ -27,20 +27,21 @@ public class DetailedCommodityInfo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     Date expiredTime;
-    String conditions = "";
+    String condition = "";
+    Integer stateEnum = -1;
     /**
      * 通告的地址
      */
     String address = "";
+    String detailedAddress = "";
+
+//    Pagination pagination;
 
     List<SimpleComment> comments;
-
-    Pagination pagination;
-
-    public DetailedCommodityInfo() {
-        pagination = new Pagination();
-        pagination.setPageIndex(1);
-    }
+//    public DetailedCommodityInfo() {
+//        pagination = new Pagination();
+//        pagination.setPageIndex(1);
+//    }
 
     public DetailedCommodityInfo(Commodity commodity) {
         if (commodity != null) {
@@ -48,8 +49,10 @@ public class DetailedCommodityInfo {
             if (commodity.getNotice() != null) {
                 Notice notice = commodity.getNotice();
                 this.expiredTime = notice.getEndTime();
-                this.conditions = notice.getCondition();
+                this.condition = notice.getCondition();
                 this.address = notice.getAddress();
+                this.detailedAddress = notice.getDetailedAddress();
+                this.stateEnum = notice.getStateEnum();
                 this.account = new SimpleAccount(notice.getUser());
             }
         }

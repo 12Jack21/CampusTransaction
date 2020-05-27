@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @ClassName: Token
@@ -24,7 +25,7 @@ public class Token implements Serializable {
     //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
-    private Timestamp createTime;
+    private Date createTime;
     @TableField(value = "token_str")
     private String tokenStr;
 

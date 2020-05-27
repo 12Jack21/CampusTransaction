@@ -6,7 +6,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @ClassName: CrossConfig
- * @Description: TODO
+ * @Description: 全局跨域
  * @Author: 曾志昊
  * @Date: 2020/5/21 0:44
  */

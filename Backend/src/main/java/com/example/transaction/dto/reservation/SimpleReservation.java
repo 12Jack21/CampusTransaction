@@ -3,6 +3,9 @@ package com.example.transaction.dto.reservation;
 import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.pojo.Reservation;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * @ClassName: SimpleReservation
@@ -16,6 +19,8 @@ public class SimpleReservation {
     SimpleAccount account;
     Double price = -1.0D;
     String note = "";
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    Date createTime;
 
     public SimpleReservation() {
     }
@@ -24,6 +29,7 @@ public class SimpleReservation {
         this.id = reservation.getId();
 //        this.price = reservation.
         this.note = reservation.getNote();
+        this.createTime = reservation.getStartTime();
 //        this.account = re
     }
 }

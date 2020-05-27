@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Author: 高战立
@@ -24,11 +25,11 @@ public class Reservation implements Serializable {
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "start_time")
-    private Timestamp startTime;
+    private Date startTime;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
-    private Timestamp updateTime;
+    private Date updateTime;
     @TableField(value = "state_enum")
     private Integer stateEnum;
     private Integer count;

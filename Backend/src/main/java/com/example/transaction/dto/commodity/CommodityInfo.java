@@ -25,6 +25,8 @@ public class CommodityInfo {
     String accountName;
     String avatar = "";
     String description = "";
+    Integer accId;
+    String type = "";
 
 
     public CommodityInfo(Commodity commodity, NoticeInfo noticeInfo) {
@@ -34,6 +36,7 @@ public class CommodityInfo {
             this.originalPrice = commodity.getOriginalPrice();
             this.expectedPrice = commodity.getExpectedPrice();
             this.name = commodity.getName();
+            this.type = commodity.getType();
             this.description = commodity.getDescription();
             if (commodity.getCommodityImages() != null && !commodity.getCommodityImages().isEmpty()) {
                 this.img = Nums.commodityImagePath + commodity.getCommodityImages().get(0).getImageUrl();
@@ -50,6 +53,7 @@ public class CommodityInfo {
                 this.state = "";
                 this.time = noticeInfo.getTime();
                 this.accountName = noticeInfo.getUserName();
+                this.accId = noticeInfo.getAccountId();
                 if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
                     this.avatar = noticeInfo.getAvatar();
                 }

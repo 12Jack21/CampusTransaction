@@ -152,10 +152,9 @@ public class ReservationController {
      * @return
      */
 
-//    @RequestMapping("/validateReservation")
     @ApiOperation(value = "预约成功，减小库存")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{reservationId}/validate")
+    @PutMapping("/{reservationId}/confirm")
     public responseFromServer validateReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
         Reservation reservation = verifySeller(reservationId, request);
         if (reservation != null) {
@@ -166,6 +165,7 @@ public class ReservationController {
             return responseFromServer.illegal();
         }
     }
+
 
 
     /**
@@ -199,7 +199,7 @@ public class ReservationController {
      */
 //    @RequestMapping("/getReservationPageForCommodity")
     @ApiOperation(value = "查看当前商品的所有预约")
-    @GetMapping("/commodity/{commodityId}/receive")
+    @GetMapping("/commodity/{commodityId}")
     @ApiImplicitParams(
             {
                     @ApiImplicitParam(name = "commodityId", value = "商品Id", paramType = "Integer", dataType = "Integer"),
@@ -226,7 +226,7 @@ public class ReservationController {
             /*验证成功*/
             QueryWrapper queryWrapper = new QueryWrapper();
             queryWrapper.eq("commodity_id", commodity.getId());
-            return reservationService.getReservationsPage(queryWrapper, pageIndex);
+            return reservationService.getSimpleReservationPage(queryWrapper, pageIndex);
         } else {
             return responseFromServer.illegal();
         }
@@ -304,7 +304,8 @@ public class ReservationController {
     @ApiOperation("获取详细预约内容")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
     @GetMapping("/detailed/{reservationId}")
-    public responseFromServer getDetailedReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
+    public responseFromServer getDetailedReservation(@PathVariable Integer reservationId,
+                                                     HttpServletRequest request) {
         Reservation reservation = verifySeller(reservationId, request);
         if (reservation != null) {
             return responseFromServer.success(reservation);

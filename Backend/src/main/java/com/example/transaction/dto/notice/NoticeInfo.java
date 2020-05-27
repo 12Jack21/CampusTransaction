@@ -34,8 +34,10 @@ public class NoticeInfo {
     private String userName;
     /*用户成交率*/
     private Double rate;
+    /*浏览量*/
+    private Integer browseCount;
 
-    Integer browseCount;
+    private Integer accountId;
 
 
 
@@ -59,16 +61,13 @@ public class NoticeInfo {
                 for(CommodityImage image:images){
                     this.img.add(Nums.commodityImagePath + image.getImageUrl());
                 }
-                /**
-                 * ZZH
-                 * TODO :
-                 */
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
         this.browseCount = notice.getBrowseCount();
         this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
+        this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }

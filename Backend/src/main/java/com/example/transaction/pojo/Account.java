@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.account.SimpleAccount;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -24,8 +26,10 @@ public class Account  implements Serializable {
     private String qq;
     private String wechat;
     private String avatar;
-    private Timestamp createTime;
-    private Timestamp updateTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date createTime;
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    private Date updateTime;
     private String introduction;
 
     @TableField(exist = false)
