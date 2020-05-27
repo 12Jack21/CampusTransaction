@@ -492,15 +492,16 @@
 </script>
 <style lang="scss">
 	.HMfilterDropdown {
-		flex-shrink: 0;
+		// flex-shrink: 0;
 		width: 100%;
 		height: 44px;
-		position: fixed;
+		position: relative;
+		// position: fixed; // 和父组件的 fixed 冲突
 		z-index: 997;
 		flex-wrap: nowrap;
 		display: flex;
 		flex-direction: row;
-		top: var(--window-top);
+		// top: var(--status-bar-height);
 		left:0;
 		view {
 			display: flex;
