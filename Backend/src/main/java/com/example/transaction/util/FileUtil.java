@@ -9,7 +9,7 @@ import java.util.UUID;
 
 /**
  * @ClassName: FileUtil
- * @Description: TODO
+ * @Description: 上传和下载图片文件工具
  * @Author: 曾志昊
  * @Date: 2020/5/18 16:41
  */

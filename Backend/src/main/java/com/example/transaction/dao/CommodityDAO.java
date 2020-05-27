@@ -46,12 +46,25 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
 
     @Results(id = "detailedCommodity_map2", value = {
             @Result(id = true, property = "id", column = "id"),
+            @Result(property = "noticeId", column = "notice_id"),
+            @Result(property = "commodityImages", column = "id", javaType = List.class, many = @Many(
+                    select = "com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"
+            ))
+    })
+    @Select("select * from commodity where notice_id = #{noticeId}")
+    Commodity getDetailedCommodityWithoutNoticeById(Integer noticeId);
+
+
+    @Results(id = "detailedCommodity_map2", value = {
+            @Result(id = true, property = "id", column = "id"),
             @Result(property = "commodityImages", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"
             ))
     })
     @Select("select * from commodity where notice_id = #{noticeId}")
     List<Commodity> getDetailedCommodityByNoticeId(Integer noticeId);
+
+
     //利用queryWrapper查找
     List<Commodity> selectWithCondition(@Param("ew") QueryWrapper<Commodity> wrapper);
 

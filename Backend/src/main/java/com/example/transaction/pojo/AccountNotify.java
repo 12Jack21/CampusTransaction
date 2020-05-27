@@ -11,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,11 +30,11 @@ public class AccountNotify implements Serializable {
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "creat_time")
-    private Timestamp createTime;
+    private Date createTime;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "read_time")
-    private Timestamp readTime;
+    private Date readTime;
     @TableField(value = "notify_id")
     private Integer notifyId;
     @TableField(value = "account_id")

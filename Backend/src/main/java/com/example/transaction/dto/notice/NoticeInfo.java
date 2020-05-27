@@ -34,8 +34,8 @@ public class NoticeInfo {
     private String userName;
     /*用户成交率*/
     private Double rate;
-
-    Integer browseCount;
+    /*浏览量*/
+    private Integer browseCount;
 
 
 
@@ -59,10 +59,6 @@ public class NoticeInfo {
                 for(CommodityImage image:images){
                     this.img.add(Nums.commodityImagePath + image.getImageUrl());
                 }
-                /**
-                 * ZZH
-                 * TODO :
-                 */
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }

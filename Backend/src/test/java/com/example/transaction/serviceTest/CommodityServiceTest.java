@@ -5,12 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * @ClassName: CommodityServiceTest
- * @Description: TODO
- * @Author: 曾志昊
- * @Date: 2020/5/19 14:56
- */
 @SpringBootTest
 public class CommodityServiceTest {
     @Autowired

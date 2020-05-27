@@ -1,6 +1,6 @@
 package com.example.transaction.dto.reservation;
 
-import com.example.transaction.dto.commodity.SimpleCommodity;
+import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
 import lombok.Data;
@@ -25,7 +25,7 @@ public class DetailedReservation {
     Integer stateEnum = -3;
     Double evaluationSell = -1.0D;
     Double evaluationBuy = -1.0D;
-    SimpleCommodity commodity;
+    SimpleCommodity2 commodity;
     Integer accountId = -1;
     String accountName = "";
     String avatar = "";
@@ -43,7 +43,7 @@ public class DetailedReservation {
         }catch(Exception e){
             e.printStackTrace();
         }
-        this.commodity = new SimpleCommodity(reservation.getCommodity());
+        this.commodity = new SimpleCommodity2(reservation.getCommodity());
         this.accountId = reservation.getAccountId();
     }
 

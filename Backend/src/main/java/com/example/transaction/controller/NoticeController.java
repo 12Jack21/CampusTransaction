@@ -53,6 +53,10 @@ public class NoticeController {
             if (notice.getType() == null) {
                 return responseFromServer.error();
             }
+            /**
+             * 处理空串等参数
+             */
+            notice.rectifyNotify();
             notice.setStateEnum(NoticeCode.UNPUBLISHED.getCode());
             return noticeService.addNotice(notice);
         } else {

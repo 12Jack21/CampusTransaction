@@ -279,6 +279,7 @@ public class CommodityServiceImpl implements CommodityService {
             return response;
         }
         DetailedCommodityInfo commodityInfo = new DetailedCommodityInfo((Commodity) response.getData());
+        commodityInfo.getCommodity().setCommodityImages(null);
         response = commentService.getCommentByCommodityId(1, 1);
         if (response.isFailure()) {
             return response;

@@ -7,6 +7,7 @@ import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.pojo.Type;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ import java.util.List;
  * @Author: 曾志昊
  * @Date: 2020/5/24 15:25
  */
+@Data
 public class BaseCommodity implements Serializable {
 
     @TableId(value = "id", type = IdType.AUTO)

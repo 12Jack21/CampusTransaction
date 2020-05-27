@@ -18,9 +18,11 @@ import java.io.Serializable;
 @TableName("commodity")
 public class SimpleCommodity implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
-    Integer id;
-    String name;
-    String imageUrl;
+    protected Integer id=-1;
+    protected String name="";
+    protected String img="";
+
+
 
     public SimpleCommodity() {
     }
@@ -29,9 +31,10 @@ public class SimpleCommodity implements Serializable {
         this.id = commodity.getId();
         this.name = commodity.getName();
         if (commodity.getCommodityImages() == null || commodity.getCommodityImages().size() == 0) {
-            this.imageUrl = null;
+            this.img = null;
         } else {
-            this.imageUrl = commodity.getCommodityImages().get(0).getImageUrl();
+            this.img = commodity.getCommodityImages().get(0).getImageUrl();
         }
+
     }
 }

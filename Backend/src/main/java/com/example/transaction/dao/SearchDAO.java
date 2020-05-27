@@ -28,9 +28,9 @@ public interface SearchDAO extends BaseMapper<Search> {
     IPage<Search> getSearchPage(Page<?> page, @Param("ew") QueryWrapper<Search> queryWrapper);
 
 
-    @Delete("delete from search where account_id = {#accountId}")
+    @Delete("delete from search where account_id = #{accountId}")
     int deleteAllSearchByAccountId(Integer accountId);
 
-    @Delete("delete from search where account_id = {#accountId} and id = {#searchId}")
+    @Delete("delete from search where account_id = #{accountId} and id = #{searchId}")
     int deleteOneSearchByAccountId(Integer accountId, Integer searchId);
 }

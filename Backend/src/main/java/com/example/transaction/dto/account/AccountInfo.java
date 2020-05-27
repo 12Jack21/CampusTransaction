@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName: AccountInfo
- * @Description: TODO
+ * @Description: 用户信息
  * @Author: 曾志昊
  * @Date: 2020/5/24 20:41
  */
