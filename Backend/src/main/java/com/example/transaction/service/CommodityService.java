@@ -1,6 +1,8 @@
 package com.example.transaction.service;
 
+import com.example.transaction.dto.CommoditySearch;
 import com.example.transaction.dto.Condition;
+import com.example.transaction.dto.commodity.MyCommodityCondition;
 import com.example.transaction.dto.commodity.Pagination;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
@@ -19,6 +21,8 @@ import java.util.List;
 
 public interface CommodityService {
     responseFromServer search(Condition condition);
+
+    responseFromServer getMyCommodities(MyCommodityCondition condition);
 
     responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId);
 

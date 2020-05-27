@@ -56,7 +56,7 @@ public class SearchController {
 
     @ApiOperation(value = "删除用户所有搜索记录")
     @ApiImplicitParam(name = "searchId", value = "搜索记录id", paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/{accountId}")
+    @DeleteMapping("/account/{accountId}")
     public responseFromServer deleteAllSearches(@PathVariable Integer accountId, HttpServletRequest request) {
         Account account = new Account(accountId);
         accountVerify.verifyWithReturn(account, request);

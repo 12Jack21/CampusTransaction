@@ -5,6 +5,7 @@ import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dto.account.AccountInfo;
+import com.example.transaction.dto.account.LoginAccountInfo;
 import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.service.AccountService;
@@ -57,7 +58,13 @@ public class AccountServiceImpl implements AccountService {
         if (response.isSuccess()) {
             Account account1 = (Account) response.getData();
             if (account.getPassword().equals(account1.getPassword())) {
-                return tokenService.loginOperationOnToken(account1);
+                response = tokenService.loginOperationOnToken(account1);
+                if(response.isSuccess()){
+                    String tokenStr = (String)response.getData();
+                    LoginAccountInfo loginAccountInfo = new LoginAccountInfo(account,tokenStr);
+                    return responseFromServer.success(loginAccountInfo);
+                }
+                return responseFromServer.error();
             } else {
                 return responseFromServer.error();
             }

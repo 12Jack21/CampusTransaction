@@ -284,7 +284,8 @@ public class ReservationController {
                     @ApiImplicitParam(name = "page_index", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    @GetMapping("/account/{accountId}/receive")
+//    @GetMapping("/account/{accountId}/receive")
+    @GetMapping("/account/{accountId}")
     public responseFromServer getReservationRequest(@RequestJson Integer pageIndex, @PathVariable Integer accountId, HttpServletRequest request) {
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /**

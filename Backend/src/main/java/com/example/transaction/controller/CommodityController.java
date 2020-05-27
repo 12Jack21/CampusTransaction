@@ -2,6 +2,7 @@ package com.example.transaction.controller;
 
 import com.example.transaction.dto.CommoditySearch;
 import com.example.transaction.dto.Condition;
+import com.example.transaction.dto.commodity.MyCommodityCondition;
 import com.example.transaction.dto.commodity.Pagination;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
@@ -134,12 +135,24 @@ public class CommodityController {
     }
 
 
-    @GetMapping("/account/{otherId}")
+    @GetMapping("/account/other/{otherId}")
     public responseFromServer getOthersCommodity(@PathVariable Integer otherId,
                                                  Pagination pagination,
                                                  HttpServletRequest request){
         return commodityService.getOthersCommodity(pagination,otherId);
     }
+
+
+    @GetMapping("/account/{accountId}")
+    public responseFromServer getMyCommodities(@PathVariable Integer accountId,
+                                                 MyCommodityCondition condition,
+                                                 HttpServletRequest request){
+        if(condition.getType()==null){
+            condition.setType(3);
+        }
+        return commodityService.getMyCommodities(condition);
+    }
+
 
     /**
      * 根据id获取商品信息
@@ -150,7 +163,7 @@ public class CommodityController {
     @ApiOperation(value = "获取商品信息")
     @GetMapping("/{commodityId}")
     public responseFromServer getById(@PathVariable Integer commodityId) {
-        return commodityService.getDetailedCommodity(commodityId);
+        return commodityService.getDetailedCommodityInfo(commodityId);
     }
 
     /**

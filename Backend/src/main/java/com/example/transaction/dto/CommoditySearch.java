@@ -14,5 +14,4 @@ public class CommoditySearch {
     Condition condition;
     Pagination pagination;
     String keyword;
-
 }

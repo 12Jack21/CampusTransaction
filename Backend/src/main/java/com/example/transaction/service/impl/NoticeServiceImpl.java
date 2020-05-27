@@ -46,6 +46,9 @@ public class NoticeServiceImpl implements NoticeService {
         /*只查看确认发布的通告*/
         queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
         /*是商品还是需求*/
+        if(condition.getType()==null){
+            condition.setType(0);
+        }
         switch (condition.getType()) {
             case 0:/*全部*/
                 break;
@@ -55,6 +58,8 @@ public class NoticeServiceImpl implements NoticeService {
             case 2:/*需求*/
                 queryWrapper.eq("type", false);
                 break;
+            default:
+                condition.setType(0);
         }
         if (condition.getAccountId() != null) {
             queryWrapper.eq("account_id", condition.getAccountId());

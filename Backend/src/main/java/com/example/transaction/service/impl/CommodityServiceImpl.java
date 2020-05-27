@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.*;
+import com.example.transaction.dto.CommoditySearch;
 import com.example.transaction.dto.Condition;
 import com.example.transaction.dto.commodity.CommodityInfo;
 import com.example.transaction.dto.commodity.DetailedCommodityInfo;
+import com.example.transaction.dto.commodity.MyCommodityCondition;
 import com.example.transaction.dto.commodity.Pagination;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.*;
@@ -223,6 +225,53 @@ public class CommodityServiceImpl implements CommodityService {
 
 
     }
+
+    private responseFromServer getMyBoughtCommodities(Integer accountId,Pagination pagination){
+        /**
+         * 返回分页
+         */
+        /**
+         * ZZH
+         * TODO : 获取我购买的商品
+         */
+        return null;
+    }
+
+    private responseFromServer getMyPublishedCommodities(Integer accountId,Pagination pagination){
+        /**
+         * 返回分页
+         */
+        return getOthersCommodity(pagination,accountId);
+    }
+
+
+    @Override
+    public responseFromServer getMyCommodities(MyCommodityCondition condition){
+        Pagination pagination = new Pagination();
+        pagination.setPageIndex(condition.getPageIndex());
+        pagination.setEndTime(condition.getEndTime());
+        switch(condition.getType()){
+            case 0:
+                /**
+                 * 我发布的
+                 */
+                break;
+            case 1:
+                /**
+                 * 我买入的
+                 */
+                break;
+            case 3:
+                /**
+                 * 全部
+                 */
+                break;
+            default:
+                return responseFromServer.error();
+        }
+        return null;
+    }
+
 
     /**
      * @Description: 获取别人的商品信息
