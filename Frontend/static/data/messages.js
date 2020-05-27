@@ -15,7 +15,7 @@ export default [
 	    commodity:{
 	    	id: -1,
 	    	name: '',
-	    	imageURL: ''
+	    	img: ''
 			},
 			title: ''
 	},
@@ -32,7 +32,7 @@ export default [
 	    commodity:{
 	    	id: 21,
 	    	name: '毛巾',
-	    	imageURL: ''
+	    	img: ''
 			},
 			title: ''
 	},
@@ -50,7 +50,7 @@ export default [
 	    commodity:{
 	    	id: -1,
 	    	name: '',
-	    	imageURL: ''
+	    	img: ''
 			},
 			title: ''
 	},
@@ -68,7 +68,7 @@ export default [
 	    commodity:{
 	    	id: 9,
 	    	name: '牙刷',
-	    	imageURL: 'qwe'
+	    	img: 'qwe'
 			},
 			title: ''
 	},
@@ -86,7 +86,7 @@ export default [
 	    commodity:{
 	    	id: -1,
 	    	name: '',
-	    	imageURL: ''
+	    	img: ''
 			},
 			title: '毕业了'
 	},
@@ -103,7 +103,7 @@ export default [
 	    commodity:{
 	    	id: 77,
 	    	name: '珍珠',
-	    	imageURL: ''
+	    	img: ''
 			},
 			title: ''
 	},

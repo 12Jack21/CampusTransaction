@@ -84,7 +84,7 @@ export default {
 		.goods-info-tools {
 			position: absolute;
 			bottom: 0;
-			width: calc(100% - 154.54rpx);
+			// width: calc(100% - 154.54rpx);
 			transition: width 0.15s;
 			.cu-tag {
 				position: absolute;

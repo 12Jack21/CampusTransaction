@@ -95,7 +95,10 @@
 			padding-left: 209.09rpx;
 			transition: all .15s;
 			.goods-info-tools {
+				/* #ifndef MP */
 				width: calc(100% - 209.09rpx);
+				
+				/* #endif */
 				transition: width .15s;
 			}
 		}

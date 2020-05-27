@@ -1,5 +1,6 @@
 <template>
 	<view>
+			
 		<!--标题栏-->
 		<bar-title bgColor="bg-white" isBack><block slot="content">我的预约</block></bar-title>
 
@@ -208,11 +209,15 @@ export default {
 </style>
 
 <style lang="scss" scoped>
+.bar-height{
+	position: fixed;
+	top: var(--status-bar-height);
+}
 .zaiui-title-tab-box {
 	position: fixed;
 	width: 100%;
-	top: 40px;
-	z-index: 999999;
+	// top: 40px;
+	z-index: 9999;
 	padding: calc(var(--status-bar-height) + 9.09rpx) 27.27rpx 9.09rpx 9.09rpx;
 	.flex {
 		.basis-l {

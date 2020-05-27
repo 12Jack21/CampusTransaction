@@ -65,7 +65,7 @@
 					<!-- action 区-->
 					<view class="action" @tap="actionTap(msg.targetId,msg.targetType)">
 						<view class="cu-avatar radius"
-						:style="'background-image:url(' + (msg.commodity.imageURL.length!==0?msg.commodity.imageURL:'/static/images/comDefault.png') + ');'" v-if="msg.commodity.name">
+						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.commodity.name">
 						</view>
 						<text style="vertical-align: middle;" v-else>去看看
 							<text class="cuIcon-right"></text>
