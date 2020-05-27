@@ -66,10 +66,10 @@
 		<!--底部操作-->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="account.id===userId">
 				<view class= "operation">				
-					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.state_enum=='CANCELLED'">
+					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.stateEnum=='CANCELLED'">
 						关闭通告
 					</button>
-					<button class="cu-btn bg-orange lg"  @tap="updateShow=true" :disabled="notice.state_enum=='CANCELLED'">
+					<button class="cu-btn bg-orange lg"  @tap="updateShow=true" :disabled="notice.stateEnum=='CANCELLED'">
 						更新
 					</button>
 				</view>
@@ -108,7 +108,7 @@
 					address:'信息学部',
 					detailedAddress:'信息学部大食堂',
 					browseCount: 30,
-					state_enum:'CANCELLED' // CANCELLED PUBLISHED
+					stateEnum:'CANCELLED' // CANCELLED PUBLISHED
 				},
 				account:{
 					id: 1,
@@ -122,7 +122,7 @@
 			...mapState(['userId']),	
 			state(){ //通告状态
 				let texts = ['发布中...','即将失效...','已失效','已关闭'],text=texts[0],color='bg-grey'
-				if(this.notice.state_enum === 'CANCELLED')
+				if(this.notice.stateEnum === 'CANCELLED')
 					text = texts[3]
 				else{
 					let d = new Date()
@@ -176,7 +176,7 @@
 							.then(({data})=>{
 								if(data.success){
 									console.log('关闭成功');
-									this.notice.state_enum = 'CANCELLED'
+									this.notice.stateEnum = 'CANCELLED'
 									this.failTip('关闭通告失败')
 								}
 							})

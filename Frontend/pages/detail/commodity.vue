@@ -320,7 +320,7 @@ export default {
 			expiredTime: '2020-05-29 10:07',
 			address: '信息学部',
 			detailedAddress: '信息学部二食堂',
-			state_enum: 'PUBLISHED', // CANCELLED PUBLISHED
+			stateEnum: 'PUBLISHED', // CANCELLED PUBLISHED
 			reservations: [
 				{
 					id: 1,
@@ -352,7 +352,7 @@ export default {
 		disabled() {
 			let now = new Date().getTime()
 			let expire = new Date(this.expiredTime).getTime()
-			if (now >= expire || this.state_enum == 'CANCELLED') return true
+			if (now >= expire || this.stateEnum == 'CANCELLED') return true
 			return false
 		},
 		comImgs(){
@@ -542,7 +542,7 @@ export default {
 					this.expiredTime = data.expiredTime
 					this.condition = data.condition
 					this.detailedAddress = data.detailedAddress
-					this.state_enum = data.state_enum
+					this.stateEnum = data.stateEnum
 					this.account = data.account
 					this.comments = data.comments
 				})

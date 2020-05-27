@@ -53,7 +53,10 @@
 			border-radius: 18.18rpx;
 			padding: 9.09rpx;
 			.cu-list.menu-avatar>.cu-item .content {
-			    width: calc(100% - 94.54rpx - 59.99rpx - 20rpx);
+				/* #ifndef MP */
+				
+			  width: calc(100% - 94.54rpx - 59.99rpx - 20rpx);
+				/* #endif */
 				line-height: 1.8em;
 			}
 			.cu-list.menu-avatar>.cu-item:after {

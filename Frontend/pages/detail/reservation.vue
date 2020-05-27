@@ -26,13 +26,13 @@
 
 		
 		<!--状态图标-->
-		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="basics == 2 && reservation.state_enum!='CANCELLED'">
+		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="basics == 2 && reservation.stateEnum!='CANCELLED'">
 			<view class="are-img-view" @tap="cancel = true"><image class="are-img" src="/static/zaiui/img/are.png" mode="widthFix" /></view>
 			<view class="text-sm text-black">交易成功，可更新一次评价</view>
 		</view>
 
 		<!--状态图标-->
-		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="reservation.state_enum=='CANCELLED'">
+		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="reservation.stateEnum=='CANCELLED'">
 			<view class="are-img-view" @tap="cancel = false"><image class="are-img" src="/static/zaiui/img/arg.png" mode="widthFix" /></view>
 			<view class="text-sm text-black text-bold">订单已取消</view>
 		</view>
@@ -65,13 +65,13 @@
 		<view class="bg-white zaiui-card-box">
 			<view class="zaiui-card-view zaiui-shop-view">
 				<view class="shop-info-view">
-					<view class="cu-avatar round sm" :style="[{ backgroundImage: avatarURL }]" />
+					<view class="cu-avatar round sm " :style="[{ backgroundImage: avatarURL }]"  @tap="comTap"/>
 					<view class="text-black text-bold text-lg title-view">{{ reservation.accountName }}</view>
 				</view>
 				<view class="goods-list-view">
 					<view class="cu-avatar radius" :style="{ backgroundImage: comImg }" />
 					<view class="reservation-goods-info-view">
-						<view class="text-black text-cut name">{{ reservation.commodity.name }}</view>
+						<view class="text-black text-cut name" @tap="comTap">{{ reservation.commodity.name }}</view>
 						<view class="text-gray text-sm text-cut introduce">{{ reservation.commodity.description }}</view>
 						<view class="text-price text-red text-lg">{{ reservation.commodity.expectedPrice }}</view>
 					</view>
@@ -125,7 +125,7 @@
 
 		<!-- 底部按钮组 -->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom">
-			<button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button>
+			<!-- <button class="cu-btn bg-orange sm" @tap="nextTap">测试下一步</button> -->
 			<button class="cu-btn line-black radius" @click="cancel" v-if="basics < 2" 
 				:disabled="cancelDisable">
 				{{ btn1[basics] }}
@@ -206,7 +206,7 @@ export default {
 				count: 10,
 				note: '最好可以有个包装',
 				createTime: '2020-10-08 10:06',
-				state_enum: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
+				stateEnum: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
 				evaluation_sell: 5, // 卖家的评价等级, 1-5
 				evaluation_buy: 1, //买家的评价等级
 				commodity: {
@@ -238,13 +238,13 @@ export default {
 		},
 		cancelDisable(){ // 取消按钮 disable
 			if(this.basics===0)
-				return this.isSell || this.reservation.state_enum!=='WAITING'
+				return this.isSell || this.reservation.stateEnum!=='WAITING'
 			else if(this.basics === 1)
-				return !this.isSell || this.reservation.state_enum == 'CANCELLED'
+				return !this.isSell || this.reservation.stateEnum == 'CANCELLED'
 			return false
 		},
 		confirmDisable(){ // 确认按钮 disable
-			return this.basics===1 && (!this.isSell || this.reservation.state_enum!=='VALIDATE')
+			return this.basics===1 && (!this.isSell || this.reservation.stateEnum!=='VALIDATE')
 		}
 	},
 	onLoad(params) {
@@ -285,7 +285,7 @@ export default {
 				.then(({ data }) => {
 					this.reservation = data
 					// 根据状态判断 界面的展示值
-					let state = data.state_enum // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
+					let state = data.stateEnum // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
 					this.initBasic(state)
 				})
 				.catch(() => {
@@ -313,7 +313,7 @@ export default {
 									if(data.success){ // 确认交易成功
 										this.tip(0,'确认交易成功')
 										this.basics += 1 //更新状态
-										this.reservation.state_enum = 'FINISHED'
+										this.reservation.stateEnum = 'FINISHED'
 									}
 									else
 										this.tip(1,'确认交易失败')
@@ -334,7 +334,7 @@ export default {
 						if(data.success){ // 取消预约成功
 							this.tip(0,'取消预约成功')
 							// this.basics += 1 //更新状态
-							this.reservation.state_enum = 'CANCELLED'
+							this.reservation.stateEnum = 'CANCELLED'
 						}
 						else
 							this.tip(1,'取消预约失败')
@@ -346,7 +346,7 @@ export default {
 						if(data.success){ // 取消预约成功
 							this.tip(0,'取消交易成功')
 							// this.basics += 1 //更新状态
-							this.reservation.state_enum = 'FAILED'
+							this.reservation.stateEnum = 'FAILED'
 						}
 						else
 							this.tip(1,'取消交易失败')
@@ -373,6 +373,11 @@ export default {
 						this.tip(1,'更新评价失败')
 				})
 				.catch(()=>this.err())
+		},
+		comTap(){
+			uni.navigateTo({
+				url: './commodity?id=' + this.reservation.commodity.id
+			});
 		},
 		nextTap() { //debug: 测试下一步
 			this.basics = this.basics == this.basicsList.length - 1 ? 0 : this.basics + 1

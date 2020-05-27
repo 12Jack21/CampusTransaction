@@ -1,7 +1,7 @@
 .cu-steps .cu-item {
 	&:before {
+		border-bottom: 5.45rpx solid #FFF3F3;		
 		width: calc(100% - 72.72rpx);
-		border-bottom: 5.45rpx solid #FFF3F3;
 		left: calc(0px - (100% - 72.72rpx) / 2);
 		top: 34.54rpx;	
 	}
@@ -221,7 +221,7 @@
 		    top: 25.45rpx;
 		}
 		.content {
-		    left: 72.72rpx;
+		    left: 72.72rpx;				
 		    width: calc(100% - 94.54rpx);
 		}
 	}

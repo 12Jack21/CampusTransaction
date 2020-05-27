@@ -7,7 +7,7 @@
 				"backgroundColor":"#FAFAFA"
 			}
 		},
-		{
+		{ 
 			"path": "pages/login/login",
 			"style": {}
 		},
