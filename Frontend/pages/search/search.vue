@@ -136,6 +136,7 @@ const conditionMap = (sort,outdated,price) =>{
 			sortVal = 7
 			break
 	}
+	// console.log('outdated',outdated);
 	switch(outdated){
 		case '1天内':
 			oVal = 1
@@ -149,11 +150,12 @@ const conditionMap = (sort,outdated,price) =>{
 		case '1月内':
 			oVal = 30
 			break
+		default:
+			console.log('default outdated');
 	}
 	
+	// 单价格区间
 	price = price[0]
-	console.log('my price',price);
-	// price为价格数组
 	switch(price){
 		case '50以下':
 			highPrice = 50
@@ -350,10 +352,8 @@ export default {
 			this.filterValues = e.value
 			this.pagination = iniPagination()
 			this.goodsData = []
-			
-			
+						
 			// do search with filter condition
-			// TODO 价格单区间
 			let searchBody = Object.assign({
 				type: e.value[0][1],
 				userAddress: e.value[1][0],

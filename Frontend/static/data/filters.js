@@ -159,7 +159,7 @@ export default [{
 	},
 	{
 		// name:'价格',
-		"type": 'filter',
+		"type": 'radio',
 		"submenu": [{
 				"name": "失效时间",
 				"submenu": [{
