@@ -46,7 +46,7 @@ public class NoticeServiceImpl implements NoticeService {
         /*只查看确认发布的通告*/
         queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
         /*是商品还是需求*/
-        if(condition.getType()==null){
+        if (condition.getType() == null) {
             condition.setType(0);
         }
         switch (condition.getType()) {
@@ -67,12 +67,12 @@ public class NoticeServiceImpl implements NoticeService {
         if (condition.getEndTime() != null) {
             queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
         }
-        queryWrapper.ge("end_time",new Timestamp(System.currentTimeMillis()));
+        queryWrapper.ge("end_time", new Timestamp(System.currentTimeMillis()));
         responseFromServer response = getNoticePage(queryWrapper, condition.getPageIndex());
-        if(response.isFailure()){
+        if (response.isFailure()) {
             return responseFromServer.error();
         }
-        MyPage myPage = (MyPage)response.getData();
+        MyPage myPage = (MyPage) response.getData();
         myPage.setPageList(transform(myPage.getPageList()));
         return responseFromServer.success(myPage);
     }
@@ -132,17 +132,17 @@ public class NoticeServiceImpl implements NoticeService {
      * @return
      */
     private responseFromServer splitAddress(Notice notice) {
-        String addressStr = notice.getDetailedAddress(),address,detailedAddress;
+        String addressStr = notice.getDetailedAddress(), address, detailedAddress;
         if (StringUtil.isNullOrEmpty(addressStr)) {
             return responseFromServer.error();
         }
         char temp = addressStr.charAt(3);
-        if(temp == '部'){
-            address = addressStr.substring(0,4);
-            detailedAddress = addressStr.substring(4,addressStr.length());
-        }else{
-            address = addressStr.substring(0,3);
-            detailedAddress = addressStr.substring(3,addressStr.length());
+        if (temp == '部') {
+            address = addressStr.substring(0, 4);
+            detailedAddress = addressStr.substring(4, addressStr.length());
+        } else {
+            address = addressStr.substring(0, 3);
+            detailedAddress = addressStr.substring(3, addressStr.length());
         }
         notice.setAddress(address);
         notice.setDetailedAddress(detailedAddress);
@@ -210,21 +210,21 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
-        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
+        Page<Notice> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         return responseFromServer.success(new MyPage(noticeIPage));
     }
 
     @Override
     public responseFromServer getNoticeInfoPage(QueryWrapper queryWrapper, int pageIndex) {
-        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
+        Page<Notice> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         MyPage myPage = new MyPage(noticeIPage);
         myPage.setPageList(transform(myPage.getPageList()));
         return responseFromServer.success(myPage);
     }
 
-    private List<NoticeInfo> transform(List<Notice> pageList){
+    private List<NoticeInfo> transform(List<Notice> pageList) {
         List<NoticeInfo> resultList = new ArrayList<>();
         for (Notice notice : pageList) {
             resultList.add(new NoticeInfo(notice));
@@ -250,13 +250,14 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 添加访问量
+     *
      * @param noticeId
      * @return
      */
     @Override
     @Transactional
-    public responseFromServer addBrowseCount(Integer noticeId){
-        if(noticeId == null || noticeId < 0 ||noticeDAO.addBrowseCount(noticeId)!=1) {
+    public responseFromServer addBrowseCount(Integer noticeId) {
+        if (noticeId == null || noticeId < 0 || noticeDAO.addBrowseCount(noticeId) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -277,8 +278,8 @@ public class NoticeServiceImpl implements NoticeService {
         }
         NoticeInfo noticeInfo = new NoticeInfo(notice);
         List<CommodityInfo> commodityInfoList = new ArrayList<>();
-        for(Commodity commodity:notice.getComList()){
-            commodityInfoList.add(new CommodityInfo(commodity,noticeInfo));
+        for (Commodity commodity : notice.getComList()) {
+            commodityInfoList.add(new CommodityInfo(commodity, noticeInfo));
         }
         notice.setComList(null);
         notice.setComInfoList(commodityInfoList);

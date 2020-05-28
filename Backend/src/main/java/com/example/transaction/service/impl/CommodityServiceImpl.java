@@ -619,7 +619,7 @@ public class CommodityServiceImpl implements CommodityService {
         List<CommodityImage> commodityImageList = commodity.getCommodityImages();
         for (CommodityImage commodityImage : commodityImageList) {
             String path = commodityImage.getImageUrl();
-            File file = new File(ResourcePath.imagePath + path);
+            File file = new File(ResourcePath.goodsFilePath + path);
             file.delete();
         }
     }

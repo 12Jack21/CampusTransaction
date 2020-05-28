@@ -3,6 +3,7 @@ package com.example.transaction.dto.notice;
 import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.code.Nums;
+import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -59,13 +60,13 @@ public class NoticeInfo {
                 continue;
             } else {
                 for(CommodityImage image:images){
-                    this.img.add(Nums.commodityImagePath + image.getImageUrl());
+                    this.img.add(ResourcePath.commodityImageRequestPath + image.getImageUrl());
                 }
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
         this.browseCount = notice.getBrowseCount();
-        this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
+        this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
         this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {

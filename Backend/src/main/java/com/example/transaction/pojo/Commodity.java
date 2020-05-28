@@ -47,98 +47,122 @@ public class Commodity extends BaseCommodity implements Serializable {
 
 
 
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
+    @Override
     public Double getOriginalPrice() {
         return originalPrice;
     }
 
+    @Override
     public void setOriginalPrice(Double originalPrice) {
         this.originalPrice = originalPrice;
     }
 
+    @Override
     public Double getExpectedPrice() {
         return expectedPrice;
     }
 
+    @Override
     public void setExpectedPrice(Double expectedPrice) {
         this.expectedPrice = expectedPrice;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
 
+    @Override
     public String getNewness() {
         return newness;
     }
 
+    @Override
     public void setNewness(String newness) {
         this.newness = newness;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public void setDescription(String description) {
         this.description = description;
     }
 
+    @Override
     public Integer getNoticeId() {
         return noticeId;
     }
 
+    @Override
     public void setNoticeId(Integer noticeId) {
         this.noticeId = noticeId;
     }
 
+    @Override
     public Integer getInitialCount() {
         return initialCount;
     }
 
+    @Override
     public void setInitialCount(Integer initialCount) {
         this.initialCount = initialCount;
     }
 
+    @Override
     public Integer getCount() {
         return count;
     }
 
+    @Override
     public void setCount(Integer count) {
         this.count = count;
     }
 
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public void setType(String type) {
         this.type = type;
     }
 
+    @Override
     public List<CommodityImage> getCommodityImages() {
         return commodityImages;
     }
 
+    @Override
     public void setCommodityImages(List<CommodityImage> commodityImages) {
         this.commodityImages = commodityImages;
     }
 
+    @Override
     public List<String> getImages() {
         return images;
     }
 
+    @Override
     public void setImages(List<String> images) {
         this.images = images;
     }

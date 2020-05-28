@@ -58,7 +58,12 @@ public class ReservationController {
         if (reservation.getCommodityId() == null || reservation.getCount() == null) {
             return responseFromServer.error();
         } else {
-            reservation.setAccountId(account.getId());
+            /**
+             * ZZH
+             * TODO : 先直接用传来的数据里的用户id
+             */
+//            reservation.setAccountId(account.getId());
+            
             reservation.setStateEnum(ReservationCode.WAITING.getCode());
             return reservationService.setUpReservation(reservation);
         }
