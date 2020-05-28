@@ -2,9 +2,9 @@
 	<view>
 			
 		<!--标题栏-->
-		<bar-title bgColor="bg-white" isBack><block slot="content">我的预约</block></bar-title>
+		<bar-title bgColor="bg-white" isBack><block slot="content">我的物品</block></bar-title>
 
-		<!-- 预约的分类tab -->
+		<!-- 物品的分类tab -->
 		<view class="bg-white zaiui-title-tab-box" style="z-index: 888;margin-left: 10rpx;">
 			<view class="flex flex-wrap">
 				<view class="basis-l">
@@ -19,24 +19,21 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="cu-tabbar-height" />
+		
 		<you-scroll ref="scroll" @onPullDown="onPullDown">
 			<!--预约列表-->
 			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 0">
-				<reservationList :list_data="wait.list" @listTap="listTap"></reservationList>
+				<commodityList :list_data="release.list" @listTap="listTap"></commodityList>
 			</view>
 
 			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 1">
-				<reservationList :list_data="on.list" @listTap="listTap"></reservationList>
+				<commodityList :list_data="receive.list" @listTap="listTap"></commodityList>
 			</view>
 
 			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 2">
-				<reservationList :list_data="finish.list" @listTap="listTap"></reservationList>
-			</view>
-
-			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 3">
-				<reservationList :list_data="total.list" @listTap="listTap"></reservationList>
+				<commodityList :list_data="total.list" @listTap="listTap"></commodityList>
 			</view>
 			
 			<!-- Loading Text -->
@@ -53,28 +50,26 @@
 <script>
 import barTitle from '@/components/basics/bar-title'
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
-import _reservations_data from '@/static/zaiui/data/reservations.js'
-import reservationList from '@/components/list/reservations-list.vue'
+import _commodities_data from '@/static/zaiui/data/home.js'
+import commodityList from '@/components/list/commodity-list.vue'
 import youScroll from '@/components/you-scroll/you-scroll.vue'
 import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 import {mapState} from 'vuex'
 import handles from '../../utils/handles.js'
 
-const reservationMap = tabCur => {
+const commodityMap = tabCur => {
 	switch (tabCur) {
 		case 0:
-			return 'wait' // 待确认
+			return 'release' // 发布的
 		case 1:
-			return 'on' // 预约中
+			return 'receive' // 买入的
 		case 2:
-			return 'finish' // 已完成
-		case 3:
 			return 'total' // 全部
 		default:
 			console.log('map case default',tabCur)
 	}
 }
-const iniReservation = ()=> ({
+const iniCommodity = ()=> ({
 	pageIndex:1,
 	pageSize:20,
 	endTime:new Date().format('yyyy-MM-dd hh:mm'),
@@ -84,7 +79,7 @@ const iniReservation = ()=> ({
 export default {
 	components: {
 		barTitle,
-		reservationList,
+		commodityList,
 		youScroll,
 		uniLoadMore
 	},
@@ -94,9 +89,8 @@ export default {
 			loadStatus:'more',
 			headTab: { scrollLeft: 0, list: [] },
 			tabCur: 0,
-			wait: { list: [] },
-			on: { list: [] },
-			finish: { list: [] },
+			release: { list: [] },
+			receive: { list: [] },
 			total: { list: [] },
 			reservations: []
 		}
@@ -105,15 +99,14 @@ export default {
 		...mapState(['userId'])
 	},
 	onLoad(params) {
-		this.headTab.list = ['待确认', '待交易', '已完成', '全部预约']
+		this.headTab.list = ['我发布的','我买入的','全部']
 		// virtual data
-		this.wait.list = _reservations_data.stage1List()
-		this.on.list = _reservations_data.stage2List()
-		this.finish.list = _reservations_data.stage3List()
-		this.total.list = _reservations_data.totalList()
+		this.release.list = _commodities_data.goodsList()
+		this.receive.list = _commodities_data.goodsList()
+		this.total.list = _commodities_data.goodsList()
 		
 		// request data
-		this.loadReservations() // 用户 id 和 预约类型
+		this.loadCommoditiess() // 用户 id 和 预约类型
 		
 		console.log('vuex acc id',this.userId);
 	},
@@ -131,54 +124,57 @@ export default {
 		listTap(id) {
 			let isSell = false // 是买家
 			uni.navigateTo({
-				url: `../../pages/detail/reservation?id=${id}&isSell=${isSell}`
+				url: `../../pages/detail/commodity?id=${id}`
 			})
 		},
-		async loadReservations() {
+		async loadCommoditiess() {
 			if(this.onRequest) return
 			this.onRequest = true
 			this.loadStatus = 'loading'
-			let curReservations = this[reservationMap(this.tabCur)]
+			let curCommodities = this[commodityMap(this.tabCur)]
 			let pagination = {
-				pageIndex: curReservations.pageIndex,
-				pageSize: curReservations.pageSize,
-				endTime: curReservations.endTime,
+				pageIndex: curCommodities.pageIndex,
+				pageSize: curCommodities.pageSize,
+				endTime: curCommodities.endTime,
 				type:this.tabCur
 			}
 			
 			await this.$api
-				.getReservations(this.userId, pagination)
+				.getCommoditiesByAcc(this.userId, pagination)
 				.then(({ data }) => {
 					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					curReservations.list.push(...data.list)
+					curCommodities.list.push(...data.list)
 					// 取完了数据
-					if (data.pageIndex - 1 >= data.pageCount) curReservations.finish = true
+					if (data.pageIndex - 1 >= data.pageCount) curCommodities.finish = true
 				})
 				.catch(() =>{
-					console.log('获取预约列表失败')
+					uni.showToast({
+						title: '通告获取失败',
+						icon: 'none'
+					})
 					this.err()
 				})
 
 			console.log('!同步运行到此，设置 loadingText')
-			if (curReservations.finish) this.loadStatus = 'noMore'
+			if (curCommodities.finish) this.loadStatus = 'noMore'
 			else this.loadStatus = 'more'
 			this.onRequest = false
 		},
 		async onPullDown(done) {
-			this[reservationMap(this.tabCur)] = iniReservation()
-			await this.loadReservations()
+			this[commodityMap(this.tabCur)] = iniCommodity()
+			await this.loadCommoditiess()
 			done()
 		},
 		setReachBottom() {
 			console.log('reservations 触底了')
-			if (!this[reservationMap(this.tabCur)].finish) this.loadReservations()
+			if (!this[commodityMap(this.tabCur)].finish) this.loadCommoditiess()
 		},
 		tabSelect(e) {
 			let current = parseInt(e.currentTarget.dataset.id)
-			if (this.tabCur !== current && this[reservationMap(current)].list.length === 0) {
-				this[reservationMap(current)] = iniReservation()
+			if (this.tabCur !== current && this[commodityMap(current)].list.length === 0) {
+				this[commodityMap(current)] = iniCommodity()
 				this.tabCur = current
-				this.loadReservations()
+				this.loadCommoditiess()
 			} else this.tabCur = current
 		},
 		tip(index, content, isClick = false, timeout = 2000) {

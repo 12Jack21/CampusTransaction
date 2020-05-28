@@ -106,8 +106,11 @@ export default{
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
 	},
-	getCommoditiesByAcc(id){ // get PUBLISHED commodity of that account
-		return http.get('/commodities/account/' + id)
+	getCommoditiesByOtherAcc(id){ // get PUBLISHED commodity of that account
+		return http.get('/commodities/other/account/' + id)
+	},
+	getCommoditiesByAcc(id,params){ // get commodities of specified my account
+		return http.get('/commodities/account/' + id,params)
 	},
 	
 	updateEvaluation(id,data){
@@ -131,8 +134,8 @@ export default{
 	getReservationsByCommodity(id){
 		return http.get('/reservations/commodity/' + id)
 	},
-	getReservations(accountId){
-		return http.get('/reservations/account/' + accountId)
+	getReservations(accountId, pagination){
+		return http.get('/reservations/account/' + accountId,{params:pagination})
 	},
 	getReservation(id){
 		return http.get('/reservations/' + id)
