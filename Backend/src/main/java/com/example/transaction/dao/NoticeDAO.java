@@ -43,7 +43,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
     @Results(id = "accountMap3", value = {
             @Result(property = "accountId", column = "account_id"),
             @Result(property = "user", column = "account_id", one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.getAccountCreditById"
+                    select = "com.example.transaction.dao.AccountDAO.getAccountWithEstimate"
             ))
     })
     @Select("select * from notice where id = #{id}")

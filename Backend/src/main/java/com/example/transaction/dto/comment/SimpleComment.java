@@ -2,6 +2,7 @@ package com.example.transaction.dto.comment;
 
 import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.pojo.Comment;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,6 +23,7 @@ public class SimpleComment implements Serializable {
     String toName = "";
     String content = "";
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date date;
 
     public SimpleComment(){}
@@ -38,7 +40,7 @@ public class SimpleComment implements Serializable {
             this.toName = receiver.getUsername();
         }
         this.content = comment.getContent();
-        this.date = comment.getDate();
+        this.date = comment.getTime();
     }
 
 }

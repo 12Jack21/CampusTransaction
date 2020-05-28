@@ -46,7 +46,7 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
             @Result(property = "commodityId", column = "commodity_id"),
             /*这里用noticeId来查找commodity*/
             @Result(property = "commodity",column = "commodity_id",javaType = Commodity.class, one = @One(
-                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityWithoutNoticeById"
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityById"
             ))
     })
     @Select("select * from reservation where id = #{id}")
@@ -72,7 +72,7 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     IPage<Reservation> getSuccessReservationRequestPage(Page<?> page, Integer id);
 
 
-    @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId) and count > #{count}")
+    @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId} and count > #{count}")
     Integer failWaiting(Integer commodityId, Integer count);
 
 }

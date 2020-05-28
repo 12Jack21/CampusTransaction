@@ -15,6 +15,7 @@ public class responseFromServer<T> implements Serializable {
 
     private int status;//0 成功 1 失败 10 需要登录
     private String msg;
+    private Boolean success;
     private T data;
     /*
         SUCCESS(0,"SUCCESS"),
@@ -27,20 +28,25 @@ public class responseFromServer<T> implements Serializable {
 
     private responseFromServer(int status){
         this.status = status;
+        this.success = status == 0;
     }
     private responseFromServer(int status, T data){
         this.status = status;
         this.data = data;
+        this.success = status == 0;
     }
 
     private responseFromServer(int status, String msg, T data){
         this.status = status;
+        this.success = status == 0;
         this.msg = msg;
         this.data = data;
+
     }
 
     private responseFromServer(int status, String msg){
         this.status = status;
+        this.success = status == 0;
         this.msg = msg;
     }
 
@@ -64,6 +70,9 @@ public class responseFromServer<T> implements Serializable {
     public String getMsg(){
         return msg;
     }
+    public Boolean getSuccess(){
+        return success;
+    }
 
     public static <T> responseFromServer<T> needLogin(){
         return new responseFromServer<T>(ResponseCode.NEED_LOGIN.getCode());
@@ -73,9 +82,9 @@ public class responseFromServer<T> implements Serializable {
         return new responseFromServer<T>(ResponseCode.SUCCESS.getCode());
     }
 
-    public static <T> responseFromServer<T> success(String msg){
-        return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),msg);
-    }
+//    public static <T> responseFromServer<T> success(String msg){
+//        return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),msg);
+//    }
 
     public static <T> responseFromServer<T> success(T data){
         return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),data);

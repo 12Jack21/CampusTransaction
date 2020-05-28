@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.commodity.CommodityInfo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,6 +25,7 @@ public class Notice implements Serializable {
 
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "end_time")
     private Date endTime;
     private String title;
@@ -37,11 +39,13 @@ public class Notice implements Serializable {
 
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
     private Date updateTime;
 
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
     private Date createTime;
     @TableField(value = "account_id")

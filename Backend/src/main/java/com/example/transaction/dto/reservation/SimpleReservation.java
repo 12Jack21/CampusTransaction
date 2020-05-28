@@ -2,6 +2,7 @@ package com.example.transaction.dto.reservation;
 
 import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.pojo.Reservation;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -20,6 +21,7 @@ public class SimpleReservation {
     Double price = -1.0D;
     String note = "";
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
 
     public SimpleReservation() {

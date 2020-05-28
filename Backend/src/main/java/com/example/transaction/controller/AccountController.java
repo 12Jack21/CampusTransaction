@@ -213,7 +213,7 @@ public class AccountController {
             }else{
                 Account newAccount = new Account(accountId);
                 newAccount.setPassword(password);
-                return accountService.updateAccount(account);
+                return accountService.updateAccount(newAccount);
             }
         }
         return responseFromServer.error("非法操作");

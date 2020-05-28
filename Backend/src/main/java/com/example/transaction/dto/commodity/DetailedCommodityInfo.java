@@ -6,6 +6,7 @@ import com.example.transaction.pojo.Comment;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.pojo.base.BaseCommodity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,6 +27,7 @@ public class DetailedCommodityInfo {
     SimpleAccount account;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date expiredTime;
     String conditions = "";
     Integer stateEnum = -1;

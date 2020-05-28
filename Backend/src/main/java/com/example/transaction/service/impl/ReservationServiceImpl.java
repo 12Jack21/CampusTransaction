@@ -96,7 +96,11 @@ public class ReservationServiceImpl implements ReservationService {
     public responseFromServer cancelReservation(Integer reservationId, Integer accountId) {
         Integer receiverId = null;
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        if (accountId.intValue() == reservation.getAccountId().intValue()) {
+        /**
+         * ZZH
+         * TODO : 当accountId为空时先视作买家
+         */
+        if (accountId == null || accountId.intValue() == reservation.getAccountId().intValue()) {
             receiverId = reservation.getCommodity().getNotice().getAccountId();
         } else if (accountId.intValue() == reservation.getCommodity().getNotice().getAccountId()) {
             receiverId = reservation.getAccountId().intValue();
@@ -135,24 +139,27 @@ public class ReservationServiceImpl implements ReservationService {
          * ZZH
          * 添加到notify
          */
-        AccountNotify accountNotify = new AccountNotify(
-                receiverId,
-                accountId,
-                NotifyTargetCode.RESERVATION.getCode(),
-                reservation.getId(),
-                NotifyActionCode.CANCELS.getCode()
-        );
+        if(accountId!=null){
+            AccountNotify accountNotify = new AccountNotify(
+                    receiverId,
+                    accountId,
+                    NotifyTargetCode.RESERVATION.getCode(),
+                    reservation.getId(),
+                    NotifyActionCode.CANCELS.getCode()
+            );
 
-        Account account = accountDAO.selectById(accountId);
-        if (account == null) {
-            return responseFromServer.error();
+            Account account = accountDAO.selectById(accountId);
+            if (account == null) {
+                return responseFromServer.error();
+            }
+
+            accountNotify.getNotify().setContent("用户" + account.getUsername() + "取消了你的预约");
+            if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }
         }
 
-        accountNotify.getNotify().setContent("用户" + account.getUsername() + "取消了你的预约");
-        if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return responseFromServer.error();
-        }
         return responseFromServer.success();
     }
 
@@ -183,12 +190,15 @@ public class ReservationServiceImpl implements ReservationService {
      */
     @Override
     public responseFromServer getSimpleReservationPage(QueryWrapper queryWrapper, Integer pageIndex) {
-        responseFromServer response = getReservationsPage(queryWrapper, pageIndex);
-        if (response.isFailure()) {
-            return response;
-        }
+        /**
+         * ZZH
+         * TODO : 这里一次性返回该商品的所有预约, 所以先设置大小为40
+         */
+        Page<Reservation> page = new Page<>(pageIndex, 40);
+        IPage<Reservation> reservationPage = reservationDAO.selectPage(page, queryWrapper);
+        MyPage myPage = new MyPage(reservationPage);
+
         //将查询的分页结果中的reservation转化成simplereservation类型
-        MyPage myPage = (MyPage) response.getData();
         List<Reservation> reservations = (List<Reservation>) myPage.getPageList();
         List<SimpleReservation> simpleReservations = new ArrayList<>();
         for (Reservation reservation : reservations) {
@@ -200,8 +210,8 @@ public class ReservationServiceImpl implements ReservationService {
             simpleReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
             simpleReservations.add(simpleReservation);
         }
-        myPage.setPageList(simpleReservations);
-        return responseFromServer.success(myPage);
+//        myPage.setPageList(simpleReservations);
+        return responseFromServer.success(simpleReservations);
     }
 
     /**
@@ -230,6 +240,8 @@ public class ReservationServiceImpl implements ReservationService {
         //将查询的分页结果中的reservation转化成simplereservation类型
         Reservation reservation = (Reservation) response.getData();
         DetailedReservation detailedReservation;
+        Notice notice = noticeDAO.getCreditByNoticeId(reservation.getCommodity().getNoticeId());
+        reservation.getCommodity().setNotice(notice);
         try {
             detailedReservation = new DetailedReservation(reservation);
             /**
@@ -244,7 +256,7 @@ public class ReservationServiceImpl implements ReservationService {
              * 设置卖家信息
              */
             Commodity commodity = reservation.getCommodity();
-            Notice notice = noticeDAO.selectById(commodity.getNoticeId());
+            notice = noticeDAO.selectById(commodity.getNoticeId());
             simpleAccount = accountDAO.getSimpleAccountById(notice.getAccountId());
             detailedReservation.setDetailedAddress(notice.getDetailedAddress());
             detailedReservation.setAccountId(simpleAccount.getId());
@@ -294,20 +306,20 @@ public class ReservationServiceImpl implements ReservationService {
              * 待确认
              */
             case 0:
-                queryWrapper.eq("r.state_enum",0);
+                queryWrapper.eq("r.state_enum", 0);
                 break;
             /**
              * 预约中
              */
             case 1:
-                queryWrapper.eq("r.state_enum",1);
+                queryWrapper.eq("r.state_enum", 1);
                 break;
             /**
              * 已完成/失败
              */
             case 3:
-                queryWrapper.in("r.state_enum", Arrays.asList(2,3));
-               break;
+                queryWrapper.in("r.state_enum", Arrays.asList(2, 3));
+                break;
             /**
              * 全部
              */
@@ -315,7 +327,7 @@ public class ReservationServiceImpl implements ReservationService {
                 break;
 
         }
-        IPage<Reservation> reservationPage = reservationDAO.getReservationRequestPage(page, accountId,queryWrapper);
+        IPage<Reservation> reservationPage = reservationDAO.getReservationRequestPage(page, accountId, queryWrapper);
         MyPage myPage = new MyPage(reservationPage);
         List<SimpleReservation> simpleReservations = new ArrayList<>();
         for (Reservation reservation : reservationPage.getRecords()) {
@@ -413,34 +425,33 @@ public class ReservationServiceImpl implements ReservationService {
 
 
         reservation = reservationDAO.selectById(reservation.getId());
+        if (sellerId != null) {
+            /**
+             * ZZH
+             * TODO : 当sellerid不为空时(即有验证token时)
+             */
+            A2a a2a1 = new A2a(reservation.getAccountId(), sellerId);
+            A2a a2a2 = new A2a(sellerId, reservation.getAccountId());
+            if (a2aDAO.insert(a2a1) != 1 || a2aDAO.insert(a2a2) != 1) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }
 
-        A2a a2a1 = new A2a(reservation.getAccountId(), sellerId);
-        A2a a2a2 = new A2a(sellerId, reservation.getAccountId());
-        if (a2aDAO.insert(a2a1) != 1 || a2aDAO.insert(a2a2) != 1) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return responseFromServer.error();
+            /*添加到notify*/
+            AccountNotify accountNotify = new AccountNotify(
+                    sellerId,
+                    reservation.getId(),
+                    NotifyTargetCode.RESERVATION.getCode(),
+                    reservation.getId(),
+                    NotifyActionCode.VALIDATES.getCode()
+            );
+            accountNotify.getNotify().setContent("你预约的" + commodity.getName() + "被确认");
+            if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                return responseFromServer.error();
+            }
         }
 
-        /*添加到notify*/
-        AccountNotify accountNotify = new AccountNotify(
-                sellerId,
-                reservation.getId(),
-                NotifyTargetCode.RESERVATION.getCode(),
-                reservation.getId(),
-                NotifyActionCode.VALIDATES.getCode()
-        );
-        accountNotify.getNotify().setContent("你预约的" + commodity.getName() + "被确认");
-        if (notifyService.insertAccountNotify(accountNotify).isFailure()) {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-            return responseFromServer.error();
-        }
-
-        /*将所有的其他用户的reservation修改状态*/
-        Reservation failedWaitingReservation = new Reservation();
-        failedWaitingReservation.setStateEnum(ReservationCode.FAILWAITING.getCode());
-        QueryWrapper queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("commodity_id", reservation.getCommodityId());
-        reservationDAO.update(failedWaitingReservation, queryWrapper);
 
         return responseFromServer.success();
     }
@@ -455,8 +466,12 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public responseFromServer finishReservation(Integer reservationId) {
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        reservation.setStateEnum(ReservationCode.FINISHED.getCode());
-        if (reservationDAO.updateById(reservation) != 1) {
+        if(reservation.getStateEnum()==ReservationCode.FINISHED.getCode()){
+            return responseFromServer.error("该预约已经成功结束");
+        }
+        Reservation newReservation = new Reservation(reservationId);
+        newReservation.setStateEnum(ReservationCode.FINISHED.getCode());
+        if (reservationDAO.updateById(newReservation) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {

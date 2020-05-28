@@ -754,6 +754,7 @@ public class CommodityServiceImpl implements CommodityService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }
+            fileNames.add(filename);
         }
         return responseFromServer.success(fileNames);
     }

@@ -3,6 +3,7 @@ package com.example.transaction.dto.reservation;
 import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -21,6 +22,7 @@ public class DetailedReservation {
     Integer count = 10;
     String note = "";
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
     Integer stateEnum = -3;
     Double evaluationSell = -1.0D;

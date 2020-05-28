@@ -1,5 +1,6 @@
 package com.example.transaction.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +17,7 @@ public class Condition {
     public Integer pageIndex;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date endTime;
 
     public boolean recent = false;

@@ -31,6 +31,5 @@ public interface CommentDAO extends BaseMapper<Comment> {
     IPage<Comment> getCommentWithAccountInfo(Page<?> page, @Param("ew") QueryWrapper<Comment> wrapper);
     /*获取分页*/
 
-
     /*评论不可删除*/
 }

@@ -16,6 +16,7 @@ import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.NotifyActionCode;
 import com.example.transaction.util.code.NotifyTargetCode;
 import com.example.transaction.util.responseFromServer;
+import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +64,7 @@ public class CommentServiceImpl implements CommentService {
      */
     @Override
     @Transactional
+    @Options(useGeneratedKeys = true)
     public responseFromServer sendComment(Comment comment) {
         if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null) {
             return responseFromServer.error();
@@ -90,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
-        return responseFromServer.success();
+        return responseFromServer.success(comment);
     }
 
     //删除评论

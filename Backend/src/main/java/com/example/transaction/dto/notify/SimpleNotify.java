@@ -38,6 +38,7 @@ public class SimpleNotify<T> {
     Boolean isRead = false;
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
 
     Integer action = -1;

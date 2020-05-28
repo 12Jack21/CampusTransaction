@@ -189,7 +189,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = ((A2a)response.getData()).getAccount2();
         if(account == null){
             /*此时没有权限查看其它用户的详细联系信息*/
-            account = accountDAO.getAccountCreditById(accountId2);
+            account = accountDAO.getAccountWithEstimate(accountId2);
         }
         if(account==null){
             return responseFromServer.error();

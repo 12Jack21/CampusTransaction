@@ -83,7 +83,12 @@ public class ReservationController {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
         if (reservationId != null) {
-            return reservationService.cancelReservation(reservationId, account.getId());
+            /**
+             * ZZH
+             * TODO : token
+             */
+//            return reservationService.cancelReservation(reservationId, account.getId());
+            return reservationService.cancelReservation(reservationId, null);
         } else {
             return responseFromServer.error();
         }
@@ -104,7 +109,12 @@ public class ReservationController {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
         if (reservationId != null) {
-            return reservationService.cancelReservation(reservationId, account.getId());
+            /**
+             * ZZH
+             * TODO : token
+             */
+//            return reservationService.cancelReservation(reservationId, account.getId());
+            return reservationService.cancelReservation(reservationId, null);
         } else {
             return responseFromServer.error();
         }
@@ -152,17 +162,21 @@ public class ReservationController {
                 /*用户身份验证*/
                 reservation = (Reservation) response.getData();
                 Commodity commodity = reservation.getCommodity();
-                if (commodity != null
-                        && commodity.getNotice() != null
-                        && commodity.getNotice().getAccountId() != null) {
-                    if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
-                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/ {
-                        return null;
-                    }
-                } else {
-                    /*查询错误*/
-                    return null;
-                }
+                /**
+                 * ZZH
+                 * TODO : 暂时先不验证
+                 */
+//                if (commodity != null
+//                        && commodity.getNotice() != null
+//                        && commodity.getNotice().getAccountId() != null) {
+//                    if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
+//                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/ {
+//                        return null;
+//                    }
+//                } else {
+//                    /*查询错误*/
+//                    return null;
+//                }
                 /*用户验证成功*/
                 return reservation;
             } else {
@@ -187,8 +201,12 @@ public class ReservationController {
         Reservation reservation = verifySeller(reservationId, request);
         if (reservation != null) {
             /*验证当前操作用户是否是卖家*/
-//            return reservationService.validateReservation(reservation, ((Account) request./*  修改获取账号方式*/getAttribute("currentAccount")).getId());
-            return reservationService.validateReservation(reservation, accountVerify.getCurrentAccount(request).getId());
+            /**
+             * ZZH
+             * TODO : 不进行验证,暂时传入空id
+             */
+//            return reservationService.validateReservation(reservation, accountVerify.getCurrentAccount(request).getId());
+            return reservationService.validateReservation(reservation, null);
         } else {
             return responseFromServer.illegal();
         }
@@ -238,9 +256,7 @@ public class ReservationController {
 
     /**
      * 查看当前商品的所有预约
-     *
      * @param commodityId
-     * @param pageIndex
      * @param request
      * @return
      */
@@ -254,14 +270,12 @@ public class ReservationController {
             }
     )
     public responseFromServer getReservationPageForCommodity(@PathVariable Integer commodityId,
-                                                             @RequestJson Integer pageIndex,
                                                              HttpServletRequest request) {
 //        Commodity commodity = (Commodity) map.get("commodity");
 //        Integer pageIndex = (Integer) map.get("pageIndex");
         if (commodityId == null) {
             return responseFromServer.error();
         }
-        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /*用户核对*/
         responseFromServer response = commodityService.getSimpleCommodity(commodityId);
         if (!response.isSuccess()) {
@@ -269,14 +283,21 @@ public class ReservationController {
         }
         Commodity commodity = (Commodity) response.getData();
         Notice notice = (Notice) noticeService.getSimpleNotice(commodity.getNoticeId()).getData();
-        if (notice.getAccountId().intValue() == accountVerify.getCurrentAccount(request).getId().intValue()) {
-            /*验证成功*/
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("commodity_id", commodity.getId());
-            return reservationService.getSimpleReservationPage(queryWrapper, pageIndex);
-        } else {
-            return responseFromServer.illegal();
-        }
+        /**
+         * ZZH
+         * TODO : 先不做验证过程
+         */
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("commodity_id", commodity.getId());
+        return reservationService.getSimpleReservationPage(queryWrapper, 1);
+//        if (notice.getAccountId().intValue() == accountVerify.getCurrentAccount(request).getId().intValue()) {
+//            /*验证成功*/
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.eq("commodity_id", commodity.getId());
+//            return reservationService.getSimpleReservationPage(queryWrapper, 1);
+//        } else {
+//            return responseFromServer.illegal();
+//        }
     }
 
     /**
@@ -359,12 +380,16 @@ public class ReservationController {
         responseFromServer response = reservationService.getDetailedReservationInfo(reservationId);
         if (response.isSuccess()) {
             DetailedReservation detailedReservation = (DetailedReservation) response.getData();
-            Account currentAccount = accountVerify.getCurrentAccount(request);
-            if (!currentAccount.getId().equals(detailedReservation.getAccountId())
-                    && !currentAccount.getId().equals(detailedReservation.getBuyerId())) {
-                /*当前用户不是卖家或买家*/
-                return responseFromServer.error();
-            }
+            /**
+             * ZZH
+             * TODO : token 不验证
+             */
+//            Account currentAccount = accountVerify.getCurrentAccount(request);
+//            if (!currentAccount.getId().equals(detailedReservation.getAccountId())
+//                    && !currentAccount.getId().equals(detailedReservation.getBuyerId())) {
+//                /*当前用户不是卖家或买家*/
+//                return responseFromServer.error();
+//            }
             return responseFromServer.success(detailedReservation);
         }
         return responseFromServer.error();
