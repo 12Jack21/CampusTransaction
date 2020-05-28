@@ -26,6 +26,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -284,9 +285,49 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public responseFromServer getReservationRequest(Integer accountId, SimpleCondition condition) {
         Page<Reservation> page = new Page<>(condition.getPageIndex(), Nums.pageSize);
-        IPage<Reservation> reservationPage = reservationDAO.getReservationRequestPage(page, accountId);
+        if (condition.getType() == null) {
+            condition.setType(4);
+        }
+        QueryWrapper queryWrapper = new QueryWrapper();
+        switch (condition.getType().intValue()) {
+            /**
+             * 待确认
+             */
+            case 0:
+                queryWrapper.eq("r.state_enum",0);
+                break;
+            /**
+             * 预约中
+             */
+            case 1:
+                queryWrapper.eq("r.state_enum",1);
+                break;
+            /**
+             * 已完成/失败
+             */
+            case 3:
+                queryWrapper.in("r.state_enum", Arrays.asList(2,3));
+               break;
+            /**
+             * 全部
+             */
+            default:
+                break;
 
+        }
+        IPage<Reservation> reservationPage = reservationDAO.getReservationRequestPage(page, accountId,queryWrapper);
         MyPage myPage = new MyPage(reservationPage);
+        List<SimpleReservation> simpleReservations = new ArrayList<>();
+        for (Reservation reservation : reservationPage.getRecords()) {
+            SimpleReservation simpleReservation = new SimpleReservation(reservation);
+            SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
+            Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
+            simpleReservation.setAccount(simpleAccount);
+            /*计算notice 的价格*/
+            simpleReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
+            simpleReservations.add(simpleReservation);
+        }
+        myPage.setPageList(simpleReservations);
         return responseFromServer.success(myPage);
     }
 

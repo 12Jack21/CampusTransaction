@@ -10,7 +10,7 @@ import java.util.Date;
 
 /**
  * @ClassName: DetailedReservation
- * @Description: TODO
+ * @Description: 预约详细信息
  * @Author: 曾志昊
  * @Date: 2020/5/26 11:42
  */

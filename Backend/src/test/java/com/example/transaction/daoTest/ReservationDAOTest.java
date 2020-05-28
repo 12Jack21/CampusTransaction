@@ -51,12 +51,5 @@ public class ReservationDAOTest {
         System.out.println(reservation);
     }
 
-    @Test
-    void testGetReservationRequestPage(){
-        Page<Reservation> page = new Page<>(1,2);
-        IPage<Reservation> iPage = reservationDAO.getReservationRequestPage(page, 1);
-        System.out.println(iPage.getPages());
-        System.out.println(iPage.getTotal());
-        System.out.println(iPage.getRecords());
-    }
+
 }
