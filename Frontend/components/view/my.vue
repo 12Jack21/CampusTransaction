@@ -393,7 +393,7 @@ export default {
 					break
 				case 'commodity':
 					uni.navigateTo({
-						url: ''
+						url: '/pages/commodities/commodities'
 					});
 					break
 				case 'notice':

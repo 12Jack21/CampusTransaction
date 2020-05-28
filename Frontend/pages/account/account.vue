@@ -166,7 +166,7 @@ export default {
 			this.onRequest = true
 			console.log('请求中');
 			this.$api
-				.getCommoditiesByAcc(this.accId)
+				.getCommoditiesByOtherAcc(this.accId)
 				.then(({ data }) => {
 					this.pageIndex = data.pageIndex
 					if(data.pageIndex - 1 >= data.pageCount){

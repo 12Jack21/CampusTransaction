@@ -42,6 +42,9 @@
 			"path": "pages/reservations/reservations", // 预约列表
 			"style": {}
 		}, {
+			"path": "pages/commodities/commodities", // 预约列表
+			"style": {}
+		}, {
 			"path": "pages/account/account",
 			"style": {
 				"backgroundColor": "#CCCCCC",
