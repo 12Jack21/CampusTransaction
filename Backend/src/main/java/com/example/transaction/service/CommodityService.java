@@ -22,6 +22,8 @@ import java.util.List;
 public interface CommodityService {
     responseFromServer search(Condition condition);
 
+    responseFromServer getMyPublishedCommodities(Integer accountId, Pagination pagination);
+
     responseFromServer getMyCommodities(MyCommodityCondition condition);
 
     responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId);

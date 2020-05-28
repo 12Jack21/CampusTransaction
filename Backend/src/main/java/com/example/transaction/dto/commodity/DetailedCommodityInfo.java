@@ -27,7 +27,7 @@ public class DetailedCommodityInfo {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     Date expiredTime;
-    String condition = "";
+    String conditions = "";
     Integer stateEnum = -1;
     /**
      * 通告的地址
@@ -49,7 +49,7 @@ public class DetailedCommodityInfo {
             if (commodity.getNotice() != null) {
                 Notice notice = commodity.getNotice();
                 this.expiredTime = notice.getEndTime();
-                this.condition = notice.getCondition();
+                this.conditions = notice.getConditions();
                 this.address = notice.getAddress();
                 this.detailedAddress = notice.getDetailedAddress();
                 this.stateEnum = notice.getStateEnum();

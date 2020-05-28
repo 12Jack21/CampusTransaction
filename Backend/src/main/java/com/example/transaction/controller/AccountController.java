@@ -5,6 +5,7 @@ import com.example.transaction.service.AccountService;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import com.example.transaction.service.impl.AccountVerify;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -128,7 +129,7 @@ public class AccountController {
 
     /*todo 上传图片*/
     //上传图片可归入个人信息修改，用户账号刚创建时初始化头像
-    @PostMapping("/{accountId}/avatar/upload")
+    @PostMapping("/{accountId}/avatar")
     public responseFromServer uploadAvatar(@PathVariable(required = true) Integer accountId, @RequestParam(required = true) MultipartFile avatar, HttpServletRequest request) {
         return accountService.uploadAvatar(avatar, accountId);
     }
@@ -190,7 +191,30 @@ public class AccountController {
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
         if (accountVerify.verify(account, request)) {
+            account.setPassword(null);
             return accountService.updateAccount(account);
+        }
+        return responseFromServer.error("非法操作");
+    }
+
+
+    @ApiOperation(value = "更新密码")
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
+    @PutMapping("/{accountId}/password")
+    public responseFromServer updatePassword(@RequestBody Account account,
+                                         @PathVariable Integer accountId,
+                                         HttpServletRequest request) {
+        /*验证当前用户id与更新信息中id是否相同
+         * 避免用户非法修改其他用户信息*/
+        if (accountVerify.verify(account, request)) {
+            String password = account.getPassword();
+            if(StringUtil.isNullOrEmpty(password)){
+                return responseFromServer.error();
+            }else{
+                Account newAccount = new Account(accountId);
+                newAccount.setPassword(password);
+                return accountService.updateAccount(account);
+            }
         }
         return responseFromServer.error("非法操作");
     }

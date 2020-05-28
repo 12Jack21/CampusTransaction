@@ -37,10 +37,10 @@ public class Reservation implements Serializable {
     private Integer accountId;
     @TableField(value = "commodity_id")
     private Integer commodityId;
-    @TableField(value = "seller_finished")
-    private Boolean sellerFinished;
-    @TableField(value = "")
-    private Boolean buyerFinished;
+    @TableField(value = "evaluation_buy")
+    private Double evaluationBuy;
+    @TableField(value = "evaluation_sell")
+    private Double evaluationSell;
 
 
     @TableField(exist = false)

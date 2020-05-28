@@ -55,7 +55,7 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     Commodity getDetailedCommodityWithoutNoticeById(Integer noticeId);
 
 
-    @Results(id = "detailedCommodity_map2", value = {
+    @Results(id = "detailedCommodity_map3", value = {
             @Result(id = true, property = "id", column = "id"),
             @Result(property = "commodityImages", column = "id", javaType = List.class, many = @Many(
                     select = "com.example.transaction.dao.CommodityImageDAO.getAllImageByCommodityId"

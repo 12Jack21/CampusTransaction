@@ -29,6 +29,10 @@ public class DetailedReservation {
     Integer accountId = -1;
     String accountName = "";
     String avatar = "";
+    String buyerName="";
+    String buyerAvatar="";
+    Integer buyerId = -1;
+    String detailedAddress = "";
 
     public DetailedReservation(){}
     public DetailedReservation(Reservation reservation){
@@ -44,7 +48,7 @@ public class DetailedReservation {
             e.printStackTrace();
         }
         this.commodity = new SimpleCommodity2(reservation.getCommodity());
-        this.accountId = reservation.getAccountId();
+        this.buyerId = reservation.getAccountId();
     }
 
 }

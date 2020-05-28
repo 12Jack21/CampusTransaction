@@ -234,14 +234,31 @@ public class CommodityServiceImpl implements CommodityService {
          * ZZH
          * TODO : 获取我购买的商品
          */
-        return null;
+
+        return responseFromServer.error();
     }
 
-    private responseFromServer getMyPublishedCommodities(Integer accountId,Pagination pagination){
+    @Override
+    public responseFromServer getMyPublishedCommodities(Integer accountId, Pagination pagination){
         /**
          * 返回分页
          */
-        return getOthersCommodity(pagination,accountId);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        Page<Commodity> page;
+        if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
+            page = new Page<>(1, Nums.pageSize);
+        } else {
+            page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
+        }
+        queryWrapper.eq("n.account_id", accountId);
+        IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+        MyPage myPage = new MyPage<Commodity>(resultPage);
+        List<CommodityInfo> commodityInfoList = new ArrayList<>();
+        for (Commodity commodity : resultPage.getRecords()) {
+            commodityInfoList.add(new CommodityInfo(commodity, null));
+        }
+        myPage.setPageList(commodityInfoList);
+        return responseFromServer.success(myPage);
     }
 
 
@@ -278,7 +295,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @Date: 2020/5/24 21:46
      */
     @Override
-    public responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId) {
+    public responseFromServer getOthersCommodity(Pagination pagination, Integer accountId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         Page<Commodity> page;
         if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
@@ -287,7 +304,7 @@ public class CommodityServiceImpl implements CommodityService {
             page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
         }
         queryWrapper.le("n.end_time", pagination.getEndTime());
-        queryWrapper.eq("n.account_id", accoutnId);
+        queryWrapper.eq("n.account_id", accountId);
         IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
         MyPage myPage = new MyPage<Commodity>(resultPage);
         List<CommodityInfo> commodityInfoList = new ArrayList<>();

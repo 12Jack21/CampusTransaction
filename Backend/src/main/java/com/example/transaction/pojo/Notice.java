@@ -4,13 +4,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.commodity.CommodityInfo;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +18,7 @@ public class Notice implements Serializable {
     private Integer id;
     private Boolean type;
     private String address;
+
     @TableField(value = "detailed_address")
     private String detailedAddress;
 
@@ -28,7 +27,7 @@ public class Notice implements Serializable {
     @TableField(value = "end_time")
     private Date endTime;
     private String title;
-    private String condition;
+    private String conditions;
     private String description;
     @TableField(value = "browse_count")
     private Integer browseCount;
@@ -68,13 +67,12 @@ public class Notice implements Serializable {
     }
 
     public void rectifyNotify() {
-        type = type.equals(0) || type.equals(1) ? type : null;
         address = StringUtil.isNullOrEmpty(address) ? null : address;
         detailedAddress = StringUtil.isNullOrEmpty(detailedAddress) ? null : detailedAddress;
         title = StringUtil.isNullOrEmpty(title) ? null : title;
-        condition = StringUtil.isNullOrEmpty(condition) ? null : condition;
+        conditions = StringUtil.isNullOrEmpty(conditions) ? null : conditions;
         description = StringUtil.isNullOrEmpty(description) ? null : description;
-        accountId = accountId < 0 ? null : accountId;
-        stateEnum = stateEnum <= 1 && stateEnum >= -2 ? stateEnum : null;
+        accountId = accountId == null || accountId < 0 ? null : accountId;
+        stateEnum = stateEnum == null || stateEnum <= 1 && stateEnum >= -2 ? stateEnum : null;
     }
 }

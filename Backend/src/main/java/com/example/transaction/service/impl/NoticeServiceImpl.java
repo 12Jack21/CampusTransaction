@@ -132,7 +132,7 @@ public class NoticeServiceImpl implements NoticeService {
      * @return
      */
     private responseFromServer splitAddress(Notice notice) {
-        String addressStr = notice.getAddress(),address,detailedAddress;
+        String addressStr = notice.getDetailedAddress(),address,detailedAddress;
         if (StringUtil.isNullOrEmpty(addressStr)) {
             return responseFromServer.error();
         }
@@ -161,7 +161,11 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null || notice.getComList() == null || notice.getComList().size() == 0) {
             return responseFromServer.error();
         }
-        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
+//        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
+        /**
+         * 暂时不对地址进行分割, 直接存储前端传来的地址信息(详细地址中包含了学部信息)
+         */
+        if (noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {

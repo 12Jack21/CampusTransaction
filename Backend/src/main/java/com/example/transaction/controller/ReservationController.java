@@ -1,6 +1,8 @@
 package com.example.transaction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.transaction.dto.SimpleCondition;
+import com.example.transaction.dto.reservation.DetailedReservation;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
@@ -73,6 +75,27 @@ public class ReservationController {
     @ApiOperation(value = "取消预约")
     @PutMapping("/{reservationId}/cancel")
     public responseFromServer cancelReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
+//        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
+        Account account = accountVerify.getCurrentAccount(request);
+        if (reservationId != null) {
+            return reservationService.cancelReservation(reservationId, account.getId());
+        } else {
+            return responseFromServer.error();
+        }
+    }
+
+
+    /**
+     * 取消预约
+     *
+     * @param reservationId
+     * @param request
+     * @return
+     */
+//    @RequestMapping("/cancelReservation")
+    @ApiOperation(value = "取消预约")
+    @PutMapping("/{reservationId}/fail")
+    public responseFromServer failReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
         if (reservationId != null) {
@@ -167,6 +190,25 @@ public class ReservationController {
     }
 
 
+    @ApiOperation(value = "更改评价")
+    @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{reservationId}")
+    public responseFromServer updateEvaluation(@PathVariable Integer reservationId,
+                                               Double evaluationSell,
+                                               Double evaluationBuy,
+                                               HttpServletRequest request) {
+        Reservation reservation = new Reservation(reservationId);
+        if (evaluationBuy != null && evaluationBuy >= 0 && evaluationBuy <= 5) {
+            reservation.setEvaluationBuy(evaluationBuy);
+        }
+        if (evaluationSell != null && evaluationSell >= 0 && evaluationSell <= 5) {
+            reservation.setEvaluationSell(evaluationSell);
+        }
+        /*暂时没有验证身份*/
+        return reservationService.updateReservation(reservation);
+
+    }
+
 
     /**
      * 卖家设置预约为完成
@@ -178,7 +220,7 @@ public class ReservationController {
 //    @RequestMapping("/finishReservation")
     @ApiOperation("预约完成")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{reservationId}/finish")
+    @PutMapping("/{reservationId}/complete")
     public responseFromServer finishReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
         Reservation reservation = verifySeller(reservationId, request);
         /*验证当前操作用户是否是卖家*/
@@ -235,8 +277,8 @@ public class ReservationController {
     /**
      * 查看我申请的预约
      *
-     * @param pageIndex
-     * @param isCommodity
+     * @param accountId
+     * @param condition
      * @param request
      * @return
      */
@@ -248,10 +290,9 @@ public class ReservationController {
                     @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    @GetMapping("/account/{accountId}/send")
+    @GetMapping("/account/{accountId}")
     public responseFromServer getMyReservation(@PathVariable Integer accountId,
-                                               @RequestJson Integer pageIndex,
-                                               @RequestJson Boolean isCommodity,
+                                               SimpleCondition condition,
                                                HttpServletRequest request) {
         /**
          * ZZH
@@ -259,13 +300,12 @@ public class ReservationController {
          * Account account =  accountVerify.getCurrentAccount(request);
          */
         Account account = accountVerify.verifyWithReturn(new Account(accountId), request);
+        Integer pageIndex = condition.getPageIndex();
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id", account.getId());
+        queryWrapper.eq("state_enum", condition.getType());
 //        Boolean isCommodity = (Boolean) map.get("isCommodity");
-        if (isCommodity != null) {
-            queryWrapper.eq("type", isCommodity);
-        }
         return reservationService.getReservationsPage(queryWrapper, pageIndex);
     }
 
@@ -273,7 +313,8 @@ public class ReservationController {
     /**
      * 查看我接收到的预约
      *
-     * @param pageIndex
+     * @param condition
+     * @param accountId
      * @param request
      * @return
      */
@@ -285,14 +326,17 @@ public class ReservationController {
             }
     )
 //    @GetMapping("/account/{accountId}/receive")
-    @GetMapping("/account/{accountId}")
-    public responseFromServer getReservationRequest(@RequestJson Integer pageIndex, @PathVariable Integer accountId, HttpServletRequest request) {
-        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
+    @GetMapping("/account/{accountId}/receive")
+    public responseFromServer getReservationRequest(SimpleCondition condition,
+                                                    @PathVariable Integer accountId,
+                                                    HttpServletRequest request) {
+        Integer pageIndex = condition.getPageIndex();
+        condition.setPageIndex(pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex);
         /**
          * TODO : token过后直接根据token获取当前的id
          * return reservationService.getReservationRequest(accountVerify.getCurrentAccount(request).getId(), pageIndex);
          */
-        return reservationService.getReservationRequest(accountId, pageIndex);
+        return reservationService.getReservationRequest(accountId, condition);
     }
 
     /**
@@ -304,15 +348,21 @@ public class ReservationController {
      */
     @ApiOperation("获取详细预约内容")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
-    @GetMapping("/detailed/{reservationId}")
+    @GetMapping("/{reservationId}")
     public responseFromServer getDetailedReservation(@PathVariable Integer reservationId,
                                                      HttpServletRequest request) {
-        Reservation reservation = verifySeller(reservationId, request);
-        if (reservation != null) {
-            return responseFromServer.success(reservation);
-        } else {
-            return responseFromServer.error();
+        responseFromServer response = reservationService.getDetailedReservationInfo(reservationId);
+        if (response.isSuccess()) {
+            DetailedReservation detailedReservation = (DetailedReservation) response.getData();
+            Account currentAccount = accountVerify.getCurrentAccount(request);
+            if (!currentAccount.getId().equals(detailedReservation.getAccountId())
+                    && !currentAccount.getId().equals(detailedReservation.getBuyerId())) {
+                /*当前用户不是卖家或买家*/
+                return responseFromServer.error();
+            }
+            return responseFromServer.success(detailedReservation);
         }
+        return responseFromServer.error();
     }
 
     /**

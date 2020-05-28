@@ -60,4 +60,14 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Select("select count(*) from reservation where commodity_id = #{commodity_id}")
     Integer getCountByCommodityId(Integer commodityId);
 
+
+    /*获取我收到的预约*/
+    @Select("select * from reservation r,commodity c,notice n where r.state_enum in (1,2)" +
+            "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id} order by r.update_time desc")
+    IPage<Reservation> getSuccessReservationRequestPage(Page<?> page, Integer id);
+
+    
+    @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId) and count > #{count}")
+    Integer failWaiting(Integer commodityId, Integer count);
+
 }

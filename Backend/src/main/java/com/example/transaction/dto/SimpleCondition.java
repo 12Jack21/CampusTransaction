@@ -1,5 +1,6 @@
-package com.example.transaction.dto.reservation;
+package com.example.transaction.dto;
 
+import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
@@ -10,7 +11,8 @@ import java.util.Date;
  * @Author: 曾志昊
  * @Date: 2020/5/26 13:49
  */
-public class ReservationCondition {
+@Data
+public class SimpleCondition {
     Integer type = 0;
     Integer pageIndex;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
