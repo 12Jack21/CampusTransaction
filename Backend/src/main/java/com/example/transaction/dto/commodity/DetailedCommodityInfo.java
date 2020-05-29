@@ -33,11 +33,17 @@ public class DetailedCommodityInfo {
     String conditions = "";
     Integer stateEnum = -1;
     private String stateEnumStr;
-    public void setStateEnum(Integer stateEnum){
-        this.stateEnum = stateEnum;
-        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
-    }
 
+
+    public void setStateEnum(Integer stateEnum) {
+        if (stateEnum != null) {
+            this.stateEnum = stateEnum;
+            this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+        }else{
+            this.stateEnum = null;
+            this.stateEnumStr = "";
+        }
+    }
     /**
      * 通告的地址
      */

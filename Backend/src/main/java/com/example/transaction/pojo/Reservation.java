@@ -39,8 +39,14 @@ public class Reservation implements Serializable {
     @TableField(exist = false)
     private String stateEnumStr;
     public void setStateEnum(Integer stateEnum){
-        this.stateEnum = stateEnum;
-        this.stateEnumStr = ReservationCode.getDescription(stateEnum);
+        try{
+            this.stateEnum = stateEnum;
+            this.stateEnumStr = ReservationCode.getDescription(stateEnum);
+        }catch(Exception e){
+            e.printStackTrace();
+            this.stateEnumStr = null;
+            this.stateEnum = -1;
+        }
     }
 
     private Integer count;

@@ -20,7 +20,11 @@ public class FileUtil {
         //获取文件后缀
         String suffix = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1, file.getOriginalFilename().length());
         if (!"jpg,jpeg,gif,png".toUpperCase().contains(suffix.toUpperCase())) {
-            return responseFromServer.error(0, "请选择jpg,jpeg,gif,png格式的图片");
+            if(isAvatar){
+                suffix = "png";
+            }else{
+                return responseFromServer.error(0, "请选择jpg,jpeg,gif,png格式的图片");
+            }
         }
         File savePathFile = new File(filePath);
         if (!savePathFile.exists()) {

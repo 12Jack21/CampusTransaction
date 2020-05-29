@@ -40,9 +40,15 @@ public class Notice implements Serializable {
     private Integer stateEnum;
     @TableField(exist = false)
     private String stateEnumStr;
-    public void setStateEnum(Integer stateEnum){
-        this.stateEnum = stateEnum;
-        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+
+    public void setStateEnum(Integer stateEnum) {
+        if (stateEnum != null) {
+            this.stateEnum = stateEnum;
+            this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+        }else{
+            this.stateEnum = null;
+            this.stateEnumStr = "";
+        }
     }
 
 
@@ -86,6 +92,6 @@ public class Notice implements Serializable {
         conditions = StringUtil.isNullOrEmpty(conditions) ? null : conditions;
         description = StringUtil.isNullOrEmpty(description) ? null : description;
         accountId = accountId == null || accountId < 0 ? null : accountId;
-        this.setStateEnum(stateEnum == null || stateEnum <= 1 && stateEnum >= -2 ? stateEnum : null);
+        this.setStateEnum(stateEnum == null || (stateEnum <= 1 && stateEnum >= 2) ? null : stateEnum);
     }
 }

@@ -132,7 +132,9 @@ public class AccountController {
     /*todo 上传图片*/
     //上传图片可归入个人信息修改，用户账号刚创建时初始化头像
     @PostMapping("/{accountId}/avatar")
-    public responseFromServer uploadAvatar(@PathVariable(required = true) Integer accountId, @RequestParam(required = true) MultipartFile avatar, HttpServletRequest request) {
+    public responseFromServer uploadAvatar(@PathVariable(required = true) Integer accountId,
+                                           @RequestParam(required = true) MultipartFile avatar,
+                                           HttpServletRequest request) {
         return accountService.uploadAvatar(avatar, accountId);
     }
 
@@ -233,23 +235,28 @@ public class AccountController {
     @ApiOperation(value = "获取账号信息，在a2a中验证")
     @GetMapping("/{accountId}")
     public responseFromServer getAccountInfo(@PathVariable Integer accountId, HttpServletRequest request) {
-        Account account = new Account(accountId);
-        Account account1 = accountVerify.verifyWithReturn(account, request);
-        if (account1 == null) {
-            return responseFromServer.error();
-        }
-        if (account1.getId().intValue() != account.getId().intValue()) {
-            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
-            if (response.isSuccess()) {
-                account = (Account) response.getData();
-                return responseFromServer.success(account);
-            } else {
-                return responseFromServer.error();
-            }
-        }else{
-            /*此时验证返回的是自己的账户信息*/
-            return responseFromServer.success(account1);
-        }
+        return getOthersAccountInfo(accountId,accountId,request);
+        //        Account account = new Account(accountId);
+//        Account account1 = accountVerify.verifyWithReturn(account, request);
+//        if (account1 == null) {
+//            return responseFromServer.error();
+//        }
+//        if (account1.getId().intValue() != account.getId().intValue()) {
+//            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
+//            if (response.isSuccess()) {
+//                account = (Account) response.getData();
+//                return responseFromServer.success(account);
+//            } else {
+//                return responseFromServer.error();
+//            }
+//        }else{
+//            /*此时验证返回的是自己的账户信息*/
+//            responseFromServer response = accountService.getDetailedAccount(accountId);
+//            if(response.isFailure()){
+//                return responseFromServer.error();
+//            }
+//            return responseFromServer.success(account1);
+//        }
     }
 
 

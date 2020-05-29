@@ -50,15 +50,16 @@ public class NoticeController {
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
             /*此时account已更新*/
-            notice.setAccountId(account.getId());
-            /*必须传入通告类型*/
-            if (notice.getType() == null) {
+                notice.setAccountId(account.getId());
+                /*必须传入通告类型*/
+                if (notice.getType() == null) {
                 return responseFromServer.error();
             }
             /**
              * 处理空串等参数
              */
             notice.rectifyNotify();
+            notice.setStateEnum(0);
             notice.setStateEnum(NoticeCode.UNPUBLISHED.getCode());
             return noticeService.addNotice(notice);
         } else {

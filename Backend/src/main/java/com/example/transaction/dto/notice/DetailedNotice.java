@@ -45,8 +45,14 @@ public class DetailedNotice {
     private Integer stateEnum;
     private String stateEnumStr = "";
     public void setStateEnum(Integer stateEnum){
-        this.stateEnum = stateEnum;
-        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+        if (stateEnum != null) {
+            this.stateEnum = stateEnum;
+            this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+        }else{
+            this.stateEnum = null;
+            this.stateEnumStr = "";
+        }
+
     }
     private Integer browseCount = -1;
     private Integer accountId = -1;

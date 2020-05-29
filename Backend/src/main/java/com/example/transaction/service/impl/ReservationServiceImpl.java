@@ -9,6 +9,7 @@ import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.dto.reservation.DetailedReservation;
 import com.example.transaction.dto.reservation.SimpleReservation;
+import com.example.transaction.dto.reservation.SimpleReservationWithCommodity;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NotifyService;
@@ -250,7 +251,7 @@ public class ReservationServiceImpl implements ReservationService {
             detailedReservation.setBuyerId(simpleAccount.getId());
             detailedReservation.setBuyerName(simpleAccount.getUsername());
             detailedReservation.setBuyerAvatar( (PathUtil.isPath(simpleAccount.getAvatar())?"":ResourcePath.avatarRequestPath)+simpleAccount.getAvatar());
-            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(simpleAccount.getId()).getCredit());
+//            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(simpleAccount.getId()).getCredit());
             /**
              * 设置卖家信息
              */
@@ -262,7 +263,7 @@ public class ReservationServiceImpl implements ReservationService {
             detailedReservation.setAccountName(simpleAccount.getUsername());
             detailedReservation.setAvatar((PathUtil.isPath(simpleAccount.getAvatar())?"":ResourcePath.avatarRequestPath)+simpleAccount.getAvatar());
             detailedReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
-            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(notice.getAccountId()).getCredit());
+//            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(notice.getAccountId()).getCredit());
         } catch (Exception e) {
             e.printStackTrace();
             return responseFromServer.error();
@@ -281,8 +282,16 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex) {
         Page<Reservation> page = new Page<>(pageIndex, Nums.pageSize);
-        IPage<Reservation> reservationPage = reservationDAO.selectPage(page, queryWrapper);
+        IPage<Reservation> reservationPage = reservationDAO.getReservationPageQuery(page,queryWrapper);
         MyPage myPage = new MyPage(reservationPage);
+        List<SimpleReservationWithCommodity> simpleReservations = new ArrayList<>();
+        if(reservationPage.getRecords()!=null && reservationPage.getRecords().size()>0){
+            for(Reservation reservation: reservationPage.getRecords()){
+                simpleReservations.add(
+                        new SimpleReservationWithCommodity(reservation));
+            }
+        }
+        myPage.setPageList(simpleReservations);
         return responseFromServer.success(myPage);
     }
 

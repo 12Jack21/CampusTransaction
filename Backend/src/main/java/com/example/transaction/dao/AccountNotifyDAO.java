@@ -56,10 +56,13 @@ public interface AccountNotifyDAO extends BaseMapper<AccountNotify> {
     IPage<AccountNotify> getNotifyPage(Page<?> page, @Param("ew") QueryWrapper wrapper);
 
 
-    @Results(
+    @Results(id = "notifyInfo2", value = {
+            @Result(property = "id", column = "id"),
             @Result(property = "notify", column = "notify_id", javaType = Notify.class, one = @One(
                     select = "com.example.transaction.dao.NotifyDAO.selectNotifyWithSimpleAccountById"
             ))
+    }
+
     )
     @Select("select * from acc_notify,notify  ${ew.customSqlSegment} and acc_notify.notify_id = notify.id order by  acc_notify.is_read ASC,acc_notify.create_time desc")
     IPage<AccountNotify> searchNotify(Page<?> page, @Param("ew") QueryWrapper wrapper);

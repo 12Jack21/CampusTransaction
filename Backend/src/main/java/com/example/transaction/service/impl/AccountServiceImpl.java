@@ -9,9 +9,11 @@ import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.dto.account.LoginAccountInfo;
 import com.example.transaction.pojo.A2a;
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Estimate;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.service.TokenService;
 import com.example.transaction.util.FileUtil;
+import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,7 +114,9 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public responseFromServer register(Account newAccout) {
         accountDAO.insert(newAccout);
-
+        Estimate estimate = new Estimate();
+        estimate.setAccountId(newAccout.getId());
+        estimateDAO.insert(estimate);
         return responseFromServer.success();
     }
 
@@ -249,13 +253,6 @@ public class AccountServiceImpl implements AccountService {
         return responseFromServer.success(a2a);
     }
 
-
-
-
-
-
-
-
     /**
      * @Description: 上传头像, 并且更新到数据库中, 返回头像图片文件名
      * @Date: 2020/5/18 16:56
@@ -276,7 +273,12 @@ public class AccountServiceImpl implements AccountService {
             return responseFromServer.error();
         }
         /*保存文件到路径下*/
-        return FileUtil.saveFile(file, true, filename,true);
+        response = FileUtil.saveFile(file, true, filename,true);
+        if(response.isFailure()){
+            return responseFromServer.error();
+        }
+        String fileName = (String)response.getData();
+        return responseFromServer.success(ResourcePath.avatarRequestPath + fileName);
     }
 
 
