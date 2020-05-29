@@ -116,7 +116,7 @@ public class CommodityServiceImpl implements CommodityService {
 
 
         /*处理地址*/
-        if (condition.getUserAddress() != null && !condition.getUserAddress().equals("全校")) {
+        if (condition.getUserAddress() != null && condition.getUserAddress().length() != 0 && !condition.getUserAddress().equals("全校")) {
             int addressCode;
             String address = condition.getUserAddress();
             try {

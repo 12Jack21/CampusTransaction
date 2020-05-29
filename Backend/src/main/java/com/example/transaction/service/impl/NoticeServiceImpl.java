@@ -227,7 +227,9 @@ public class NoticeServiceImpl implements NoticeService {
     private List<NoticeInfo> transform(List<Notice> pageList) {
         List<NoticeInfo> resultList = new ArrayList<>();
         for (Notice notice : pageList) {
-            resultList.add(new NoticeInfo(notice));
+            NoticeInfo noticeInfo = new NoticeInfo(notice);
+            noticeInfo.setAccountId(notice.getUser().getId());
+            resultList.add(noticeInfo);
         }
         return resultList;
     }
