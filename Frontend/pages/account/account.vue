@@ -12,19 +12,19 @@
 			<view class="" style="background-image: url(../../static/images/accBg.png) ;position: relative;z-index: 0;">
 				<view class="flex" style="justify-content: center;padding-top: 20rpx;">
 					<view class="flex flex-direction user-space" style="align-items: center;">
-						<view class="cu-avatar round" :style="{ backgroundImage: account.avartar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avartar }" />
+						<view class="cu-avatar round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : ('url('+ account.avatar+')') }" />
 						<view class="flex" style="align-items: flex-start;">
 							<text class="username">{{ account.username }}</text>
 								<text style="border-radius: 16rpx;" :class="[account.gender === 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue']"></text>
 						</view>
 						<view class="address"><text class="cuIcon-locationfill"></text>{{ account.address }}</view>
 						<view class="introduction">
-							简介： {{account.introduction.length===0?'该用户还未填写':account.introduction}}
+							简介： {{account.introduction==null || account.introduction.length===0?'该用户还未填写':account.introduction}}
 						</view>
 						<view class=" wechat">
-							<view v-if="account.wechat" class="we">
+							<view v-if="account.weChat" class="we">
 								微信号：
-								<text selectable>{{ account.wechat }}</text>
+								<text selectable>{{ account.weChat }}</text>
 							</view>
 							<view v-if="account.qq" class="qq">
 								QQ号：
@@ -62,7 +62,7 @@
 									<view class="cu-avatar xl radius" :style="{ backgroundImage: item.img.length === 0 ? 'url(/static/images/comDefault.png)' : ('url(' +item.img+')'), position: 'relative' }">
 										<text class=" count-view cu-tag sm" :class="['bg-' + (item.count <= 2 ? 'red' : 'blue')]">剩余{{ item.count }}件</text>
 									</view>
-									<view class="text-cut-2 text-sm text-black margin-tb-sm">{{ item.name }}</view>
+									<view class="text-cut-2 text-sm text-black margin-tb-sm">{{ item.name | comFilter }}</view>
 									<view class="text-red text-price margin-tb-sm text-lg">{{ item.expectedPrice }}</view>
 								</view>
 							</block>
@@ -93,11 +93,11 @@ export default {
 			finish:false,
 			account: {
 				username: '急可',
-				avartar: '',
+				avatar: '',
 				gender: 0,
 				introduction:'我就是我，是不一样的高哥',
 				address: '文理学部',
-				wechat: '2020wechat2020',
+				weChat: '2020wechat2020',
 				qq: '',
 				rate: 90, // 交易成功率
 				evaluation: 90.2 // 信誉值
@@ -119,19 +119,20 @@ export default {
 			return this.account.gender === 0 ? '她' : '他'
 		}
 	},
-	onPullDownRefresh() {
+	async onPullDownRefresh() {
 		console.log('accId',this.accId);
 		this.getAccount(this.accId)
 		this.commodities = []
 		this.initPagination()
-		this.getCommodities()
+		await this.getCommodities()
+		uni.stopPullDownRefresh()
 	},
 	onLoad(params) {
 		this.accId = params.id
 		this.getAccount(params.id)
 		
 		//debug
-		for (let i = 0; i < 10; i++) this.commodities.push(this.aCom)
+		// for (let i = 0; i < 10; i++) this.commodities.push({...this.aCom})
 
 		// request
 		this.initPagination()
@@ -153,21 +154,31 @@ export default {
 		},
 		getAccount(toAccId) {
 			this.$api
-				.getOtherAccount(this.accId, this.userId)
+				.getOtherAccount(toAccId, this.userId)
 				.then(({ data }) => {
-					console.log('其他账户的信息', data)
-					this.account = data
-					this.tip(1,'用户信息获取成功')
+					console.log('其他账户的信息', data.data)
+					data = data.data
+					this.account = Object.assign({},this.account,data)
+					this.tip(0,'用户信息获取成功')
 				})
-				.catch(() => this.tip(1,"网络异常"))
+				.catch((err) => {
+					console.log('getAccount error',err);
+					this.tip(1,"网络异常")
+				})
 		},
-		getCommodities(){
+		async getCommodities(){
 			if(this.finish || this.onRequest) return
 			this.onRequest = true
 			console.log('请求中');
-			this.$api
-				.getCommoditiesByOtherAcc(this.accId)
+			let pagination = {
+				pageIndex:this.pageIndex,
+				endTime: this.endTime
+			}
+			await this.$api
+				.getCommoditiesByOtherAcc(this.accId,pagination)
 				.then(({ data }) => {
+					data = data.data
+					console.log('commodities data:',data);
 					this.pageIndex = data.pageIndex
 					if(data.pageIndex - 1 >= data.pageCount){
 						this.finish = true
@@ -181,7 +192,7 @@ export default {
 					 this.onRequest = false
 				})
 		},
-		tip(index, content, isClick=false,timeout = 2000) {
+		tip(index, content, isClick=false,timeout = 3000) {
 			let types = ['success', 'err', 'warn', 'info', 'loading']
 			this.$refs.mpopup.open({
 				type: types[index],
@@ -190,6 +201,12 @@ export default {
 				isClick
 			})
 		},
+	},
+	filters:{
+		comFilter(val){
+			if(val.length > 6) return val.slice(0,6) + '...'
+			else return val
+		}
 	}
 }
 </script>

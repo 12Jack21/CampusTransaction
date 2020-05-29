@@ -91,20 +91,6 @@ import handles from '@/utils/handles.js'
 
 import { mapState } from 'vuex'
 
-function comMap(tab){
-	switch(tab){
-		case 0:
-			return 'newComs'
-		case 1:
-			return 'nearComs'
-		case 2:
-			return 'expiredComs'
-		case 3:
-			return 'cheapComs'
-		default:
-			console.log('Default Com Map Tab:',tab);
-	}
-}
 export default {
 	name: 'home',
 	components: {
@@ -162,6 +148,13 @@ export default {
 				finish:false,
 				data:[]
 			},
+			// four tabs' goods list: new, near, outdated, cheap
+			storeGoods:[ // 为了让 Vue初始化时把这些 property 加入响应式处理
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+			],
 			modalShow:true
 		}
 	},
@@ -207,7 +200,7 @@ export default {
 		// this.goodsData = _home_data.goodsList()
 		
 		
-		this.newComs.endTime = new Date().format('yyyy-MM-dd hh:mm')
+		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
 		this.getCommodityList()
 		
 		// #ifdef MP	
@@ -237,22 +230,20 @@ export default {
 		setReachBottom() {
 			console.log('home 触底了,加载更多物品列表')
 			// 全部加载时
-			if(!this[comMap(this.goodsTabData.tabCur)].finish)
+			if(!this.storeGoods[this.goodsTabData.tabCur].finish)
 				this.getCommodityList()
 		},		
 		//商品列表上的分类tab被点击 
 		goodsTab(e) {
-			let current = parseInt(e.currentTarget.dataset.id)
-			console.log("current:",current);
-			let coms = this[comMap(current)].data
-			this.goodsData = this[comMap(current)].data // 更新 goodsData
-			if(coms.length === 0){ 
-				this[comMap(current)].endTime = new Date().format('yyyy-MM-dd hh:mm')
+			let current = e.currentTarget.dataset.id
+			this.goodsData = this.storeGoods[current].data
+			if(this.goodsData.length === 0){ 
+				this.storeGoods[current].endTime = new Date().format('yyyy-MM-dd hh:mm')
 				this.goodsTabData.tabCur = current // TODO 陷阱
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
-				this[comMap(current)] = Object.assign({},this[comMap(current)],{
+				this.storeGoods.splice(current,1,{
 					pageIndex:1,
 					endTime: new Date().format('yyyy-MM-dd hh:mm'),
 					data:[],
@@ -292,12 +283,12 @@ export default {
 			if(this.onRequest) return 
 			this.onRequest = true
 			this.loadStatus = 'loading'
+			let self = this
 			let tab = this.goodsTabData.tabCur
-			var comObj = this[comMap(tab)]
 			let pagination = {
-				pageIndex: comObj.pageIndex,
-				pageSize: comObj.pageSize,
-				endTime: comObj.endTime,
+				pageIndex: this.storeGoods[tab].pageIndex,
+				pageSize: this.storeGoods[tab].pageSize,
+				endTime: this.storeGoods[tab].endTime,
 				userAddress: this.goodsTabData.tabCur===1? this.userAddress:''
 			}
 			// request commodity list data with pagination
@@ -305,20 +296,23 @@ export default {
 				.then(res=>{
 					let resp = res.data.data
 					console.log('get commodity list, home resp=', res.data.data);
-					comObj.pageIndex = resp.pageIndex
-					comObj.pageSize = resp.pageSize
-					console.log('before push, after set page property:',{...comObj});
-					comObj.data.push(...resp.pageList)
-					console.log('after push:',{...comObj.data});
-					// this.$nextTick(function(){
-					this.goodsData = comObj.data		
-					// console.log('goodsData after nextTick',[...this.goodsData]);
-					// this.$forceUpdate()
-					// })
+					this.storeGoods[tab].pageIndex = resp.pageIndex
+					this.storeGoods[tab].pageSize = resp.pageSize
+					console.log('before push, after set page property:',{...this.storeGoods[tab]});
+					this.storeGoods[tab].data.push(...resp.pageList)
+					console.log('after push:',{...this.storeGoods[tab]});
+					this.storeGoods.splice(tab,1,this.storeGoods[tab])
+					console.log('after add to responsive env:',{...this.storeGoods[tab]});
+					this.$nextTick(function(){
+						console.log('after nextTick:',{...this.storeGoods[tab]});
+						this.goodsData = [...this.storeGoods[tab].data]		
+						console.log('goodsData after nextTick',[...this.goodsData]);
+						this.$forceUpdate()
+					})
 					
 					// 取完了数据
 					if(resp.pageIndex - 1 >= resp.pageCount) {
-						comObj.finish = true
+						self.storeGoods[tab].finish = true
 						this.loadStatus = 'noMore'
 					}
 					else

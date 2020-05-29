@@ -7,7 +7,8 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 		console.log('http default config',config);
 		
     config.baseUrl = 'http://localhost:9012'; /* 根域名 */
-		config.baseUrl = 'http://39.96.69.108:9999/'
+		config.baseUrl = 'http://39.96.69.108:9999'
+		// config.baseUrl = 'http://39.96.69.108:8080'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
     }
@@ -21,6 +22,7 @@ http.interceptor.request((config, cancel) => { /* cancel 为函数，如果调�
       ...config.header,
       token: uni.getStorageSync('token') || '' // 演示拦截器header加参
     }
+		console.log(`请求前拦截 URL:${config.baseUrl + config.url}, 拦截方法: ${config.method}`);
     // 演示custom 用处
     // if (config.custom.auth) {
     //   config.header.token = 'token'
@@ -106,8 +108,8 @@ export default{
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
 	},
-	getCommoditiesByOtherAcc(id){ // get PUBLISHED commodity of that account
-		return http.get('/commodities/other/account/' + id)
+	getCommoditiesByOtherAcc(id,pagination){ // get PUBLISHED commodity of that account
+		return http.get('/commodities/account/other/' + id,{params:pagination})
 	},
 	getCommoditiesByAcc(id,params){ // get commodities of specified my account
 		return http.get('/commodities/account/' + id,params)
@@ -123,7 +125,7 @@ export default{
 		return http.put('/reservations/' + id + '/cancel')
 	},
 	successReservation(id){ //卖家
-		return http.put('/reservations/' + id + '/success')
+		return http.put('/reservations/' + id + '/complete')
 	},
 	failReservation(id){
 		return http.put('/reservations/' + id + '/fail')
@@ -154,7 +156,7 @@ export default{
 		return http.post('/accounts/' + id + '/password', password)
 	},
 	uploadAvatar(id, filePath){
-		return http.upload('/accounts/' + id,{
+		return http.upload('/accounts/' + id + '/avatar',{
 			filePath,
 			name:'avatar'
 		})
@@ -173,8 +175,8 @@ export default{
 	getMessages(id,params){
 		return http.get('/messages/account/' + id, {params})
 	},
-	readMessages(ids){
-		return http.put('/messsages',{ids})
+	readMessages(id){
+		return http.put('/messages/read/' +id)
 	},
 	addComment(data){
 		return http.post('/comments',data)

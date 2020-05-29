@@ -19,8 +19,8 @@
 				<!-- 分类 -->
 				<view class="cu-form-group" >
 					<view class="title">分类:</view>
-					<picker @change="typePickerChange":range="types" :value="types.indexOf(commodity.tpe)">
-						<view>{{commodity.type}}</view>
+					<picker @change="typePickerChange" :range="types" :value="types.indexOf(commodity.type)">
+						<input :value="commodity.type" type="text" name="type" />
 					</picker>
 				</view>
 				<!-- end -->

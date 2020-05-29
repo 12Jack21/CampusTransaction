@@ -44,7 +44,7 @@
 					<!-- end -->
 
 					<!-- 条件 -->
-					<view class="cu-form-group"><textarea name="condition" maxlength="300" style="height: 3em;" placeholder="限定条件说明"></textarea></view>
+					<view class="cu-form-group"><textarea name="conditions" maxlength="300" style="height: 3em;" placeholder="限定条件说明"></textarea></view>
 					<!-- end -->
 					
 					<!-- 任务的出价钱 -->
@@ -64,12 +64,12 @@
 					<!-- 失效时间选择 -->
 					<view class="cu-form-group">
 						<view class="title">失效日期</view>
-						<input type="text" @focus="showPicker" :value="outdatedTime" name="outdatedTime" placeholder="日期选择" />
+						<input type="text" @focus="showPicker" :value="endTime" name="endTime" placeholder="日期选择" />
 					</view>
 					<mx-date-picker
 						:show="isShowPicker"
 						type="datetime"
-						:value="outdatedTime"
+						:value="endTime"
 						:show-tips="true"
 						:begin-text="'选择'"
 						:show-seconds="false"
@@ -205,7 +205,7 @@ export default {
 	data() {
 		return {
 			isShowPicker: false,
-			outdatedTime: '',
+			endTime: '',
 			focus: 0, //0 为通告信息，1为物品详细信息填写
 			scene: -1, // 0,1,2 分别代表发布带物品的闲置通告、需求通告、任务通告
 			noticeTypeListData: [],
@@ -252,7 +252,7 @@ export default {
 			if(this.scene == 0) return '通告整体的描述'
 			else return '描述具体的任务，如到某地取快递等'
 		},
-		...mapState(['userAddress'])
+		...mapState(['userAddress','userId'])
 	},
 	created() {
 		// 加载备选的菜单 List
@@ -270,7 +270,9 @@ export default {
 	methods: {
 		comfirmDatetime(e) {
 			this.isShowPicker = false
-			if (e) this.outdatedTime = e.value
+			if (e) {
+				this.endTime = e.value.replace(/\//g,'-')
+			}
 		},
 		showPicker() {
 			this.isShowPicker = true
@@ -325,7 +327,10 @@ export default {
 				c.images = []
 				for(let j = 0;j < c.imgList.length;j++){
 					await this.$api.uploadImage(c.imgList[j])
-					.then(res=>{c.images.push(res.data)}) //未判断返回的是否是个 URL 字符串
+					.then(res=>{
+						console.log('upload images:',res.data);
+						c.images.push(res.data.data)
+						}) //未判断返回的是否是个 URL 字符串
 					.catch(err=>{
 						this.imgError = true
 						console.log('一张图片上传失败',this.imgError);
@@ -357,7 +362,7 @@ export default {
 				});
 				return false
 			}
-			else if(!prefixs.some(v=>data.address.startsWith(v))){
+			else if(!prefixs.some(v=>data.detailedAddress.startsWith(v))){
 				uni.showToast({
 					title: '地址需要以某个学部开头',
 					icon: 'none'
@@ -365,10 +370,10 @@ export default {
 				return false
 			}
 			
-			// validate outdatedTime
+			// validate endTime
 			let now = new Date()
-			let val = new Date(data.outdatedTime)
-			if(data.outdatedTime.length === 0){
+			let val = new Date(data.endTime)
+			if(data.endTime.length === 0){
 				uni.showToast({
 					title: '失效日期不能为空',
 					icon: 'none'
@@ -474,7 +479,8 @@ export default {
 			this.$api.addNotice({
 				...notice,
 				type: this.scene === 0 ? 0:1,
-				comList: this.comList
+				accountId: this.userId,
+				comList: [...this.comList]
 				})
 				.then(res=>{
 					console.log('通告上传成功');
@@ -486,7 +492,7 @@ export default {
 					this.scene = -1
 				})
 				.catch(err =>{
-					console.log('通告上传失败');
+					console.log('通告上传失败,err:',err);
 					uni.hideLoading()
 					uni.showToast({
 						title: '网络异常,发布失败',

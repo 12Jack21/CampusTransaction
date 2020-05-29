@@ -11,7 +11,9 @@
 		<!--轮播图-->
 		<view class="zaiui-banner-swiper-box">
 			<swiper class="screen-swiper" circular autoplay @change="bannerSwiper">
-				<swiper-item v-for="(item, index) in comImgs" :key="index"><image :src="item" mode="aspectFill" /></swiper-item>
+				<swiper-item v-for="(item, index) in comImgs" :key="index"  @tap="imgTap(item)">
+					<image :src="item" mode="aspectFill" />
+				</swiper-item>
 			</swiper>
 			<!--页码-->
 			<text class="cu-tag bg-grey round sm zaiui-page">{{ bannerCur + 1 }} / {{ comImgs.length }}</text>
@@ -46,7 +48,7 @@
 						<text class="cuIcon-noticefill"  ></text>
 						预约队列			
 					</view>
-					<text class="text-gray">({{reservations.length}}个正在排队...)</text>
+					<text class="text-gray">({{reserveLength}}个正在排队...)</text>
 				</view>		
 				<view @tap="toNotice">			
 					<text class="cuIcon-activity text-black"></text>
@@ -60,7 +62,7 @@
 			<view class="flex flex-wrap text-sm">
 				<view class="basis-1"><text class="text-gray">条件</text></view>
 				<view class="basis-9">
-					<text class="text-sm">{{ condition }}</text>
+					<text class="text-sm">{{ conditions }}</text>
 				</view>
 			</view>
 			<view class="zaiui-border-view" />
@@ -118,7 +120,7 @@
 				<view class="zaiui-view-box">
 					<view class="flex ">
 						<view style="flex: 0 0 12%;" @tap="fromAccTap(item.fromId)">
-							<view class="cu-avatar round commentAvatar" :style="{ backgroundImage: item.fromImage.length === 0 ? 'url(/static/images/avatar/1.jpg)' : item.fromImage }" />
+							<view class="cu-avatar round commentAvatar" :style="{ backgroundImage: item.fromImage.length === 0 ? 'url(/static/images/avatar/1.jpg)' : 'url('+ item.fromImage+ ')' }" />
 						</view>
 						<view style="flex: 0 0 86%;" class="text-lg flex flex-direction">
 							<view class="font-lg" @tap="fromAccTap(item.fromId)">{{ item.fromName }}</view>
@@ -143,7 +145,7 @@
 		<!-- 发布者信息-->
 		<view class="margin-top bg-white zaiui-view-box zaiui-goods-info-view-box">
 			<view class="zaiui-shop-view">
-				<view class="cu-avatar lg round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : account.avatar }" @tap="accTap" />
+				<view class="cu-avatar lg round" :style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/1.jpg)' : 'url(' +account.avatar+')' }" @tap="accTap" />
 				<view class="text-view">
 					<view class="margin-bottom-xs">{{ account.username }}</view>
 					<view class="text-sm text-cut">{{account.introduction.length===0?'我什么都没留下':account.introduction}}</view>
@@ -184,7 +186,7 @@
 						<!--商品信息-->
 						<view class="cu-list menu-avatar">
 							<view class="cu-item">
-								<view class="cu-avatar radius lg" style="background-image:url(/static/images/home/goods/1.png);" />
+								<view class="cu-avatar radius lg" :style="{backgroundImage:commodity.images.length===0?'/static/images/comDefault.png': 'url('+commodity.images[0]+')'}" />
 								<view class="content">
 									<view class="text-price-view">
 										<text class="text-price text-red margin-right-xs">{{ commodity.expectedPrice }}</text>
@@ -224,7 +226,7 @@
 									<view
 										class="cu-avatar radius"
 										@tap="reserveTap(item.id)"
-										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' :('url('+ item.acocunt.avatar+')'), 'z-index': 10 }"
+										:style="{ backgroundImage: item.account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' :('url('+ item.account.avatar+')'), 'z-index': 10 }"
 									/>
 									<view class="goods-info-view">
 										<view class="flex" style="justify-content: space-between;">
@@ -233,11 +235,11 @@
 										</view>
 										<view class="flex " style="justify-content: space-between;align-items: center;">
 											<view>
-												<view style="vertical-align: middle;" @tap="noteTap(item)">{{ item.note | noteFilter }}</view>
+												<view style="vertical-align: middle;" v-show="isSell" @tap="noteTap(item)">{{ item.note | noteFilter }}</view>
 												<view class="text-orange">X {{ item.count }}</view>
 											</view>
-											<view class="reserve-btn-right" style="min-width: 120rpx;" @tap="confirmReserve(item)">
-												<button class="cu-btn bg-red round sm" :disabled="item.disabled">确认预约</button>
+											<view class="reserve-btn-right" style="min-width: 120rpx;" v-show="isSell" @tap="confirmReserve(item)">
+												<button class="cu-btn bg-red round sm" :disabled="item.stateEnumStr!='WAITING'">确认预约</button>
 											</view>
 										</view>
 									</view>
@@ -316,11 +318,11 @@ export default {
 			],
 			myComment: '',
 			noticeId:2,
-			condition: '只限男生',
-			expiredTime: '2020-05-29 10:07',
+			conditions: '只限男生',
+			expiredTime: '2020-06-29 10:07',
 			address: '信息学部',
 			detailedAddress: '信息学部二食堂',
-			stateEnum: 'PUBLISHED', // CANCELLED PUBLISHED
+			stateEnumStr: 'PUBLISHED', // CANCELLED PUBLISHED
 			reservations: [
 				{
 					id: 1,
@@ -331,7 +333,8 @@ export default {
 					price: 2012,
 					note: '最好可以有个包装最好可以有个包装最好可以有个包装', //最多24个字符
 					createTime: '2020-10-09 10:09',
-					count: 10
+					count: 10,
+					stateEnumStr:'VALIDATE' // 'WAITING','FINISHED'
 				},
 				{
 					id: 20,
@@ -342,22 +345,30 @@ export default {
 					price: 12,
 					note: '可以附赠一个本子吗',
 					createTime: '2020-01-09 10:09',
-					count: 1
+					count: 1,
+					stateEnumStr:'VALIDATE'
 				}
 			]
 		}
 	},
 	computed: {
 		...mapState(['userId']),
+		reserveLength(){
+			return this.reservations.length;
+		},
 		disabled() {
 			let now = new Date().getTime()
 			let expire = new Date(this.expiredTime).getTime()
-			if (now >= expire || this.stateEnum == 'CANCELLED') return true
+			if (now >= expire || this.stateEnumStr == 'CANCELLED') return true
 			return false
 		},
 		comImgs(){
-			if(this.commodity.images.length===0) return ['/static/images/comDefault.png']
-			else return this.commodity.images
+			if(this.commodity.images == null || this.commodity.images.length===0) return ['/static/images/comDefault.png']
+			else 
+				return this.commodity.images
+		},
+		isSell(){
+			return this.userId === this.account.id
 		}
 	},
 	onLoad(params) {
@@ -378,26 +389,33 @@ export default {
 	},
 	filters: {
 		noteFilter(val) {
+			if(val == null) return ''
 			if (val.length >= 20) return val.slice(0, 20) + '...'
 			return val
 		}
 	},
 	methods: {
+		imgTap(img){
+			uni.previewImage({
+				current:img,
+				urls:this.comImgs,
+				indicator:'default',
+				loop:true			
+			})
+		},
 		updateCom(body) {
 			this.tip(4, '更新中', true)
-
 			this.$api
 				.updateCommodity(this.commodity.id, body)
 				.then(({ data }) => {
 					if (data.success) {
-						this.commodity = Object.assign(this.commodity, body)
+						this.commodity = Object.assign({},this.commodity, body)
 						this.update(0)
 					} else this.update(1, '更新失败')
 				})
 				.catch(() => this.update(1))
 		},
 		noteTap(re) {
-			console.log('noteTap', re)
 			if (typeof re.showNote == 'undefined') this.$set(re, 'showNote', true)
 			// 添加响应式属性
 			else re.showNote = !re.showNote
@@ -408,7 +426,8 @@ export default {
 				.confirmReservation(reservation.id)
 				.then(({ data }) => {
 					if (data.success) {
-						thi.$set(reservation, 'disabled', true)
+						// this.$set(reservation, 'disabled', true)
+						reservation.stateEnumStr = 'VALIDATE'
 						uni.showToast({
 							title: '预约确认成功'
 						})
@@ -418,17 +437,14 @@ export default {
 							icon: 'none'
 						})
 				})
-				.catch(() =>
-					uni.showToast({
-						title: '网络异常',
-						icon: 'none',
-						position: 'bottom'
-					})
-				)
+				.catch(() =>{
+					console.log('catch reservation');
+					this.err()
+				})
 		},
 		toNotice(){
 			uni.navigateTo({
-				url:'./notice?id' + this.noticeId
+				url:'./notice?id=' + this.noticeId
 			})
 		},
 		accTap() {
@@ -442,6 +458,7 @@ export default {
 			})
 		},
 		reserveTap(id) {
+			if(!this.isSell) return 
 			let isSell = true // 卖方
 			uni.navigateTo({
 				url: `../../pages/detail/reservation?id=${id}&isSell=${isSell}`,
@@ -465,10 +482,10 @@ export default {
 			//发布评论
 			this.$api
 				.addComment(body)
-				.then(({ data }) => {
+				.then(({data}) => {
 					if (data.success) {
 						this.tip(0, '评论发布成功')
-						this.comments.push(data.comment)
+						this.comments.push(data.data)
 						this.clearComment()
 					}
 					this.onCommentRequest = false
@@ -480,7 +497,7 @@ export default {
 		},
 		commentTap(id, name) {
 			//回复
-			if (parseInt(this.userId) === this.toCommentId)
+			if (parseInt(this.userId) === id)
 				//回复自己
 				return
 			this.toCommentId = id
@@ -496,8 +513,7 @@ export default {
 			this.$api
 				.getReservationsByCommodity(com_id)
 				.then(({ data }) => {
-					console.log('预约列表数据', data)
-					this.reservations = data
+					this.reservations = data.data // 数组直接赋值应该能触发响应式更新
 				})
 				.catch(() => {
 					console.log('获取预约列表失败')
@@ -521,7 +537,8 @@ export default {
 			this.$api
 				.addReservation(data)
 				.then(({ data }) => {
-					console.log('add reservation', data)
+					console.log('buyer add reservation', data)
+					
 					this.update(0)
 				})
 				.catch(() => this.update(1))
@@ -537,14 +554,15 @@ export default {
 			this.$api
 				.getCommodity(id)
 				.then(({ data }) => {
-					console.log('commodity detail', data)
-					this.commodity = data.commodity
+					console.log('commodity detail', data.data)
+					data = data.data
+					this.commodity = Object.assign({},this.commodity,data.commodity)
 					this.expiredTime = data.expiredTime
-					this.condition = data.condition
+					this.conditions = data.conditions
 					this.detailedAddress = data.detailedAddress
-					this.stateEnum = data.stateEnum
-					this.account = data.account
-					this.comments = data.comments
+					this.stateEnumStr = data.stateEnumStr
+					this.account = Object.assign({},this.account,data.account)
+					this.comments = [...data.comments]
 				})
 				.catch(() => {
 					console.log('请求商品数据失败')

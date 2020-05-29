@@ -224,7 +224,7 @@ export default {
 			}
 		},
 		avatar(){
-			if(this.account.avatar.length ===0) return defaultAvatar;
+			if(this.account.avatar == undefined || this.account.avatar==null || this.account.avatar.length ===0) return defaultAvatar;
 			return 'url(' + this.account.avatar + ')'
 		}
 	},
@@ -251,11 +251,11 @@ export default {
 			this.$api.updateAccount(this.userId, this.account)
 				.then(({data})=>{
 					if(data.success){
-						this.tip(1,'更新成功')
+						this.tip(0,'更新成功')
 						this.store = {}
 					}
 					else{
-						this.tip(0,'更新失败')
+						this.tip(1,'更新失败')
 						this.account = this.store
 					}
 					if(close) {
@@ -289,10 +289,10 @@ export default {
 				this.$api.uploadAvatar(this.account.id, this.url)
 					.then(({data})=>{
 						if(data.success){
-							this.tip(1,'上传头像成功')
-							this.account.avatar = data.avartar
+							this.tip(0,'上传头像成功')							
+							this.account.avatar = data.data
 						}else{
-							this.tip(0,'更新头像失败')
+							this.tip(1,'更新头像失败')
 						}
 						this.modal.show = false
 						this.uploading = false
@@ -366,8 +366,8 @@ export default {
 		getMyAccount(){
 			this.$api.getMyAccount(this.userId)
 				.then(({data})=>{
-					console.log('我的账户',data);
-					this.account = data
+					console.log('我的账户',data.data);
+					this.account = Object.assign({},this.account,data.data)
 				})
 				.catch(()=>{
 					console.log('获取我的账户信息失败');
@@ -381,7 +381,7 @@ export default {
 			// 清空 vuex中数据
 			this.$store.dispatch('logout')
 			uni.reLaunch({
-				url:'../../pages/login/login?type=logout'
+				url:'../../pages/login/login?type=3'
 			})
 		},
 		dataTap(tag){
