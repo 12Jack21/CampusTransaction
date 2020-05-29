@@ -212,7 +212,7 @@ public class NoticeController {
     @ApiOperation(value = "获取用户公告列表")
     @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
     @GetMapping("/account/{accountId}")
-    public responseFromServer getNoticePageByAccountId(@RequestBody NoticeCondition condition,
+    public responseFromServer getNoticePageByAccountId(NoticeCondition condition,
                                                        @PathVariable Integer accountId,
                                                        HttpServletRequest request) {
 //        Integer pageIndex = (Integer) map.get("pageIndex");
