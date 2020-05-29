@@ -22,8 +22,7 @@ http.interceptor.request((config, cancel) => { /* cancel 为函数，如果调�
       ...config.header,
       token: uni.getStorageSync('token') || '' // 演示拦截器header加参
     }
-		console.log('请求前拦截 URL:',config.baseUrl + config.url);
-		console.log('请求前拦截方法:',config.method);
+		console.log(`请求前拦截 URL:${config.baseUrl + config.url}, 拦截方法: ${config.method}`);
     // 演示custom 用处
     // if (config.custom.auth) {
     //   config.header.token = 'token'
@@ -157,7 +156,7 @@ export default{
 		return http.post('/accounts/' + id + '/password', password)
 	},
 	uploadAvatar(id, filePath){
-		return http.upload('/accounts/' + id,{
+		return http.upload('/accounts/' + id + '/avatar',{
 			filePath,
 			name:'avatar'
 		})

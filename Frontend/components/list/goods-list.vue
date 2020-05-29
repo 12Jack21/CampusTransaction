@@ -1,6 +1,6 @@
 <template>
 	<view class="">
-		<block v-for="(item, index) in list_data" :key="index">
+		<block v-for="(item, index) in list_data" :key="item.id">
 			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" >
 				<view class="goods-img" @tap="listTap(item.id)">
 					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />

@@ -220,7 +220,7 @@ export default {
 			backHistories: searchHistories(),
 			histories: searchHistories(),
 			recommendations: ['耳机', '电动车', '笔记本', '华为手机', 'AJ鞋', '篮球'],
-			goodsData: [],
+			goodsData: _home_data.goodsList(),
 			filterData: '',
 			filterDropdownValue: [],
 			filterValues: [],
@@ -245,7 +245,7 @@ export default {
 	},
 	onLoad(param) {
 		console.log('search page onLoad, param:', param)
-		this.goodsData = _home_data.goodsList() //虚拟
+		// this.goodsData = _home_data.goodsList() //虚拟
 
 		this.pagination = iniPagination()
 		let type_index = 0
