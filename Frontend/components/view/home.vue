@@ -252,12 +252,12 @@ export default {
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
-				this[comMap(current)] = {
+				this[comMap(current)] = Object.assign({},this[comMap(current)],{
 					pageIndex:1,
 					endTime: new Date().format('yyyy-MM-dd hh:mm'),
 					data:[],
 					finish:false
-				}
+				})
 				this.goodsTabData.tabCur = current
 				this.getCommodityList()
 			}
@@ -309,11 +309,11 @@ export default {
 					comObj.pageSize = resp.pageSize
 					console.log('before push, after set page property:',{...comObj});
 					comObj.data.push(...resp.pageList)
-					console.log('after push:',{...comObj});
+					console.log('after push:',{...comObj.data});
 					// this.$nextTick(function(){
 					this.goodsData = comObj.data		
-					console.log('goodsData after nextTick',[...this.goodsData]);
-					this.$forceUpdate()
+					// console.log('goodsData after nextTick',[...this.goodsData]);
+					// this.$forceUpdate()
 					// })
 					
 					// 取完了数据

@@ -55,7 +55,7 @@
 						</view>
 						<view class="text-gray text-sm text-cut">
 							{{preSentence(msg.action, msg.commodity.name.length!==0)}} 
-							<text style="color: red;">
+							<text style="color: red;" v-if="msg.sender!==-1">
 								{{msg.commodity.name}}
 							</text>
 							{{postSentence(msg.action,msg.commodity.name.length!==0)}}
@@ -65,7 +65,7 @@
 					<!-- action 区-->
 					<view class="action" @tap="actionTap(msg.targetId,msg.targetType)">
 						<view class="cu-avatar radius"
-						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.commodity.name">
+						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.sender!==-1">
 						</view>
 						<text style="vertical-align: middle;" v-else>去看看
 							<text class="cuIcon-right"></text>
@@ -140,7 +140,7 @@ export default {
 			listTouchStart: 0,
 			listTouchDirection: null,
 			loadStatus:'more',
-			type:0,
+			type:0,// 初始化是未读消息
 			newsData:{
 				...iniPagination(),
 				data: []
@@ -161,8 +161,8 @@ export default {
 		}
 	},
 	created(){
+		// this.newsData.data = news
 		this.getMessages()
-		this.newsData.data = news
 	},
 	watch: {
 		scrollBottom(newVal){
@@ -216,10 +216,9 @@ export default {
 		readTap(index){
 			//点击已读
 			let msg = this.newsData.data[index]
-			let ids = []
-			ids.push(msg.id)
-			this.$api.readMessages(ids)
+			this.$api.readMessages(msg.id)
 				.then(({data})=>{
+					console.log('已读响应:',data);
 					if(data.success){
 						msg.isRead = true
 						this.newsData.data.splice(index,1,msg) // 更新已读状态
@@ -231,11 +230,14 @@ export default {
 				this.type = type
 				this.newsData = {...iniPagination(), data:[]}
 				this.getMessages()
+			}else{ //相同的 Menu type
+				this.newsData ={...iniPagination(),data:[]}
+				this.getMessages()
 			}
 		},
 		//触底了
 		setReachBottom() {
-			if(!this.storeNews[this.type].finish){
+			if(!this.newsData.finish){
 				this.getMessages()
 			}
 		},
@@ -250,12 +252,13 @@ export default {
 			}
 			this.$api.getMessages(this.userId, params)
 				.then(({data})=>{
-					console.log('messages',data);
+					data = data.data
+					console.log('getMessages:',data);
 					if(data.pageIndex - 1 >= data.pageCount){
 						this.newsData.finish = true
 						this.loadStatus = 'noMore'
 					}			
-					this.newsData.data.push(...data.data)
+					this.newsData.data.push(...data.pageList)
 					this.loadStatus = 'more'
 					this.onRequest = false
 				})

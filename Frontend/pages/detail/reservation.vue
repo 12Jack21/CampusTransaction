@@ -156,10 +156,10 @@
 								<view class="text-gray ">原评级:</view>
 								<uni-rate :value="oriEvaluation" disabled></uni-rate>
 							</view>
+							<loading v-if="onEvaluation">更新中</loading>
 						</view>
 						<!-- end -->
 					</view>
-					<loading v-if="onEvaluation">更新中</loading>
 					<!-- 保存更新 -->
 					<view class="zaiui-footer-fixed" style="z-index: 10;">
 						<view class="flex flex-direction"><button class="cu-btn bg-red" style="font-size: 1.4em;padding: 10rpx 0;" @tap="confirmEvaluation">保存</button></view>
@@ -207,8 +207,8 @@ export default {
 				note: '最好可以有个包装',
 				createTime: '2020-10-08 10:06',
 				stateEnumStr: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
-				evaluation_sell: 5, // 卖家的评价等级, 1-5
-				evaluation_buy: 1, //买家的评价等级
+				evaluationSell: 5, // 卖家的评价等级, 1-5
+				evaluationBuy: 1, //买家的评价等级
 				commodity: {
 					id: 1,
 					name: '物品名',
@@ -234,7 +234,7 @@ export default {
 		},
 		oriEvaluation(){
 			// 判断是买方还是卖方
-			return this.isSell? this.reservation.evaluation_sell:this.reservation.evaluation_buy
+			return this.isSell? this.reservation.evaluationSell:this.reservation.evaluationBuy
 		},
 		cancelDisable(){ // 取消按钮 disable
 			if(this.basics===0)
@@ -304,7 +304,7 @@ export default {
 			else if(this.basics===1){ //交易未确认		
 				uni.showModal({
 					title: '交易确认',
-					content: '请务必确认已收到商品后再确认交易',
+					content: '请务必确认双方已成功完成交易后再确认',
 					confirmText: '确认',
 					confirmColor: '#0081ff',
 					class: 'zaiui-modal',
@@ -356,25 +356,28 @@ export default {
 					.catch(()=>this.err())
 			}
 		},
-		confirmEvaluation(){
+	  async	confirmEvaluation(){
 			if(this.newEvaluation == this.oriEvaluation || this.onEvaluation) return
 			this.onEvaluation = true
 			let data = {
-				evaluation_buy: this.isSell? this.reservation.evaluation_buy:this.newEvaluation,
-				evaluation_sell: this.isSell? this.newEvaluation: this.reservation.evaluation_sell
+				evaluationBuy: this.isSell? this.reservation.evaluationBuy:this.newEvaluation,
+				evaluationSell: this.isSell? this.newEvaluation: this.reservation.evaluationSell
 			}
-			this.$api.updateEvaluation(this.reservation.id,data)
+			await this.$api.updateEvaluation(this.reservation.id,data)
 				.then(({data})=>{
 					if(data.success){ // 取消预约成功
 							this.tip(0,'更新评价成功')
 							// 更新评价
-							if(this.isSell)	this.reservation.evaluation_sell = this.newEvaluation
-							else this.reservation.evaluation_buy = this.newEvaluation
+							if(this.isSell)	this.reservation.evaluationSell = this.newEvaluation
+							else this.reservation.evaluationBuy = this.newEvaluation
 						}
 					else
 						this.tip(1,'更新评价失败')
 				})
 				.catch(()=>this.err())
+				
+				this.onEvaluation = false
+				this.modalShow = false
 		},
 		comTap(){
 			uni.navigateTo({

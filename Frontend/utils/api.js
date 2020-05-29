@@ -125,7 +125,7 @@ export default{
 		return http.put('/reservations/' + id + '/cancel')
 	},
 	successReservation(id){ //卖家
-		return http.put('/reservations/' + id + '/success')
+		return http.put('/reservations/' + id + '/complete')
 	},
 	failReservation(id){
 		return http.put('/reservations/' + id + '/fail')
@@ -175,8 +175,8 @@ export default{
 	getMessages(id,params){
 		return http.get('/messages/account/' + id, {params})
 	},
-	readMessages(ids){
-		return http.put('/messsages',{ids})
+	readMessages(id){
+		return http.put('/messages/read/' +id)
 	},
 	addComment(data){
 		return http.post('/comments',data)

@@ -22,7 +22,7 @@ export default [
 	{
 	    id: 2,
 	    isRead: false,
-	    createTime: '2020/10/02',
+	    createTime: '2020-10-02',
 	    sender: 11,
 	    avatar: '',
 	    accountName: 'sam',
@@ -39,7 +39,7 @@ export default [
 	{
 	    id: 3,
 	    isRead: false,
-	    createTime: '2020/05/20',
+	    createTime: '2020-05-20',
 	    sender: -1, 
 	    avatar: '',
 	    accountName: '',
@@ -57,7 +57,7 @@ export default [
 	{
 	    id: 4,
 	    isRead: false,
-	    createTime: '2020/05/20',
+	    createTime: '2020-05-20',
 	    sender: 11, 
 	    avatar: 'aa',
 	    accountName: 'Tom',
@@ -75,7 +75,7 @@ export default [
 	{
 	    id: 5,
 	    isRead: false,
-	    createTime: '2020/05/20',
+	    createTime: '2020-05-20',
 	    sender: -1, 
 	    avatar: '',
 	    accountName: '',
@@ -93,7 +93,7 @@ export default [
 	{
 	    id: 6,
 	    isRead: true,
-	    createTime: '2020/05/11',
+	    createTime: '2020-05-11',
 	    sender: 12, 
 	    avatar: '去',
 	    accountName: 'Jackason',

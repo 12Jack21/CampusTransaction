@@ -67,7 +67,7 @@ const reservationMap = tabCur => {
 		case 1:
 			return 'on' // 预约中
 		case 2:
-			return 'finish' // 已完成
+			return 'finish' // 已结束
 		case 3:
 			return 'total' // 全部
 		default:
@@ -105,13 +105,13 @@ export default {
 		...mapState(['userId'])
 	},
 	onLoad(params) {
-		this.headTab.list = ['待确认', '待交易', '已完成', '全部预约']
+		this.headTab.list = ['待确认', '待交易', '已结束', '全部预约']
 		// virtual data
-		this.wait.list = _reservations_data.stage1List()
-		this.on.list = _reservations_data.stage2List()
-		this.finish.list = _reservations_data.stage3List()
-		this.total.list = _reservations_data.totalList()
-		
+		// this.wait.list = _reservations_data.stage1List()
+		// this.on.list = _reservations_data.stage2List()
+		// this.finish.list = _reservations_data.stage3List()
+		// this.total.list = _reservations_data.totalList()
+		this.wait = Object.assign({},this.wait,iniReservation())
 		// request data
 		this.loadReservations() // 用户 id 和 预约类型
 		
@@ -149,8 +149,9 @@ export default {
 			await this.$api
 				.getReservations(this.userId, pagination)
 				.then(({ data }) => {
-					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					curReservations.list.push(...data.list)
+					data = data.data
+					console.log('curReservation data:',data);
+					curReservations.list.push(...data.pageList)
 					// 取完了数据
 					if (data.pageIndex - 1 >= data.pageCount) curReservations.finish = true
 				})
@@ -159,12 +160,14 @@ export default {
 					this.err()
 				})
 
-			console.log('!同步运行到此，设置 loadingText')
+			console.log('获取预约-同步运行到此，设置 loadingText')
 			if (curReservations.finish) this.loadStatus = 'noMore'
 			else this.loadStatus = 'more'
 			this.onRequest = false
 		},
 		async onPullDown(done) {
+			// let c = this[reservationMap(this.tabCur)]
+			// c = Object.assign({},c,iniReservation())
 			this[reservationMap(this.tabCur)] = iniReservation()
 			await this.loadReservations()
 			done()
