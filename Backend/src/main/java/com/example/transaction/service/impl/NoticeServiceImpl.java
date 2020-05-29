@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
+import com.example.transaction.dto.notice.DetailedNotice;
 import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.Commodity;
@@ -46,7 +47,7 @@ public class NoticeServiceImpl implements NoticeService {
         /*只查看确认发布的通告*/
         queryWrapper.eq("state_enum", NoticeCode.PUBLISHED.getCode());
         /*是商品还是需求*/
-        if(condition.getType()==null){
+        if (condition.getType() == null) {
             condition.setType(0);
         }
         switch (condition.getType()) {
@@ -67,12 +68,12 @@ public class NoticeServiceImpl implements NoticeService {
         if (condition.getEndTime() != null) {
             queryWrapper.le("create_time", (new Timestamp(condition.getEndTime().getTime())));
         }
-        queryWrapper.ge("end_time",new Timestamp(System.currentTimeMillis()));
+        queryWrapper.ge("end_time", new Timestamp(System.currentTimeMillis()));
         responseFromServer response = getNoticePage(queryWrapper, condition.getPageIndex());
-        if(response.isFailure()){
+        if (response.isFailure()) {
             return responseFromServer.error();
         }
-        MyPage myPage = (MyPage)response.getData();
+        MyPage myPage = (MyPage) response.getData();
         myPage.setPageList(transform(myPage.getPageList()));
         return responseFromServer.success(myPage);
     }
@@ -132,17 +133,17 @@ public class NoticeServiceImpl implements NoticeService {
      * @return
      */
     private responseFromServer splitAddress(Notice notice) {
-        String addressStr = notice.getAddress(),address,detailedAddress;
+        String addressStr = notice.getDetailedAddress(), address, detailedAddress;
         if (StringUtil.isNullOrEmpty(addressStr)) {
             return responseFromServer.error();
         }
         char temp = addressStr.charAt(3);
-        if(temp == '部'){
-            address = addressStr.substring(0,4);
-            detailedAddress = addressStr.substring(4,addressStr.length());
-        }else{
-            address = addressStr.substring(0,3);
-            detailedAddress = addressStr.substring(3,addressStr.length());
+        if (temp == '部') {
+            address = addressStr.substring(0, 4);
+            detailedAddress = addressStr.substring(4, addressStr.length());
+        } else {
+            address = addressStr.substring(0, 3);
+            detailedAddress = addressStr.substring(3, addressStr.length());
         }
         notice.setAddress(address);
         notice.setDetailedAddress(detailedAddress);
@@ -161,7 +162,11 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null || notice.getComList() == null || notice.getComList().size() == 0) {
             return responseFromServer.error();
         }
-        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
+//        if (splitAddress(notice).isFailure() || noticeDAO.insert(notice) != 1) {
+        /**
+         * 暂时不对地址进行分割, 直接存储前端传来的地址信息(详细地址中包含了学部信息)
+         */
+        if (noticeDAO.insert(notice) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         } else {
@@ -206,24 +211,26 @@ public class NoticeServiceImpl implements NoticeService {
      */
     @Override
     public responseFromServer getNoticePage(QueryWrapper queryWrapper, int pageIndex) {
-        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
+        Page<Notice> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         return responseFromServer.success(new MyPage(noticeIPage));
     }
 
     @Override
     public responseFromServer getNoticeInfoPage(QueryWrapper queryWrapper, int pageIndex) {
-        Page<Notice> page = new Page<>((pageIndex-1)*Nums.pageSize, Nums.pageSize);
+        Page<Notice> page = new Page<>((pageIndex - 1) * Nums.pageSize, Nums.pageSize);
         IPage<Notice> noticeIPage = noticeDAO.getDetailedNoticePage(page, queryWrapper);
         MyPage myPage = new MyPage(noticeIPage);
         myPage.setPageList(transform(myPage.getPageList()));
         return responseFromServer.success(myPage);
     }
 
-    private List<NoticeInfo> transform(List<Notice> pageList){
+    private List<NoticeInfo> transform(List<Notice> pageList) {
         List<NoticeInfo> resultList = new ArrayList<>();
         for (Notice notice : pageList) {
-            resultList.add(new NoticeInfo(notice));
+            NoticeInfo noticeInfo = new NoticeInfo(notice);
+            noticeInfo.setAccountId(notice.getUser().getId());
+            resultList.add(noticeInfo);
         }
         return resultList;
     }
@@ -246,13 +253,14 @@ public class NoticeServiceImpl implements NoticeService {
 
     /**
      * 添加访问量
+     *
      * @param noticeId
      * @return
      */
     @Override
     @Transactional
-    public responseFromServer addBrowseCount(Integer noticeId){
-        if(noticeId == null || noticeId < 0 ||noticeDAO.addBrowseCount(noticeId)!=1) {
+    public responseFromServer addBrowseCount(Integer noticeId) {
+        if (noticeId == null || noticeId < 0 || noticeDAO.addBrowseCount(noticeId) != 1) {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -271,14 +279,11 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null) {
             return responseFromServer.error();
         }
-        NoticeInfo noticeInfo = new NoticeInfo(notice);
-        List<CommodityInfo> commodityInfoList = new ArrayList<>();
-        for(Commodity commodity:notice.getComList()){
-            commodityInfoList.add(new CommodityInfo(commodity,noticeInfo));
+        DetailedNotice detailedNotice = new DetailedNotice(notice);
+        if(detailedNotice.getBrowseCount()!=null && detailedNotice.getBrowseCount()==0){
+            detailedNotice.setBrowseCount(1);
         }
-        notice.setComList(null);
-        notice.setComInfoList(commodityInfoList);
-        return responseFromServer.success(notice);
+        return responseFromServer.success(detailedNotice);
     }
 
 

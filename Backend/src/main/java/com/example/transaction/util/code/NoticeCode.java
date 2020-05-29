@@ -9,6 +9,13 @@ public enum NoticeCode {
     private final int code;
     private final String desc;
 
+    public static String getDescription(int code){
+        try{
+            return values()[code+2].toString();
+        }catch(Exception e){
+            return "";
+        }
+    }
 
     NoticeCode(int code, String desc){
         this.code = code;

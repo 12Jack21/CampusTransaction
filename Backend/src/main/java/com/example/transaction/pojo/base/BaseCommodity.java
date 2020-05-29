@@ -7,6 +7,7 @@ import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.pojo.Type;
+import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -55,7 +56,7 @@ public class BaseCommodity implements Serializable {
         if(commodityImages!=null && !commodityImages.isEmpty()){
             images = new ArrayList<>();
             for(CommodityImage image : commodityImages){
-                images.add(image.getImageUrl());
+                images.add(ResourcePath.commodityImageRequestPath + image.getImageUrl());
             }
         }
     }

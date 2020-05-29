@@ -15,7 +15,7 @@ class AccountDAOTest {
 
     @Test
     void testGetAccountCreditById(){
-        Account account = accountDAO.getAccountCreditById(1);
+        Account account = accountDAO.getAccountWithEstimate(1);
         System.out.println(account);
     }
 

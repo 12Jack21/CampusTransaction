@@ -1,6 +1,7 @@
 package com.example.transaction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.transaction.dto.notice.DataWrapper;
 import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Notice;
@@ -37,14 +38,15 @@ public class NoticeController {
     /**
      * 创建通告(包含上传的商品信息)
      *
-     * @param notice
+     * @param data
      * @param request
      * @return 通告
      */
 //    @RequestMapping("/setupNotice")
     @ApiOperation("创建通告(包含上传的商品信息)")
     @PostMapping("/add")
-    public responseFromServer addNotice(@RequestBody Notice notice, HttpServletRequest request) {
+    public responseFromServer addNotice(@RequestBody DataWrapper data, HttpServletRequest request) {
+        Notice notice = data.getData();
         Account account = new Account(notice.getAccountId());
         if (accountVerify.verify(account, request)) {
             /*此时account已更新*/
@@ -210,7 +212,7 @@ public class NoticeController {
     @ApiOperation(value = "获取用户公告列表")
     @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
     @GetMapping("/account/{accountId}")
-    public responseFromServer getNoticePageByAccountId(@RequestBody NoticeCondition condition,
+    public responseFromServer getNoticePageByAccountId(NoticeCondition condition,
                                                        @PathVariable Integer accountId,
                                                        HttpServletRequest request) {
 //        Integer pageIndex = (Integer) map.get("pageIndex");

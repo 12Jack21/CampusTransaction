@@ -15,36 +15,33 @@ public class responseFromServer<T> implements Serializable {
 
     private int status;//0 成功 1 失败 10 需要登录
     private String msg;
+    private boolean success;
     private T data;
-    /*
-        SUCCESS(0,"SUCCESS"),
-        ERROR(1,"ERROR"),
-        ILLEGAL_ARGUMENT(2,"ILLEGAL_ARGUMENT"),
-        NEED_LOGIN(10,"NEED_LOGIN"),
-        SELLER_NEED_LOGIN(11,"NEED_LOGIN"),
-        Exception(-1,"Exception");
-    * */
 
     private responseFromServer(int status){
         this.status = status;
+        this.success = status == 0;
     }
     private responseFromServer(int status, T data){
         this.status = status;
         this.data = data;
+        this.success = status == 0;
     }
 
     private responseFromServer(int status, String msg, T data){
         this.status = status;
+        this.success = status == 0;
         this.msg = msg;
         this.data = data;
     }
 
     private responseFromServer(int status, String msg){
         this.status = status;
+        this.success = status == 0;
         this.msg = msg;
     }
 
-    @JsonIgnore
+
     //使之不在json序列化结果当中
     public boolean isSuccess(){
         return this.status == ResponseCode.SUCCESS.getCode();
@@ -64,6 +61,10 @@ public class responseFromServer<T> implements Serializable {
     public String getMsg(){
         return msg;
     }
+    public boolean getSuccess(){
+        return this.success;
+    }
+    public void setSuccess(boolean success){this.success = success;}
 
     public static <T> responseFromServer<T> needLogin(){
         return new responseFromServer<T>(ResponseCode.NEED_LOGIN.getCode());
@@ -73,9 +74,9 @@ public class responseFromServer<T> implements Serializable {
         return new responseFromServer<T>(ResponseCode.SUCCESS.getCode());
     }
 
-    public static <T> responseFromServer<T> success(String msg){
-        return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),msg);
-    }
+//    public static <T> responseFromServer<T> success(String msg){
+//        return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),msg);
+//    }
 
     public static <T> responseFromServer<T> success(T data){
         return new responseFromServer<T>(ResponseCode.SUCCESS.getCode(),data);

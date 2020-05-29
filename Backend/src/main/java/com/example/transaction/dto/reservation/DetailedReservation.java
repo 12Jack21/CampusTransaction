@@ -3,6 +3,8 @@ package com.example.transaction.dto.reservation;
 import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
+import com.example.transaction.util.code.NoticeCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -10,7 +12,7 @@ import java.util.Date;
 
 /**
  * @ClassName: DetailedReservation
- * @Description: TODO
+ * @Description: 预约详细信息
  * @Author: 曾志昊
  * @Date: 2020/5/26 11:42
  */
@@ -21,14 +23,24 @@ public class DetailedReservation {
     Integer count = 10;
     String note = "";
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
     Integer stateEnum = -3;
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+    }
     Double evaluationSell = -1.0D;
     Double evaluationBuy = -1.0D;
     SimpleCommodity2 commodity;
     Integer accountId = -1;
     String accountName = "";
     String avatar = "";
+    String buyerName="";
+    String buyerAvatar="";
+    Integer buyerId = -1;
+    String detailedAddress = "";
 
     public DetailedReservation(){}
     public DetailedReservation(Reservation reservation){
@@ -36,7 +48,7 @@ public class DetailedReservation {
         this.count = reservation.getCount();
         this.note = reservation.getNote();
         this.createTime = reservation.getStartTime();
-        this.stateEnum = reservation.getStateEnum();
+        setStateEnum(stateEnum = reservation.getStateEnum());
         try{
             Account seller = reservation.getCommodity().getNotice().getUser();
             this.evaluationSell = seller.getEstimate().getCredit();
@@ -44,7 +56,7 @@ public class DetailedReservation {
             e.printStackTrace();
         }
         this.commodity = new SimpleCommodity2(reservation.getCommodity());
-        this.accountId = reservation.getAccountId();
+        this.buyerId = reservation.getAccountId();
     }
 
 }

@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName: CommodityController
@@ -286,7 +287,8 @@ public class CommodityController {
                                               @RequestBody Commodity commodity,
                                               HttpServletRequest request) {
         commodity.setId(commodityId);
-        responseFromServer response = getById(commodity.getId());
+//        responseFromServer response = getById(commodity.getId());
+        responseFromServer response = commodityService.getById(commodity.getId());
         if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.updateCommodity(commodity);
         } else {
@@ -357,9 +359,9 @@ public class CommodityController {
         MultipartFile[] images = {image};
         responseFromServer response = commodityService.uploadCommodityImages(images, null, false);
         if (response.isSuccess()) {
-            CommodityImage commodityImage = (CommodityImage) response.getData();
-            if (commodityImage != null && commodityImage.getImageUrl() != null && commodityImage.getImageUrl() != "") {
-                return responseFromServer.success(commodityImage);
+            List<String> fileNames = (List<String>) response.getData();
+            if(fileNames!=null&&fileNames.size()==1){
+                return responseFromServer.success(fileNames.get(0));
             }
         }
         return responseFromServer.error();

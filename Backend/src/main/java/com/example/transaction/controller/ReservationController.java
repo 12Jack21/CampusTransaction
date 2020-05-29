@@ -1,6 +1,8 @@
 package com.example.transaction.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.transaction.dto.SimpleCondition;
+import com.example.transaction.dto.reservation.DetailedReservation;
 import com.example.transaction.pojo.*;
 import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NoticeService;
@@ -56,7 +58,12 @@ public class ReservationController {
         if (reservation.getCommodityId() == null || reservation.getCount() == null) {
             return responseFromServer.error();
         } else {
-            reservation.setAccountId(account.getId());
+            /**
+             * ZZH
+             * TODO : 先直接用传来的数据里的用户id
+             */
+//            reservation.setAccountId(account.getId());
+            
             reservation.setStateEnum(ReservationCode.WAITING.getCode());
             return reservationService.setUpReservation(reservation);
         }
@@ -76,7 +83,38 @@ public class ReservationController {
 //        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
         Account account = accountVerify.getCurrentAccount(request);
         if (reservationId != null) {
-            return reservationService.cancelReservation(reservationId, account.getId());
+            /**
+             * ZZH
+             * TODO : token
+             */
+//            return reservationService.cancelReservation(reservationId, account.getId());
+            return reservationService.cancelReservation(reservationId, null);
+        } else {
+            return responseFromServer.error();
+        }
+    }
+
+
+    /**
+     * 取消预约
+     *
+     * @param reservationId
+     * @param request
+     * @return
+     */
+//    @RequestMapping("/cancelReservation")
+    @ApiOperation(value = "取消预约")
+    @PutMapping("/{reservationId}/fail")
+    public responseFromServer failReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
+//        Account account = (Account) request./* 修改获取账号方式*/getAttribute("currentAccount");
+        Account account = accountVerify.getCurrentAccount(request);
+        if (reservationId != null) {
+            /**
+             * ZZH
+             * TODO : token
+             */
+//            return reservationService.cancelReservation(reservationId, account.getId());
+            return reservationService.cancelReservation(reservationId, null);
         } else {
             return responseFromServer.error();
         }
@@ -124,17 +162,21 @@ public class ReservationController {
                 /*用户身份验证*/
                 reservation = (Reservation) response.getData();
                 Commodity commodity = reservation.getCommodity();
-                if (commodity != null
-                        && commodity.getNotice() != null
-                        && commodity.getNotice().getAccountId() != null) {
-                    if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
-                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/ {
-                        return null;
-                    }
-                } else {
-                    /*查询错误*/
-                    return null;
-                }
+                /**
+                 * ZZH
+                 * TODO : 暂时先不验证
+                 */
+//                if (commodity != null
+//                        && commodity.getNotice() != null
+//                        && commodity.getNotice().getAccountId() != null) {
+//                    if (commodity.getNotice().getAccountId().intValue() != account.getId().intValue())
+//                        /*此时要操作的用户跟notice的卖家不符合 非法操作*/ {
+//                        return null;
+//                    }
+//                } else {
+//                    /*查询错误*/
+//                    return null;
+//                }
                 /*用户验证成功*/
                 return reservation;
             } else {
@@ -159,13 +201,36 @@ public class ReservationController {
         Reservation reservation = verifySeller(reservationId, request);
         if (reservation != null) {
             /*验证当前操作用户是否是卖家*/
-//            return reservationService.validateReservation(reservation, ((Account) request./*  修改获取账号方式*/getAttribute("currentAccount")).getId());
-            return reservationService.validateReservation(reservation, accountVerify.getCurrentAccount(request).getId());
+            /**
+             * ZZH
+             * TODO : 不进行验证,暂时传入空id
+             */
+//            return reservationService.validateReservation(reservation, accountVerify.getCurrentAccount(request).getId());
+            return reservationService.validateReservation(reservation, null);
         } else {
             return responseFromServer.illegal();
         }
     }
 
+
+    @ApiOperation(value = "更改评价")
+    @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
+    @PutMapping("/{reservationId}")
+    public responseFromServer updateEvaluation(@PathVariable Integer reservationId,
+                                               Double evaluationSell,
+                                               Double evaluationBuy,
+                                               HttpServletRequest request) {
+        Reservation reservation = new Reservation(reservationId);
+        if (evaluationBuy != null && evaluationBuy >= 0 && evaluationBuy <= 5) {
+            reservation.setEvaluationBuy(evaluationBuy);
+        }
+        if (evaluationSell != null && evaluationSell >= 0 && evaluationSell <= 5) {
+            reservation.setEvaluationSell(evaluationSell);
+        }
+        /*暂时没有验证身份*/
+        return reservationService.updateReservation(reservation);
+
+    }
 
 
     /**
@@ -178,7 +243,7 @@ public class ReservationController {
 //    @RequestMapping("/finishReservation")
     @ApiOperation("预约完成")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
-    @PutMapping("/{reservationId}/finish")
+    @PutMapping("/{reservationId}/complete")
     public responseFromServer finishReservation(@PathVariable Integer reservationId, HttpServletRequest request) {
         Reservation reservation = verifySeller(reservationId, request);
         /*验证当前操作用户是否是卖家*/
@@ -191,9 +256,7 @@ public class ReservationController {
 
     /**
      * 查看当前商品的所有预约
-     *
      * @param commodityId
-     * @param pageIndex
      * @param request
      * @return
      */
@@ -207,14 +270,12 @@ public class ReservationController {
             }
     )
     public responseFromServer getReservationPageForCommodity(@PathVariable Integer commodityId,
-                                                             @RequestJson Integer pageIndex,
                                                              HttpServletRequest request) {
 //        Commodity commodity = (Commodity) map.get("commodity");
 //        Integer pageIndex = (Integer) map.get("pageIndex");
         if (commodityId == null) {
             return responseFromServer.error();
         }
-        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         /*用户核对*/
         responseFromServer response = commodityService.getSimpleCommodity(commodityId);
         if (!response.isSuccess()) {
@@ -222,21 +283,28 @@ public class ReservationController {
         }
         Commodity commodity = (Commodity) response.getData();
         Notice notice = (Notice) noticeService.getSimpleNotice(commodity.getNoticeId()).getData();
-        if (notice.getAccountId().intValue() == accountVerify.getCurrentAccount(request).getId().intValue()) {
-            /*验证成功*/
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("commodity_id", commodity.getId());
-            return reservationService.getSimpleReservationPage(queryWrapper, pageIndex);
-        } else {
-            return responseFromServer.illegal();
-        }
+        /**
+         * ZZH
+         * TODO : 先不做验证过程
+         */
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("commodity_id", commodity.getId());
+        return reservationService.getSimpleReservationPage(queryWrapper, 1);
+//        if (notice.getAccountId().intValue() == accountVerify.getCurrentAccount(request).getId().intValue()) {
+//            /*验证成功*/
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.eq("commodity_id", commodity.getId());
+//            return reservationService.getSimpleReservationPage(queryWrapper, 1);
+//        } else {
+//            return responseFromServer.illegal();
+//        }
     }
 
     /**
      * 查看我申请的预约
      *
-     * @param pageIndex
-     * @param isCommodity
+     * @param accountId
+     * @param condition
      * @param request
      * @return
      */
@@ -248,10 +316,9 @@ public class ReservationController {
                     @ApiImplicitParam(name = "pageIndex", value = "页面索引", paramType = "Integer", dataType = "Integer")
             }
     )
-    @GetMapping("/account/{accountId}/send")
+    @GetMapping("/account/{accountId}")
     public responseFromServer getMyReservation(@PathVariable Integer accountId,
-                                               @RequestJson Integer pageIndex,
-                                               @RequestJson Boolean isCommodity,
+                                               SimpleCondition condition,
                                                HttpServletRequest request) {
         /**
          * ZZH
@@ -259,13 +326,12 @@ public class ReservationController {
          * Account account =  accountVerify.getCurrentAccount(request);
          */
         Account account = accountVerify.verifyWithReturn(new Account(accountId), request);
+        Integer pageIndex = condition.getPageIndex();
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id", account.getId());
+        queryWrapper.eq("state_enum", condition.getType());
 //        Boolean isCommodity = (Boolean) map.get("isCommodity");
-        if (isCommodity != null) {
-            queryWrapper.eq("type", isCommodity);
-        }
         return reservationService.getReservationsPage(queryWrapper, pageIndex);
     }
 
@@ -273,7 +339,8 @@ public class ReservationController {
     /**
      * 查看我接收到的预约
      *
-     * @param pageIndex
+     * @param condition
+     * @param accountId
      * @param request
      * @return
      */
@@ -285,14 +352,17 @@ public class ReservationController {
             }
     )
 //    @GetMapping("/account/{accountId}/receive")
-    @GetMapping("/account/{accountId}")
-    public responseFromServer getReservationRequest(@RequestJson Integer pageIndex, @PathVariable Integer accountId, HttpServletRequest request) {
-        pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
+    @GetMapping("/account/{accountId}/receive")
+    public responseFromServer getReservationRequest(SimpleCondition condition,
+                                                    @PathVariable Integer accountId,
+                                                    HttpServletRequest request) {
+        Integer pageIndex = condition.getPageIndex();
+        condition.setPageIndex(pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex);
         /**
          * TODO : token过后直接根据token获取当前的id
          * return reservationService.getReservationRequest(accountVerify.getCurrentAccount(request).getId(), pageIndex);
          */
-        return reservationService.getReservationRequest(accountId, pageIndex);
+        return reservationService.getReservationRequest(accountId, condition);
     }
 
     /**
@@ -304,15 +374,25 @@ public class ReservationController {
      */
     @ApiOperation("获取详细预约内容")
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
-    @GetMapping("/detailed/{reservationId}")
+    @GetMapping("/{reservationId}")
     public responseFromServer getDetailedReservation(@PathVariable Integer reservationId,
                                                      HttpServletRequest request) {
-        Reservation reservation = verifySeller(reservationId, request);
-        if (reservation != null) {
-            return responseFromServer.success(reservation);
-        } else {
-            return responseFromServer.error();
+        responseFromServer response = reservationService.getDetailedReservationInfo(reservationId);
+        if (response.isSuccess()) {
+            DetailedReservation detailedReservation = (DetailedReservation) response.getData();
+            /**
+             * ZZH
+             * TODO : token 不验证
+             */
+//            Account currentAccount = accountVerify.getCurrentAccount(request);
+//            if (!currentAccount.getId().equals(detailedReservation.getAccountId())
+//                    && !currentAccount.getId().equals(detailedReservation.getBuyerId())) {
+//                /*当前用户不是卖家或买家*/
+//                return responseFromServer.error();
+//            }
+            return responseFromServer.success(detailedReservation);
         }
+        return responseFromServer.error();
     }
 
     /**

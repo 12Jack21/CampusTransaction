@@ -18,6 +18,7 @@ public class NotifyCondition {
     Integer type;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date endTime;
 
     Integer accountId;

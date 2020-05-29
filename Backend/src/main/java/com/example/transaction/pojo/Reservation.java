@@ -3,6 +3,7 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.transaction.util.code.ReservationCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -24,23 +25,33 @@ public class Reservation implements Serializable {
     private String note;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "start_time")
     private Date startTime;
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "update_time")
     private Date updateTime;
     @TableField(value = "state_enum")
     private Integer stateEnum;
+
+    @TableField(exist = false)
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = ReservationCode.getDescription(stateEnum);
+    }
+
     private Integer count;
     @TableField(value = "account_id")
     private Integer accountId;
     @TableField(value = "commodity_id")
     private Integer commodityId;
-    @TableField(value = "seller_finished")
-    private Boolean sellerFinished;
-    @TableField(value = "")
-    private Boolean buyerFinished;
+    @TableField(value = "evaluation_buy")
+    private Double evaluationBuy;
+    @TableField(value = "evaluation_sell")
+    private Double evaluationSell;
 
 
     @TableField(exist = false)

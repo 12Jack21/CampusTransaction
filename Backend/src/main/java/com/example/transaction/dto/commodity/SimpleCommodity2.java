@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class SimpleCommodity2 extends SimpleCommodity implements Serializable {
     String description = "";
     Double expectedPrice = -1.0D;
+    Double originalPrice = -1.0D;
 
     public SimpleCommodity2(){}
 
@@ -22,6 +23,8 @@ public class SimpleCommodity2 extends SimpleCommodity implements Serializable {
         super(commodity);
         this.description = commodity.getDescription();
         this.expectedPrice = commodity.getExpectedPrice();
+        this.originalPrice = commodity.getOriginalPrice();
+
     }
 
     public String getDescription() {

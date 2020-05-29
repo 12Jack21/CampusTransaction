@@ -33,4 +33,14 @@ public class CommodityImageDAOTest {
         CommodityImage commodityImage = commodityImageDAO.selectById(1);
         System.out.println(commodityImage);
     }
+
+    @Test
+    void insert(){
+        for(int i = 29; i <=60;i++){
+            CommodityImage commodityImage = new CommodityImage();
+            commodityImage.setImageUrl(i+".jpg");
+            commodityImage.setCommodityId(i);
+            commodityImageDAO.insert(commodityImage);
+        }
+    }
 }

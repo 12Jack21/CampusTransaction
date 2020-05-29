@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.dao.CommodityDAO;
+import com.example.transaction.dao.EstimateDAO;
 import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.dto.account.LoginAccountInfo;
 import com.example.transaction.pojo.A2a;
@@ -33,6 +34,8 @@ public class AccountServiceImpl implements AccountService {
     private TokenService tokenService;
     @Autowired
     CommodityDAO commodityDAO;
+    @Autowired
+    EstimateDAO estimateDAO;
 
     @Autowired
     public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO, TokenService tokenService) {
@@ -109,6 +112,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public responseFromServer register(Account newAccout) {
         accountDAO.insert(newAccout);
+
         return responseFromServer.success();
     }
 
@@ -181,6 +185,26 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    /**
+     * 根据用户名返回账号
+     * @param accountId
+     * @return
+     */
+    @Override
+    public responseFromServer getDetailedAccount(Integer accountId){
+        AccountInfo accountInfo;
+        try{
+            Account account = accountDAO.getAccountWithEstimate(accountId);
+            account.setPassword(null);
+            accountInfo = new AccountInfo(account);
+        }catch(Exception e){
+            e.printStackTrace();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success(accountInfo);
+    }
+
+
     public responseFromServer getOthersInfo(Integer accountId1,Integer accountId2){
         responseFromServer response = getA2a(accountId1,accountId2);
         if(response.isFailure()||response.getData() == null){
@@ -189,7 +213,7 @@ public class AccountServiceImpl implements AccountService {
         Account account = ((A2a)response.getData()).getAccount2();
         if(account == null){
             /*此时没有权限查看其它用户的详细联系信息*/
-            account = accountDAO.getAccountCreditById(accountId2);
+            account = accountDAO.getAccountWithEstimate(accountId2);
         }
         if(account==null){
             return responseFromServer.error();
@@ -224,6 +248,13 @@ public class AccountServiceImpl implements AccountService {
         }
         return responseFromServer.success(a2a);
     }
+
+
+
+
+
+
+
 
     /**
      * @Description: 上传头像, 并且更新到数据库中, 返回头像图片文件名

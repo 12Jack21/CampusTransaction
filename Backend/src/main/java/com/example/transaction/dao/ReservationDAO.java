@@ -45,19 +45,34 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Results(id = "reservation-detailedCommodity-map",value = {
             @Result(property = "commodityId", column = "commodity_id"),
             /*这里用noticeId来查找commodity*/
-            @Result(property = "commodity",column = "id",javaType = Commodity.class, one = @One(
-                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityWithoutNoticeById"
+            @Result(property = "commodity",column = "commodity_id",javaType = Commodity.class, one = @One(
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityById"
             ))
     })
     @Select("select * from reservation where id = #{id}")
     Reservation selectWithDetailedCommodityById(Integer id);
 
     /*获取我收到的预约*/
-    @Select("select * from reservation r,commodity c,notice n where " +
-            "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id}")
-    IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id);
+    @Results(id = "reservation-detailedCommodity-map2",value = {
+            @Result(property = "commodity", column = "commodity_id", javaType = Commodity.class, one = @One(
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityWithoutNoticeById"
+            ))
+    })
+    @Select("select * from reservation r,commodity c,notice n  ${ew.customSqlSegment} and " +
+            "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id} order by r.update_time desc")
+    IPage<Reservation> getReservationRequestPage(Page<?> page, Integer id,@Param("ew")QueryWrapper<Reservation> queryWrapper);
 
     @Select("select count(*) from reservation where commodity_id = #{commodity_id}")
     Integer getCountByCommodityId(Integer commodityId);
+
+
+    /*获取我收到的预约*/
+    @Select("select * from reservation r,commodity c,notice n where r.state_enum in (1,2)" +
+            "r.commodity_id = c.id and c.notice_id = n.id and n.account_id = #{id} order by r.update_time desc")
+    IPage<Reservation> getSuccessReservationRequestPage(Page<?> page, Integer id);
+
+
+    @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId} and count > #{count}")
+    Integer failWaiting(Integer commodityId, Integer count);
 
 }

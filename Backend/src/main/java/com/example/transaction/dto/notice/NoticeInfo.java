@@ -2,7 +2,9 @@ package com.example.transaction.dto.notice;
 
 import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.Nums;
+import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -39,7 +41,9 @@ public class NoticeInfo {
 
     private Integer accountId;
 
+    private String conditions;
 
+    private String detailedAddress;
 
     /*发布的时间到今天的距离：一年前 一周前*/
     private String time;
@@ -59,19 +63,25 @@ public class NoticeInfo {
                 continue;
             } else {
                 for(CommodityImage image:images){
-                    this.img.add(Nums.commodityImagePath + image.getImageUrl());
+                    this.img.add(ResourcePath.commodityImageRequestPath + image.getImageUrl());
                 }
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
         this.browseCount = notice.getBrowseCount();
-        this.avatar = Nums.avatarPath + notice.getUser().getAvatar();
+        if(PathUtil.isPath(notice.getUser().getAvatar())){
+            this.avatar = notice.getUser().getAvatar();
+        }else{
+
+            this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
+        }
         this.userName = notice.getUser().getUsername();
         this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }
         this.description = notice.getDescription();
+        this.conditions = notice.getConditions();
         Date now = new Date();
         Long millis = notice.getCreateTime().getTime();
         Long deviance = (new Date()).getTime() - notice.getCreateTime().getTime();

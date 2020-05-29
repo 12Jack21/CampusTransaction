@@ -25,6 +25,8 @@ web:
   avatar-path: E:/CampusTransactionResources/avatars
 
 spring:
+  jackson:
+    time-zone: GMT+8
   # redis配置
   redis:
     database: 0

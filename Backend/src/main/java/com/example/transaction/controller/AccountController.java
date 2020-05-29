@@ -1,10 +1,13 @@
 package com.example.transaction.controller;
 
+import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Estimate;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
 import com.example.transaction.service.impl.AccountVerify;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -128,7 +131,7 @@ public class AccountController {
 
     /*todo 上传图片*/
     //上传图片可归入个人信息修改，用户账号刚创建时初始化头像
-    @PostMapping("/{accountId}/avatar/upload")
+    @PostMapping("/{accountId}/avatar")
     public responseFromServer uploadAvatar(@PathVariable(required = true) Integer accountId, @RequestParam(required = true) MultipartFile avatar, HttpServletRequest request) {
         return accountService.uploadAvatar(avatar, accountId);
     }
@@ -190,7 +193,30 @@ public class AccountController {
         /*验证当前用户id与更新信息中id是否相同
          * 避免用户非法修改其他用户信息*/
         if (accountVerify.verify(account, request)) {
+            account.setPassword(null);
             return accountService.updateAccount(account);
+        }
+        return responseFromServer.error("非法操作");
+    }
+
+
+    @ApiOperation(value = "更新密码")
+    @ApiImplicitParam(name = "account", value = "用户实体", paramType = "Account", dataType = "Account")
+    @PutMapping("/{accountId}/password")
+    public responseFromServer updatePassword(@RequestBody Account account,
+                                         @PathVariable Integer accountId,
+                                         HttpServletRequest request) {
+        /*验证当前用户id与更新信息中id是否相同
+         * 避免用户非法修改其他用户信息*/
+        if (accountVerify.verify(account, request)) {
+            String password = account.getPassword();
+            if(StringUtil.isNullOrEmpty(password)){
+                return responseFromServer.error();
+            }else{
+                Account newAccount = new Account(accountId);
+                newAccount.setPassword(password);
+                return accountService.updateAccount(newAccount);
+            }
         }
         return responseFromServer.error("非法操作");
     }
@@ -230,23 +256,42 @@ public class AccountController {
 
     @ApiOperation(value = "获取账号信息，在a2a中验证")
     @GetMapping("/other/{otherId}")
-    public responseFromServer getOthersAccountInfo(@PathVariable Integer otherId, HttpServletRequest request) {
+    public responseFromServer getOthersAccountInfo(@PathVariable Integer otherId,
+                                                   Integer id,
+                                                   HttpServletRequest request) {
         Account account = new Account(otherId);
         Account account1 = accountVerify.verifyWithReturn(account, request);
         if (account1 == null) {
             return responseFromServer.error();
         }
-        if (account1.getId().intValue() != account.getId().intValue()) {
-            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
+        if (/*todo token*/(id!=null && otherId !=null)||account1.getId().intValue() != account.getId().intValue()) {
+            responseFromServer response = accountService.getA2a(id, otherId);
+            /**
+             * ZZH
+             * TODO : token
+             */
+            //            responseFromServer response = accountService.getA2a(account1.getId(),account.getId());
             if (response.isSuccess()) {
-                account = (Account) response.getData();
                 return responseFromServer.success(account);
             } else {
-                return responseFromServer.error();
+                response = accountService.getDetailedAccount(otherId);
+                if(response.isFailure()) {
+                    return responseFromServer.error();
+                }
+                AccountInfo accountInfo = (AccountInfo) response.getData();
+                if(!id.equals(otherId)){
+                    accountInfo.setWeChat("");
+                    accountInfo.setQq("");
+                }
+                return responseFromServer.success(accountInfo);
             }
         }else{
             /*此时验证返回的是自己的账户信息*/
-            return responseFromServer.success(account1);
+            responseFromServer response = accountService.getDetailedAccount(otherId);
+            if(response.isFailure()){
+                return responseFromServer.error();
+            }
+            return response;
         }
     }
 

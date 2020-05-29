@@ -24,6 +24,7 @@ public class Token implements Serializable {
 
     //@JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @TableField(value = "create_time")
     private Date createTime;
     @TableField(value = "token_str")

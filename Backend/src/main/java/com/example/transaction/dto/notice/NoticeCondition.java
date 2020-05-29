@@ -1,5 +1,6 @@
 package com.example.transaction.dto.notice;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -14,6 +15,7 @@ import java.util.Date;
 @Data
 public class NoticeCondition {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date endTime;
     Integer pageIndex;
     //0-全部 1-出售的 2-需求

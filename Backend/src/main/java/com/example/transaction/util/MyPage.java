@@ -1,6 +1,7 @@
 package com.example.transaction.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -39,6 +40,7 @@ public class MyPage<T> {
      * 查询的截止时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     public Date endTime = null;
 
     public MyPage(IPage<T> page) {

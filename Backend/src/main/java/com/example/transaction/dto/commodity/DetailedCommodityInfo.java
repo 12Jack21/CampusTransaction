@@ -6,6 +6,8 @@ import com.example.transaction.pojo.Comment;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.Notice;
 import com.example.transaction.pojo.base.BaseCommodity;
+import com.example.transaction.util.code.NoticeCode;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -26,9 +28,16 @@ public class DetailedCommodityInfo {
     SimpleAccount account;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date expiredTime;
-    String condition = "";
+    String conditions = "";
     Integer stateEnum = -1;
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+    }
+
     /**
      * 通告的地址
      */
@@ -49,12 +58,13 @@ public class DetailedCommodityInfo {
             if (commodity.getNotice() != null) {
                 Notice notice = commodity.getNotice();
                 this.expiredTime = notice.getEndTime();
-                this.condition = notice.getCondition();
+                this.conditions = notice.getConditions();
                 this.address = notice.getAddress();
-                this.detailedAddress = notice.getDetailedAddress();
-                this.stateEnum = notice.getStateEnum();
+                this.detailedAddress = notice.getDetailedAddress()==null?"":notice.getDetailedAddress();
+                this.setStateEnum(notice.getStateEnum());
                 this.account = new SimpleAccount(notice.getUser());
             }
+            commodity.setNotice(null);
         }
     }
 

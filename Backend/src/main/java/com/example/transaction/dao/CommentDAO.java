@@ -20,6 +20,7 @@ public interface CommentDAO extends BaseMapper<Comment> {
     @Results(id="commentInfo", value = {
             @Result(property = "fromId", column = "from_id"),
             @Result(property = "toId", column = "to_id"),
+            @Result(property = "date", column = "time"),
             @Result(property = "sender", column = "from_id", javaType = Account.class, one = @One(
                     select = "com.example.transaction.dao.AccountDAO.getSimpleAccountById"
             )),
@@ -30,7 +31,6 @@ public interface CommentDAO extends BaseMapper<Comment> {
     @Select("select * from comment ${ew.customSqlSegment}")
     IPage<Comment> getCommentWithAccountInfo(Page<?> page, @Param("ew") QueryWrapper<Comment> wrapper);
     /*获取分页*/
-
 
     /*评论不可删除*/
 }

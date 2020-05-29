@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.account.SimpleAccount;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -23,14 +24,17 @@ public class Comment implements Serializable {
     private Integer id;
     private Boolean type;
     private String content;
+
+    @TableField(value = "time")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date date;
 
     @TableField(value = "from_id")
     private Integer fromId;
 
     @TableField(value = "to_id")
-    private Integer toId;
+    private Integer toId = -1;
 
     @TableField(value = "commodity_id")
     private Integer commodityId;

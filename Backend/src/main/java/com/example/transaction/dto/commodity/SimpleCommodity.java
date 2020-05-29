@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.transaction.pojo.Commodity;
+import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -21,8 +22,7 @@ public class SimpleCommodity implements Serializable {
     protected Integer id=-1;
     protected String name="";
     protected String img="";
-
-
+    protected Integer count = -1;
 
     public SimpleCommodity() {
     }
@@ -30,11 +30,11 @@ public class SimpleCommodity implements Serializable {
     public SimpleCommodity(Commodity commodity) {
         this.id = commodity.getId();
         this.name = commodity.getName();
+        this.count = commodity.getCount();
         if (commodity.getCommodityImages() == null || commodity.getCommodityImages().size() == 0) {
-            this.img = null;
+            this.img = "";
         } else {
-            this.img = commodity.getCommodityImages().get(0).getImageUrl();
+            this.img = ResourcePath.commodityImageRequestPath + commodity.getCommodityImages().get(0).getImageUrl();
         }
-
     }
 }

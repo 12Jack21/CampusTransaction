@@ -2,7 +2,8 @@ package com.example.transaction.dto.commodity;
 
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.Commodity;
-import com.example.transaction.util.code.Nums;
+import com.example.transaction.util.PathUtil;
+import com.example.transaction.util.code.ResourcePath;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
 
@@ -39,7 +40,7 @@ public class CommodityInfo {
             this.type = commodity.getType();
             this.description = commodity.getDescription();
             if (commodity.getCommodityImages() != null && !commodity.getCommodityImages().isEmpty()) {
-                this.img = Nums.commodityImagePath + commodity.getCommodityImages().get(0).getImageUrl();
+                this.img = ResourcePath.commodityImageRequestPath + commodity.getCommodityImages().get(0).getImageUrl();
             }
 //            if (!StringUtil.isNullOrEmpty(noticeInfo.getImage())) {
 //                this.img = Nums.commodityImagePath + noticeInfo.getImage();
@@ -55,7 +56,9 @@ public class CommodityInfo {
                 this.accountName = noticeInfo.getUserName();
                 this.accId = noticeInfo.getAccountId();
                 if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
-                    this.avatar = noticeInfo.getAvatar();
+
+                    this.avatar =  (PathUtil.isPath(noticeInfo.getAvatar())?"":ResourcePath.avatarRequestPath)+ noticeInfo.getAvatar();
+
                 }
             }
 

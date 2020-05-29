@@ -4,6 +4,7 @@ import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Notify;
+import com.example.transaction.util.code.ResourcePath;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,7 +31,7 @@ public class SimpleNotify<T> {
     Integer sender = -1;
     String avatar = "";
     String accountName = "";
-    Boolean accountGender = false;
+    Integer accountGender = 0;
     /**
      * notify属性
      */
@@ -38,6 +39,7 @@ public class SimpleNotify<T> {
     Boolean isRead = false;
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
 
     Integer action = -1;
@@ -62,7 +64,7 @@ public class SimpleNotify<T> {
         this.targetId = notify.getTarget();
         this.targetType = notify.getTargetType();
 
-        this.avatar = simpleAccount.getAvatar();
+        this.avatar = ResourcePath.avatarRequestPath + simpleAccount.getAvatar();
         this.accountName = simpleAccount.getUsername();
         this.accountGender = simpleAccount.getGender();
         this.receiverId = accountNotify.getAccountId();

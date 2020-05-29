@@ -29,7 +29,4 @@ public interface A2aDAO extends BaseMapper<A2a> {
     @Select("select * from a2a where account_id_1 = #{accountId1} and account_id_2 = #{accountId2}")
     A2a getA2a(Integer accountId1, Integer accountId2);
 
-
-
-
 }

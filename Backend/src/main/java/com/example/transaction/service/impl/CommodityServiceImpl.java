@@ -116,7 +116,7 @@ public class CommodityServiceImpl implements CommodityService {
 
 
         /*处理地址*/
-        if (condition.getUserAddress() != null && !condition.getUserAddress().equals("全校")) {
+        if (condition.getUserAddress() != null && condition.getUserAddress().length() != 0 && !condition.getUserAddress().equals("全校")) {
             int addressCode;
             String address = condition.getUserAddress();
             try {
@@ -134,7 +134,7 @@ public class CommodityServiceImpl implements CommodityService {
         if (condition.getOutdated() != null && condition.getOutdated() > 0) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            calendar.add(Calendar.DATE,condition.getOutdated());
+            calendar.add(Calendar.DATE, condition.getOutdated());
             timestamp = new Timestamp(calendar.getTimeInMillis());
             queryWrapper.le("n.end_time", timestamp);
         }
@@ -205,9 +205,9 @@ public class CommodityServiceImpl implements CommodityService {
                 CommodityInfo commodityInfo = new CommodityInfo(commodity, noticeInfo);
                 /*查询是否已有人预约*/
                 Integer count = reservationDAO.getCountByCommodityId(commodity.getId());
-                if(count!=null && count >=0){
-                    commodityInfo.setState(count.intValue()+"人预约");
-                }else{
+                if (count != null && count >= 0) {
+                    commodityInfo.setState(count.intValue() + "人预约");
+                } else {
                     commodityInfo.setState("发布中");
                 }
                 commodityInfoList.add(commodityInfo);
@@ -226,7 +226,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     }
 
-    private responseFromServer getMyBoughtCommodities(Integer accountId,Pagination pagination){
+    private responseFromServer getMyBoughtCommodities(Integer accountId, Pagination pagination) {
         /**
          * 返回分页
          */
@@ -234,23 +234,40 @@ public class CommodityServiceImpl implements CommodityService {
          * ZZH
          * TODO : 获取我购买的商品
          */
-        return null;
+
+        return responseFromServer.error();
     }
 
-    private responseFromServer getMyPublishedCommodities(Integer accountId,Pagination pagination){
+    @Override
+    public responseFromServer getMyPublishedCommodities(Integer accountId, Pagination pagination) {
         /**
          * 返回分页
          */
-        return getOthersCommodity(pagination,accountId);
+        QueryWrapper queryWrapper = new QueryWrapper();
+        Page<Commodity> page;
+        if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
+            page = new Page<>(1, Nums.pageSize);
+        } else {
+            page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
+        }
+        queryWrapper.eq("n.account_id", accountId);
+        IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
+        MyPage myPage = new MyPage<Commodity>(resultPage);
+        List<CommodityInfo> commodityInfoList = new ArrayList<>();
+        for (Commodity commodity : resultPage.getRecords()) {
+            commodityInfoList.add(new CommodityInfo(commodity, null));
+        }
+        myPage.setPageList(commodityInfoList);
+        return responseFromServer.success(myPage);
     }
 
 
     @Override
-    public responseFromServer getMyCommodities(MyCommodityCondition condition){
+    public responseFromServer getMyCommodities(MyCommodityCondition condition) {
         Pagination pagination = new Pagination();
         pagination.setPageIndex(condition.getPageIndex());
         pagination.setEndTime(condition.getEndTime());
-        switch(condition.getType()){
+        switch (condition.getType()) {
             case 0:
                 /**
                  * 我发布的
@@ -278,7 +295,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @Date: 2020/5/24 21:46
      */
     @Override
-    public responseFromServer getOthersCommodity(Pagination pagination, Integer accoutnId) {
+    public responseFromServer getOthersCommodity(Pagination pagination, Integer accountId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         Page<Commodity> page;
         if (pagination.getPageIndex() == null || pagination.getPageIndex() <= 0) {
@@ -286,8 +303,11 @@ public class CommodityServiceImpl implements CommodityService {
         } else {
             page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
         }
-        queryWrapper.le("n.end_time", pagination.getEndTime());
-        queryWrapper.eq("n.account_id", accoutnId);
+        if(pagination.getEndTime()==null){
+            pagination.setEndTime(new Date());
+        }
+        queryWrapper.ge("n.end_time", pagination.getEndTime());
+        queryWrapper.eq("n.account_id", accountId);
         IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
         MyPage myPage = new MyPage<Commodity>(resultPage);
         List<CommodityInfo> commodityInfoList = new ArrayList<>();
@@ -536,25 +556,14 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Transactional
     public boolean updateCommodityInfo(Commodity commodity) {
-        for (String url : commodity.getImages()) {
-            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
+        if (commodity.getImages() != null) {
+            for (String url : commodity.getImages()) {
+                if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return false;
+                }
             }
         }
-        /*已经取消了多类型标签的功能*/
-//        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
-//            return true;
-//        }
-//
-//        List<Type> typeList = commodity.getTypes();
-//        for (Type type : typeList) {
-//            type.setCommodityId(commodity.getId());
-//            if (typeDAO.updateById(type) != 1) {
-//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//                return false;
-//            }
-//        }
         return true;
     }
 
@@ -602,7 +611,7 @@ public class CommodityServiceImpl implements CommodityService {
         List<CommodityImage> commodityImageList = commodity.getCommodityImages();
         for (CommodityImage commodityImage : commodityImageList) {
             String path = commodityImage.getImageUrl();
-            File file = new File(ResourcePath.imagePath + path);
+            File file = new File(ResourcePath.goodsFilePath + path);
             file.delete();
         }
     }
@@ -737,6 +746,7 @@ public class CommodityServiceImpl implements CommodityService {
                 TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
                 return responseFromServer.error(0, "保存文件异常");
             }
+            fileNames.add(filename);
         }
         return responseFromServer.success(fileNames);
     }
