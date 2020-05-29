@@ -155,8 +155,9 @@ export default {
 			this.$api
 				.getOtherAccount(this.accId, this.userId)
 				.then(({ data }) => {
-					console.log('其他账户的信息', data)
-					this.account = data
+					console.log('其他账户的信息', data.data)
+					data = data.data
+					this.account = Object.assign({},this.account,data)
 					this.tip(1,'用户信息获取成功')
 				})
 				.catch(() => this.tip(1,"网络异常"))
@@ -168,6 +169,7 @@ export default {
 			this.$api
 				.getCommoditiesByOtherAcc(this.accId)
 				.then(({ data }) => {
+					data = data.data
 					this.pageIndex = data.pageIndex
 					if(data.pageIndex - 1 >= data.pageCount){
 						this.finish = true

@@ -390,7 +390,7 @@ export default {
 				.updateCommodity(this.commodity.id, body)
 				.then(({ data }) => {
 					if (data.success) {
-						this.commodity = Object.assign(this.commodity, body)
+						this.commodity = Object.assign({},this.commodity, body)
 						this.update(0)
 					} else this.update(1, '更新失败')
 				})
@@ -497,7 +497,7 @@ export default {
 				.getReservationsByCommodity(com_id)
 				.then(({ data }) => {
 					console.log('预约列表数据', data)
-					this.reservations = data
+					this.reservations = Object.assign({},this.reservations,data.data)
 				})
 				.catch(() => {
 					console.log('获取预约列表失败')
@@ -537,14 +537,17 @@ export default {
 			this.$api
 				.getCommodity(id)
 				.then(({ data }) => {
-					console.log('commodity detail', data)
-					this.commodity = data.commodity
+					console.log('commodity detail', data.data)
+					data = data.data
+					this.commodity = Object.assign({},this.commodity,data.commodity)
+					console.log('this.comments responsive:',this.comments);
+					console.log('data comments:',data.comments);
 					this.expiredTime = data.expiredTime
 					this.condition = data.condition
 					this.detailedAddress = data.detailedAddress
 					this.stateEnum = data.stateEnum
-					this.account = data.account
-					this.comments = data.comments
+					this.account = Object.assign({},this.account,data.account)
+					this.comments = [...data.comments]
 				})
 				.catch(() => {
 					console.log('请求商品数据失败')

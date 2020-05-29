@@ -283,7 +283,9 @@ export default {
 			this.$api
 				.getReservation(id)
 				.then(({ data }) => {
-					this.reservation = data
+					console.log('reservation data from request:',data.data);
+					data = data.data
+					this.reservation = Object.assign({},this.reservation,data)
 					// 根据状态判断 界面的展示值
 					let state = data.stateEnum // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
 					this.initBasic(state)

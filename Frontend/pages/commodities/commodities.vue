@@ -143,7 +143,7 @@ export default {
 				.getCommoditiesByAcc(this.userId, pagination)
 				.then(({ data }) => {
 					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					curCommodities.list.push(...data.list)
+					curCommodities.list.push(...data.data.list)
 					// 取完了数据
 					if (data.pageIndex - 1 >= data.pageCount) curCommodities.finish = true
 				})

@@ -366,8 +366,8 @@ export default {
 		getMyAccount(){
 			this.$api.getMyAccount(this.userId)
 				.then(({data})=>{
-					console.log('我的账户',data);
-					this.account = data
+					console.log('我的账户',data.data);
+					this.account = Object.assign({},this.account,data.data)
 				})
 				.catch(()=>{
 					console.log('获取我的账户信息失败');
@@ -381,7 +381,7 @@ export default {
 			// 清空 vuex中数据
 			this.$store.dispatch('logout')
 			uni.reLaunch({
-				url:'../../pages/login/login?type=logout'
+				url:'../../pages/login/login?type=3'
 			})
 		},
 		dataTap(tag){
