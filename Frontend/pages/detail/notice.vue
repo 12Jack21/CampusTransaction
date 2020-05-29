@@ -8,11 +8,11 @@
 		<view class="bg-white margin-top padding radius zaiui-trends">
 			<view class="cu-list menu-avatar">
 				<view class="cu-item">
-						<view class="cu-avatar round" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)':('url('+ account.avatar+')') }" 
+						<view class="cu-avatar round" :style="{ backgroundImage:notice.avatar.length===0? 'url(/static/images/avatar/default.png)':('url('+ notice.avatar+')') }" 
 						/>
-					<view class="content" @tap="userTap('userTap', account.id)">
+					<view class="content" @tap="userTap('userTap', notice.accId)">
 						<view class="text-black">
-							<view class="text-cut">{{account.username}}</view>
+							<view class="text-cut">{{notice.username}}</view>
 						</view>
 						<view class="text-sm flex">
 							<text>{{notice.createTime}}</text>
@@ -54,17 +54,17 @@
 			<!--商品列表-->
 			<view class="bg-white zaiui-goods-list-view" >						
 				<noticeGoodsList
-					:list_data="commodities"
+					:list_data="notice.comInfoList"
 					@listTap="listTap"
 				/>
 			</view>	
 		</checkbox-group>
 		
 		<!--占位底部距离-->
-		<view class="height-space" v-if="account.id===userId" />
+		<view class="height-space" v-if="notice.accId===userId" />
 		
 		<!--底部操作-->
-		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="account.id===userId">
+		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="notice.accId===userId">
 				<view class= "operation">				
 					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.stateEnum=='CANCELLED'">
 						关闭通告
@@ -103,19 +103,17 @@
 					title:'通告标题',
 					description:'这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述',
 					createTime:'3小时前',
-					expiredTime:' 2020-10-08 10:19',
+					expiredTime:'2020-10-08 10:19',
 					condition: 'tonggao条件',
 					address:'信息学部',
 					detailedAddress:'信息学部大食堂',
 					browseCount: 30,
-					stateEnum:'CANCELLED' // CANCELLED PUBLISHED
-				},
-				account:{
-					id: 1,
-					username:'ZaiZ',
-					avatar:''
-				},
-				commodities:[]			
+					stateEnum:'CANCELLED',// CANCELLED PUBLISHED
+					comInfoList:[] ,//物品列表
+					accId:1,
+					avatar:'用户的头像',
+					username:"小罗"
+				}
 			}
 		},
 		computed:{
@@ -142,7 +140,7 @@
 		},
 		onLoad(params) {			
 			// virtual data
-			this.commodities = _home_data.goodsList()
+			this.notice.comInfoList = _home_data.goodsList()
 			// request
 			this.getNotice(params.id)
 		},	
@@ -187,7 +185,10 @@
 			getNotice(id){
 				this.$api.getNotice(id)
 					.then(({data})=>{
-						this.notice = data.data
+						console.log('notice get data',data.data);
+						this.notice = Object.assign({},this.notice,data.data)
+						console.log('backend notice',this.notice);
+						// this.notice = data.data
 					})
 					.catch(()=>{
 						console.log('获取通告详情失败');

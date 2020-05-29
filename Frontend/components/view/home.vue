@@ -64,7 +64,7 @@
 					</view>
 				</view>
 			</view>
-			<!-- end -->
+			<!-- end --> 
 			
 			<!-- Loading Text -->
 			<uni-load-more :status="loadStatus"></uni-load-more>
@@ -125,7 +125,12 @@ export default {
 			// showing goods data
 			goodsData: [],
 			// four tabs' goods list: new, near, outdated, cheap
-			storeGoods:[],
+			storeGoods:[ // 为了让 Vue初始化时把这些 property 加入响应式处理
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+				{pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]},
+			],
 			modalShow:true
 		}
 	},
@@ -170,9 +175,7 @@ export default {
 		//商品列表数据
 		this.goodsData = _home_data.goodsList()
 		
-		// 存取分页查询所需的字段
-		for(let i = 0;i < 4;i++) 
-			this.storeGoods.push({pageIndex:1,pageSize:10,endTime:'',finish:false,data:[]})
+		
 		this.storeGoods[0].endTime = new Date().format('yyyy-MM-dd hh:mm')
 		this.getCommodityList()
 		
@@ -216,6 +219,8 @@ export default {
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
+				this.storeGoods[current].pageIndex = 1
+				this.storeGoods[current].endTime = new Date().format('yyyy-MM-dd hh:mm')
 				this.storeGoods[current].data = [] //清空来方便 push
 				this.storeGoods[current].finish = false
 				this.goodsTabData.tabCur = current
@@ -263,12 +268,13 @@ export default {
 			// request commodity list data with pagination
 			this.$api.getCommodities(tab, pagination)
 				.then(res=>{
-					console.log('home resp', res.data.data);
 					let resp = res.data.data
-					self.storeGoods[tab].pageIndex = resp.pageIndex
-					self.storeGoods[tab].pageSize = resp.pageSize
-					self.storeGoods[tab].data.push(...(resp.pageList))
-					self.goodsData = self.storeGoods[tab].data
+					console.log('get commodity list, home resp=', res.data.data);
+					this.storeGoods[tab].pageIndex = resp.pageIndex
+					this.storeGoods[tab].pageSize = resp.pageSize
+					
+					this.storeGoods[tab].data.push(...resp.pageList)
+					this.goodsData = [...this.storeGoods[tab].data]
 					
 					// 取完了数据
 					if(resp.pageIndex - 1 >= resp.pageCount) {

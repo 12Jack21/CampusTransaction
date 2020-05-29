@@ -25,7 +25,7 @@
 				</view>
 
 				<view class="notice-title">
-					<text>Title-{{ item.title }}</text>
+					<text>{{ item.title }}</text>
 				</view>
 
 				<!--内容-->
