@@ -14,10 +14,7 @@ import com.example.transaction.service.CommodityService;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.service.ReservationService;
 import com.example.transaction.util.MyPage;
-import com.example.transaction.util.code.Nums;
-import com.example.transaction.util.code.NotifyActionCode;
-import com.example.transaction.util.code.NotifyTargetCode;
-import com.example.transaction.util.code.ReservationCode;
+import com.example.transaction.util.code.*;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -204,6 +201,7 @@ public class ReservationServiceImpl implements ReservationService {
         for (Reservation reservation : reservations) {
             SimpleReservation simpleReservation = new SimpleReservation(reservation);
             SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
+            simpleAccount.setAvatar(ResourcePath.avatarRequestPath + simpleAccount.getAvatar());
             Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
             simpleReservation.setAccount(simpleAccount);
             /*计算notice 的价格*/
@@ -250,7 +248,7 @@ public class ReservationServiceImpl implements ReservationService {
             SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
             detailedReservation.setBuyerId(simpleAccount.getId());
             detailedReservation.setBuyerName(simpleAccount.getUsername());
-            detailedReservation.setBuyerAvatar(simpleAccount.getAvatar());
+            detailedReservation.setBuyerAvatar(ResourcePath.avatarRequestPath + simpleAccount.getAvatar());
             detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(simpleAccount.getId()).getCredit());
             /**
              * 设置卖家信息
@@ -261,7 +259,7 @@ public class ReservationServiceImpl implements ReservationService {
             detailedReservation.setDetailedAddress(notice.getDetailedAddress());
             detailedReservation.setAccountId(simpleAccount.getId());
             detailedReservation.setAccountName(simpleAccount.getUsername());
-            detailedReservation.setAvatar(simpleAccount.getAvatar());
+            detailedReservation.setAvatar(ResourcePath.avatarRequestPath + simpleAccount.getAvatar());
             detailedReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
             detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(notice.getAccountId()).getCredit());
         } catch (Exception e) {

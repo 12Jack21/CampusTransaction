@@ -1,6 +1,7 @@
 package com.example.transaction.controller;
 
 import com.example.transaction.pojo.Account;
+import com.example.transaction.pojo.Estimate;
 import com.example.transaction.service.AccountService;
 import com.example.transaction.util.jsonParamResolver.handler.RequestJson;
 import com.example.transaction.util.responseFromServer;
@@ -264,13 +265,18 @@ public class AccountController {
             responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
             if (response.isSuccess()) {
                 account = (Account) response.getData();
+
                 return responseFromServer.success(account);
             } else {
                 return responseFromServer.error();
             }
         }else{
             /*此时验证返回的是自己的账户信息*/
-            return responseFromServer.success(account1);
+            responseFromServer response = accountService.getDetailedAccount(otherId);
+            if(response.isFailure()){
+                return responseFromServer.error();
+            }
+            return response;
         }
     }
 

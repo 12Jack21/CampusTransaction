@@ -29,7 +29,7 @@ public class DetailedNotice {
     /*标题*/
     private String title;
 
-    private String conditions;
+    private String conditions = "";
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @DateTimeFormat(pattern = "yyyy-Mm-dd HH:mm")
@@ -41,7 +41,12 @@ public class DetailedNotice {
     private String userName = "";
     private Double rate = 1.0D;
     private String avatar = "";
-    private String stateEnum = "";
+    private Integer stateEnum;
+    private String stateEnumStr = "";
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+    }
     private Integer browseCount = -1;
     private Integer accountId = -1;
     List<SimpleCommodity2> commodityList;
@@ -52,6 +57,7 @@ public class DetailedNotice {
     public DetailedNotice(Notice notice) {
         this.id = notice.getId();
         this.address = notice.getAddress();
+        this.detailedAddress = notice.getDetailedAddress();
         this.commodityList = new ArrayList<>();
         this.title = notice.getTitle();
         for (int i = 0; i < notice.getComList().size(); i++) {
@@ -68,5 +74,6 @@ public class DetailedNotice {
         this.description = notice.getDescription();
         this.conditions = notice.getConditions();
         this.expiredTime = notice.getEndTime();
+        this.setStateEnum(notice.getStateEnum());
     }
 }

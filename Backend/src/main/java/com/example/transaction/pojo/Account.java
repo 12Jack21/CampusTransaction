@@ -21,7 +21,7 @@ public class Account  implements Serializable {
     private Integer id = -1;
     private String username;
     private String password;
-    private Boolean gender;
+    private Integer gender;
     private String address;
     private String institute;
     private String mail;

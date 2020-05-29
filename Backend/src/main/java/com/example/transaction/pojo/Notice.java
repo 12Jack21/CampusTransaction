@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.example.transaction.dto.commodity.CommodityInfo;
+import com.example.transaction.util.code.NoticeCode;
+import com.example.transaction.util.code.ReservationCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
@@ -36,6 +38,13 @@ public class Notice implements Serializable {
 
     @TableField(value = "state_enum")
     private Integer stateEnum;
+    @TableField(exist = false)
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+    }
+
 
     //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -77,6 +86,6 @@ public class Notice implements Serializable {
         conditions = StringUtil.isNullOrEmpty(conditions) ? null : conditions;
         description = StringUtil.isNullOrEmpty(description) ? null : description;
         accountId = accountId == null || accountId < 0 ? null : accountId;
-        stateEnum = stateEnum == null || stateEnum <= 1 && stateEnum >= -2 ? stateEnum : null;
+        this.setStateEnum(stateEnum == null || stateEnum <= 1 && stateEnum >= -2 ? stateEnum : null);
     }
 }

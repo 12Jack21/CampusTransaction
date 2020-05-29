@@ -3,6 +3,7 @@ package com.example.transaction.pojo;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.example.transaction.util.code.ReservationCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -34,6 +35,14 @@ public class Reservation implements Serializable {
     private Date updateTime;
     @TableField(value = "state_enum")
     private Integer stateEnum;
+
+    @TableField(exist = false)
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = ReservationCode.getDescription(stateEnum);
+    }
+
     private Integer count;
     @TableField(value = "account_id")
     private Integer accountId;

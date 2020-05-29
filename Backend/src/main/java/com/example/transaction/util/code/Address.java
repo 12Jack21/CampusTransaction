@@ -8,6 +8,10 @@ public enum Address {
 
     private final int code;
     private final String desc;
+    
+    public String getDescription(int code){
+        return values()[code].toString();
+    }
 
 
     Address(int code, String desc) {

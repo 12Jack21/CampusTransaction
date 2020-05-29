@@ -134,7 +134,7 @@ public class CommodityServiceImpl implements CommodityService {
         if (condition.getOutdated() != null && condition.getOutdated() > 0) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
-            calendar.add(Calendar.DATE,condition.getOutdated());
+            calendar.add(Calendar.DATE, condition.getOutdated());
             timestamp = new Timestamp(calendar.getTimeInMillis());
             queryWrapper.le("n.end_time", timestamp);
         }
@@ -205,9 +205,9 @@ public class CommodityServiceImpl implements CommodityService {
                 CommodityInfo commodityInfo = new CommodityInfo(commodity, noticeInfo);
                 /*查询是否已有人预约*/
                 Integer count = reservationDAO.getCountByCommodityId(commodity.getId());
-                if(count!=null && count >=0){
-                    commodityInfo.setState(count.intValue()+"人预约");
-                }else{
+                if (count != null && count >= 0) {
+                    commodityInfo.setState(count.intValue() + "人预约");
+                } else {
                     commodityInfo.setState("发布中");
                 }
                 commodityInfoList.add(commodityInfo);
@@ -226,7 +226,7 @@ public class CommodityServiceImpl implements CommodityService {
 
     }
 
-    private responseFromServer getMyBoughtCommodities(Integer accountId,Pagination pagination){
+    private responseFromServer getMyBoughtCommodities(Integer accountId, Pagination pagination) {
         /**
          * 返回分页
          */
@@ -239,7 +239,7 @@ public class CommodityServiceImpl implements CommodityService {
     }
 
     @Override
-    public responseFromServer getMyPublishedCommodities(Integer accountId, Pagination pagination){
+    public responseFromServer getMyPublishedCommodities(Integer accountId, Pagination pagination) {
         /**
          * 返回分页
          */
@@ -263,11 +263,11 @@ public class CommodityServiceImpl implements CommodityService {
 
 
     @Override
-    public responseFromServer getMyCommodities(MyCommodityCondition condition){
+    public responseFromServer getMyCommodities(MyCommodityCondition condition) {
         Pagination pagination = new Pagination();
         pagination.setPageIndex(condition.getPageIndex());
         pagination.setEndTime(condition.getEndTime());
-        switch(condition.getType()){
+        switch (condition.getType()) {
             case 0:
                 /**
                  * 我发布的
@@ -303,7 +303,10 @@ public class CommodityServiceImpl implements CommodityService {
         } else {
             page = new Page<>(pagination.getPageIndex(), Nums.pageSize);
         }
-        queryWrapper.le("n.end_time", pagination.getEndTime());
+        if(pagination.getEndTime()==null){
+            pagination.setEndTime(new Date());
+        }
+        queryWrapper.ge("n.end_time", pagination.getEndTime());
         queryWrapper.eq("n.account_id", accountId);
         IPage<Commodity> resultPage = commodityDAO.search(page, queryWrapper);
         MyPage myPage = new MyPage<Commodity>(resultPage);
@@ -553,25 +556,14 @@ public class CommodityServiceImpl implements CommodityService {
      */
     @Transactional
     public boolean updateCommodityInfo(Commodity commodity) {
-        for (String url : commodity.getImages()) {
-            if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
-                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-                return false;
+        if (commodity.getImages() != null) {
+            for (String url : commodity.getImages()) {
+                if (validateCommodityImageUrl(commodity.getId(), url).isFailure()) {
+                    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+                    return false;
+                }
             }
         }
-        /*已经取消了多类型标签的功能*/
-//        if (commodity.getTypes() == null || commodity.getTypes().size() == 0) {
-//            return true;
-//        }
-//
-//        List<Type> typeList = commodity.getTypes();
-//        for (Type type : typeList) {
-//            type.setCommodityId(commodity.getId());
-//            if (typeDAO.updateById(type) != 1) {
-//                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-//                return false;
-//            }
-//        }
         return true;
     }
 

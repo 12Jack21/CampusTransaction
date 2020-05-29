@@ -31,16 +31,16 @@ public class Commodity extends BaseCommodity implements Serializable {
     }
 
     public void clear(){
-        if(description == "") {
+        if(description != null && description == "") {
             description = null;
         }
-        if (expectedPrice <= 0) {
+        if (expectedPrice!=null && expectedPrice <= 0) {
             expectedPrice = null;
         }
-        if(type == ""){
+        if(type != null && type == ""){
             type = null;
         }
-        if(count<0){
+        if(count != null && count<0){
             count = null;
         }
     }

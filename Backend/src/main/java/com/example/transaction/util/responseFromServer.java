@@ -15,16 +15,8 @@ public class responseFromServer<T> implements Serializable {
 
     private int status;//0 成功 1 失败 10 需要登录
     private String msg;
-    private Boolean success;
+    private boolean success;
     private T data;
-    /*
-        SUCCESS(0,"SUCCESS"),
-        ERROR(1,"ERROR"),
-        ILLEGAL_ARGUMENT(2,"ILLEGAL_ARGUMENT"),
-        NEED_LOGIN(10,"NEED_LOGIN"),
-        SELLER_NEED_LOGIN(11,"NEED_LOGIN"),
-        Exception(-1,"Exception");
-    * */
 
     private responseFromServer(int status){
         this.status = status;
@@ -41,7 +33,6 @@ public class responseFromServer<T> implements Serializable {
         this.success = status == 0;
         this.msg = msg;
         this.data = data;
-
     }
 
     private responseFromServer(int status, String msg){
@@ -50,7 +41,7 @@ public class responseFromServer<T> implements Serializable {
         this.msg = msg;
     }
 
-    @JsonIgnore
+
     //使之不在json序列化结果当中
     public boolean isSuccess(){
         return this.status == ResponseCode.SUCCESS.getCode();
@@ -70,9 +61,10 @@ public class responseFromServer<T> implements Serializable {
     public String getMsg(){
         return msg;
     }
-    public Boolean getSuccess(){
-        return success;
+    public boolean getSuccess(){
+        return this.success;
     }
+    public void setSuccess(boolean success){this.success = success;}
 
     public static <T> responseFromServer<T> needLogin(){
         return new responseFromServer<T>(ResponseCode.NEED_LOGIN.getCode());

@@ -181,6 +181,26 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
+    /**
+     * 根据用户名返回账号
+     * @param accountId
+     * @return
+     */
+    @Override
+    public responseFromServer getDetailedAccount(Integer accountId){
+        AccountInfo accountInfo;
+        try{
+            Account account = accountDAO.getAccountWithEstimate(accountId);
+            account.setPassword(null);
+            accountInfo = new AccountInfo(account);
+        }catch(Exception e){
+            e.printStackTrace();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success(accountInfo);
+    }
+
+
     public responseFromServer getOthersInfo(Integer accountId1,Integer accountId2){
         responseFromServer response = getA2a(accountId1,accountId2);
         if(response.isFailure()||response.getData() == null){
@@ -224,6 +244,13 @@ public class AccountServiceImpl implements AccountService {
         }
         return responseFromServer.success(a2a);
     }
+
+
+
+
+
+
+
 
     /**
      * @Description: 上传头像, 并且更新到数据库中, 返回头像图片文件名

@@ -33,6 +33,8 @@ public interface AccountService {
 
     public responseFromServer verifyPassword(Account account);
 
+    responseFromServer getDetailedAccount(Integer accountId);
+
     public responseFromServer getA2a(Integer accountId1, Integer accountId2);
 
     responseFromServer uploadAvatar(MultipartFile file, Integer accountId);

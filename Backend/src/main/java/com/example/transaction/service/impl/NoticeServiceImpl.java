@@ -280,6 +280,9 @@ public class NoticeServiceImpl implements NoticeService {
             return responseFromServer.error();
         }
         DetailedNotice detailedNotice = new DetailedNotice(notice);
+        if(detailedNotice.getBrowseCount()!=null && detailedNotice.getBrowseCount()==0){
+            detailedNotice.setBrowseCount(1);
+        }
         return responseFromServer.success(detailedNotice);
     }
 

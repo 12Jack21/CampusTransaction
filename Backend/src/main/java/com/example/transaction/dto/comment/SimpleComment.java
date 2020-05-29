@@ -2,6 +2,8 @@ package com.example.transaction.dto.comment;
 
 import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.pojo.Comment;
+import com.example.transaction.util.PathUtil;
+import com.example.transaction.util.code.ResourcePath;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,21 +28,26 @@ public class SimpleComment implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date date;
 
-    public SimpleComment(){}
+    public SimpleComment() {
+    }
 
-    public SimpleComment(Comment comment){
+    public SimpleComment(Comment comment) {
         this.fromId = comment.getFromId();
-        if(comment.getSender()!=null){
+        if (comment.getSender() != null) {
             SimpleAccount sender = comment.getSender();
-            this.fromImage = sender.getAvatar();
-            this.fromName = sender.getUsername();
+            if(PathUtil.isPath(sender.getAvatar())){
+                this.fromImage = sender.getAvatar();
+            }else{
+                this.fromImage = ResourcePath.avatarRequestPath + sender.getAvatar();
+            }
+            this.fromName = sender.getUsername() == null ? "" : sender.getUsername();
         }
-        if(comment.getReceiver()!=null){
-            SimpleAccount receiver  = comment.getReceiver();
-            this.toName = receiver.getUsername();
+        if (comment.getReceiver() != null) {
+            SimpleAccount receiver = comment.getReceiver();
+            this.toName = receiver.getUsername() == null ? "" : receiver.getUsername();
         }
         this.content = comment.getContent();
-        this.date = comment.getTime();
+        this.date = comment.getDate();
     }
 
 }

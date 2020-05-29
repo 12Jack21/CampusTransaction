@@ -5,22 +5,26 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.dao.CommentDAO;
+import com.example.transaction.dto.account.SimpleAccount;
+import com.example.transaction.dto.comment.SimpleComment;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.AccountNotify;
 import com.example.transaction.pojo.Comment;
-import com.example.transaction.pojo.Notify;
 import com.example.transaction.service.CommentService;
 import com.example.transaction.service.NotifyService;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.NotifyActionCode;
 import com.example.transaction.util.code.NotifyTargetCode;
+import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.apache.ibatis.annotations.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
+
+import java.util.Date;
 
 /**
  * @ClassName: CommentServiceImpl
@@ -50,8 +54,9 @@ public class CommentServiceImpl implements CommentService {
     public responseFromServer getCommentByCommodityId(Integer pageIndex, Integer commodityId){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("commodity_id", commodityId);
-        queryWrapper.orderByDesc("time");
-        Page<Comment> page = new Page<>(pageIndex, Nums.pageSize);
+        queryWrapper.orderByAsc("time");
+//        queryWrapper.orderByDesc("time");
+        Page<Comment> page = new Page<>(pageIndex, 100);
         IPage<Comment> iPage = commentDAO.getCommentWithAccountInfo(page, queryWrapper);
         MyPage myPage = new MyPage(iPage);
         return responseFromServer.success(myPage);
@@ -69,6 +74,15 @@ public class CommentServiceImpl implements CommentService {
         if (comment.getToId() == null || comment.getContent() == null || comment.getCommodityId() == null) {
             return responseFromServer.error();
         }
+
+        if(comment.getDate()==null){
+            comment.setDate(new Date());
+        }
+
+        if(comment.getToId()==-1){
+            comment.setToId(null);
+        }
+
         if (commentDAO.insert(comment) != 1) {
             /*回滚事务*/
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
@@ -92,7 +106,13 @@ public class CommentServiceImpl implements CommentService {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
-        return responseFromServer.success(comment);
+        SimpleAccount sender = new SimpleAccount(accountDAO.selectById(comment.getFromId()));
+        comment.setSender(sender);
+        if(comment.getToId()!=null&&comment.getToId()>0){
+            comment.setReceiver(new SimpleAccount(accountDAO.selectById(comment.getToId())));
+        }
+        comment.getSender().setAvatar(sender.getAvatar());
+        return responseFromServer.success(new SimpleComment(comment));
     }
 
     //删除评论
@@ -122,9 +142,5 @@ public class CommentServiceImpl implements CommentService {
         queryWrapper.orderByDesc("id");
         return getCommentPage(queryWrapper,pageIndex);
     }
-
-
-
-
 
 }

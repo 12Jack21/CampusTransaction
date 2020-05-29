@@ -3,6 +3,7 @@ package com.example.transaction.dto.reservation;
 import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
+import com.example.transaction.util.code.NoticeCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,11 @@ public class DetailedReservation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     Date createTime;
     Integer stateEnum = -3;
+    private String stateEnumStr;
+    public void setStateEnum(Integer stateEnum){
+        this.stateEnum = stateEnum;
+        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+    }
     Double evaluationSell = -1.0D;
     Double evaluationBuy = -1.0D;
     SimpleCommodity2 commodity;
@@ -42,7 +48,7 @@ public class DetailedReservation {
         this.count = reservation.getCount();
         this.note = reservation.getNote();
         this.createTime = reservation.getStartTime();
-        this.stateEnum = reservation.getStateEnum();
+        setStateEnum(stateEnum = reservation.getStateEnum());
         try{
             Account seller = reservation.getCommodity().getNotice().getUser();
             this.evaluationSell = seller.getEstimate().getCredit();

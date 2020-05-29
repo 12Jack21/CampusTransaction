@@ -287,7 +287,8 @@ public class CommodityController {
                                               @RequestBody Commodity commodity,
                                               HttpServletRequest request) {
         commodity.setId(commodityId);
-        responseFromServer response = getById(commodity.getId());
+//        responseFromServer response = getById(commodity.getId());
+        responseFromServer response = commodityService.getById(commodity.getId());
         if (accountVerify.verifySellerByCommodityId(response, request)) {
             return commodityService.updateCommodity(commodity);
         } else {

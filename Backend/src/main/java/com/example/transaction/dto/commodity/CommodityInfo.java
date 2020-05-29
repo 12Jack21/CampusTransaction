@@ -55,7 +55,7 @@ public class CommodityInfo {
                 this.accountName = noticeInfo.getUserName();
                 this.accId = noticeInfo.getAccountId();
                 if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
-                    this.avatar = noticeInfo.getAvatar();
+                    this.avatar = ResourcePath.avatarRequestPath + noticeInfo.getAvatar();
                 }
             }
 

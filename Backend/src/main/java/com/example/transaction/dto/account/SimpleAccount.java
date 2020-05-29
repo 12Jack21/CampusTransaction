@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Estimate;
+import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,22 +23,25 @@ public class SimpleAccount implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     private String username;
-    private Boolean gender;
+    private Integer gender;
     private String avatar;
     private String introduction;
 
     @TableField(exist = false)
     private Estimate estimate;
 
-    public SimpleAccount(Integer accountId){
+    public SimpleAccount(Integer accountId) {
         this.id = accountId;
     }
-    public SimpleAccount(){}
-    public SimpleAccount(Account account){
+
+    public SimpleAccount() {
+    }
+
+    public SimpleAccount(Account account) {
         this.id = account.getId();
-        this.avatar = account.getAvatar();
+        this.avatar = ResourcePath.avatarRequestPath + account.getAvatar();
         this.username = account.getUsername();
         this.gender = account.getGender();
-        this.introduction = account.getIntroduction();
+        this.introduction = account.getIntroduction() == null ? "" : account.getIntroduction();
     }
 }
