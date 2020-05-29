@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
+import com.example.transaction.dto.notice.DetailedNotice;
 import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.Commodity;
@@ -278,14 +279,8 @@ public class NoticeServiceImpl implements NoticeService {
         if (notice == null) {
             return responseFromServer.error();
         }
-        NoticeInfo noticeInfo = new NoticeInfo(notice);
-        List<CommodityInfo> commodityInfoList = new ArrayList<>();
-        for (Commodity commodity : notice.getComList()) {
-            commodityInfoList.add(new CommodityInfo(commodity, noticeInfo));
-        }
-        notice.setComList(null);
-        notice.setComInfoList(commodityInfoList);
-        return responseFromServer.success(notice);
+        DetailedNotice detailedNotice = new DetailedNotice(notice);
+        return responseFromServer.success(detailedNotice);
     }
 
 

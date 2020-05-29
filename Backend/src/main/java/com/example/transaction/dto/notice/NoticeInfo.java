@@ -40,7 +40,9 @@ public class NoticeInfo {
 
     private Integer accountId;
 
+    private String conditions;
 
+    private String detailedAddress;
 
     /*发布的时间到今天的距离：一年前 一周前*/
     private String time;
@@ -73,6 +75,7 @@ public class NoticeInfo {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }
         this.description = notice.getDescription();
+        this.conditions = notice.getConditions();
         Date now = new Date();
         Long millis = notice.getCreateTime().getTime();
         Long deviance = (new Date()).getTime() - notice.getCreateTime().getTime();
