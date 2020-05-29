@@ -26,13 +26,13 @@
 
 		
 		<!--状态图标-->
-		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="basics == 2 && reservation.stateEnum!='CANCELLED'">
+		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="basics == 2 && reservation.stateEnumStr!='CANCELLED'">
 			<view class="are-img-view" @tap="cancel = true"><image class="are-img" src="/static/zaiui/img/are.png" mode="widthFix" /></view>
 			<view class="text-sm text-black">交易成功，可更新一次评价</view>
 		</view>
 
 		<!--状态图标-->
-		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="reservation.stateEnum=='CANCELLED'">
+		<view class="bg-white padding solid-top text-center zaiui-status-img-view" v-if="reservation.stateEnumStr=='CANCELLED'">
 			<view class="are-img-view" @tap="cancel = false"><image class="are-img" src="/static/zaiui/img/arg.png" mode="widthFix" /></view>
 			<view class="text-sm text-black text-bold">订单已取消</view>
 		</view>
@@ -206,7 +206,7 @@ export default {
 				count: 10,
 				note: '最好可以有个包装',
 				createTime: '2020-10-08 10:06',
-				stateEnum: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
+				stateEnumStr: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
 				evaluation_sell: 5, // 卖家的评价等级, 1-5
 				evaluation_buy: 1, //买家的评价等级
 				commodity: {
@@ -238,13 +238,13 @@ export default {
 		},
 		cancelDisable(){ // 取消按钮 disable
 			if(this.basics===0)
-				return this.isSell || this.reservation.stateEnum!=='WAITING'
+				return this.isSell || this.reservation.stateEnumStr!=='WAITING'
 			else if(this.basics === 1)
-				return !this.isSell || this.reservation.stateEnum == 'CANCELLED'
+				return !this.isSell || this.reservation.stateEnumStr == 'CANCELLED'
 			return false
 		},
 		confirmDisable(){ // 确认按钮 disable
-			return this.basics===1 && (!this.isSell || this.reservation.stateEnum!=='VALIDATE')
+			return this.basics===1 && (!this.isSell || this.reservation.stateEnumStr!=='VALIDATE')
 		}
 	},
 	onLoad(params) {
@@ -287,7 +287,7 @@ export default {
 					data = data.data
 					this.reservation = Object.assign({},this.reservation,data)
 					// 根据状态判断 界面的展示值
-					let state = data.stateEnum // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
+					let state = data.stateEnumStr // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
 					this.initBasic(state)
 				})
 				.catch(() => {
@@ -315,7 +315,7 @@ export default {
 									if(data.success){ // 确认交易成功
 										this.tip(0,'确认交易成功')
 										this.basics += 1 //更新状态
-										this.reservation.stateEnum = 'FINISHED'
+										this.reservation.stateEnumStr = 'FINISHED'
 									}
 									else
 										this.tip(1,'确认交易失败')
@@ -336,7 +336,7 @@ export default {
 						if(data.success){ // 取消预约成功
 							this.tip(0,'取消预约成功')
 							// this.basics += 1 //更新状态
-							this.reservation.stateEnum = 'CANCELLED'
+							this.reservation.stateEnumStr = 'CANCELLED'
 						}
 						else
 							this.tip(1,'取消预约失败')
@@ -348,7 +348,7 @@ export default {
 						if(data.success){ // 取消预约成功
 							this.tip(0,'取消交易成功')
 							// this.basics += 1 //更新状态
-							this.reservation.stateEnum = 'FAILED'
+							this.reservation.stateEnumStr = 'FAILED'
 						}
 						else
 							this.tip(1,'取消交易失败')

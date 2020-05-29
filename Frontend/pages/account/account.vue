@@ -19,7 +19,7 @@
 						</view>
 						<view class="address"><text class="cuIcon-locationfill"></text>{{ account.address }}</view>
 						<view class="introduction">
-							简介： {{account.introduction.length===0?'该用户还未填写':account.introduction}}
+							简介： {{account.introduction==null || account.introduction.length===0?'该用户还未填写':account.introduction}}
 						</view>
 						<view class=" wechat">
 							<view v-if="account.wechat" class="we">
@@ -119,19 +119,20 @@ export default {
 			return this.account.gender === 0 ? '她' : '他'
 		}
 	},
-	onPullDownRefresh() {
+	async onPullDownRefresh() {
 		console.log('accId',this.accId);
 		this.getAccount(this.accId)
 		this.commodities = []
 		this.initPagination()
-		this.getCommodities()
+		await this.getCommodities()
+		uni.stopPullDownRefresh()
 	},
 	onLoad(params) {
 		this.accId = params.id
 		this.getAccount(params.id)
 		
 		//debug
-		for (let i = 0; i < 10; i++) this.commodities.push(this.aCom)
+		// for (let i = 0; i < 10; i++) this.commodities.push({...this.aCom})
 
 		// request
 		this.initPagination()
@@ -158,18 +159,23 @@ export default {
 					console.log('其他账户的信息', data.data)
 					data = data.data
 					this.account = Object.assign({},this.account,data)
-					this.tip(1,'用户信息获取成功')
+					this.tip(0,'用户信息获取成功')
 				})
 				.catch(() => this.tip(1,"网络异常"))
 		},
-		getCommodities(){
+		async getCommodities(){
 			if(this.finish || this.onRequest) return
 			this.onRequest = true
 			console.log('请求中');
-			this.$api
-				.getCommoditiesByOtherAcc(this.accId)
+			let pagination = {
+				pageIndex:this.pageIndex,
+				endTime: this.endTime
+			}
+			await this.$api
+				.getCommoditiesByOtherAcc(this.accId,pagination)
 				.then(({ data }) => {
 					data = data.data
+					console.log('commodities data:',data);
 					this.pageIndex = data.pageIndex
 					if(data.pageIndex - 1 >= data.pageCount){
 						this.finish = true

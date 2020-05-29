@@ -219,10 +219,12 @@ export default {
 				this.getCommodityList()
 			}// 点击相同的 tab 则相当于下拉刷新当前列表
 			else if(this.goodsTabData.tabCur === current){
-				this.storeGoods[current].pageIndex = 1
-				this.storeGoods[current].endTime = new Date().format('yyyy-MM-dd hh:mm')
-				this.storeGoods[current].data = [] //清空来方便 push
-				this.storeGoods[current].finish = false
+				this.storeGoods.splice(current,1,{
+					pageIndex:1,
+					endTime: new Date().format('yyyy-MM-dd hh:mm'),
+					data:[],
+					finish:false
+				})
 				this.goodsTabData.tabCur = current
 				this.getCommodityList()
 			}
@@ -272,8 +274,11 @@ export default {
 					console.log('get commodity list, home resp=', res.data.data);
 					this.storeGoods[tab].pageIndex = resp.pageIndex
 					this.storeGoods[tab].pageSize = resp.pageSize
-					
+					console.log('before push, after set page property:',this.storeGoods[tab]);
 					this.storeGoods[tab].data.push(...resp.pageList)
+					console.log('after push:',this.storeGoods[tab]);
+					this.storeGoods.splice(tab,1,this.storeGoods[tab])
+					console.log('after add to responsive env:',this.storeGoods[tab]);
 					this.goodsData = [...this.storeGoods[tab].data]
 					
 					// 取完了数据

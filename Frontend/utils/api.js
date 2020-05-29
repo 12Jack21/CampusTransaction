@@ -8,6 +8,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 		
     config.baseUrl = 'http://localhost:9012'; /* 根域名 */
 		config.baseUrl = 'http://39.96.69.108:9999'
+		// config.baseUrl = 'http://39.96.69.108:8080'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
     }
@@ -108,8 +109,8 @@ export default{
 	getCommodities(sort, pagination){ //add last commodity id
 		return http.get('/commodities/sort/' + sort, {params: pagination})
 	},
-	getCommoditiesByOtherAcc(id){ // get PUBLISHED commodity of that account
-		return http.get('/commodities/other/account/' + id)
+	getCommoditiesByOtherAcc(id,pagination){ // get PUBLISHED commodity of that account
+		return http.get('/commodities/account/other/' + id,{params:pagination})
 	},
 	getCommoditiesByAcc(id,params){ // get commodities of specified my account
 		return http.get('/commodities/account/' + id,params)

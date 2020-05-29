@@ -44,7 +44,7 @@
 					<!-- end -->
 
 					<!-- 条件 -->
-					<view class="cu-form-group"><textarea name="condition" maxlength="300" style="height: 3em;" placeholder="限定条件说明"></textarea></view>
+					<view class="cu-form-group"><textarea name="conditions" maxlength="300" style="height: 3em;" placeholder="限定条件说明"></textarea></view>
 					<!-- end -->
 					
 					<!-- 任务的出价钱 -->

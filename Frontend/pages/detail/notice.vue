@@ -54,7 +54,7 @@
 			<!--商品列表-->
 			<view class="bg-white zaiui-goods-list-view" >						
 				<noticeGoodsList
-					:list_data="notice.comInfoList"
+					:list_data="notice.commodityList"
 					@listTap="listTap"
 				/>
 			</view>	
@@ -66,10 +66,10 @@
 		<!--底部操作-->
 		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="notice.accId===userId">
 				<view class= "operation">				
-					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.stateEnum=='CANCELLED'">
+					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.stateEnumStr=='CANCELLED'">
 						关闭通告
 					</button>
-					<button class="cu-btn bg-orange lg"  @tap="updateShow=true" :disabled="notice.stateEnum=='CANCELLED'">
+					<button class="cu-btn bg-orange lg"  @tap="updateShow=true" :disabled="notice.stateEnumStr=='CANCELLED'">
 						更新
 					</button>
 				</view>
@@ -104,12 +104,12 @@
 					description:'这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述',
 					createTime:'3小时前',
 					expiredTime:'2020-10-08 10:19',
-					condition: 'tonggao条件',
+					conditions: 'tonggao条件',
 					address:'信息学部',
 					detailedAddress:'信息学部大食堂',
 					browseCount: 30,
-					stateEnum:'CANCELLED',// CANCELLED PUBLISHED
-					comInfoList:[] ,//物品列表
+					stateEnumStr:'CANCELLED',// CANCELLED PUBLISHED
+					commodityList:[] ,//物品列表
 					accId:1,
 					avatar:'用户的头像',
 					username:"小罗"
@@ -120,7 +120,7 @@
 			...mapState(['userId']),	
 			state(){ //通告状态
 				let texts = ['发布中...','即将失效...','已失效','已关闭'],text=texts[0],color='bg-grey'
-				if(this.notice.stateEnum === 'CANCELLED')
+				if(this.notice.stateEnumStr === 'CANCELLED')
 					text = texts[3]
 				else{
 					let d = new Date()
@@ -139,8 +139,8 @@
 			}
 		},
 		onLoad(params) {			
-			// virtual data
-			this.notice.comInfoList = _home_data.goodsList()
+			// virtual data 
+			this.notice.commodityList = _home_data.goodsList()
 			// request
 			this.getNotice(params.id)
 		},	
@@ -174,7 +174,7 @@
 							.then(({data})=>{
 								if(data.success){
 									console.log('关闭成功');
-									this.notice.stateEnum = 'CANCELLED'
+									this.notice.stateEnumStr = 'CANCELLED'
 									this.failTip('关闭通告失败')
 								}
 							})
