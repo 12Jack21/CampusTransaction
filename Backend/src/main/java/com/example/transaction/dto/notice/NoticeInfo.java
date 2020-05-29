@@ -2,6 +2,7 @@ package com.example.transaction.dto.notice;
 
 import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
@@ -68,7 +69,12 @@ public class NoticeInfo {
             }
         }
         this.browseCount = notice.getBrowseCount();
-        this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
+        if(PathUtil.isPath(notice.getUser().getAvatar())){
+            this.avatar = notice.getUser().getAvatar();
+        }else{
+
+            this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
+        }
         this.userName = notice.getUser().getUsername();
         this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {

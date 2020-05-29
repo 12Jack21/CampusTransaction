@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Estimate;
+import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.ResourcePath;
 import lombok.Data;
 
@@ -39,7 +40,8 @@ public class SimpleAccount implements Serializable {
 
     public SimpleAccount(Account account) {
         this.id = account.getId();
-        this.avatar = ResourcePath.avatarRequestPath + account.getAvatar();
+        this.avatar = (PathUtil.isPath(account.getAvatar())?"":ResourcePath.avatarRequestPath)+account.getAvatar();
+
         this.username = account.getUsername();
         this.gender = account.getGender();
         this.introduction = account.getIntroduction() == null ? "" : account.getIntroduction();

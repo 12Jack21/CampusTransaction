@@ -38,7 +38,8 @@ public class SimpleComment implements Serializable {
             if(PathUtil.isPath(sender.getAvatar())){
                 this.fromImage = sender.getAvatar();
             }else{
-                this.fromImage = ResourcePath.avatarRequestPath + sender.getAvatar();
+                this.fromImage = (PathUtil.isPath(sender.getAvatar())?"":ResourcePath.avatarRequestPath)+sender.getAvatar();
+
             }
             this.fromName = sender.getUsername() == null ? "" : sender.getUsername();
         }

@@ -5,6 +5,7 @@ import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Commodity;
 import com.example.transaction.pojo.CommodityImage;
 import com.example.transaction.pojo.Notice;
+import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
@@ -65,7 +66,7 @@ public class DetailedNotice {
             this.commodityList.add(new SimpleCommodity2(commodity));
         }
         this.browseCount = notice.getBrowseCount();
-        this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
+        this.avatar = (PathUtil.isPath(notice.getUser().getAvatar())?"":ResourcePath.avatarRequestPath)+notice.getUser().getAvatar();
         this.userName = notice.getUser().getUsername();
         this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {

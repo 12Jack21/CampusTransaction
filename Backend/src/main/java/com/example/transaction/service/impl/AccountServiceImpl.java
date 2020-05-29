@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.transaction.dao.A2aDAO;
 import com.example.transaction.dao.AccountDAO;
 import com.example.transaction.dao.CommodityDAO;
+import com.example.transaction.dao.EstimateDAO;
 import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.dto.account.LoginAccountInfo;
 import com.example.transaction.pojo.A2a;
@@ -33,6 +34,8 @@ public class AccountServiceImpl implements AccountService {
     private TokenService tokenService;
     @Autowired
     CommodityDAO commodityDAO;
+    @Autowired
+    EstimateDAO estimateDAO;
 
     @Autowired
     public AccountServiceImpl(AccountDAO accountDAO, A2aDAO a2aDAO, TokenService tokenService) {
@@ -109,6 +112,7 @@ public class AccountServiceImpl implements AccountService {
     @Transactional(rollbackFor = Exception.class)
     public responseFromServer register(Account newAccout) {
         accountDAO.insert(newAccout);
+
         return responseFromServer.success();
     }
 

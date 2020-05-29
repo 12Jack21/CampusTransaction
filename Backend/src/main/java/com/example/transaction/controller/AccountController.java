@@ -1,5 +1,6 @@
 package com.example.transaction.controller;
 
+import com.example.transaction.dto.account.AccountInfo;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Estimate;
 import com.example.transaction.service.AccountService;
@@ -255,20 +256,34 @@ public class AccountController {
 
     @ApiOperation(value = "获取账号信息，在a2a中验证")
     @GetMapping("/other/{otherId}")
-    public responseFromServer getOthersAccountInfo(@PathVariable Integer otherId, HttpServletRequest request) {
+    public responseFromServer getOthersAccountInfo(@PathVariable Integer otherId,
+                                                   Integer id,
+                                                   HttpServletRequest request) {
         Account account = new Account(otherId);
         Account account1 = accountVerify.verifyWithReturn(account, request);
         if (account1 == null) {
             return responseFromServer.error();
         }
-        if (account1.getId().intValue() != account.getId().intValue()) {
-            responseFromServer response = accountService.getA2a(account.getId(), account1.getId());
+        if (/*todo token*/(id!=null && otherId !=null)||account1.getId().intValue() != account.getId().intValue()) {
+            responseFromServer response = accountService.getA2a(id, otherId);
+            /**
+             * ZZH
+             * TODO : token
+             */
+            //            responseFromServer response = accountService.getA2a(account1.getId(),account.getId());
             if (response.isSuccess()) {
-                account = (Account) response.getData();
-
                 return responseFromServer.success(account);
             } else {
-                return responseFromServer.error();
+                response = accountService.getDetailedAccount(otherId);
+                if(response.isFailure()) {
+                    return responseFromServer.error();
+                }
+                AccountInfo accountInfo = (AccountInfo) response.getData();
+                if(!id.equals(otherId)){
+                    accountInfo.setWeChat("");
+                    accountInfo.setQq("");
+                }
+                return responseFromServer.success(accountInfo);
             }
         }else{
             /*此时验证返回的是自己的账户信息*/

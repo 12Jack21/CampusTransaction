@@ -2,6 +2,7 @@ package com.example.transaction.dto.commodity;
 
 import com.example.transaction.dto.notice.NoticeInfo;
 import com.example.transaction.pojo.Commodity;
+import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.ResourcePath;
 import io.netty.util.internal.StringUtil;
 import lombok.Data;
@@ -55,7 +56,9 @@ public class CommodityInfo {
                 this.accountName = noticeInfo.getUserName();
                 this.accId = noticeInfo.getAccountId();
                 if (!StringUtil.isNullOrEmpty(noticeInfo.getAvatar())) {
-                    this.avatar = ResourcePath.avatarRequestPath + noticeInfo.getAvatar();
+
+                    this.avatar =  (PathUtil.isPath(noticeInfo.getAvatar())?"":ResourcePath.avatarRequestPath)+ noticeInfo.getAvatar();
+
                 }
             }
 
