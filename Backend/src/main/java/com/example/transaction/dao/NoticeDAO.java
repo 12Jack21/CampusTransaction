@@ -56,7 +56,7 @@ public interface NoticeDAO extends BaseMapper<Notice> {
                     select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityByNoticeId"
             )),
             @Result(property = "user", column = "account_id", javaType = Account.class, one = @One(
-                    select = "com.example.transaction.dao.AccountDAO.selectById"
+                    select = "com.example.transaction.dao.AccountDAO.getAccountWithEstimate"
             ))
     })
     @Select("select * from notice ${ew.customSqlSegment}")

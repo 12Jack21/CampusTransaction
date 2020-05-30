@@ -101,7 +101,7 @@ public interface CommodityDAO extends BaseMapper<Commodity> {
     /*信誉低到高*/
     @ResultMap(value = "detailedCommodity_map2")
 //    @Select("select * from commodity c, notice n, type t ${ew.customSqlSegment} and ")
-    @Select("select * from commodity c, notice n, account a,estimate e ${ew.customSqlSegment} and c.notice_id = n.id and a.id = e.account_id ORDER BY n.create_time DESC,n.end_time ASC,e.success_rate ASC")
+    @Select("select * from commodity c, notice n, account a,estimate e ${ew.customSqlSegment} and c.notice_id = n.id and n.account_id = a.id and a.id = e.account_id ORDER BY n.create_time DESC,n.end_time ASC,e.success_rate ASC")
     IPage<Commodity> searchEstimateASC(Page<?> page, @Param("ew") QueryWrapper<Commodity> wrapper);
 
 }

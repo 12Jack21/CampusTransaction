@@ -75,6 +75,9 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId} and count > #{count}")
     Integer failWaiting(Integer commodityId, Integer count);
 
+    @Update("update reservation set state_enum = 3 where notice.id = #{noticeId} and notice.id = commodity.notice_id and commodity.id = reservation.commodity_id")
+    Integer failWaiting(Integer noticeId);
+
 
     /*获取我收到的预约*/
     @Results(id = "reservation-detailedCommodity-map3",value = {

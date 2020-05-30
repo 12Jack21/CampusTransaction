@@ -9,6 +9,7 @@ import com.example.transaction.service.NoticeService;
 import com.example.transaction.service.impl.AccountVerify;
 import com.example.transaction.util.code.NoticeCode;
 import com.example.transaction.util.responseFromServer;
+import io.netty.util.internal.StringUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -59,8 +60,7 @@ public class NoticeController {
              * 处理空串等参数
              */
             notice.rectifyNotify();
-            notice.setStateEnum(0);
-            notice.setStateEnum(NoticeCode.UNPUBLISHED.getCode());
+            notice.setStateEnum(NoticeCode.PUBLISHED.getCode());
             return noticeService.addNotice(notice);
         } else {
             /*非法操作：为他人创建通告*/
@@ -76,14 +76,14 @@ public class NoticeController {
      * @param request
      * @return
      */
-//    @RequestMapping("/cancelNotice")
-    @ApiOperation(value = "取消通告")
-    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
-    @DeleteMapping("/{noticeId}/cancel")
-    public responseFromServer cancelNotice(@PathVariable Integer noticeId, HttpServletRequest request) {
-        return updateNoticeState(noticeId, NoticeCode.CANCELLED.getCode(), request);
-    }
-
+////    @RequestMapping("/cancelNotice")
+//    @ApiOperation(value = "取消通告")
+//    @ApiImplicitParam(name = "noticeId", value = "通告Id", paramType = "Integer", dataType = "Integer")
+//    @DeleteMapping("/{noticeId}/cancel")
+//    public responseFromServer cancelNotice(@PathVariable Integer noticeId, HttpServletRequest request) {
+//        return updateNoticeState(noticeId, NoticeCode.CANCELLED.getCode(), request);
+//    }
+//
 
     /**
      * 将已经上传完的通告发布
@@ -97,14 +97,15 @@ public class NoticeController {
     @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer")
     @PutMapping()
     public responseFromServer publishNotice(@RequestBody Notice notice, HttpServletRequest request) {
-        return updateNoticeState(notice.getId(), NoticeCode.PUBLISHED.getCode(), request);
+        Notice notice2 = new Notice();
+        notice2.setStateEnum(NoticeCode.PUBLISHED.getCode());
+        return updateNoticeState(notice.getId(),notice2 , request);
     }
 
     /**
      * 修改状态，进行用户校验，非法操作检查
-     *
      * @param noticeId
-     * @param code
+     * @param notice
      * @param request
      * @return
      */
@@ -113,9 +114,9 @@ public class NoticeController {
             @ApiImplicitParam(name = "notice_id", value = "通告Id", paramType = "Integer", dataType = "Integer"),
             @ApiImplicitParam(name = "code", value = "状态码", paramType = "Integer", dataType = "Integer")
     })
-    @PutMapping("/{noticeId}/{code}")
+    @PutMapping("/{noticeId}")
     public responseFromServer updateNoticeState(@PathVariable Integer noticeId,
-                                                @PathVariable Integer code,
+                                                @RequestBody Notice notice,
                                                 HttpServletRequest request) {
         /**
          * ZZH
@@ -124,12 +125,16 @@ public class NoticeController {
         Account account = new Account();
         if (accountVerify.verify(account, request)) {
             QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("account_id", account.getId());
+//            if(account.getId()!=null&&account.getId()>0){
+//                queryWrapper.eq("account_id",account.getId());
+//            }
             queryWrapper.eq("id", noticeId);
             Notice updateNotice = new Notice();
-            updateNotice.setAccountId(account.getId());
+//            updateNotice.setAccountId(account.getId()==null||account.getId()<=0?null:account.getId());
             updateNotice.setId(noticeId);
-            updateNotice.setStateEnum(code);
+            updateNotice.setConditions(StringUtil.isNullOrEmpty(notice.getConditions())?null:notice.getConditions());
+            updateNotice.setDescription(StringUtil.isNullOrEmpty(notice.getDescription())?null:notice.getDescription());
+            updateNotice.setEndTime(notice.getEndTime()==null?null:notice.getEndTime());
             return noticeService.updateNotice(updateNotice, queryWrapper);
         } else {
             /*非法操作：操作他人通告*/
@@ -179,6 +184,20 @@ public class NoticeController {
         condition.setAccountId(null);
         return noticeService.getRecentNotice(condition);
     }
+
+
+    //    @RequestMapping("/getRecentNoticePage")
+    @ApiOperation("获取首页通告")
+    @GetMapping("/cancel/{noticeId}")
+    public responseFromServer cancelNotice(@PathVariable Integer noticeId,
+                                           HttpServletRequest request) {
+        if(noticeId == null || noticeId<=0){
+            return responseFromServer.error();
+        }
+        return noticeService.cancelNotice(noticeId);
+
+    }
+
 
     /**
      * 根据id查询通告
