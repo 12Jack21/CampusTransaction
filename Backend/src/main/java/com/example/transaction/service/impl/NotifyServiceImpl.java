@@ -296,7 +296,13 @@ public class NotifyServiceImpl implements NotifyService {
     @Override
     @Transactional
     public responseFromServer searchSimpleAccountNotifyPage(NotifyCondition condition) {
+        if(condition == null){
+            return responseFromServer.error();
+        }
         QueryWrapper queryWrapper = new QueryWrapper();
+        if(condition.getType() == null){
+            condition.setType(0);
+        }
         switch (condition.getType()) {
             case 0:
                 /**未读消息*/

@@ -138,7 +138,7 @@ public class ReservationServiceImpl implements ReservationService {
          * ZZH
          * 添加到notify
          */
-        if(accountId!=null){
+        if (accountId != null) {
             AccountNotify accountNotify = new AccountNotify(
                     receiverId,
                     accountId,
@@ -203,12 +203,16 @@ public class ReservationServiceImpl implements ReservationService {
         for (Reservation reservation : reservations) {
             SimpleReservation simpleReservation = new SimpleReservation(reservation);
             SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
-            simpleAccount.setAvatar( (PathUtil.isPath(simpleAccount.getAvatar())?"":ResourcePath.avatarRequestPath)+simpleAccount.getAvatar());
+            simpleAccount.setAvatar((PathUtil.isPath(simpleAccount.getAvatar()) ? "" : ResourcePath.avatarRequestPath) + simpleAccount.getAvatar());
             Commodity commodity = commodityDAO.getSimpleCommodityById(reservation.getCommodityId());
             simpleReservation.setAccount(simpleAccount);
             /*计算notice 的价格*/
-            simpleReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
-            simpleReservations.add(simpleReservation);
+            try {
+                simpleReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
+                simpleReservations.add(simpleReservation);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 //        myPage.setPageList(simpleReservations);
         return responseFromServer.success(simpleReservations);
@@ -248,9 +252,9 @@ public class ReservationServiceImpl implements ReservationService {
              * 设置买家信息
              */
             SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(reservation.getAccountId());
-            detailedReservation.setBuyerId(simpleAccount.getId());
+            detailedReservation.setBuyerId(reservation.getAccountId());
             detailedReservation.setBuyerName(simpleAccount.getUsername());
-            detailedReservation.setBuyerAvatar( (PathUtil.isPath(simpleAccount.getAvatar())?"":ResourcePath.avatarRequestPath)+simpleAccount.getAvatar());
+            detailedReservation.setBuyerAvatar((PathUtil.isPath(simpleAccount.getAvatar()) ? "" : ResourcePath.avatarRequestPath) + simpleAccount.getAvatar());
 //            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(simpleAccount.getId()).getCredit());
             /**
              * 设置卖家信息
@@ -259,9 +263,9 @@ public class ReservationServiceImpl implements ReservationService {
             notice = noticeDAO.selectById(commodity.getNoticeId());
             simpleAccount = accountDAO.getSimpleAccountById(notice.getAccountId());
             detailedReservation.setDetailedAddress(notice.getDetailedAddress());
-            detailedReservation.setAccountId(simpleAccount.getId());
+            detailedReservation.setAccountId(notice.getAccountId());
             detailedReservation.setAccountName(simpleAccount.getUsername());
-            detailedReservation.setAvatar((PathUtil.isPath(simpleAccount.getAvatar())?"":ResourcePath.avatarRequestPath)+simpleAccount.getAvatar());
+            detailedReservation.setAvatar((PathUtil.isPath(simpleAccount.getAvatar()) ? "" : ResourcePath.avatarRequestPath) + simpleAccount.getAvatar());
             detailedReservation.setPrice(commodity.getExpectedPrice() * reservation.getCount());
 //            detailedReservation.setEvaluationBuy(estimateDAO.getByAccountId(notice.getAccountId()).getCredit());
         } catch (Exception e) {
@@ -282,11 +286,11 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public responseFromServer getReservationsPage(QueryWrapper queryWrapper, Integer pageIndex) {
         Page<Reservation> page = new Page<>(pageIndex, Nums.pageSize);
-        IPage<Reservation> reservationPage = reservationDAO.getReservationPageQuery(page,queryWrapper);
+        IPage<Reservation> reservationPage = reservationDAO.getReservationPageQuery(page, queryWrapper);
         MyPage myPage = new MyPage(reservationPage);
         List<SimpleReservationWithCommodity> simpleReservations = new ArrayList<>();
-        if(reservationPage.getRecords()!=null && reservationPage.getRecords().size()>0){
-            for(Reservation reservation: reservationPage.getRecords()){
+        if (reservationPage.getRecords() != null && reservationPage.getRecords().size() > 0) {
+            for (Reservation reservation : reservationPage.getRecords()) {
                 simpleReservations.add(
                         new SimpleReservationWithCommodity(reservation));
             }
@@ -474,7 +478,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Transactional
     public responseFromServer finishReservation(Integer reservationId) {
         Reservation reservation = reservationDAO.selectWithDetailedCommodityById(reservationId);
-        if(reservation.getStateEnum()==ReservationCode.FINISHED.getCode()){
+        if (reservation.getStateEnum() == ReservationCode.FINISHED.getCode()) {
             return responseFromServer.error("该预约已经成功结束");
         }
         Reservation newReservation = new Reservation(reservationId);
