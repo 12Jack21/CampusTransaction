@@ -8,6 +8,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 		
     config.baseUrl = 'http://localhost:9012'; /* 根域名 */
 		config.baseUrl = 'http://39.96.69.108:9999'
+		config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
 		// config.baseUrl = 'http://39.96.69.108:8080'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
