@@ -44,6 +44,7 @@ public class NotifyController {
                                                             NotifyCondition condition,
                                                             HttpServletRequest request) {
         Account account = new Account(accountId);
+        condition = new NotifyCondition();
         condition.setAccountId(accountId);
         if (accountVerify.verify(account, request)) {
 
