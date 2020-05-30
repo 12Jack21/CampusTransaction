@@ -12,7 +12,7 @@
 						/>
 					<view class="content" @tap="userTap('userTap', notice.accId)">
 						<view class="text-black">
-							<view class="text-cut">{{notice.username}}</view>
+							<view class="text-cut">{{notice.userName}}</view>
 						</view>
 						<view class="text-sm flex">
 							<text>{{notice.createTime}}</text>
@@ -64,7 +64,7 @@
 		<view class="height-space" v-if="notice.accId===userId" />
 		
 		<!--底部操作-->
-		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="notice.accId===userId">
+		<view class="bg-white zaiui-footer-fixed zaiui-foot-padding-bottom" v-if="notice.accountId===userId">
 				<view class= "operation">				
 					<button class="cu-btn bg-red lg"  @tap="cancelNotice" :disabled="notice.stateEnumStr=='CANCELLED'">
 						关闭通告
@@ -75,8 +75,8 @@
 				</view>
 		</view>
 		
-		<modal-notice :show="updateShow" @closeModal="updateShow=false" :notice="notice"></modal-notice>
-		
+		<modal-notice :show="updateShow" @updateNoticeA="updateNotice"  @closeModal="updateShow=false" :notice="notice"></modal-notice>
+		<mpopup ref="mpopup"></mpopup>
 	</view>
 </template>
 
@@ -89,17 +89,7 @@
 	
 	import {mapState} from 'vuex'
 	
-	export default {
-		components: {
-			barTitle,
-			noticeGoodsList,
-			modalNotice
-		},
-		data() {
-			return {
-				updateShow:false,
-				addShow:false,
-				notice: {
+	const sampleNotice = {
 					title:'通告标题',
 					description:'这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述这是i一个大段大段的通告描述',
 					createTime:'3小时前',
@@ -112,7 +102,32 @@
 					commodityList:[] ,//物品列表
 					accId:1,
 					avatar:'用户的头像',
-					username:"小罗"
+					userName:"小罗"
+				}
+	export default {
+		components: {
+			barTitle,
+			noticeGoodsList,
+			modalNotice
+		},
+		data() {
+			return {
+				updateShow:false,
+				addShow:false,
+				notice: {
+					title:'',
+					description:'',
+					createTime:'',
+					expiredTime:'',
+					conditions: '',
+					address:'',
+					detailedAddress:'',
+					browseCount: 0,
+					stateEnumStr:'',// CANCELLED PUBLISHED
+					commodityList:[] ,//物品列表
+					accountId:-1,
+					avatar:'',
+					userName:""
 				}
 			}
 		},
@@ -140,12 +155,12 @@
 		},
 		onLoad(params) {			
 			// virtual data 
-			this.notice.commodityList = _home_data.goodsList()
+			// this.notice.commodityList = _home_data.goodsList()
 			// request
 			this.getNotice(params.id)
 		},	
-		onPullDownRefresh() {
-			this.getNotice(this.notice.id)
+		async onPullDownRefresh() {
+			await this.getNotice(this.notice.id)
 		},
 		onReady() {
 			_tool.setBarColor(true);
@@ -155,6 +170,9 @@
 			});
 		},
 		methods: {
+			updateNotice(body){
+				this.notice = Object.assign({},this.notice,body)
+			},
 			failTip(msg){
 				uni.showToast({
 					title: msg,
@@ -175,24 +193,36 @@
 								if(data.success){
 									console.log('关闭成功');
 									this.notice.stateEnumStr = 'CANCELLED'
-									this.failTip('关闭通告失败')
-								}
+									this.tip(0,'关闭成功')
+								}else
+									this.tip(1,'关闭通告失败')
 							})
-							.catch(()=>this.failTip('网络连接异常'))
+							.catch(()=>this.tip(1,'网络连接异常'))
 					}
 				});
 			},
-			getNotice(id){
+			tip(index, content, isClick = false, timeout = 2000) {
+				const types = ['success', 'err', 'warn', 'info', 'loading']
+				this.$refs.mpopup.open({
+					type: types[index],
+					content,
+					timeout,
+					isClick
+				})
+			},
+			async getNotice(id){
 				this.$api.getNotice(id)
 					.then(({data})=>{
 						console.log('notice get data',data.data);
 						this.notice = Object.assign({},this.notice,data.data)
 						console.log('backend notice',this.notice);
 						// this.notice = data.data
+						uni.stopPullDownRefresh()
 					})
 					.catch(()=>{
 						console.log('获取通告详情失败');
 						this.failTip('获取通告详情失败')
+						uni.stopPullDownRefresh()
 					})
 			},
 			listTap(id) {

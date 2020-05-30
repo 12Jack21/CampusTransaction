@@ -152,7 +152,7 @@ export default {
 	created() {
 		this.notices = iniNotice()
 		//加载虚拟数据
-		this.notices.list = _find_data.trendsData()		
+		// this.notices.list = _find_data.trendsData()		
 		
 		// TODO: Requests, like others
 		this.loadNotices()

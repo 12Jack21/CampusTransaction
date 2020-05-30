@@ -18,7 +18,7 @@
 						<view class="action">
 							<text class="rate">
 								<text class=" cuIcon-rank" />
-								<text class="margin-left-xs">成功率: {{ item.rate }}%</text>
+								<text class="margin-left-xs">成功率: {{ item.rate |rateFilter }}%</text>
 							</text>
 						</view>
 					</view>
@@ -119,6 +119,9 @@ export default {
 			if(desc.length > MAXLEN)
 				return desc.slice(0,MAXLEN) + '...'
 			return desc
+		},
+		rateFilter(rate){
+			return rate * 100
 		}
 	}
 }

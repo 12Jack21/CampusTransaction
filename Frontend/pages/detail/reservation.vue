@@ -117,6 +117,27 @@
 				</view>
 			</view>
 		</view>
+		
+		<!--评价信息-->
+		<view class="bg-white zaiui-card-box">
+			<view class="zaiui-card-view zaiui-order-view">
+				<view class="text-lg text-bold text-black">评价信息</view>
+				<view class="solid-line"></view>
+				<view class="text-black title-view">
+					<view class="title">卖方评价</view>
+					<view class="text-right" style="height: 40rpx;">
+						<uni-rate :value="reservation.evaluationSell" disabled></uni-rate>
+					</view>
+				</view>
+				<view style="height: 30rpx;"/>
+				<view class="text-black title-view">
+					<view class="title">买方评价</view>
+					<view class="text-right" style="height: 40rpx;">
+						<uni-rate :value="reservation.evaluationBuy" disabled></uni-rate>
+					</view>
+				</view>
+			</view>
+		</view>
 
 		<view class="bg-white zaiui-card-hight-box" />
 

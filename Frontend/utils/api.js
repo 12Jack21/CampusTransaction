@@ -113,7 +113,7 @@ export default{
 		return http.get('/commodities/account/other/' + id,{params:pagination})
 	},
 	getCommoditiesByAcc(id,params){ // get commodities of specified my account
-		return http.get('/commodities/account/' + id,params)
+		return http.get('/commodities/account/' + id,{params})
 	},
 	
 	updateEvaluation(id,data){
@@ -164,10 +164,10 @@ export default{
 	},
 	
 	updateNotice(id, body){
-		return http.put('/notice/' + id, body)
+		return http.put('/notices/' + id, body)
 	},
 	cancelNotice(id){
-		return http.get('/notice/cancel/' + id)
+		return http.get('/notices/cancel/' + id)
 	},
 	updateCommodity(id, update){
 		return http.put('/commodities/' + id, update)

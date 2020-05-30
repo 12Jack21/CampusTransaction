@@ -2,10 +2,10 @@
 	<view>
 			
 		<!--标题栏-->
-		<bar-title bgColor="bg-white" isBack><block slot="content">我的物品</block></bar-title>
-
-		<!-- 物品的分类tab -->
-		<view class="bg-white zaiui-title-tab-box" style="z-index: 888;margin-left: 10rpx;">
+		<bar-title bgColor="bg-white" isBack><block slot="content">我发布的</block></bar-title>
+<!-- 
+		物品的分类tab -->
+<!-- 		<view class="bg-white zaiui-title-tab-box" style="z-index: 888;margin-left: 10rpx;">
 			<view class="flex flex-wrap">
 				<view class="basis-l">
 					<scroll-view scroll-x class="nav z" scroll-with-animation :scroll-left="headTab.scrollLeft">
@@ -18,9 +18,9 @@
 					</scroll-view>
 				</view>
 			</view>
-		</view>
+		</view> -->
 
-		<view class="cu-tabbar-height" />
+		<!-- <view class="cu-tabbar-height" /> -->
 		
 		<you-scroll ref="scroll" @onPullDown="onPullDown">
 			<!--预约列表-->
@@ -28,13 +28,13 @@
 				<commodityList :list_data="release.list" @listTap="listTap"></commodityList>
 			</view>
 
-			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 1">
+<!-- 			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 1">
 				<commodityList :list_data="receive.list" @listTap="listTap"></commodityList>
 			</view>
 
 			<view class="bg-white zaiui-goods-list-view" v-show="tabCur === 2">
 				<commodityList :list_data="total.list" @listTap="listTap"></commodityList>
-			</view>
+			</view> -->
 			
 			<!-- Loading Text -->
 			<uni-load-more :status="loadStatus" class="margin-bottom"></uni-load-more>
@@ -101,10 +101,14 @@ export default {
 	onLoad(params) {
 		this.headTab.list = ['我发布的','我买入的','全部']
 		// virtual data
-		this.release.list = _commodities_data.goodsList()
-		this.receive.list = _commodities_data.goodsList()
-		this.total.list = _commodities_data.goodsList()
-		
+		// this.release.list = _commodities_data.goodsList()
+		// this.receive.list = _commodities_data.goodsList()
+		// this.total.list = _commodities_data.goodsList()
+		this.release = Object.assign({},this.release,{
+			pageIndex:1,
+			finish:false,
+			endTime: new Date().format('yyyy-MM-dd hh:mm')
+		})
 		// request data
 		this.loadCommoditiess() // 用户 id 和 预约类型
 		
@@ -142,20 +146,17 @@ export default {
 			await this.$api
 				.getCommoditiesByAcc(this.userId, pagination)
 				.then(({ data }) => {
+					console.log('coms data',data);
 					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					curCommodities.list.push(...data.data.list)
+					curCommodities.list.push(...data.data.pageList)
 					// 取完了数据
 					if (data.pageIndex - 1 >= data.pageCount) curCommodities.finish = true
 				})
 				.catch(() =>{
-					uni.showToast({
-						title: '通告获取失败',
-						icon: 'none'
-					})
 					this.err()
 				})
 
-			console.log('!同步运行到此，设置 loadingText')
+			console.log('同步运行到此，设置 loadingText')
 			if (curCommodities.finish) this.loadStatus = 'noMore'
 			else this.loadStatus = 'more'
 			this.onRequest = false
