@@ -41,7 +41,7 @@
 						</view>
 						<view class="cu-item" @tap="dataTap('commodity')">
 							<view class="text-xxl text-black cuIcon-home"></view>
-							<text class="text-sm">我的物品</text>
+							<text class="text-sm">我发布的</text>
 						</view>
 						<view class="cu-item" @tap="dataTap('notice')">
 							<view class="text-xxl text-black cuIcon-attention"></view>

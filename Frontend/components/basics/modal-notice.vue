@@ -6,11 +6,11 @@
 				<!-- 条件 -->
 				<view class="cu-form-group br-top">
 					<view class="title">新的条件</view>
-					<input type="text"  :value="notice.condition" name="condition" placeholder="输入条件" />
+					<input type="text"  v-model="notice.conditions" name="conditions" placeholder="输入条件" />
 				</view>
 				<!-- 描述 -->
 				<view class="cu-form-group">
-					<textarea name="description" :value="notice.description" maxlength="1000" 
+					<textarea name="description" v-model="notice.description" maxlength="1000" 
 						placeholder="新的通告描述" key="description"></textarea>
 				</view>
 				<!-- end -->
@@ -18,7 +18,7 @@
 				<!-- 失效时间选择 -->
 				<view class="cu-form-group br-bottom">
 					<view class="title">新的失效日期</view>
-					<input type="text" @focus="isShowPicker = true" :value="notice.expiredTime" name="outdatedTime" 
+					<input type="text" @focus="isShowPicker = true" v-model="notice.expiredTime" name="expiredTime" 
 					placeholder="日期选择" />
 				</view>
 				<mx-date-picker
@@ -66,7 +66,7 @@ export default {
 	methods: {
 		comfirmDatetime(e) {
 			this.isShowPicker = false
-			if (e) this.notice.expiredTime = e.value
+			if (e) this.notice.expiredTime = e.value.replace(/\//g,'-')
 		},
 		submit(e){
 			uni.showLoading({
@@ -75,18 +75,20 @@ export default {
 			let body = {
 				description:this.notice.description,
 				expiredTime:this.notice.expiredTime,
-				condition:this.notice.condition
+				conditions:this.notice.conditions
 			}
 			console.log('a',body);
 			this.$api.updateNotice(this.notice.id, body)
 				.then(({data})=>{
+					console.log('更新回传值',data);
 					uni.hideLoading()
 					if(data.success){
 						uni.showToast({
 							title: '更新成功'
 						});
-						// TODO: update data binding
-						
+						// update data binding
+						this.$emit('updateNoticeA',body)
+						this.$emit('closeModal')
 					}else
 						uni.showToast({
 							title:'更新失败',
@@ -96,7 +98,7 @@ export default {
 				.catch(()=>{
 					uni.hideLoading()
 					uni.showToast({
-						title:'更新失败',
+						title:'更新失败,网络异常',
 						icon:'none'
 					})
 				})
