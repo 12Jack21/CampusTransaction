@@ -58,12 +58,6 @@ public class DetailedReservation {
         this.evaluationSell = reservation.getEvaluationSell();
         this.evaluationBuy = reservation.getEvaluationBuy();
         setStateEnum(reservation.getStateEnum());
-        try{
-            Account seller = reservation.getCommodity().getNotice().getUser();
-            this.evaluationSell = seller.getEstimate().getCredit();
-        }catch(Exception e){
-            e.printStackTrace();
-        }
         this.commodity = new SimpleCommodity2(reservation.getCommodity());
         this.buyerId = reservation.getAccountId();
     }
