@@ -207,8 +207,8 @@ export default {
 				note: '最好可以有个包装',
 				createTime: '2020-10-08 10:06',
 				stateEnumStr: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
-				evaluationSell: 5, // 卖家的评价等级, 1-5
-				evaluationBuy: 1, //买家的评价等级
+				evaluationSell: 3, // 卖家的评价等级, 1-5
+				evaluationBuy: 3, //买家的评价等级
 				commodity: {
 					id: 1,
 					name: '物品名',

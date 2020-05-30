@@ -58,9 +58,9 @@
 				<view class="zaiui-goods-list-box">
 					<view class="flex flex-wrap ">
 						<goods-list :list_data="leftGoods" @listTap="goodsListTap" @accTap="accTap"
-						 class=" " style="width: 49%;padding-right: 1%;" />
+						style="width: 49%;padding-right: 1%;" key="leftGoods"/>
 						<goods-list :list_data="rightGoods" @listTap="goodsListTap" @accTap="accTap"
-						class=" " style="width: 49%;padding-left: 1%;"/>
+						class=" " style="width: 49%;padding-left: 1%;" key="rightGoods"/>
 					</view>
 				</view>
 			</view>
@@ -296,7 +296,7 @@ export default {
 			var comObj = this[comMap(tab)]
 			let pagination = {
 				pageIndex: comObj.pageIndex,
-				pageSize: comObj.pageSize,
+				// pageSize: comObj.pageSize,
 				endTime: comObj.endTime,
 				userAddress: this.goodsTabData.tabCur===1? this.userAddress:''
 			}
@@ -307,13 +307,14 @@ export default {
 					console.log('get commodity list, home resp=', res.data.data);
 					comObj.pageIndex = resp.pageIndex
 					comObj.pageSize = resp.pageSize
-					console.log('before push, after set page property:',{...comObj});
-					comObj.data.push(...resp.pageList)
-					console.log('after push:',{...comObj.data});
+					
 					// this.$nextTick(function(){
-					this.goodsData = comObj.data		
-					// console.log('goodsData after nextTick',[...this.goodsData]);
-					// this.$forceUpdate()
+					comObj.data.push(...resp.pageList)
+					this.goodsData = []
+					this.goodsData.push(...comObj.data)
+					this.$forceUpdate()
+					// this.$set(this,'goodsData',comObj.data)
+					console.log('goodsData after equal', this.goodsData);
 					// })
 					
 					// 取完了数据
@@ -329,7 +330,7 @@ export default {
 					uni.showToast({
 					title:'获取物品失败,请检查网络',
 					icon:'none'
-				})
+				}) 
 					this.loadStatus = 'more'
 					this.onRequest = false
 				})

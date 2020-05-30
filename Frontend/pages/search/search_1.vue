@@ -126,7 +126,6 @@ import handles from '@/utils/handles.js'
 
 import _home_data from '@/static/zaiui/data/home.js' //虚拟数据
 import filter_data from '../../static/data/filters.js'
-import search_data from '@/static/data/virtual.js'
 
 const iniPagination = () => {
 	return {
@@ -221,7 +220,7 @@ export default {
 			backHistories: searchHistories(),
 			histories: searchHistories(),
 			recommendations: ['耳机', '电动车', '笔记本', '华为手机', 'AJ鞋', '篮球'],
-			goodsData: searchData.a(),
+			goodsData: _home_data.goodsList(),
 			filterData: '',
 			filterDropdownValue: [],
 			filterValues: [],
@@ -377,8 +376,7 @@ export default {
 			this.filterValues = e.value
 			this.pagination = iniPagination()
 			this.goodsData = []
-			
-			console.log('filter value:',e.value);
+
 			// do search with filter condition
 			let searchBody = Object.assign(
 				{
