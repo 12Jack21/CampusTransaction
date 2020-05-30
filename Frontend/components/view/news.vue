@@ -32,7 +32,7 @@
 					
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
-					v-bind:style="[{'background-image':'url('+ (msg.sender===-1? 
+					v-bind:style="[{'background-image':'url('+ (!(msg.action!=5 && msg.action!=6 && msg.action!=7&&msg.action!=10)? 
 					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatar.length === 0? '/static/images/avatar/default.png':msg.avatar) ) + ')' }]" 
 					@tap="accTap(msg.sender, msg.sender!==-1)">
 						<!-- 已读/未读 -->
@@ -65,7 +65,7 @@
 					<!-- action 区-->
 					<view class="action" @tap="actionTap(msg.targetId,msg.targetType)">
 						<view class="cu-avatar radius"
-						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.sender!==-1">
+						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.action!=5 && msg.action!=6 && msg.action!=7&&msg.action!=10">
 						</view>
 						<text style="vertical-align: middle;" v-else>去看看
 							<text class="cuIcon-right"></text>

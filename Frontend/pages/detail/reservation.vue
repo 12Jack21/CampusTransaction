@@ -119,7 +119,7 @@
 		</view>
 		
 		<!--评价信息-->
-		<view class="bg-white zaiui-card-box">
+		<view class="bg-white zaiui-card-box" v-if="reservation.stateEnumStr=='FINISHED'">
 			<view class="zaiui-card-view zaiui-order-view">
 				<view class="text-lg text-bold text-black">评价信息</view>
 				<view class="solid-line"></view>
@@ -133,7 +133,7 @@
 				<view class="text-black title-view">
 					<view class="title">买方评价</view>
 					<view class="text-right" style="height: 40rpx;">
-						<uni-rate :value="reservation.evaluationBuy" disabled></uni-rate>
+						<uni-rate :value="reservation.evaluationBuy"  disabled ></uni-rate>
 					</view>
 				</view>
 			</view>
@@ -212,6 +212,7 @@ export default {
 			isSell: false, //是否为卖方
 			modalShow: false, //评价
 			basics: 0,
+			valueSync:5,
 			basicsList: [
 				{ cuIcon: 'cartfill', name: '未预约', name_s: '已预约' },
 				{ cuIcon: 'card', name: '待确认', name_s: '已确认' },
@@ -228,8 +229,8 @@ export default {
 				note: '最好可以有个包装',
 				createTime: '2020-10-08 10:06',
 				stateEnumStr: 'CANCELLED', // 'FAIL','CANCELLED','WAITING','VALIDATE','FINISHED','FAILWAITING'
-				evaluationSell: 3, // 卖家的评价等级, 1-5
-				evaluationBuy: 3, //买家的评价等级
+				evaluationSell: 5, // 卖家的评价等级, 1-5
+				evaluationBuy: 5, //买家的评价等级
 				commodity: {
 					id: 1,
 					name: '物品名',
@@ -267,6 +268,13 @@ export default {
 		confirmDisable(){ // 确认按钮 disable
 			return this.basics===1 && (!this.isSell || this.reservation.stateEnumStr!=='VALIDATE')
 		}
+	},
+	watch:{
+		value:function(now,old,){
+		    if(now != old){
+		      this.valueSync = Number(now);
+		    }
+		  }
 	},
 	onLoad(params) {
 		console.log('reservation onload,params',params);

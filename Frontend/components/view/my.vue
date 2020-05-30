@@ -201,10 +201,10 @@ export default {
 			store:{}, // 备份的 account
 			account:{
 				avatar:'',
-				username:'FAIR',
+				username:'',// 'FAIR',
 				password:'q',
 				gender: 1,
-				address:'文理学部',
+				address:'',// '文理学部',
 				email:'221qqw121@qq.com',
 				wechat:'wechatID_12121223',
 				qq:'99881231',
