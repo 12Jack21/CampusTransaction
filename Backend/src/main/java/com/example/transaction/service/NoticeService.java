@@ -22,6 +22,9 @@ public interface NoticeService {
     /*获得详细通告内容*/
     responseFromServer getDetailedNotice(Integer noticeId);
 
+    @Transactional
+    responseFromServer cancelNotice(Integer noticeId);
+
     /*添加通告*/
     responseFromServer setupNotice(Notice notice);
 

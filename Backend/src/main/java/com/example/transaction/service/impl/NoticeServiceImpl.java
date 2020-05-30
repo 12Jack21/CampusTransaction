@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.CommodityDAO;
 import com.example.transaction.dao.NoticeDAO;
+import com.example.transaction.dao.ReservationDAO;
 import com.example.transaction.dto.notice.DetailedNotice;
 import com.example.transaction.dto.notice.NoticeCondition;
 import com.example.transaction.dto.notice.NoticeInfo;
@@ -94,6 +95,22 @@ public class NoticeServiceImpl implements NoticeService {
         }
         commodityService.deleteAllByNotice(notice);
         if (noticeDAO.delete(queryWrapper) != 1) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return responseFromServer.error();
+        }
+        return responseFromServer.success();
+    }
+
+    @Override
+    @Transactional
+    public responseFromServer cancelNotice(Integer noticeId) {
+        try {
+            Notice notice = new Notice(noticeId);
+            notice.setStateEnum(NoticeCode.CANCELLED.getCode());
+            noticeDAO.updateById(notice);
+            reservationDAO.failWaiting(noticeId);
+        } catch (Exception e) {
+            e.printStackTrace();
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             return responseFromServer.error();
         }
@@ -280,7 +297,7 @@ public class NoticeServiceImpl implements NoticeService {
             return responseFromServer.error();
         }
         DetailedNotice detailedNotice = new DetailedNotice(notice);
-        if(detailedNotice.getBrowseCount()!=null && detailedNotice.getBrowseCount()==0){
+        if (detailedNotice.getBrowseCount() != null && detailedNotice.getBrowseCount() == 0) {
             detailedNotice.setBrowseCount(1);
         }
         return responseFromServer.success(detailedNotice);
@@ -290,6 +307,8 @@ public class NoticeServiceImpl implements NoticeService {
     NoticeDAO noticeDAO;
     CommodityDAO commodityDAO;
     CommodityService commodityService;
+    @Autowired
+    ReservationDAO reservationDAO;
 
     @Autowired
     public NoticeServiceImpl(NoticeDAO noticeDAO, CommodityDAO commodityDAO, CommodityService commodityService) {

@@ -148,10 +148,13 @@ public class CommodityController {
     public responseFromServer getMyCommodities(@PathVariable Integer accountId,
                                                  MyCommodityCondition condition,
                                                  HttpServletRequest request){
-        if(condition.getType()==null){
-            condition.setType(3);
-        }
-        return commodityService.getMyCommodities(condition);
+//        if(condition.getType()==null){
+//            condition.setType(3);
+//        }
+        Pagination pagination = new Pagination();
+        pagination.setEndTime(condition.getEndTime());
+        pagination.setPageIndex(condition.getPageIndex());
+        return getOthersCommodity(accountId,pagination,request);
     }
 
 

@@ -69,12 +69,15 @@ public class NoticeInfo {
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
-
+        try{
+            this.rate = notice.getUser().getEstimate().getSuccessRate();
+        }catch(Exception e){
+            this.rate = 75.0;
+        }
         this.browseCount = notice.getBrowseCount() == null? -1:notice.getBrowseCount();
         if(PathUtil.isPath(notice.getUser().getAvatar())){
             this.avatar = notice.getUser().getAvatar();
         }else{
-
             this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
         }
         this.userName = StringUtil.isNullOrEmpty(notice.getUser().getUsername())?"":notice.getUser().getUsername();
