@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<block v-for="(item) in list_data" :key="item.id">
+		<block v-for="item in list_data" :key="item.id">
 			<view class="bg-white margin-top padding radius zaiui-trends">
 				<!--用户信息-->
 				<view class="cu-list menu-avatar">

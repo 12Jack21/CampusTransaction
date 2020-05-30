@@ -8,7 +8,7 @@ http.setConfig((config) => { /* config 为默认全局配置*/
 		
     config.baseUrl = 'http://localhost:9012'; /* 根域名 */
 		config.baseUrl = 'http://39.96.69.108:9999'
-		config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
+		// config.baseUrl = 'https://easy-mock.com/mock/5eb89db640d5e5498f113eff/ct'
 		// config.baseUrl = 'http://39.96.69.108:8080'
     config.header = {
 				// "Content-Type": 'application/x-www-form-urlencoded'
@@ -47,10 +47,10 @@ http.interceptor.response((response) => { /* 对响应成功做点什么 （stat
   // }
 	if(response.data.msg=='ERROR') // 服务器错误处理的代码
 		return Promise.reject(response)
-  console.log('http intercept response',response)
+  console.log('http intercept response:',response)
   return response
 }, (response) => { /*  对响应错误做点什么 （statusCode !== 200），必须return response*/
-  console.log('http intercept error',response)
+  console.log('http intercept error:',response)
   return response
 })
 

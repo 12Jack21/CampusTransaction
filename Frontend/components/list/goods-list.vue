@@ -1,7 +1,7 @@
 <template>
 	<view class="">
 		<block v-for="(item, index) in list_data" :key="item.id">
-			<view class="bg-white margin-bottom-sm list-radius" v-if="!item.type" >
+			<view class="bg-white margin-bottom-sm list-radius" >
 				<view class="goods-img" @tap="listTap(item.id)">
 					<image :src="item.img.length===0 ? '/static/images/comDefault.png':item.img" mode="widthFix" lazy-load />
 					<view class="count-view">
@@ -33,11 +33,11 @@
 									<view class="basis-xs" @tap="accTap(item.accId)">
 										<image class="cu-avatar sm round img"
 									 :src="item.avatar.length===0?'/static/images/avatar/default.png':item.avatar" 
-									 lazy-load mode="widthFix" /></view>
+									 mode="widthFix" /></view>
 									<view class="basis-xl text-cut line-height" @tap="accTap(item.accId)">
 										<text class="text-sm margin-left-xs">{{ item.accountName }}</text>
 									</view>
-									<image class="v-icon" src="/static/zaiui/img/v.png" lazy-load mode="widthFix" v-if="item.avatar.length===0" />
+									<image class="v-icon" src="/static/zaiui/img/v.png" mode="widthFix" v-if="item.avatar.length===0" />
 								</view>
 							</view>
 							<view class="flex-sub text-right text-time">
