@@ -5,6 +5,7 @@ import com.example.transaction.pojo.Notice;
 import com.example.transaction.util.PathUtil;
 import com.example.transaction.util.code.Nums;
 import com.example.transaction.util.code.ResourcePath;
+import io.netty.util.internal.StringUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -68,20 +69,21 @@ public class NoticeInfo {
 //                this.img = Nums.commodityImagePath + images.get(0).getImageUrl();
             }
         }
-        this.browseCount = notice.getBrowseCount();
+
+        this.browseCount = notice.getBrowseCount() == null? -1:notice.getBrowseCount();
         if(PathUtil.isPath(notice.getUser().getAvatar())){
             this.avatar = notice.getUser().getAvatar();
         }else{
 
             this.avatar = ResourcePath.avatarRequestPath + notice.getUser().getAvatar();
         }
-        this.userName = notice.getUser().getUsername();
+        this.userName = StringUtil.isNullOrEmpty(notice.getUser().getUsername())?"":notice.getUser().getUsername();
         this.accountId = notice.getAccountId();
         if (notice.getUser().getEstimate() != null) {
             this.rate = notice.getUser().getEstimate().getSuccessRate();
         }
-        this.description = notice.getDescription();
-        this.conditions = notice.getConditions();
+        this.description = StringUtil.isNullOrEmpty(notice.getDescription())?"":notice.getDescription();
+        this.conditions = StringUtil.isNullOrEmpty(notice.getConditions())?"":notice.getConditions();
         Date now = new Date();
         Long millis = notice.getCreateTime().getTime();
         Long deviance = (new Date()).getTime() - notice.getCreateTime().getTime();

@@ -22,6 +22,7 @@ import java.util.List;
 public interface NotifyDAO extends BaseMapper<Notify> {
 
     @Results(id = "notifyMap", value = {
+            @Result(property = "sender", column = "sender"),
             @Result(property = "account", column = "sender", javaType = SimpleAccount.class, one = @One(
                     select = "com.example.transaction.dao.AccountDAO.getSimpleAccountById"
             ))

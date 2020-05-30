@@ -55,13 +55,11 @@ public class NotifyController {
 
     @ApiOperation(value = "设置为已读")
     @ApiImplicitParam(name = "ids", value = "用户Id", paramType = "Integer", dataType = "Integer")
-    @PutMapping
-    public responseFromServer setIsRead(@RequestBody List<Integer> ids,
+    @PutMapping("/read/{id}")
+    public responseFromServer setIsRead(@PathVariable Integer id,
                                         HttpServletRequest request) {
-        for (Integer id : ids) {
-            if (readNotify(id, request).isFailure()) {
-                return responseFromServer.error();
-            }
+        if (readNotify(id, request).isFailure()) {
+            return responseFromServer.error();
         }
         return responseFromServer.success();
     }

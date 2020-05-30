@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -217,10 +218,14 @@ public class ReservationController {
     @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
     @PutMapping("/{reservationId}")
     public responseFromServer updateEvaluation(@PathVariable Integer reservationId,
-                                               Double evaluationSell,
-                                               Double evaluationBuy,
+                                               @RequestBody Reservation reservation,
+//                                               @RequestJson Double evaluationSell,
+//                                               @RequestJson Double evaluationBuy,
                                                HttpServletRequest request) {
-        Reservation reservation = new Reservation(reservationId);
+        reservation.setId(reservationId);
+        Double evaluationBuy = reservation.getEvaluationBuy();
+        Double evaluationSell = reservation.getEvaluationSell();
+//        Reservation reservation = new Reservation(reservationId);
         if (evaluationBuy != null && evaluationBuy >= 0 && evaluationBuy <= 5) {
             reservation.setEvaluationBuy(evaluationBuy);
         }
@@ -330,9 +335,36 @@ public class ReservationController {
         pageIndex = pageIndex == null || pageIndex.intValue() <= 0 ? 1 : pageIndex;
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("account_id", account.getId());
-        queryWrapper.eq("state_enum", condition.getType());
+        switch (condition.getType().intValue()) {
+            /**
+             * 待确认
+             */
+            case 0:
+                queryWrapper.eq("state_enum", 0);
+                break;
+            /**
+             * 预约中
+             */
+            case 1:
+                queryWrapper.eq("state_enum", 1);
+                break;
+            /**
+             * 已完成 / 失败
+             */
+            case 2:
+                queryWrapper.in("state_enum", Arrays.asList(2, 3,-1));
+                break;
+            /**
+             * 全部
+             */
+            default:
+                break;
+
+        }
+
 //        Boolean isCommodity = (Boolean) map.get("isCommodity");
         return reservationService.getReservationsPage(queryWrapper, pageIndex);
+//        return reservationService.getSimpleReservationPage(queryWrapper,pageIndex);
     }
 
 

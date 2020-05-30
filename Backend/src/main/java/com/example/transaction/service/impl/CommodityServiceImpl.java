@@ -670,7 +670,7 @@ public class CommodityServiceImpl implements CommodityService {
      * @return
      */
     @Override
-    @Transactional
+
     public responseFromServer validateCommodityImageUrl(Integer commodityId, String url) {
         CommodityImage image = new CommodityImage();
         image.setCommodityId(commodityId);
@@ -679,15 +679,22 @@ public class CommodityServiceImpl implements CommodityService {
 //        file.renameTo(new File("E:/CampusTransaction/images/"+url));
         try {
             /*将图片从temp文件夹移动到images文件夹下*/
-            Files.move(Paths.get("E:/CampusTransactionResources/temp/" + url), Paths.get("E:/CampusTransactionResources/images/" + url), StandardCopyOption.REPLACE_EXISTING);
+            Files.move(Paths.get(ResourcePath.imageTempPath + url), Paths.get(ResourcePath.goodsFilePath + url), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
             return responseFromServer.error();
         }
 
-        if (1 != commodityImageDAO.updateByUrl(url, commodityId)) {
+        CommodityImage commodityImage = new CommodityImage();
+        commodityImage.setCommodityId(commodityId);
+        commodityImage.setImageUrl(url);
+        if(1 != commodityImageDAO.insert(commodityImage)){
             return responseFromServer.error();
         }
+//
+//        if (1 != commodityImageDAO.updateByUrl(url, commodityId)) {
+//            return responseFromServer.error();
+//        }
 
         return responseFromServer.success();
     }

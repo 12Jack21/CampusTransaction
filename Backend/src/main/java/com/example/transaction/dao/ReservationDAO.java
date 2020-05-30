@@ -75,4 +75,15 @@ public interface ReservationDAO  extends BaseMapper<Reservation> {
     @Update("update reservation set state_enum = 3 where commodity_id = #{commodityId} and count > #{count}")
     Integer failWaiting(Integer commodityId, Integer count);
 
+
+    /*获取我收到的预约*/
+    @Results(id = "reservation-detailedCommodity-map3",value = {
+            @Result(property = "commodity", column = "commodity_id", javaType = Commodity.class, one = @One(
+                    select = "com.example.transaction.dao.CommodityDAO.getDetailedCommodityById"
+            ))
+    })
+    @Select("select * from reservation  ${ew.customSqlSegment} order by update_time desc")
+    IPage<Reservation> getReservationPageQuery(Page<?> page, @Param("ew")QueryWrapper<Reservation> queryWrapper);
+
+
 }

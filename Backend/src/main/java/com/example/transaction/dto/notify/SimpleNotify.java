@@ -24,7 +24,6 @@ public class SimpleNotify<T> {
      * 接收者
      */
     Integer receiverId;
-
     /**
      * 发送者
      */
@@ -57,19 +56,23 @@ public class SimpleNotify<T> {
 
     public SimpleNotify(AccountNotify accountNotify) {
         Notify notify = accountNotify.getNotify();
-
+        this.id = accountNotify.getId();
+        this.createTime = accountNotify.getCreateTime();
         SimpleAccount simpleAccount = notify.getAccount();
         this.sender = notify.getSender();
         this.action = notify.getAction();
         this.targetId = notify.getTarget();
         this.targetType = notify.getTargetType();
 
-        this.avatar = ResourcePath.avatarRequestPath + simpleAccount.getAvatar();
-        this.accountName = simpleAccount.getUsername();
-        this.accountGender = simpleAccount.getGender();
-        this.receiverId = accountNotify.getAccountId();
-        this.isRead = accountNotify.getIsRead();
-        this.createTime = accountNotify.getCreateTime();
+        if(simpleAccount !=null){
+            this.avatar = ResourcePath.avatarRequestPath + simpleAccount.getAvatar();
+            this.accountName = simpleAccount.getUsername();
+            this.accountGender = simpleAccount.getGender();
+            this.receiverId = accountNotify.getAccountId();
+            this.isRead = accountNotify.getIsRead();
+            this.createTime = accountNotify.getCreateTime();
+
+        }
 
     }
 }

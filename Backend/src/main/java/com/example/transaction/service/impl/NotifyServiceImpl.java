@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.transaction.dao.*;
+import com.example.transaction.dto.account.SimpleAccount;
 import com.example.transaction.dto.commodity.SimpleCommodity;
 import com.example.transaction.dto.notify.NotifyCondition;
 import com.example.transaction.dto.notify.SimpleNotify;
@@ -12,6 +13,7 @@ import com.example.transaction.service.NotifyService;
 import com.example.transaction.util.MyPage;
 import com.example.transaction.util.code.NotifyTargetCode;
 import com.example.transaction.util.code.Nums;
+import com.example.transaction.util.code.ResourcePath;
 import com.example.transaction.util.responseFromServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -256,7 +258,11 @@ public class NotifyServiceImpl implements NotifyService {
             if (commodity == null) {
                 return responseFromServer.error();
             }
+            List<CommodityImage> images = commodityImageDAO.getAllImageByCommodityId(commodity.getId());
             SimpleCommodity simpleCommodity = new SimpleCommodity(commodity);
+            if(images!=null && images.size()>0){
+                simpleCommodity.setImg(ResourcePath.commodityImageRequestPath + images.get(0).getImageUrl());
+            }
             simpleNotify.setCommodity(simpleCommodity);
         } else if (targetType == NotifyTargetCode.RESERVATION.getCode()) {
             /*当前的target是预约,也要放入商品信息*/
@@ -268,7 +274,11 @@ public class NotifyServiceImpl implements NotifyService {
             if (commodity == null) {
                 return responseFromServer.error();
             }
+            List<CommodityImage> images = commodityImageDAO.getAllImageByCommodityId(commodity.getId());
             SimpleCommodity simpleCommodity = new SimpleCommodity(commodity);
+            if(images!=null && images.size()>0){
+                simpleCommodity.setImg(ResourcePath.commodityImageRequestPath + images.get(0).getImageUrl());
+            }
             simpleNotify.setCommodity(simpleCommodity);
         } else if (targetType == NotifyTargetCode.NOTICE.getCode()) {
             /*当前target是通告,只需要放入标题*/
@@ -290,7 +300,7 @@ public class NotifyServiceImpl implements NotifyService {
         switch (condition.getType()) {
             case 0:
                 /**未读消息*/
-                queryWrapper.eq("acc_notify.is_read", false);
+                queryWrapper.eq("acc_notify.is_read", false);break;
             case 1:
                 /**全部消息*/
                 break;
@@ -306,9 +316,9 @@ public class NotifyServiceImpl implements NotifyService {
         }
         Page<AccountNotify> page;
         if (condition.getPageIndex() == null || condition.getPageIndex() <= 0) {
-            page = new Page<>(Nums.pageSize, 1);
+            page = new Page<>(1,Nums.pageSize);
         } else {
-            page = new Page<>(Nums.pageSize, condition.getPageIndex());
+            page = new Page<>(condition.getPageIndex(),Nums.pageSize);
         }
         Timestamp timestamp;
         if (condition.getEndTime() == null) {
@@ -325,6 +335,8 @@ public class NotifyServiceImpl implements NotifyService {
         for (AccountNotify accountNotify : myPage.getPageList()) {
             try {
                 /**填充显示所需的数据*/
+                SimpleAccount simpleAccount = accountDAO.getSimpleAccountById(accountNotify.getNotify().getSender());
+                accountNotify.getNotify().setAccount(simpleAccount);
                 SimpleNotify simpleNotify = new SimpleNotify(accountNotify);
                 if (fillInSimpleNotifyData(simpleNotify).isFailure()) {
                     throw new Exception();
@@ -347,7 +359,10 @@ public class NotifyServiceImpl implements NotifyService {
     NoticeDAO noticeDAO;
     @Autowired
     ReservationDAO reservationDAO;
-
+    @Autowired
+    CommodityImageDAO commodityImageDAO;
+    @Autowired
+    AccountDAO accountDAO;
     @Autowired
     public NotifyServiceImpl(NotifyDAO notifyDAO, AccountNotifyDAO accountNotifyDAO, CommodityDAO commodityDAO) {
         this.accountNotifyDAO = accountNotifyDAO;

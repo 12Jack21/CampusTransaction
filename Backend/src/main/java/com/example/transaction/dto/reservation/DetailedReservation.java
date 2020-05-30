@@ -4,6 +4,7 @@ import com.example.transaction.dto.commodity.SimpleCommodity2;
 import com.example.transaction.pojo.Account;
 import com.example.transaction.pojo.Reservation;
 import com.example.transaction.util.code.NoticeCode;
+import com.example.transaction.util.code.ReservationCode;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,8 +29,14 @@ public class DetailedReservation {
     Integer stateEnum = -3;
     private String stateEnumStr;
     public void setStateEnum(Integer stateEnum){
-        this.stateEnum = stateEnum;
-        this.stateEnumStr = NoticeCode.getDescription(stateEnum);
+
+        if (stateEnum != null) {
+            this.stateEnum = stateEnum;
+            this.stateEnumStr = ReservationCode.getDescription(stateEnum);
+        }else{
+            this.stateEnum = null;
+            this.stateEnumStr = "";
+        }
     }
     Double evaluationSell = -1.0D;
     Double evaluationBuy = -1.0D;
@@ -48,7 +55,9 @@ public class DetailedReservation {
         this.count = reservation.getCount();
         this.note = reservation.getNote();
         this.createTime = reservation.getStartTime();
-        setStateEnum(stateEnum = reservation.getStateEnum());
+        this.evaluationSell = reservation.getEvaluationSell();
+        this.evaluationBuy = reservation.getEvaluationBuy();
+        setStateEnum(reservation.getStateEnum());
         try{
             Account seller = reservation.getCommodity().getNotice().getUser();
             this.evaluationSell = seller.getEstimate().getCredit();
