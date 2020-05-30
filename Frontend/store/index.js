@@ -16,7 +16,7 @@ const store = new Vuex.Store({
 			state.userId = userId
 			state.userName = userName
 			state.userAddress = userAddress
-			state.token = token
+			state.token = token 
 			state.hasLogin = true
 		},
 		relogin(state,{userId,userName,userAddress}){

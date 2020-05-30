@@ -1,29 +1,27 @@
 <template>
-	<view class="zaiui-my-box" :class="show ? 'show' : ''" >
-		<view   v-show="scene=='my'">		
+	<view class="zaiui-my-box" :class="show ? 'show' : ''">
+		<view v-show="scene == 'my'">
 			<view class="bg-gradual-red zaiui-head-box">
 				<!--标题栏-->
 				<!--小程序端不显示-->
 				<bar-title :isBack="false" :fixed="false">
-					#<!-- #ifdef MP -->
-					<block slot="left">
-						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'" />
-					</block>
+					#
+					<!-- #ifdef MP -->
+					<block slot="left"><text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene = 'password'" /></block>
 					<!-- #endif -->
-					#<!-- #ifndef MP -->
-					<block slot="right">
-						<text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene='password'"  />
-					</block>
-					<!-- #endif -->					
-				</bar-title> 
- 
+					#
+					<!-- #ifndef MP -->
+					<block slot="right"><text style="font-size: 1.5em;" class="cuIcon-settings" @tap="scene = 'password'" /></block>
+					<!-- #endif -->
+				</bar-title>
+
 				<!--用户信息-->
 				<view class="zaiui-user-info-box">
 					<view class="cu-list menu-avatar">
 						<view class="flex" style="justify-content: flex-start;">
-							<view class="cu-avatar round userAvatar" :style="{ backgroundImage:avatar}" />
+							<view class="cu-avatar round userAvatar" :style="{ backgroundImage: avatar }" />
 							<view class=" text-xl text-white flex" style="align-items: center;">
-								<text class="margin-right">{{account.username}}</text>
+								<text class="margin-right">{{ account.username }}</text>
 							</view>
 						</view>
 					</view>
@@ -55,129 +53,128 @@
 					<view class="cu-item arrow">
 						<view class="content">头像</view>
 						<view class="action" @tap="updateInfo('avatar')">
-							<view class="cu-avatar round sm" :style="{ backgroundImage:account.avatar.length===0? 'url(/static/images/avatar/default.png)' : ('url('+ account.avatar+')') }" />
+							<view
+								class="cu-avatar round sm"
+								:style="{ backgroundImage: account.avatar.length === 0 ? 'url(/static/images/avatar/default.png)' : 'url(' + account.avatar + ')' }"
+							/>
 						</view>
 					</view>
 					<view class="cu-item arrow" @tap="updateInfo('username')">
 						<view class="content">昵称</view>
-						<view class="action"><text class="text-gray">{{account.username}}</text></view>
+						<view class="action">
+							<text class="text-gray">{{ account.username }}</text>
+						</view>
 					</view>
 					<view class="cu-item arrow">
 						<view class="content">性别</view>
 						<view class="action">
-							<picker @change="genderPickerChange" :range="['女','男']" :value="account.gender">
-								<view class="picker text-gray">{{ account.gender===0 ? '女' : '男' }}</view>
+							<picker @change="genderPickerChange" :range="['女', '男']" :value="account.gender">
+								<view class="picker text-gray">{{ account.gender === 0 ? '女' : '男' }}</view>
 							</picker>
 						</view>
 					</view>
 					<view class="cu-item arrow">
-						<view class="content">地址</view>
-						<view class="action">
-							<picker @change="addrPickerChange" :range="addrs" :value="addrs.indexOf(account.address)">
-								<view class="picker text-gray">{{ account.address}}</view>
-							</picker>
-						</view>
-					</view>
+						<picker @change="addrPickerChange" :range="addrs" :value="addrs.indexOf(account.address) || 0">
+							<view class="content">地址</view>
+							<view class="action">
+								<view class="picker text-gray">{{ account.address }}</view>
+							</view>
+						</picker>
+					</view> 
 				</view>
 
-				<view class="cu-list menu margin-top">			
-					<view class="cu-item arrow" @tap="scene='intro'">
+				<view class="cu-list menu margin-top">
+					<view class="cu-item arrow" @tap="scene = 'intro'">
 						<view class="content">个人简介</view>
-						<view class="action"><text class="text-gray">{{account.introduction}}</text></view>
+						<view class="action">
+							<text class="text-gray">{{ account.introduction }}</text>
+						</view>
 					</view>
-					<view class="cu-item arrow" @tap="scene='contact'">
+					<view class="cu-item arrow" @tap="scene = 'contact'">
 						<view class="content">联系卡</view>
 						<view class="action"></view>
 					</view>
 				</view>
 
 				<view class="cu-list menu margin-top">
-					<view class="cu-item arrow" @tap="scene='about'">
+					<view class="cu-item arrow" @tap="scene = 'about'">
 						<view class="content">关于</view>
 						<view class="action"></view>
 					</view>
-					<view class="cu-item arrow logOutItem" @tap="logOut">
-						<view class="content text-red">注销账户</view>
-					</view>
+					<view class="cu-item arrow logOutItem" @tap="logOut"><view class="content text-red">注销账户</view></view>
 				</view>
 			</view>
 
-		
 			<!--占位底部距离-->
 			<view class="cu-tabbar-height"></view>
-			
+
 			<!--弹出框-->
 			<view class="cu-modal bottom-modal zaiui-bottom-modal-box" :class="modal.show ? 'show' : ''">
 				<view class="cu-dialog bg-white updateDialog">
 					<view class="text-black text-center margin-tb text-lg title-bar">
 						<text>{{ modal.title }}</text>
-						<text class="cuIcon-close close-icon" @tap="modal.show=false"></text>		
+						<text class="cuIcon-close close-icon" @tap="modal.show = false"></text>
 					</view>
-			
+
 					<!-- 模态框内容区域 -->
 					<view class="zaiui-modal-content">
 						<!-- 修改头像 -->
 						<view class="zaiui-view-box select" v-if="modal.type == 'avatar'">
 							<!-- 上传 -->
 							<view class="avatar">
-								<avatar selWidth="200upx" selHeight="200upx" @upload="upload" :avatarSrc="url"
-								        avatarStyle="width: 200upx; height: 200upx; border-radius: 100%;">
-								    </avatar>
+								<avatar selWidth="200upx" selHeight="200upx" @upload="upload" :avatarSrc="url" avatarStyle="width: 200upx; height: 200upx; border-radius: 100%;"></avatar>
 								<loading v-if="uploading">上传中</loading>
 								<text class="text-gray" v-else>点击头像选择</text>
 							</view>
 							<!-- end -->
 						</view>
-			
+
 						<!-- 修改昵称 -->
-						<view class="zaiui-view-box select" v-if="modal.type == 'username'">										
+						<view class="zaiui-view-box select" v-if="modal.type == 'username'">
 							<!-- 新昵称 -->
 							<view class="usernameItem">
 								<view class="flex new">
 									<view class="text-black text-lg text-bold">新昵称:</view>
-									<input type="text" v-model="username" placeholder="输入新昵称"  maxlength="12"/>
+									<input type="text" v-model="username" placeholder="输入新昵称" maxlength="12" />
 								</view>
 								<view class="flex old text-lg">
 									<view class="text-gray ">原昵称:</view>
-									<text class="text-gray ">{{account.username}}</text>
+									<text class="text-gray ">{{ account.username }}</text>
 								</view>
 							</view>
 							<!-- end -->
-						</view>						
+						</view>
 						<!-- 保存更新 -->
 						<view class="zaiui-footer-fixed" style="z-index: 10;">
 							<view class="flex flex-direction">
-								<button class="cu-btn bg-red" style="font-size: 1.4em;padding: 10rpx 0;" @tap="confirm" >{{modal.type=='username'? '保存':'上传'}}</button>
-							</view> 
+								<button class="cu-btn bg-red" style="font-size: 1.4em;padding: 10rpx 0;" @tap="confirm">{{ modal.type == 'username' ? '保存' : '上传' }}</button>
+							</view>
 						</view>
-						
 					</view>
 				</view>
 			</view>
-			
 		</view>
-		<contact-cards :onUpdate="onUpdate" :contact="contact" v-if="scene=='contact'" @close="close" @updateContact="updateContact"></contact-cards>
-		<edit-password :onUpdate="onUpdate" :srcPassword="account.password" v-else-if="scene=='password'" @close="close" @updatePassword="updatePassword" ></edit-password>
-		<edit-synopsis :onUpdate="onUpdate"  v-else-if="scene=='intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
-		
-		
+		<contact-cards :onUpdate="onUpdate" :contact="contact" v-if="scene == 'contact'" @close="close" @updateContact="updateContact"></contact-cards>
+		<edit-password :onUpdate="onUpdate" :srcPassword="account.password" v-else-if="scene == 'password'" @close="close" @updatePassword="updatePassword"></edit-password>
+		<edit-synopsis :onUpdate="onUpdate" :intro="account.introduction" v-else-if="scene == 'intro'" @close="close" @updateIntro="updateIntro"></edit-synopsis>
+
 		<mpopup ref="mpopup" :isdistance="true"></mpopup>
 	</view>
 </template>
 
 <script>
 import barTitle from '@/components/basics/bar-title'
-import avatar from "../../components/yq-avatar/yq-avatar.vue";
+import avatar from '../../components/yq-avatar/yq-avatar.vue'
 import contactCards from '@/components/my/contact-cards.vue'
 import editSynopsis from '@/components/my/edit-synopsis.vue'
 import editPassword from '@/components/my/edit-password.vue'
 
 import _my_data from '@/static/zaiui/data/my.js' //虚拟数据
 import _tool from '@/static/zaiui/util/tools.js' //工具函数
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 
 const types = ['success', 'err', 'warn', 'info', 'loading'] // tip message types
-const defaultAvatar = 'url(/static/images/avatar/default.png)' 
+const defaultAvatar = 'url(/static/images/avatar/default.png)'
 export default {
 	name: 'my',
 	components: {
@@ -190,41 +187,41 @@ export default {
 	data() {
 		return {
 			uploading: false,
-			onUpdate:false,
-			scene:'my',
-			addrs:['信息学部', '文理学部', '工学部', '医学部'],
-			modal:{
-				title:'修改头像',
-				type:'avatar',
+			onUpdate: false,
+			scene: 'my',
+			addrs: ['信息学部', '文理学部', '工学部', '医学部'],
+			modal: {
+				title: '修改头像',
+				type: 'avatar',
 				show: false
 			},
-			store:{}, // 备份的 account
-			account:{
-				avatar:'',
-				username:'',// 'FAIR',
-				password:'q',
+			store: {}, // 备份的 account
+			account: {
+				avatar: '',
+				username: '', // 'FAIR',
+				password: 'q',
 				gender: 1,
-				address:'',// '文理学部',
-				email:'221qqw121@qq.com',
-				wechat:'wechatID_12121223',
-				qq:'99881231',
-				introduction:"我就是我，是不一样的烟火"
+				address: '', // '文理学部',
+				email: '221qqw121@qq.com',
+				wechat: 'wechatID_12121223',
+				qq: '99881231',
+				introduction: '我就是我，是不一样的烟火'
 			},
-			username:'', // 新昵称
-			url:''
+			username: '', // 新昵称
+			url: ''
 		}
 	},
-	computed:{
+	computed: {
 		...mapState(['userId']),
-		contact(){
+		contact() {
 			return {
-				wechat:this.account.wechat,
-				qq:this.account.qq,
-				email:this.account.email
+				wechat: this.account.wechat,
+				qq: this.account.qq,
+				email: this.account.email
 			}
 		},
-		avatar(){
-			if(this.account.avatar == undefined || this.account.avatar==null || this.account.avatar.length ===0) return defaultAvatar;
+		avatar() {
+			if (this.account.avatar == undefined || this.account.avatar == null || this.account.avatar.length === 0) return defaultAvatar
 			return 'url(' + this.account.avatar + ')'
 		}
 	},
@@ -234,7 +231,7 @@ export default {
 			default: true
 		}
 	},
-	created() {	
+	created() {
 		this.getMyAccount()
 	},
 	mounted() {
@@ -243,149 +240,152 @@ export default {
 			scrollTop: 0,
 			duration: 0
 		})
-		this.url = this.avatar.startsWith('url(') ? this.avatar.slice(4,-1):this.avatar
+		this.url = this.avatar.startsWith('url(') ? this.avatar.slice(4, -1) : this.avatar
 	},
 	methods: {
-		updateAccRequest(close){
-			if(close) this.onUpdate = true
-			this.$api.updateAccount(this.userId, this.account)
-				.then(({data})=>{
-					if(data.success){
-						this.tip(0,'更新成功')
+		updateAccRequest(close) {
+			if (close) this.onUpdate = true
+			this.$api
+				.updateAccount(this.userId, this.account)
+				.then(({ data }) => {
+					if (data.success) {
+						this.tip(0, '更新成功')
 						this.store = {}
-					}
-					else{
-						this.tip(1,'更新失败')
+					} else {
+						this.tip(1, '更新失败')
 						this.account = this.store
 					}
-					if(close) {
+					if (close) {
 						this.scene = 'my'
 						this.onUpdate = false
 					}
 				})
-				.catch(()=>{
+				.catch(() => {
 					this.err()
 					this.account = this.store
-					if(close) {
+					if (close) {
 						this.scene = 'my'
 						this.onUpdate = false
 					}
 				})
 		},
-		upload(rsp){ //切换新头像
+		upload(rsp) {
+			//切换新头像
 			this.url = rsp.path
 		},
-		confirm(){
-			if(this.modal.type == 'username'){
-				if(this.username == this.account.username) return
-				this.store = Object.assign({},this.account)
+		confirm() {
+			if (this.modal.type == 'username') {
+				if (this.username == this.account.username) return
+				this.store = Object.assign({}, this.account)
 				this.account.username = this.username
 				this.updateAccRequest()
 				this.modal.show = false
-			}else if(this.modal.type == 'avatar'){
+			} else if (this.modal.type == 'avatar') {
 				// 上传头像
-				if(this.url == this.account.avatar) return
+				if (this.url == this.account.avatar) return
 				this.uploading = true
-				this.$api.uploadAvatar(this.account.id, this.url)
-					.then(({data})=>{
-						if(data.success){
-							this.tip(0,'上传头像成功')							
+				this.$api
+					.uploadAvatar(this.account.id, this.url)
+					.then(({ data }) => {
+						if (data.success) {
+							this.tip(0, '上传头像成功')
 							this.account.avatar = data.data
-						}else{
-							this.tip(1,'更新头像失败')
+						} else {
+							this.tip(1, '更新头像失败')
 						}
 						this.modal.show = false
 						this.uploading = false
 					})
-					.catch(()=>{
+					.catch(() => {
 						this.modal.show = false
 						this.uploading = false
 						this.err()
 					})
 			}
 		},
-		addrPickerChange(e){
+		addrPickerChange(e) {
 			let a = e.detail.value
-			if(this.addrs[a] == this.account.address) return
-			this.store = Object.assign({},this.account) // set store to backup
+			if (this.addrs[a] == this.account.address) return
+			this.store = Object.assign({}, this.account) // set store to backup
 			this.account.address = this.addrs[a]
 			this.updateAccRequest()
 		},
-		genderPickerChange(e){
+		genderPickerChange(e) {
 			let g = e.detail.value
-			if(g === this.account.gender) return
-			this.store = Object.assign({},this.account)
+			if (g === this.account.gender) return
+			this.store = Object.assign({}, this.account)
 			this.account.gender = g
 			this.updateAccRequest()
 		},
-		updateContact({wechat,qq,email}){
-			if(this.account.wechat==wechat &&this.account.qq==qq&&this.account.email==email) return
-			this.store = {...this.account}
-			this.account = Object.assign(this.account,{wechat,qq,email})
+		updateContact({ wechat, qq, email }) {
+			if (this.account.wechat == wechat && this.account.qq == qq && this.account.email == email) return
+			this.store = { ...this.account }
+			this.account = Object.assign(this.account, { wechat, qq, email })
 			this.updateAccRequest(true)
 		},
-		updateIntro({introduction}){
-			if(this.account.introduction==introduction) return
-			this.store = {...this.account}
-			this.account = Object.assign(this.account,{introduction})
+		updateIntro({ introduction }) {
+			if (this.account.introduction == introduction) return
+			this.store = { ...this.account }
+			this.account = Object.assign(this.account, { introduction })
 			this.updateAccRequest(true)
 		},
-		updateInfo(info){
-			switch(info){
+		updateInfo(info) {
+			switch (info) {
 				case 'avatar':
-					this.modal.type='avatar'
-					this.modal.title='修改头像'
+					this.modal.type = 'avatar'
+					this.modal.title = '修改头像'
 					this.modal.show = true
 					break
 				case 'username':
-					this.modal.type='username'
-					this.modal.title='修改昵称'
+					this.modal.type = 'username'
+					this.modal.title = '修改昵称'
 					this.modal.show = true
 					break
 				default:
-					console.log('update switch case default:',info);
+					console.log('update switch case default:', info)
 			}
 		},
-		updatePassword(pass){
+		updatePassword(pass) {
 			this.onUpdate = true
-			this.$api.updatePassword(this.userId,pass)
-				.then(({data})=>{
-					if(data.success){
-						this.tip(0,'密码修改成功')
-					}else
-						this.tip(1,'密码修改失败')
+			this.$api
+				.updatePassword(this.userId, pass)
+				.then(({ data }) => {
+					if (data.success) {
+						this.tip(0, '密码修改成功')
+					} else this.tip(1, '密码修改失败')
 					this.onUpdate = false
-					this.scene='my'
+					this.scene = 'my'
 				})
-				.catch(()=>{
+				.catch(() => {
 					this.err()
 					this.onUpdate = false
-					this.scene='my'
+					this.scene = 'my'
 				})
 		},
-		getMyAccount(){
-			this.$api.getMyAccount(this.userId)
-				.then(({data})=>{
-					console.log('我的账户',data.data);
-					this.account = Object.assign({},this.account,data.data)
+		getMyAccount() {
+			this.$api
+				.getMyAccount(this.userId)
+				.then(({ data }) => {
+					console.log('我的账户', data.data)
+					this.account = Object.assign({}, this.account, data.data)
 				})
-				.catch(()=>{
-					console.log('获取我的账户信息失败');
+				.catch(() => {
+					console.log('获取我的账户信息失败')
 					uni.showToast({
 						title: '网络异常',
 						icon: 'none'
-					});
+					})
 				})
 		},
-		logOut(){
+		logOut() {
 			// 清空 vuex中数据
 			this.$store.dispatch('logout')
 			uni.reLaunch({
-				url:'../../pages/login/login?type=3'
+				url: '../../pages/login/login?type=3'
 			})
 		},
-		dataTap(tag){
-			switch(tag){
+		dataTap(tag) {
+			switch (tag) {
 				case 'reservation':
 					uni.navigateTo({
 						url: '/pages/reservations/reservations'
@@ -394,15 +394,15 @@ export default {
 				case 'commodity':
 					uni.navigateTo({
 						url: '/pages/commodities/commodities'
-					});
+					})
 					break
 				case 'notice':
 					// TODO: 暂不考虑
 					uni.navigateTo({
 						url: ''
-					});
+					})
 					break
-			}		
+			}
 		},
 		err() {
 			this.tip(1, '网络异常')
@@ -411,11 +411,11 @@ export default {
 			this.$refs.mpopup.open({
 				type: types[index],
 				content,
-				timeout:2500,
-				isClick:false
+				timeout: 2500,
+				isClick: false
 			})
 		},
-		close(){
+		close() {
 			this.scene = 'my'
 		}
 	}
@@ -423,66 +423,66 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$img_size:150rpx;
+$img_size: 150rpx;
 $bottom_height: 60rpx;
 $space: 20rpx;
 
-.status-bar-height{
+.status-bar-height {
 	height: var(--status-bar-height);
 }
-.avatar{
+.avatar {
 	margin-bottom: $bottom_height * 2;
 	display: flex;
 	flex-direction: column;
-	> text{
+	> text {
 		text-align: center;
 		margin-top: $bottom_height;
 	}
 }
-.usernameItem{
+.usernameItem {
 	padding: 20rpx 0 60rpx 0;
 	margin-bottom: $bottom_height;
 	display: flex;
 	flex-direction: column;
 	// justify-content: center;
 	align-items: center;
-	.new{
+	.new {
 		align-items: center;
 		justify-content: center;
 	}
-	input{
-		border: #FAFAFA 1px solid;
+	input {
+		border: #fafafa 1px solid;
 		box-shadow: #e6e6e6 2px 1px 1px;
 		border-radius: 10rpx;
 		padding: 10rpx;
 		margin-left: $space;
 		height: 2em;
 	}
-	.old{
+	.old {
 		margin-top: $space;
 		justify-self: flex-start;
 		align-items: flex-end;
-		text{
+		text {
 			margin-left: $space;
 		}
 	}
 }
-.updateDialog{
+.updateDialog {
 	border-radius: 40rpx 40rpx 0 0 !important;
-	.title-bar{
+	.title-bar {
 		position: relative;
-		.cuIcon-close{
+		.cuIcon-close {
 			position: absolute;
 			right: 20rpx;
 		}
 	}
 }
-.userAvatar{
+.userAvatar {
 	width: $img_size;
 	height: $img_size;
 	margin: 0 30rpx 10rpx 30rpx;
 }
-.logOutItem:before{
+.logOutItem:before {
 	color: red !important;
 }
 .zaiui-my-box {
@@ -568,7 +568,7 @@ $space: 20rpx;
 			}
 		}
 	}
-	
+
 	.zaiui-view-content {
 		padding: 0 27.27rpx 54.54rpx;
 		margin-top: -63.63rpx;
@@ -584,7 +584,7 @@ $space: 20rpx;
 		.cu-list.grid > .cu-item text {
 			color: inherit;
 		}
-		.cu-list{
+		.cu-list {
 			border-radius: 9rpx;
 		}
 		.zaiui-user-info-money-box {
