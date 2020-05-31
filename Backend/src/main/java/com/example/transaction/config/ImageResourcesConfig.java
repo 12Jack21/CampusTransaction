@@ -21,8 +21,8 @@ public class ImageResourcesConfig implements WebMvcConfigurer {
 //                .addResourceLocations("file:"+ ResourcePath.basePath + "/src/main/resources/static/images/home/goods/");
         /*打包后的路径*/
         registry.addResourceHandler("/static/images/avatar/**")
-                .addResourceLocations("file:"+ ResourcePath.basePath + "/BOOT-INF/classes/static/images/avatar/");
+                .addResourceLocations("file:" + ResourcePath.basePath + "/BOOT-INF/classes/static/images/avatar/");
         registry.addResourceHandler("/static/images/home/goods/**")
-                .addResourceLocations("file:"+ ResourcePath.basePath + "/BOOT-INF/classes/static/images/home/goods/");
+                .addResourceLocations("file:" + ResourcePath.basePath + "/BOOT-INF/classes/static/images/home/goods/");
     }
 }
