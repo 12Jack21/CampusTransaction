@@ -132,7 +132,7 @@ export default {
 			})
 		},
 		async loadCommoditiess() {
-			if(this.onRequest) return
+			if(this.onRequest||this.release.finish) return
 			this.onRequest = true
 			this.loadStatus = 'loading'
 			let curCommodities = this[commodityMap(this.tabCur)]
@@ -147,8 +147,10 @@ export default {
 				.getCommoditiesByAcc(this.userId, pagination)
 				.then(({ data }) => {
 					console.log('coms data',data);
+					data = data.data
 					// 一些没有判断 success,根据后台的 json 来决定要不要加这个判断
-					curCommodities.list.push(...data.data.pageList)
+					curCommodities.list.push(...data.pageList)
+					curCommodities.pageIndex = data.pageIndex
 					// 取完了数据
 					if (data.pageIndex - 1 >= data.pageCount) curCommodities.finish = true
 				})

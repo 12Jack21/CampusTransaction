@@ -297,10 +297,10 @@ export default {
 			toCommentId: -1, //发送给的用户的 id
 			commodity: {
 				id: 10,
-				name: 'iPhone XR',
+				name:'',// 'iPhone XR',
 				expectedPrice: 1000,
 				originalPrice: 2000,
-				description: '物品描述u五奥尔加去哦为oh',
+				description: '',// '物品描述u五奥尔加去哦为oh',
 				count: 79,
 				type:'电子产品',
 				newness:'九成新',
@@ -320,8 +320,8 @@ export default {
 			noticeId:2,
 			conditions: '只限男生',
 			expiredTime: '2020-06-29 10:07',
-			address: '信息学部',
-			detailedAddress: '信息学部二食堂',
+			address:'',// '信息学部',
+			detailedAddress:'',// '信息学部二食堂',
 			stateEnumStr: 'PUBLISHED', // CANCELLED PUBLISHED
 			reservations: [
 				{

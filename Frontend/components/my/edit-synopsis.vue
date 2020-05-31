@@ -8,7 +8,7 @@
 			</block>
 			<!-- #ifndef MP -->
 			<block slot="right">
-				<text class="text-orange"@tap="save">保存</text>
+				<text class="text-orange" @tap="save">保存</text>
 			</block> 
 			<!-- #endif -->
 		</bar-title>
@@ -46,12 +46,19 @@
 			onUpdate:{
 				type:Boolean,
 				default:false
+			},
+			intro:{
+				type:String,
+				default:''
 			}
 		},
 		data(){
 			return {
 				introduction:''
 			}
+		},
+		created() {
+			this.introduction = this.intro
 		},
 		onReady() {
 			_tool.setBarColor(true);

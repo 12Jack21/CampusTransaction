@@ -352,7 +352,9 @@ export default {
 			this.$appi.getSearchHistory(this.userId).then(res => (this.histories = res.data.data))
 		},
 		async onPullDown(done) {
-			this.pagination = iniPagination() //对象展开不适用
+			this.pagination = Object.assign({},this.pagination,iniPagination()) //对象展开不适用
+			console.log("pullDown, pagination:",iniPagination());
+			this.goodsData = []
 			await this.doSearch(this.searchBody)
 			done() // 结束下拉刷新
 		},
