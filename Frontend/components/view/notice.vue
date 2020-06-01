@@ -113,7 +113,7 @@ const noticeMap = tabCur => {
 }
 
 export default {
-	name: 'find',
+	name: 'notice',
 	components: {
 		trendsList,
 		youScroll

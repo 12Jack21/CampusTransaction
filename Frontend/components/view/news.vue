@@ -32,7 +32,7 @@
 					
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
-					v-bind:style="[{'background-image':'url('+ (!(msg.action!=5 && msg.action!=6 && msg.action!=7&&msg.action!=10)? 
+					v-bind:style="[{'background-image':'url('+ (noShowAvatar(msg.action)? 
 					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatar.length === 0? '/static/images/avatar/default.png':msg.avatar) ) + ')' }]" 
 					@tap="accTap(msg.sender, msg.sender!==-1)">
 						<!-- 已读/未读 -->
@@ -42,9 +42,9 @@
 					<view class="content">
 						<view class="text-black">		
 							<!-- 标题 -->
-							<text class="margin-right-xs" v-if="msg.accountName">{{msg.accountName}}</text>
-							<text class="margin-right-xs" v-else-if="msg.action===7">失效通知</text>
+							<text class="margin-right-xs" v-if="msg.action===7">失效通知</text>
 							<text class="margin-right-xs" v-else-if="msg.action===5||msg.action===10">交易通知</text>
+							<text class="margin-right-xs" v-else>{{msg.accountName}}</text>
 							
 							<!-- 某用户 评论了某用户,某用户预约了 -->
 							<text class="cu-tag sm radius" :class="msg.accountGender === 0 ? 'bg-pink':'bg-blue'" 
@@ -55,7 +55,7 @@
 						</view>
 						<view class="text-gray text-sm text-cut">
 							{{preSentence(msg.action, msg.commodity.name.length!==0)}} 
-							<text style="color: red;" v-if="msg.sender!==-1">
+							<text style="color: red;" v-if="!noComActions.includes(msg.action)">
 								{{msg.commodity.name}}
 							</text>
 							{{postSentence(msg.action,msg.commodity.name.length!==0)}}
@@ -65,7 +65,7 @@
 					<!-- action 区-->
 					<view class="action" @tap="actionTap(msg.targetId,msg.targetType)">
 						<view class="cu-avatar radius"
-						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="msg.action!=5 && msg.action!=6 && msg.action!=7&&msg.action!=10">
+						:style="'background-image:url(' + (msg.commodity.img.length!==0?msg.commodity.img:'/static/images/comDefault.png') + ');'" v-if="!noComActions.includes(msg.action)">
 						</view>
 						<text style="vertical-align: middle;" v-else>去看看
 							<text class="cuIcon-right"></text>
@@ -121,6 +121,8 @@ const iniPagination = ()=>{
 		finish:false,
 	}
 }
+
+const noComActions = [5,6,7,10] // 不用展示 物品的 action值
 export default {
 	name: 'news',
 	components: {
@@ -129,6 +131,7 @@ export default {
 	},
 	data() {
 		return {
+			noComActions: noComActions,
 			onRequest:false,
 			newsMenuItems:[
 				{id:0,url:'1.png',text:'未读消息'},
@@ -180,6 +183,9 @@ export default {
 		})
 	},
 	methods: {
+		noShowAvatar(action){
+			return noComActions.includes(action)
+		},
 		actionTap(targetId,targetType){
 			console.log('actionTap targetType',targetType);
 			switch(targetType){
@@ -216,6 +222,7 @@ export default {
 		readTap(index){
 			//点击已读
 			let msg = this.newsData.data[index]
+			console.log('tap read msg:',msg);
 			this.$api.readMessages(msg.id)
 				.then(({data})=>{
 					console.log('已读响应:',data);
@@ -223,6 +230,9 @@ export default {
 						msg.isRead = true
 						this.newsData.data.splice(index,1,msg) // 更新已读状态
 					}
+				})
+				.catch(()=>{
+					console.log('消息已读失败');
 				})
 		},
 		menuTap(type){
