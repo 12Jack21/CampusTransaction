@@ -45,9 +45,11 @@ http.interceptor.response((response) => { /* 对响应成功做点什么 （stat
  // if (response.config.custom.verification) { // 演示自定义参数的作用
   //   return response.data
   // }
-	if(response.data.msg=='ERROR') // 服务器错误处理的代码
-		return Promise.reject(response)
-  console.log('http intercept response:',response)
+	if(response.data.msg=='ERROR'){ // 服务器错误处理的代码
+		console.log('http intercept error data (code=200)', response.data);
+	}
+	else	
+		console.log('http intercept response:',response)
   return response
 }, (response) => { /*  对响应错误做点什么 （statusCode !== 200），必须return response*/
   console.log('http intercept error:',response)
