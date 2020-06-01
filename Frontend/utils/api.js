@@ -145,6 +145,9 @@ export default{
 	getReservation(id){
 		return http.get('/reservations/' + id)
 	},
+	checkExistReservation(accId,params){
+		return http.get('/reservations/check/' + accId, {params})
+	},
 	
 	getOtherAccount(otherId, id){
 		return http.get('/accounts/other/' + otherId, {params:{id}})

@@ -327,6 +327,7 @@ export default {
 				avatar: '',
 				introduction: ''
 			},
+			isReserved: false,
 			comments: [
 				{ fromId: 1, fromName: '大牛', fromImage: '', toName: '', content: '真的是我觉得性价比最高的机器了真的是我觉得性价比最高的机器了', date: '2020-10-09' },
 				{ fromId: 2, fromName: '小哈', fromImage: '', toName: '大牛', content: '想问一下这个能便宜一点吗', date: '2020-08-01' }
@@ -389,6 +390,7 @@ export default {
 		console.log('commodity detail params', params)
 		this.getCommodityDetail(params.id)
 		this.getReservationsByCom(params.id)
+		this.checkExistReservation(this.userId,params.id)
 	},
 	onPullDownRefresh() {
 		this.getCommodityDetail(this.commodity.id)
@@ -408,6 +410,15 @@ export default {
 		}
 	},
 	methods: {
+		checkExistReservation(accId, comId){ // 检查该用户是否有未确认的预约
+			this.$api.checkExistReservation(accId, {comId})
+				.then(({data})=>{
+					console.log('check reservation result', data);
+					if(data.success)
+						this.isReserved = true
+				})
+				.catch((err)=>console.log('check reservation fail',err))
+		},
 		imgTap(img) {
 			uni.previewImage({
 				current: img,
@@ -538,6 +549,16 @@ export default {
 				this.selectTap('sell')
 				return
 			}
+			if(this.isReserved){
+				thi.tip(2,'你已经预约过了')
+				return
+			}
+			// validate selected count
+			if(this.selectedCount > this.commodity.count){
+				this.tip(2,'选择数量不能大于剩余量')
+				return
+			}
+			
 			let data = {
 				accountId: this.userId,
 				count: parseInt(this.selectedCount),
@@ -552,8 +573,10 @@ export default {
 				.addReservation(data)
 				.then(({ data }) => {
 					console.log('buyer add reservation', data)
-					if(data.success)
+					if(data.success){
 						this.update(0,'预约成功')
+						this.isReserved = true
+					}
 					else
 						this.update(1,'预约失败')
 				})
