@@ -51,7 +51,7 @@ public class CommentServiceImpl implements CommentService {
      * @return 执行结果
      */
     @Override
-    public responseFromServer getCommentByCommodityId(Integer pageIndex, Integer commodityId){
+    public responseFromServer  getCommentByCommodityId(Integer pageIndex, Integer commodityId){
         QueryWrapper<Comment> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("commodity_id", commodityId);
         queryWrapper.orderByAsc("time");

@@ -40,4 +40,5 @@ public interface ReservationService {
 
     public responseFromServer deleteReservation(Reservation reservation);
 
+    responseFromServer checkIfUserHasReservation(Integer accountId, Integer commodityId);
 }

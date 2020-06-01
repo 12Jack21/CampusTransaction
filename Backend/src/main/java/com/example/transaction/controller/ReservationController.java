@@ -64,7 +64,7 @@ public class ReservationController {
              * TODO : 先直接用传来的数据里的用户id
              */
 //            reservation.setAccountId(account.getId());
-            
+
             reservation.setStateEnum(ReservationCode.WAITING.getCode());
             return reservationService.setUpReservation(reservation);
         }
@@ -261,6 +261,7 @@ public class ReservationController {
 
     /**
      * 查看当前商品的所有预约
+     *
      * @param commodityId
      * @param request
      * @return
@@ -352,7 +353,7 @@ public class ReservationController {
              * 已完成 / 失败
              */
             case 2:
-                queryWrapper.in("state_enum", Arrays.asList(2, 3,-1));
+                queryWrapper.in("state_enum", Arrays.asList(2, 3, -1));
                 break;
             /**
              * 全部
@@ -453,6 +454,23 @@ public class ReservationController {
             return responseFromServer.error();
         }
     }
+
+    @ApiOperation(value = "确定一下用户是否对某商品已经预约")
+    @ApiImplicitParam(name = "reservationId", value = "预约Id", paramType = "Integer", dataType = "Integer")
+    @GetMapping("/check/{accountId}")
+    public responseFromServer checkIfUserHasReservation(@PathVariable Integer accountId,
+                                                        Integer comId,
+                                                        HttpServletRequest request) {
+        /**
+         * ZZH
+         * TODO : 为什么获取简单预约需要验证卖家身份?
+         */
+        if (accountId == null || comId == null) {
+            return responseFromServer.error();
+        }
+        return reservationService.checkIfUserHasReservation(accountId, comId);
+    }
+
 
     /**
      * 更新预约内容
