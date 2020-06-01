@@ -20,9 +20,9 @@ mybatis-plus:
 #  logging.level.com.looedu.mapper= info
 
 web:
-  upload-path: E:/CampusTransactionResources/images
-  front-path: E:/CampusTransactionResources/images
-  avatar-path: E:/CampusTransactionResources/avatars
+#  upload-path: E:/CampusTransactionResources/images
+#  front-path: E:/CampusTransactionResources/images
+#  avatar-path: E:/CampusTransactionResources/avatars
 
 spring:
   jackson:
@@ -33,8 +33,8 @@ spring:
     host: 39.96.69.108
     port: 6379
 
-  resources:
-    static-locations: file:${web.upload-path},file:${web.front-path},file:${web.avarar-path}
+#  resources:
+#    static-locations: file:${web.upload-path},file:${web.front-path},file:${web.avarar-path}
 
 
   application:
