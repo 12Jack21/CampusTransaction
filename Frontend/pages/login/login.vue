@@ -108,7 +108,7 @@ export default {
 			uni.navigateTo({
 				url:'/pages/index/index',
 				animationType:'slide-in-bottom',
-				animationDuration:3000
+				animationDuration:1000
 			})
 			return true
 			// end
