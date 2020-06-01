@@ -238,8 +238,10 @@
 												<view style="vertical-align: middle;" v-show="isSell" @tap="noteTap(item)">{{ item.note | noteFilter }}</view>
 												<view class="text-orange">X {{ item.count }}</view>
 											</view>
-											<view class="reserve-btn-right" style="min-width: 120rpx;" v-show="isSell" @tap="confirmReserve(item)">
-												<button class="cu-btn bg-red round sm" :disabled="item.stateEnumStr!='WAITING'">确认预约</button>
+											<view class="reserve-btn-right" style="min-width: 120rpx;" v-show="isSell" >
+												<button class="cu-btn bg-red round sm" :disabled="item.stateEnumStr!='WAITING'" @tap="confirmReserve(item)">
+													确认预约
+												</button>
 											</view>
 										</view>
 									</view>

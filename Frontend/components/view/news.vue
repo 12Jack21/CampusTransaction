@@ -32,7 +32,7 @@
 					
 					<!-- 头像区 -->
 					<view class="cu-avatar round"
-					v-bind:style="[{'background-image':'url('+ (!(msg.action!=5 && msg.action!=6 && msg.action!=7&&msg.action!=10)? 
+					v-bind:style="[{'background-image':'url('+ (showAvatar(msg.action)? 
 					((msg.action===5 || msg.action===10)? '/static/images/news/azg.png': '/static/images/news/az3.png') : (msg.avatar.length === 0? '/static/images/avatar/default.png':msg.avatar) ) + ')' }]" 
 					@tap="accTap(msg.sender, msg.sender!==-1)">
 						<!-- 已读/未读 -->
@@ -42,9 +42,9 @@
 					<view class="content">
 						<view class="text-black">		
 							<!-- 标题 -->
-							<text class="margin-right-xs" v-if="msg.accountName">{{msg.accountName}}</text>
-							<text class="margin-right-xs" v-else-if="msg.action===7">失效通知</text>
+							<text class="margin-right-xs" v-if="msg.action===7">失效通知</text>
 							<text class="margin-right-xs" v-else-if="msg.action===5||msg.action===10">交易通知</text>
+							<text class="margin-right-xs" v-else>{{msg.accountName}}</text>
 							
 							<!-- 某用户 评论了某用户,某用户预约了 -->
 							<text class="cu-tag sm radius" :class="msg.accountGender === 0 ? 'bg-pink':'bg-blue'" 
@@ -180,6 +180,9 @@ export default {
 		})
 	},
 	methods: {
+		showAvatar(action){
+			return !(action!=5 && action!=6 && action!=7 && action!=10)
+		},
 		actionTap(targetId,targetType){
 			console.log('actionTap targetType',targetType);
 			switch(targetType){
@@ -216,6 +219,7 @@ export default {
 		readTap(index){
 			//点击已读
 			let msg = this.newsData.data[index]
+			console.log('tap read msg:',msg);
 			this.$api.readMessages(msg.id)
 				.then(({data})=>{
 					console.log('已读响应:',data);
@@ -223,6 +227,9 @@ export default {
 						msg.isRead = true
 						this.newsData.data.splice(index,1,msg) // 更新已读状态
 					}
+				})
+				.catch(()=>{
+					console.log('消息已读失败');
 				})
 		},
 		menuTap(type){
