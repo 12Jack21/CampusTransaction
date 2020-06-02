@@ -16,8 +16,8 @@ public class ResourcePath {
 //    public static final String goodsFilePath = basePath + "/src/main/resources/static/images/home/goods/";
 
     //39.96.69.108=>服务器ip
-    public static final String commodityImageRequestPath = "http://39.96.69.108:3306/static/images/home/goods/";
-    public static final String avatarRequestPath = "http://39.96.69.108:3306/static/images/avatar/";
+    public static final String commodityImageRequestPath = "http://39.96.69.108:8080/static/images/home/goods/";
+    public static final String avatarRequestPath = "http://39.96.69.108:8080/static/images/avatar/";
     public static final String imageTempPath = "classpath:/static/images/temp/";
     public static final String avatarFilePath = "classpath:/static/images/avatar/";
     public static final String goodsFilePath = "classpath:/static/images/home/goods/";
