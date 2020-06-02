@@ -360,7 +360,7 @@ public class CommodityServiceImpl implements CommodityService {
         }
         DetailedCommodityInfo commodityInfo = new DetailedCommodityInfo((Commodity) response.getData());
         commodityInfo.getCommodity().setCommodityImages(null);
-        response = commentService.getCommentByCommodityId(1, 1);
+        response = commentService.getCommentByCommodityId(1, id);
         if (response.isFailure()) {
             return response;
         }

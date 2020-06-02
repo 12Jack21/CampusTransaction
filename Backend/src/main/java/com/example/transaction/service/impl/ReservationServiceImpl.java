@@ -542,6 +542,21 @@ public class ReservationServiceImpl implements ReservationService {
         }
     }
 
+    @Override
+    public responseFromServer checkIfUserHasReservation(Integer accountId, Integer commodityId){
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("commodity_id",commodityId);
+        queryWrapper.eq("account_id",accountId);
+        queryWrapper.eq("state_enum",ReservationCode.WAITING);
+        Integer count = reservationDAO.selectCount(queryWrapper);
+        if(count == null||count.equals(0)){
+            return responseFromServer.error();
+        }else{
+            return responseFromServer.success();
+        }
+
+    }
+
     NotifyService notifyService;
     A2aDAO a2aDAO;
     ReservationDAO reservationDAO;
@@ -562,6 +577,5 @@ public class ReservationServiceImpl implements ReservationService {
         this.a2aDAO = a2aDAO;
         this.commodityService = commodityService;
     }
-
 
 }
