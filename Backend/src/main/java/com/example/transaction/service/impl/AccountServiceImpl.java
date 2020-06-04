@@ -58,13 +58,13 @@ public class AccountServiceImpl implements AccountService {
      * @return
      */
     @Override
-    public responseFromServer login(Account account) {
-        responseFromServer response = selectByUserName(account.getUsername());
-        if (response.isSuccess()) {
-            Account account1 = (Account) response.getData();
-            if (account.getPassword().equals(account1.getPassword())) {
-                response = tokenService.loginOperationOnToken(account1);
-                if(response.isSuccess()){
+                public responseFromServer login(Account account) {
+                    responseFromServer response = selectByUserName(account.getUsername());
+                    if (response.isSuccess()) {
+                        Account account1 = (Account) response.getData();
+                        if (account.getPassword().equals(account1.getPassword())) {
+                            response = tokenService.loginOperationOnToken(account1);
+                            if(response.isSuccess()){
                     String tokenStr = (String)response.getData();
                     LoginAccountInfo loginAccountInfo = new LoginAccountInfo(account,tokenStr);
                     return responseFromServer.success(loginAccountInfo);

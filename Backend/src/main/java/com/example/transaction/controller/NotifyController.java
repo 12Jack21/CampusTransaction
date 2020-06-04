@@ -89,9 +89,9 @@ public class NotifyController {
             return responseFromServer.error();
         }
         AccountNotify notify = (AccountNotify) response.getData();
-        if (notify.getAccountId().intValue() != account.getId().intValue()) {
-            return responseFromServer.error();
-        }
+//        if (notify.getAccountId().intValue() != account.getId().intValue()) {
+//            return responseFromServer.error();
+//        }
         return notifyService.readNotify(notify.getId());
     }
 
