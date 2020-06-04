@@ -550,7 +550,7 @@ export default {
 				return
 			}
 			if(this.isReserved){
-				thi.tip(2,'你已经预约过了')
+				this.tip(2,'你已经预约过了')
 				return
 			}
 			// validate selected count
@@ -576,12 +576,13 @@ export default {
 					if(data.success){
 						this.update(0,'预约成功')
 						this.isReserved = true
+						this.reservations.push({})
 					}
 					else
 						this.update(1,'预约失败')
 				})
 				.catch((err) => {
-					console.log('预约创建失败',err)
+					console.log('预约创建失败',err)  
 					this.update(1,'网络异常')
 				})
 		},
