@@ -25,13 +25,30 @@ public class ImageResourcesConfig implements WebMvcConfigurer {
 //                .addResourceLocations("file:"+ ResourcePath.basePath + "/src/main/resources/static/images/home/goods/");
         /*打包后的路径*/
 //        registry.addResourceHandler("/static/images/avatar/**")
-//                .addResourceLocations("file:" + ResourcePath.basePath + "/BOOT-INF/classes/static/images/avatar/");
+//                .addResourceLocations("file:E:/CampusTransactionResources/images/avatar/");
 //        registry.addResourceHandler("/static/images/home/goods/**")
-//                .addResourceLocations("file:" + ResourcePath.basePath + "/BOOT-INF/classes/static/images/home/goods/");
+//                .addResourceLocations("file:E:/CampusTransactionResources/images/home/goods/");
+
         registry.addResourceHandler("/static/images/avatar/**")
-                .addResourceLocations("classpath:/static/images/avatar/");
+                .addResourceLocations("/springboot/transaction/target/images/avatar/");
         registry.addResourceHandler("/static/images/home/goods/**")
-                .addResourceLocations("classpath:/static/images/home/goods/");
+                .addResourceLocations("/springboot/transaction/target/images/home/goods/");
+
+
+
+//        registry.addResourceHandler("/static/images/avatar/**")
+//                .addResourceLocations("classpath:/static/images/avatar/");
+//        registry.addResourceHandler("/static/images/home/goods/**")
+//                .addResourceLocations("classpath:/static/images/home/goods/");
+
+
+//        registry.addResourceHandler("/static/images/avatar/**")
+//                .addResourceLocations(ResourcePath.avatarFilePath);
+//        registry.addResourceHandler("/static/images/home/goods/**")
+//                .addResourceLocations(ResourcePath.goodsFilePath);
+
+
+
 
 
     }
