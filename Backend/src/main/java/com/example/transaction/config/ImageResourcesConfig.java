@@ -30,9 +30,9 @@ public class ImageResourcesConfig implements WebMvcConfigurer {
 //                .addResourceLocations("file:E:/CampusTransactionResources/images/home/goods/");
 
         registry.addResourceHandler("/static/images/avatar/**")
-                .addResourceLocations("/springboot/transaction/target/images/avatar/");
+                .addResourceLocations("file:/springboot/transaction/target/images/avatar/");
         registry.addResourceHandler("/static/images/home/goods/**")
-                .addResourceLocations("/springboot/transaction/target/images/home/goods/");
+                .addResourceLocations("file:/springboot/transaction/target/images/home/goods/");
 
 
 
